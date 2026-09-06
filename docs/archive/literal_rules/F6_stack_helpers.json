@@ -1,0 +1,171 @@
+[
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ slotPtr\\ =\\ \\(__int16\\ \\*\\)\\(uintptr_t\\)\\(stackPtr\\ \\+\\ (?P<lit>6)\\);[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "Unit_CountSelectedGroupMembers",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:42 Unit_CountSelectedGroupMembers: clash95.asm:53545 and :53554 (Unit_GetSquadCount / 0x422B80) retain lea [eax+6], 31-byte stepping, and cmp eax,0Ah. UnitStackRecord.unit_slots at offset 6 contains ten UnitSlotRecord entries (src/recovered_structs.h:180-195; RECOVERED_STRUCTURES.json:495).",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 10,
+    "name": "UNIT_STACK_SLOT_COUNT",
+    "pattern": "(?m)^\\ \\ for\\ \\(\\ result\\ =\\ 0;\\ result\\ <\\ (?P<lit>10);\\ \\+\\+result\\ \\)[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "Unit_CountSelectedGroupMembers",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:43 Unit_CountSelectedGroupMembers: clash95.asm:53545 and :53554 (Unit_GetSquadCount / 0x422B80) retain lea [eax+6], 31-byte stepping, and cmp eax,0Ah. UnitStackRecord.unit_slots at offset 6 contains ten UnitSlotRecord entries (src/recovered_structs.h:180-195; RECOVERED_STRUCTURES.json:495).",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ slotPtr\\ =\\ \\(__int16\\ \\*\\)\\(uintptr_t\\)\\(stackPtr\\ \\+\\ (?P<lit>6)\\);[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStack_HasOnlyFlyingUnits",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:59 UnitStack_HasOnlyFlyingUnits: clash95.asm:53573 and :53585 (sub_422BA0) retain lea [eax+6], 31-byte stepping, and cmp eax,0Ah. The unit-type word feeds the per-type flying-flag query; UnitStackRecord.unit_slots has offset 6 and capacity 10 (src/recovered_structs.h:180-195).",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 10,
+    "name": "UNIT_STACK_SLOT_COUNT",
+    "pattern": "(?m)^\\ \\ \\ \\ if\\ \\(\\ slotIndex\\ >=\\ (?P<lit>10)\\ \\)[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStack_HasOnlyFlyingUnits",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:70 UnitStack_HasOnlyFlyingUnits: clash95.asm:53573 and :53585 (sub_422BA0) retain lea [eax+6], 31-byte stepping, and cmp eax,0Ah. The unit-type word feeds the per-type flying-flag query; UnitStackRecord.unit_slots has offset 6 and capacity 10 (src/recovered_structs.h:180-195).",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 10,
+    "name": "UNIT_STACK_SLOT_COUNT",
+    "pattern": "(?m)^\\ \\ \\ \\ UnitStackSelection_BuildSelectedSlotIndexList\\(\\(int\\)\\(intptr_t\\)g_UnitStackSlotSelectedFlags,\\ (?P<lit>10),\\ selectedSlotList\\);[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_RedrawPanel",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:356 UnitStackSelection_RedrawPanel: clash95.asm sub_423420:54441 passes 0Ah to sub_412B20; :54446 reads first unit word at+6; :54521 bounds the slot loop by 0Ah and :54527/:54532 read words at 31*j+6. Source line353 derives the selected stack pointer from gameData plus UNIT_STACK_TABLE_OFFSET and the existing 725-byte stack stride expression. UnitStackRecord.unit_slots offset 6/capacity 10 and the selection-list helper at src/units/004115E0_00412BE0_units_002.cpp:1397 independently establish layout and count.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ \\ \\ if\\ \\(\\ \\(unsigned\\ int\\)\\*\\(__int16\\ \\*\\)\\(uintptr_t\\)\\(g_SelectedUnitStackRecordPtr\\ \\+\\ (?P<lit>6)\\)\\ <=\\ 0x28\\ \\&\\&\\ UnitStackSelection_HasSelectedSlots\\(\\)\\ \\)[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_RedrawPanel",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:358 UnitStackSelection_RedrawPanel: clash95.asm sub_423420:54441 passes 0Ah to sub_412B20; :54446 reads first unit word at+6; :54521 bounds the slot loop by 0Ah and :54527/:54532 read words at 31*j+6. Source line353 derives the selected stack pointer from gameData plus UNIT_STACK_TABLE_OFFSET and the existing 725-byte stack stride expression. UnitStackRecord.unit_slots offset 6/capacity 10 and the selection-list helper at src/units/004115E0_00412BE0_units_002.cpp:1397 independently establish layout and count.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 10,
+    "name": "UNIT_STACK_SLOT_COUNT",
+    "pattern": "(?m)^\\ \\ \\ \\ for\\ \\(\\ j\\ =\\ 0;\\ j\\ <\\ (?P<lit>10);\\ \\+\\+j\\ \\)[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_RedrawPanel",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:374 UnitStackSelection_RedrawPanel: clash95.asm sub_423420:54441 passes 0Ah to sub_412B20; :54446 reads first unit word at+6; :54521 bounds the slot loop by 0Ah and :54527/:54532 read words at 31*j+6. Source line353 derives the selected stack pointer from gameData plus UNIT_STACK_TABLE_OFFSET and the existing 725-byte stack stride expression. UnitStackRecord.unit_slots offset 6/capacity 10 and the selection-list helper at src/units/004115E0_00412BE0_units_002.cpp:1397 independently establish layout and count.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ \\ \\ \\ \\ if\\ \\(\\ \\*\\(__int16\\ \\*\\)\\(uintptr_t\\)\\(UNIT_SLOT_RECORD_BYTES\\ \\*\\ j\\ \\+\\ g_SelectedUnitStackRecordPtr\\ \\+\\ (?P<lit>6)\\)\\ ==\\ \\-1\\ \\)[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_RedrawPanel",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:376 UnitStackSelection_RedrawPanel: clash95.asm sub_423420:54441 passes 0Ah to sub_412B20; :54446 reads first unit word at+6; :54521 bounds the slot loop by 0Ah and :54527/:54532 read words at 31*j+6. Source line353 derives the selected stack pointer from gameData plus UNIT_STACK_TABLE_OFFSET and the existing 725-byte stack stride expression. UnitStackRecord.unit_slots offset 6/capacity 10 and the selection-list helper at src/units/004115E0_00412BE0_units_002.cpp:1397 independently establish layout and count.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ \\ \\ \\ \\ unitSpriteId\\ =\\ DLX_GetSpriteForChar\\(g_CurrentPlayerInfoSpriteSet,\\ \\*\\(__int16\\ \\*\\)\\(uintptr_t\\)\\(UNIT_SLOT_RECORD_BYTES\\ \\*\\ j\\ \\+\\ g_SelectedUnitStackRecordPtr\\ \\+\\ (?P<lit>6)\\)\\);[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_RedrawPanel",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:378 UnitStackSelection_RedrawPanel: clash95.asm sub_423420:54441 passes 0Ah to sub_412B20; :54446 reads first unit word at+6; :54521 bounds the slot loop by 0Ah and :54527/:54532 read words at 31*j+6. Source line353 derives the selected stack pointer from gameData plus UNIT_STACK_TABLE_OFFSET and the existing 725-byte stack stride expression. UnitStackRecord.unit_slots offset 6/capacity 10 and the selection-list helper at src/units/004115E0_00412BE0_units_002.cpp:1397 independently establish layout and count.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ \\ \\ if\\ \\(\\ DD_IsLost\\(\\(int\\)\\(intptr_t\\)g_RenderState\\)\\ \\&\\&\\ \\*\\(__int16\\ \\*\\)\\(uintptr_t\\)\\(g_SelectedUnitStackRecordPtr\\ \\+\\ UNIT_SLOT_RECORD_BYTES\\ \\*\\ slot_index\\ \\+\\ (?P<lit>6)\\)\\ !=\\ \\-1\\ \\)[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_HandleInput",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:478 UnitStackSelection_HandleInput: clash95.asm sub_423860:54824/:54831/:54850 access selected slot type/info at stack pointer plus 31*slot_index+6, and :54923 passes 0Ah to sub_412B20. UnitStackSelection_RedrawPanel establishes g_SelectedUnitStackRecordPtr from the stack table; UnitStackRecord.unit_slots offset 6/capacity 10 and UnitStackSelection_BuildSelectedSlotIndexList slotCount loop (src/units/004115E0_00412BE0_units_002.cpp:1397) independently corroborate the domains.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ \\ \\ \\ \\ Unit_Info\\(100,\\ 100,\\ special_unit_info,\\ \\(unsigned\\ __int8\\ \\*\\)\\(uintptr_t\\)\\(g_SelectedUnitStackRecordPtr\\ \\+\\ UNIT_SLOT_RECORD_BYTES\\ \\*\\ slot_index\\ \\+\\ (?P<lit>6)\\),\\ a1,\\ 0\\);[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_HandleInput",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:481 UnitStackSelection_HandleInput: clash95.asm sub_423860:54824/:54831/:54850 access selected slot type/info at stack pointer plus 31*slot_index+6, and :54923 passes 0Ah to sub_412B20. UnitStackSelection_RedrawPanel establishes g_SelectedUnitStackRecordPtr from the stack table; UnitStackRecord.unit_slots offset 6/capacity 10 and UnitStackSelection_BuildSelectedSlotIndexList slotCount loop (src/units/004115E0_00412BE0_units_002.cpp:1397) independently corroborate the domains.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 6,
+    "name": "UNIT_STACK_SLOT_BASE_OFFSET",
+    "pattern": "(?m)^\\ \\ \\ \\ if\\ \\(\\ DD_IsFlipping\\(\\(int\\)\\(intptr_t\\)g_RenderState\\)\\ \\&\\&\\ \\*\\(__int16\\ \\*\\)\\(uintptr_t\\)\\(g_SelectedUnitStackRecordPtr\\ \\+\\ UNIT_SLOT_RECORD_BYTES\\ \\*\\ slot_index\\ \\+\\ (?P<lit>6)\\)\\ !=\\ \\-1\\ \\)[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_HandleInput",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:484 UnitStackSelection_HandleInput: clash95.asm sub_423860:54824/:54831/:54850 access selected slot type/info at stack pointer plus 31*slot_index+6, and :54923 passes 0Ah to sub_412B20. UnitStackSelection_RedrawPanel establishes g_SelectedUnitStackRecordPtr from the stack table; UnitStackRecord.unit_slots offset 6/capacity 10 and UnitStackSelection_BuildSelectedSlotIndexList slotCount loop (src/units/004115E0_00412BE0_units_002.cpp:1397) independently corroborate the domains.",
+    "area": "buildings"
+  },
+  {
+    "kind": "regex",
+    "value": 10,
+    "name": "UNIT_STACK_SLOT_COUNT",
+    "pattern": "(?m)^\\ \\ \\ \\ \\ \\ \\ \\ UnitStackSelection_BuildSelectedSlotIndexList\\(\\(int\\)\\(intptr_t\\)g_UnitStackSlotSelectedFlags,\\ (?P<lit>10),\\ selected_slot_indices\\);[ \\t]*(?://[^\\n]*)?$",
+    "files": [
+      "src/buildings/00422B50_004254E0_buildings_005.cpp"
+    ],
+    "func": "UnitStackSelection_HandleInput",
+    "confidence": "high",
+    "evidence": "src/buildings/00422B50_004254E0_buildings_005.cpp:548 UnitStackSelection_HandleInput: clash95.asm sub_423860:54824/:54831/:54850 access selected slot type/info at stack pointer plus 31*slot_index+6, and :54923 passes 0Ah to sub_412B20. UnitStackSelection_RedrawPanel establishes g_SelectedUnitStackRecordPtr from the stack table; UnitStackRecord.unit_slots offset 6/capacity 10 and UnitStackSelection_BuildSelectedSlotIndexList slotCount loop (src/units/004115E0_00412BE0_units_002.cpp:1397) independently corroborate the domains.",
+    "area": "buildings"
+  }
+]

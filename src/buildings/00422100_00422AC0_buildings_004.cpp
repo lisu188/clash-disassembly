@@ -290,7 +290,7 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
     slot_index = BuildingGarrisonDialog_HitTestSlotGrid();
     if ( slot_index == -1 )
       continue;
-    slot_record = g_BuildingGarrisonDialogActiveBuilding + 31 * slot_index;
+    slot_record = g_BuildingGarrisonDialogActiveBuilding + UNIT_SLOT_RECORD_BYTES * slot_index;
     primary_down = DD_IsFlipping((int)(intptr_t)g_RenderState);
     secondary_down = DD_IsLost((int)(intptr_t)g_RenderState);
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -505,10 +505,10 @@ CLASH95_INTERNAL int Diagnostics_CountBattleUnitsForOwner(int owner)
   if ( !g_MapData )
     return 0;
   count = 0;
-  for ( offset = 0; offset != 682; offset += 31 )
+  for ( offset = 0; offset != BATTLE_UNIT_ENTRIES_BYTES; offset += BATTLE_UNIT_ENTRY_STRIDE )
   {
-    if ( *(__int16 *)(uintptr_t)(g_MapData + offset + 852) != -1
-      && *(unsigned __int8 *)(uintptr_t)(g_MapData + offset + 854) == owner )
+    if ( *(__int16 *)(uintptr_t)(g_MapData + offset + BATTLE_UNIT_ENTRIES_OFFSET) != -1
+      && *(unsigned __int8 *)(uintptr_t)(g_MapData + offset + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) == owner )
     {
       ++count;
     }
@@ -524,9 +524,9 @@ CLASH95_INTERNAL int Diagnostics_CountBattleUnitsTotal(void)
   if ( !g_MapData )
     return 0;
   count = 0;
-  for ( offset = 0; offset != 682; offset += 31 )
+  for ( offset = 0; offset != BATTLE_UNIT_ENTRIES_BYTES; offset += BATTLE_UNIT_ENTRY_STRIDE )
   {
-    if ( *(__int16 *)(uintptr_t)(g_MapData + offset + 852) != -1 )
+    if ( *(__int16 *)(uintptr_t)(g_MapData + offset + BATTLE_UNIT_ENTRIES_OFFSET) != -1 )
       ++count;
   }
   return count;
@@ -538,9 +538,9 @@ CLASH95_INTERNAL void Diagnostics_TraceBattleUnitSnapshot(const char *stage)
 
   if ( !Diagnostics_IsWorldMapClickTraceEnabled() || !g_MapData )
     return;
-  for ( slot_index = 0; slot_index < 22; ++slot_index )
+  for ( slot_index = 0; slot_index < BATTLE_UNIT_ENTRY_COUNT; ++slot_index )
   {
-    int unit_record = g_MapData + 852 + 31 * slot_index;
+    int unit_record = g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * slot_index;
     int unit_type = *(__int16 *)(uintptr_t)unit_record;
 
     if ( unit_type == -1 )
@@ -851,13 +851,13 @@ CLASH95_INTERNAL void Diagnostics_TraceBattlefieldClickEvent(
 
   if ( !Diagnostics_IsWorldMapClickTraceEnabled() || !g_MapData )
     return;
-  if ( g_SelectedUnitIndex >= 0 && g_SelectedUnitIndex < 22 )
-    selected_type = *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852);
-  if ( occupant_slot >= 0 && occupant_slot < 22 )
+  if ( g_SelectedUnitIndex >= 0 && g_SelectedUnitIndex < BATTLE_UNIT_ENTRY_COUNT )
+    selected_type = *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET);
+  if ( occupant_slot >= 0 && occupant_slot < BATTLE_UNIT_ENTRY_COUNT )
   {
-    int occupant_record = g_MapData + 31 * occupant_slot;
+    int occupant_record = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * occupant_slot;
 
-    occupant_type = *(__int16 *)(uintptr_t)(occupant_record + 852);
+    occupant_type = *(__int16 *)(uintptr_t)(occupant_record + BATTLE_UNIT_ENTRIES_OFFSET);
     occupant_owner = *(unsigned __int8 *)(uintptr_t)(occupant_record + 854);
     occupant_ap = *(unsigned __int8 *)(uintptr_t)(occupant_record + 860);
     occupant_flags = *(unsigned __int8 *)(uintptr_t)(occupant_record + 864);
@@ -925,7 +925,7 @@ CLASH95_INTERNAL int Diagnostics_UnitStackIndexFromRecord(int stack_record)
   stack_table_delta = stack_record - stack_table_base;
   if ( stack_table_delta < 0 || stack_table_delta % UNIT_STACK_STRIDE != 0 )
     return -1;
-  stack_table_delta /= 725;
+  stack_table_delta /= UNIT_STACK_STRIDE;
   if ( stack_table_delta < 0 || stack_table_delta >= UNIT_STACK_TABLE_COUNT )
     return -1;
   return stack_table_delta;

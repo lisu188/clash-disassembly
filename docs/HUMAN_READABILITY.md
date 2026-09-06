@@ -361,6 +361,44 @@ provides the direct branch proof. No route, visual or campaign milestone advance
 Private exact commands, hashes, initializer review, original measurements and
 all attempts are retained under artifacts/readability/road-functions-20260906/batch-06/.
 
+The repair commit `8df94c4` was then combined with upstream numeric-cleanup merge
+`431e4c5`. The only merge conflict was the history-log prepend; both records
+remain. Independent review verifies all 68 changed source/header/data files
+against the exact expected union. Normalizer, query and initializer bodies
+retain their original-validated hashes. No numeric-cleanup work is discarded.
+
+Both integrated builds and all eight public asset-free gates pass; all 137
+tooling tests pass. Defined symbols, all 4157 recovered identities, section
+layouts and program headers match the repaired route-tested binaries. Every
+code/data byte is identical; only GNU build-id bytes and the ELF section-table
+offset differ. This establishes applicability of the retained fresh runtime
+comparisons to the integrated production code without another route replay.
+Final native coverage passes at 6167/6662 lines (92.57%), all 718 functions and
+zero uncovered functions; the preintegration run was 6169/6662 (92.60%). No
+coverage floor or warning/link/header baseline is raised.
+
+The two-line coverage variation is confined to the unchanged
+`Building_UpdatePlagueState` RNG-dependent outbreak branch: 17/19 versus 19/19
+lines. Its existing fixture explicitly permits that branch not to fire across
+20 calls. The integrated native run retains 1059 passes, zero assertion
+failures and 530 isolated crashes out of 1589; coverage success does not mean
+every native fixture succeeds.
+
+The final coverage work encountered host disk-full and a read-only WSL
+filesystem. Lossless NTFS compression of this batch's BMPs preserved all files,
+and Ubuntu was restarted with explicit user approval. Write/compiler checks
+then passed, coverage ran in an owned Linux-native build and the independent
+runtime audit reverified every frozen input, save and checkpoint hash plus both
+frame metrics. Failed/interrupted attempts remain recorded. Final metadata
+checks pass except the existing 14 header-ratchet differences and the existing
+Markdown reference to an absent private predecessor report. Whitespace checks
+against incoming main pass; the retained incoming CRLF JSON is checked with
+Git's `cr-at-eol` setting, consistent with `.gitattributes`.
+
+Integration commands and raw results are under this batch's build-validation/
+integration/, integration-audit/ and integration-metadata/ directories. The
+parent gate script is artifacts/readability/road-functions-20260906/batch-06/integration-metadata.sh.
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

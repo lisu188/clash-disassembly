@@ -278,7 +278,7 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
   attackerPlayerOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4);
   defenderStack = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * defenderStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent("unit_attack_enter", attackerStackIndex, defenderStackIndex, *defenderStack, defenderStack[1]);
-  bothHuman = *(_DWORD *)(uintptr_t)(gameData + attackerPlayerOffset + 140051) && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 140051);
+  bothHuman = *(_DWORD *)(uintptr_t)(gameData + attackerPlayerOffset + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + PLAYER_CONTROLLER_MODE_TABLE_OFFSET);
   bothPlayersHuman = (unsigned __int8 *)(uintptr_t)bothHuman;
   capturedCargoFlag = 0;
   if ( UnitStack_HasNormalCombatUnits((intptr_t)attackerStack) )
@@ -346,8 +346,8 @@ LABEL_22:
             v20 = defenderSpecialEntries;
             defenderSquadCount = Unit_GetSquadCount((int)(intptr_t)defenderStack);
             UnitSlots_ExtractSpecialEntries((char *)defenderStack + 6, defenderSquadCount, (char *)defenderSpecialEntries);
-            eitherHuman = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 140051)
-               || *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + gameData + 140051);
+            eitherHuman = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET)
+               || *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET);
             if ( eitherHuman && Unit_GetSquadCount((int)(intptr_t)attackerStack) && Unit_GetSquadCount((int)(intptr_t)defenderStack) )
             {
               defenderStackForPrompt = defenderStack;
@@ -929,7 +929,7 @@ int  UnitSlots_CalcCombatStrengthScore(char *slotArray, int slotCount, int statC
       unitType = UNIT_SLOT_TYPE(slotArray);
       if ( unitType <= 0x28 )
         break;
-      slotArray += 31;
+      slotArray += UNIT_SLOT_RECORD_BYTES;
     }
     unitScore = 0;
     unitMetadata = &g_UnitTypeRuntimeCoreMetadata[unitType];
@@ -952,7 +952,7 @@ int  UnitSlots_CalcCombatStrengthScore(char *slotArray, int slotCount, int statC
       if ( (unitMetadata->flags & 1) == 0 )
         adjustedRankCount -= 2 * wallDefenseBonus / 100;
       v16 = Unit_CalcEffectivenessA(slotArray, statContext) * adjustedRankCount + totalScore;
-      slotArray += 31;
+      slotArray += UNIT_SLOT_RECORD_BYTES;
       totalScore = v16;
     }
     else if ( unitMetadata->base_melee_attack || !unitMetadata->base_shot_power )
@@ -967,13 +967,13 @@ int  UnitSlots_CalcCombatStrengthScore(char *slotArray, int slotCount, int statC
       if ( remainingRanks > 0 )
       {
         effectivenessA = Unit_CalcEffectivenessA(slotArray, statContext);
-        slotArray += 31;
+        slotArray += UNIT_SLOT_RECORD_BYTES;
         totalScore += remainingRanks * effectivenessA + unitScore;
       }
       else
       {
 LABEL_8:
-        slotArray += 31;
+        slotArray += UNIT_SLOT_RECORD_BYTES;
         totalScore += unitScore;
       }
     }
@@ -987,7 +987,7 @@ LABEL_8:
       if ( tierCount >= 3 )
         adjustedTier = tierCount + 2;
       v20 = Unit_CalcEffectivenessC((__int16 *)slotArray) * adjustedTier + totalScore;
-      slotArray += 31;
+      slotArray += UNIT_SLOT_RECORD_BYTES;
       totalScore = v20;
     }
   }
@@ -1004,9 +1004,9 @@ int  UnitSlots_CalcDefenseScore(char *slotArray, int slotCount, int statContext)
   for ( i = 0; --slotCount != -1; i += slotDefense )
   {
     while ( (unsigned int)*(__int16 *)slotArray > 0x28 )
-      slotArray += 31;
+      slotArray += UNIT_SLOT_RECORD_BYTES;
     slotDefense = Unit_CalcEffectivenessB(slotArray, statContext);
-    slotArray += 31;
+    slotArray += UNIT_SLOT_RECORD_BYTES;
   }
   return (300 * i - (__CFSHL__((300 * i) >> 31, 8) + ((300 * i) >> 31 << 8))) >> 8;
 }
@@ -1179,7 +1179,7 @@ int  CalculateBattleResult(
     attackerCount = defenderCount;
   casualtyBudget = 0;
   for ( i = 0; i < attackerCount; ++i )
-    casualtyBudget += *((signed char *)winnerSlots + 31 * i + 9);
+    casualtyBudget += *((signed char *)winnerSlots + UNIT_SLOT_RECORD_BYTES * i + 9);
   casualtyBudget = casualtyBudget * lowerNetScore / higherNetScore;
   Debug_Log(casualtyBudget, (char)higherNetScore, a5, (int)(intptr_t)aSum_quantDAtt_, casualtyBudget);
   while ( casualtyBudget > 0 )
@@ -1196,7 +1196,7 @@ int  CalculateBattleResult(
       selected_priority = 0;
       for ( i = 0; i < attackerCount && i < (int)sizeof(slotProcessed); ++i )
       {
-        slot_priority = g_UnitTypeRuntimeCoreMetadata[UNIT_SLOT_TYPE((char *)winnerSlots + 31 * i)].autoresolve_casualty_weight;
+        slot_priority = g_UnitTypeRuntimeCoreMetadata[UNIT_SLOT_TYPE((char *)winnerSlots + UNIT_SLOT_RECORD_BYTES * i)].autoresolve_casualty_weight;
         if ( slot_priority > selected_priority && !slotProcessed[i] )
         {
           selected_priority = slot_priority;
@@ -1208,7 +1208,7 @@ int  CalculateBattleResult(
         casualtyBudget = 0;
         break;
       }
-      old_quantity = *((signed char *)winnerSlots + 31 * selected_slot + 9);
+      old_quantity = *((signed char *)winnerSlots + UNIT_SLOT_RECORD_BYTES * selected_slot + 9);
       new_quantity = old_quantity - selected_priority;
       if ( new_quantity < 0 )
         new_quantity = 0;
@@ -1221,7 +1221,7 @@ int  CalculateBattleResult(
         new_quantity = 0;
       if ( loss_delta > 0 )
         applied_loss = 1;
-      *((_BYTE *)winnerSlots + 31 * selected_slot + 9) = new_quantity;
+      *((_BYTE *)winnerSlots + UNIT_SLOT_RECORD_BYTES * selected_slot + 9) = new_quantity;
       slotProcessed[selected_slot] = 1;
     }
     if ( !applied_loss )
@@ -1230,8 +1230,8 @@ int  CalculateBattleResult(
   Debug_Log(0, 0, a5, (int)(intptr_t)aJednostkaZwyci);
   for ( i = 0; i < attackerCount; ++i )
   {
-    if ( !*((_BYTE *)winnerSlots + 31 * i + 9) )
-      *(__int16 *)((char *)winnerSlots + 31 * i) = -1;
+    if ( !*((_BYTE *)winnerSlots + UNIT_SLOT_RECORD_BYTES * i + 9) )
+      *(__int16 *)((char *)winnerSlots + UNIT_SLOT_RECORD_BYTES * i) = -1;
   }
   UnitSlots_RemoveGaps((_WORD *)winnerSlots, attackerCount);
   if ( buildingRecord )
@@ -1239,7 +1239,7 @@ int  CalculateBattleResult(
   for ( i = 0; i < loserCount; ++i )
   {
     *loserSlots = -1;
-    loserSlots = (_WORD *)((char *)loserSlots + 31);
+    loserSlots = (_WORD *)((char *)loserSlots + UNIT_SLOT_RECORD_BYTES);
   }
   return Battle_StoreLastOutcomeValue(0);
 }
@@ -1370,7 +1370,7 @@ signed int  UI_PromptLeadTroopsPersonally(
       }
       a5 = attackerCountCopy;
       ++attackerSlotIndex;
-      attackerSlotPtr += 31;
+      attackerSlotPtr += UNIT_SLOT_RECORD_BYTES;
     }
     while ( attackerSlotIndex < attackerCountCopy );
   }
@@ -1394,13 +1394,13 @@ signed int  UI_PromptLeadTroopsPersonally(
         defenderUnitSpriteHandle = defenderUnitSpriteSet;
         defenderUnitSprite = DLX_GetSpriteForChar((int)(intptr_t)defenderUnitSpriteSet, 0);
         Compat_RenderDeviceDrawMenuSprite(defenderCellX, defenderCellY, defenderUnitSprite, 1);
-        if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(defenderSlotsBase + 2) + gameData + 140051) )
+        if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(defenderSlotsBase + 2) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
           UI_DrawTextFmt((int)(intptr_t)defenderSlotPtr, defenderCellY, defenderCellY + 32, defenderCellX + 50, 3, (const char*)(uintptr_t)((int)(intptr_t)aD_4));
         DLXSpriteSet_ReleaseAndClear((int *)&defenderUnitSpriteHandle);
       }
       a5 = defenderCountCopy;
       ++defenderSlotIndex;
-      defenderSlotPtr += 31;
+      defenderSlotPtr += UNIT_SLOT_RECORD_BYTES;
     }
     while ( defenderSlotIndex < defenderCountCopy );
   }

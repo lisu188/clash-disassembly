@@ -24,7 +24,7 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
   char slotFlags; // dh
   int stackRow; // ebx
   int disbandedFlag; // ebx
-  _BYTE v15[725]; // [esp+0h] [ebp-300h] BYREF
+  _BYTE v15[UNIT_STACK_STRIDE]; // [esp+0h] [ebp-300h] BYREF
   int v16[3]; // [esp+2D8h] [ebp-28h]
   int v17[7]; // [esp+2E4h] [ebp-1Ch] BYREF
 
@@ -64,8 +64,8 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
     ++slotIndex;
     ++slot;
   }
-  while ( slotIndex < 10 );
-  if ( anyDisbanded && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * stack->owner_player_index + 140051) )
+  while ( slotIndex < UNIT_STACK_SLOT_COUNT );
+  if ( anyDisbanded && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * stack->owner_player_index + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
   {
     stackRow = stack->tile_row;
     UI_CenterWorldMapViewportOnRectIfFit(stackRow, stack->tile_column, stack->tile_column - 5, stackRow);
@@ -115,7 +115,7 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
 
   slot = stack->unit_slots;
   anyRemoved = 0;
-  for ( i = 0; i < 10; ++i )
+  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
   {
     result = slot->unit_type_id;
     if ( result == -1 )
@@ -188,7 +188,7 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
   stackIndex = 0;
   for ( i = 0; ; i += UNIT_STACK_STRIDE )
   {
-    if ( *(__int16 *)(uintptr_t)(gameData + i + 147180) == -1 || *(unsigned __int8 *)(uintptr_t)(gameData + i + 147178) != g_CurrentPlayerIndex )
+    if ( *(__int16 *)(uintptr_t)(gameData + i + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1 || *(unsigned __int8 *)(uintptr_t)(gameData + i + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) != g_CurrentPlayerIndex )
       goto LABEL_16;
     stackPtr = gameData + UNIT_STACK_TABLE_OFFSET + i;
     Diagnostics_TraceWorldMapActionEvent(
@@ -196,14 +196,14 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       (int)stackIndex,
       *(__int16 *)(uintptr_t)stackPtr,
       *(__int16 *)(uintptr_t)(stackPtr + 2),
-      *(_DWORD *)(uintptr_t)(stackPtr + 316));
+      *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     UnitStack_AdjustFatigueByPredicate((__int16 *)(uintptr_t)stackPtr, -20, UnitSlot_CanRecoverFatigue, 0xFFFFFFFF, a4);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_recover_fatigue",
       (int)stackIndex,
       *(__int16 *)(uintptr_t)stackPtr,
       *(__int16 *)(uintptr_t)(stackPtr + 2),
-      *(_DWORD *)(uintptr_t)(stackPtr + 316));
+      *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(stackPtr + 4) + 140051) )
     {
       UnitStack_AdjustFatigueByPredicate((__int16 *)(uintptr_t)stackPtr, 10, UnitSlot_ShouldGainFatigueFromLowActionPoints, 0xFFFFFFFF, a4);
@@ -214,14 +214,14 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       (int)stackIndex,
       *(__int16 *)(uintptr_t)stackPtr,
       *(__int16 *)(uintptr_t)(stackPtr + 2),
-      *(_DWORD *)(uintptr_t)(stackPtr + 316));
+      *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     UnitStack_ClearSpentTurnFlag(stackPtr);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_clear_spent",
       (int)stackIndex,
       *(__int16 *)(uintptr_t)stackPtr,
       *(__int16 *)(uintptr_t)(stackPtr + 2),
-      *(_DWORD *)(uintptr_t)(stackPtr + 316));
+      *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     slotIndex = 0;
     slotCursor = stackPtr;
     do
@@ -234,11 +234,11 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
         *(_WORD *)(uintptr_t)(slotCursor + 6) = -1;
         break;
       }
-      slotCursor += 31;
-      actionPoints = UnitSlot_CalcActionPointsFromFatigue((__int16 *)(uintptr_t)(stackPtr + 6 + 31 * slotIndex++));
+      slotCursor += UNIT_SLOT_RECORD_BYTES;
+      actionPoints = UnitSlot_CalcActionPointsFromFatigue((__int16 *)(uintptr_t)(stackPtr + 6 + UNIT_SLOT_RECORD_BYTES * slotIndex++));
       *(_BYTE *)(uintptr_t)(slotCursor - 17) = actionPoints;
     }
-    while ( slotIndex < 10 );
+    while ( slotIndex < UNIT_STACK_SLOT_COUNT );
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_ap",
       (int)stackIndex,
@@ -285,34 +285,34 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       buildingRecord = UNIT_RECORD(buildingIndex);
       if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4
         && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1
-        && *(_BYTE *)(uintptr_t)(slotIndex + gameData + 509676) != UNIT_STACK_OWNER_INDEX(stackPtr) )
+        && *(_BYTE *)(uintptr_t)(slotIndex + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != UNIT_STACK_OWNER_INDEX(stackPtr) )
       {
         break;
       }
     }
-    if ( *(_DWORD *)(uintptr_t)(stackPtr + 316) )
+    if ( *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET) )
     {
       Diagnostics_TraceWorldMapActionEvent(
         "unit_new_turn_before_path",
         (int)stackIndex,
         *(__int16 *)(uintptr_t)stackPtr,
         *(__int16 *)(uintptr_t)(stackPtr + 2),
-        *(_DWORD *)(uintptr_t)(stackPtr + 316));
+        *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
       UnitStack_ExecuteQueuedPath(stackIndex, 0, slotIndex, 0xFFFFFFFF, a4);
       Diagnostics_TraceWorldMapActionEvent(
         "unit_new_turn_after_path",
         (int)stackIndex,
         *(__int16 *)(uintptr_t)stackPtr,
         *(__int16 *)(uintptr_t)(stackPtr + 2),
-        *(_DWORD *)(uintptr_t)(stackPtr + 316));
+        *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     }
     else
       UnitStack_ClearReadyFlags(stackPtr);
 LABEL_16:
-    nextStackOffset = i + 725;
+    nextStackOffset = i + UNIT_STACK_STRIDE;
     slotIndex = stackIndex + 1;
     stackIndex = slotIndex;
-    if ( slotIndex >= 500 )
+    if ( slotIndex >= UNIT_STACK_TABLE_COUNT )
     {
       Diagnostics_TraceWorldMapActionEvent("unit_new_turn_done", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, (unsigned __int8)a2);
       return LogAllUnits(nextStackOffset, slotIndex, 0xFFFFFFFF);
@@ -347,8 +347,8 @@ signed int  UnitStack_HasBuilder(int stackIndex)
     if ( slotType == UNIT_TYPE_BUILDER )
       break;
     ++slotIndex;
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
-    if ( slotIndex >= 10 )
+    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
+    if ( slotIndex >= UNIT_STACK_SLOT_COUNT )
       return 0;
   }
   return 1;
@@ -370,7 +370,7 @@ __int16  Map_RedrawUnitFootprintByIndex(int stackIndex)
   y = unit_stack[1];
   result = WorldMap_RedrawTileIfVisible(x, y);
   unit_type = unit_stack[3];
-  unit_metadata_offset = 88 * unit_type;
+  unit_metadata_offset = UNIT_TYPE_METADATA_STRIDE * unit_type;
   if ( g_UnitTypeSpriteVerticalOffsetPx[unit_metadata_offset] )
   {
     if ( (unsigned __int16)unit_type >= 0x1Bu )
@@ -389,31 +389,31 @@ __int16  Map_RedrawUnitFootprintByIndex(int stackIndex)
       {
         switch ( *((_BYTE *)unit_stack + 5) )
         {
-          case 0:
-          case 4:
+          case DIRECTION8_WEST:
+          case DIRECTION8_EAST:
             WorldMap_RedrawTileIfVisible(x - 1, y);
             result = WorldMap_RedrawTileIfVisible(x + 1, y);
             break;
-          case 1:
+          case DIRECTION8_SOUTHWEST:
             WorldMap_RedrawTileIfVisible(x + 1, y);
             result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
-          case 2:
-          case 6:
+          case DIRECTION8_SOUTH:
+          case DIRECTION8_NORTH:
             WorldMap_RedrawTileIfVisible(x, y - 1);
             result = WorldMap_RedrawTileIfVisible(x, y + 1);
             break;
-          case 3:
+          case DIRECTION8_SOUTHEAST:
             WorldMap_RedrawTileIfVisible(x + 1, y);
             WorldMap_RedrawTileIfVisible(x, y + 1);
             result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
-          case 5:
+          case DIRECTION8_NORTHEAST:
             WorldMap_RedrawTileIfVisible(x - 1, y);
             WorldMap_RedrawTileIfVisible(x, y + 1);
             result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
-          case 7:
+          case DIRECTION8_NORTHWEST:
             WorldMap_RedrawTileIfVisible(x - 1, y);
             result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
@@ -475,7 +475,7 @@ void Map_UpdateIdleAnimatedUnits(void)
     unitType = *(__int16 *)(uintptr_t)(stackPtr + 6);
     if ( unitType != -1 )
     {
-      metadataOffset = 88 * unitType;
+      metadataOffset = UNIT_TYPE_METADATA_STRIDE * unitType;
       if ( (g_UnitTypeHasIdleAnimationFlags[metadataOffset] & 1) != 0 )
       {
         nextAnimTick = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[metadataOffset] + *(_DWORD *)(uintptr_t)(stackPtr + 24);
@@ -506,7 +506,7 @@ void Map_UpdateIdleAnimatedUnits(void)
 //----- (00411E20) --------------------------------------------------------
 int  Unit_GetSpriteVerticalOffsetPx(int stackIndex)
 {
-  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147180)];
+  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET)];
 }
 // 5202E4: using guessed type int gameData;
 
@@ -569,8 +569,8 @@ BOOL  UnitStack_CanExecuteQueuedPathNow(int stackIndex)
   unsigned __int16 lastStepActionPoints; // si
 
   stackPtr = gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex;
-  pathLength = *(_DWORD *)(uintptr_t)(stackPtr + 316);
-  pathBufferPtr = stackPtr + 316;
+  pathLength = *(_DWORD *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET);
+  pathBufferPtr = stackPtr + UNIT_STACK_PATH_OFFSET;
   result = 0;
   if ( pathLength )
   {
@@ -606,15 +606,15 @@ void * UnitSlots_ExtractSpecialEntries(char *slotArray, int slotCount, char *ext
     {
       shiftIndex = 0;
       qmemcpy(extractedOut, slotArray, 0x1Fu);
-      extractedOut += 31;
+      extractedOut += UNIT_SLOT_RECORD_BYTES;
       shiftCursor = (_WORD*)(slotArray);
       if ( remainingCount - slotIndex - 1 > 0 )
       {
         do
         {
-          qmemcpy(shiftCursor, (char *)shiftCursor + 31, 0x1Fu);
+          qmemcpy(shiftCursor, (char *)shiftCursor + UNIT_SLOT_RECORD_BYTES, 0x1Fu);
           ++shiftIndex;
-          shiftCursor = (_WORD *)((char *)shiftCursor + 31);
+          shiftCursor = (_WORD *)((char *)shiftCursor + UNIT_SLOT_RECORD_BYTES);
         }
         while ( shiftIndex < remainingCount - slotIndex - 1 );
       }
@@ -623,7 +623,7 @@ void * UnitSlots_ExtractSpecialEntries(char *slotArray, int slotCount, char *ext
     }
     else
     {
-      slotArray += 31;
+      slotArray += UNIT_SLOT_RECORD_BYTES;
       ++slotIndex;
     }
   }
@@ -647,16 +647,16 @@ int  UnitSlots_AppendEntries(char *destSlots, char *srcSlots)
 
   srcStart = srcSlots;
   while ( UNIT_SLOT_TYPE(destSlots) != -1 )
-    destSlots += 31;
+    destSlots += UNIT_SLOT_RECORD_BYTES;
   srcCount = 0;
   while ( UNIT_SLOT_TYPE(srcSlots) != -1 )
   {
-    srcSlots += 31;
+    srcSlots += UNIT_SLOT_RECORD_BYTES;
     ++srcCount;
   }
   destAppendPtr = destSlots;
-  result = 31 * srcCount;
-  qmemcpy(destAppendPtr, srcStart, 31 * srcCount);
+  result = UNIT_SLOT_RECORD_BYTES * srcCount;
+  qmemcpy(destAppendPtr, srcStart, UNIT_SLOT_RECORD_BYTES * srcCount);
   return result;
 }
 
@@ -729,8 +729,8 @@ signed int  UnitStack_HasGoldCargo(int stackPtr)
     if ( slotType == UNIT_TYPE_GOLD_CARGO )
       break;
     ++slotIndex;
-    stackPtr += 31;
-    if ( slotIndex >= 10 )
+    stackPtr += UNIT_SLOT_RECORD_BYTES;
+    if ( slotIndex >= UNIT_STACK_SLOT_COUNT )
       return 0;
   }
   return 1;
@@ -751,8 +751,8 @@ signed int  UnitStack_HasPeasantCargo(int stackPtr)
     if ( slotType == UNIT_TYPE_PEASANT_CARGO )
       break;
     ++slotIndex;
-    stackPtr += 31;
-    if ( slotIndex >= 10 )
+    stackPtr += UNIT_SLOT_RECORD_BYTES;
+    if ( slotIndex >= UNIT_STACK_SLOT_COUNT )
       return 0;
   }
   return 1;
@@ -782,7 +782,7 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
   slotPtr = stackPtr + 3;
   totalPeasantQuantity = 0;
   peasantSlotCount = 0;
-  for ( i = 0; i < 10; ++i )
+  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
   {
     slotType = *slotPtr;
     if ( slotType == -1 )
@@ -792,7 +792,7 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
       ++peasantSlotCount;
       totalPeasantQuantity += *((char *)slotPtr + 9);
     }
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
   }
   minActionPoints = UnitStack_GetMinCurrentActionPoints((intptr_t)stackPtr);
   if ( (int)(intptr_t)v8 > totalPeasantQuantity )
@@ -806,21 +806,21 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
         break;
       if ( clearCursor[3] == UNIT_TYPE_PEASANT_CARGO )
         clearCursor[3] = -1;
-      clearCursor = (__int16 *)((char *)clearCursor + 31);
+      clearCursor = (__int16 *)((char *)clearCursor + UNIT_SLOT_RECORD_BYTES);
       ++clearIndex;
-      clearSlotPtr = (__int16 *)((char *)clearSlotPtr + 31);
+      clearSlotPtr = (__int16 *)((char *)clearSlotPtr + UNIT_SLOT_RECORD_BYTES);
     }
-    while ( clearIndex < 10 );
+    while ( clearIndex < UNIT_STACK_SLOT_COUNT );
     Unit_CompactSquad(stackPtr, (int)(intptr_t)clearCursor, a3);
     squadCount = Unit_GetSquadCount((int)(intptr_t)stackPtr);
     fullCargoUnits = totalPeasantQuantity / 100;
     addedIndex = 0;
-    for ( j = (int)(intptr_t)stackPtr + 31 * squadCount; ; *(_BYTE *)(uintptr_t)(j - 17) = minActionPoints )
+    for ( j = (int)(intptr_t)stackPtr + UNIT_SLOT_RECORD_BYTES * squadCount; ; *(_BYTE *)(uintptr_t)(j - 17) = minActionPoints )
     {
       v18 = addedIndex + squadCount;
       if ( addedIndex >= fullCargoUnits )
         break;
-      j += 31;
+      j += UNIT_SLOT_RECORD_BYTES;
       *(_WORD *)(uintptr_t)(j - 25) = UNIT_TYPE_PEASANT_CARGO;
       *(_BYTE *)(uintptr_t)(j - 16) = 100;
       *(_BYTE *)(uintptr_t)(j - 15) = 0;
@@ -833,7 +833,7 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
     *(_BYTE *)(uintptr_t)(j + 15) = totalPeasantQuantity % 100;
     v8 = stackPtr;
     *(_BYTE *)(uintptr_t)(j + 16) = 0;
-    a2 = (DWORD)(intptr_t)stackPtr + 31 * v18 + 31;
+    a2 = (DWORD)(intptr_t)stackPtr + UNIT_SLOT_RECORD_BYTES * v18 + UNIT_SLOT_RECORD_BYTES;
     *(_BYTE *)(uintptr_t)(j + 17) = 10;
     *(_WORD *)(uintptr_t)(a2 + 6) = -1;
   }
@@ -1052,14 +1052,14 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
                               + TILE_MAP_OFFSET)
         + gameData
         + UNIT_STACK_TABLE_OFFSET;
-    for ( i = sourceSlotsPtr; ; i += 31 )
+    for ( i = sourceSlotsPtr; ; i += UNIT_SLOT_RECORD_BYTES )
     {
-      slotByteOffset = 31 * slotCount;
+      slotByteOffset = UNIT_SLOT_RECORD_BYTES * slotCount;
       if ( *(__int16 *)i == -1 )
         break;
       ++slotCount;
     }
-    qmemcpy((void *)(uintptr_t)(targetStackPtr + 6), sourceSlotsPtr, 31 * slotCount);
+    qmemcpy((void *)(uintptr_t)(targetStackPtr + 6), sourceSlotsPtr, UNIT_SLOT_RECORD_BYTES * slotCount);
     if ( slotCount < 9 )
     {
       slotByteOffset += targetStackPtr;
@@ -1453,7 +1453,7 @@ int  UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck(char *slotArray,
       if ( slotType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slotType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         hasSpecialPersonage = 1;
       ++slotIndex;
-      slotCursor += 31;
+      slotCursor += UNIT_SLOT_RECORD_BYTES;
     }
     while ( slotIndex < slotCount );
   }

@@ -187,7 +187,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   _WORD *neighborDistPtr; // edx
   __int16 relaxFromDistance; // bx
   int mapWidthLimit; // ecx
-  _BYTE mergedProfile[88]; // [esp+0h] [ebp-104h] BYREF
+  _BYTE mergedProfile[UNIT_TYPE_METADATA_STRIDE]; // [esp+0h] [ebp-104h] BYREF
   int stackIndex_l; // [esp+58h] [ebp-ACh]
   int sourceRow_l; // [esp+5Ch] [ebp-A8h]
   int sourceColumn_l; // [esp+60h] [ebp-A4h]
@@ -423,7 +423,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
       LOWORD(targetDistancePtr) = *targetDistancePtr;
       traceRow = targetRow_l;
       currentTileDistance = targetDistancePtr;
-      pathBuffer = (int *)(uintptr_t)Mem_Alloc(404, v30, distanceGrid, 0);
+      pathBuffer = (int *)(uintptr_t)Mem_Alloc(UNIT_STACK_PATH_ALLOCATION_BYTES, v30, distanceGrid, 0);
       traceColumn = targetColumn;
       if ( pathBuffer )
         *pathBuffer = 0;
@@ -653,7 +653,7 @@ _DWORD * Unit_MoveTrackNearTile(int stackIndex, int targetRow, int a3, int targe
     column_delta = -column_delta;
   if ( row_delta == 0 && column_delta == 0 )
   {
-    raw_path = (int *)(uintptr_t)Mem_Alloc(404, gameData, targetColumn, a5);
+    raw_path = (int *)(uintptr_t)Mem_Alloc(UNIT_STACK_PATH_ALLOCATION_BYTES, gameData, targetColumn, a5);
     if ( raw_path )
       *raw_path = 0;
     return (_DWORD *)raw_path;
@@ -665,7 +665,7 @@ _DWORD * Unit_MoveTrackNearTile(int stackIndex, int targetRow, int a3, int targe
   raw_path = Unit_MoveTrack(stackIndex, source_row, targetRow, source_column, targetColumn, targetColumn);
   if ( raw_path )
   {
-    reverse_path = (int *)(uintptr_t)Mem_Alloc(404, (int)(intptr_t)raw_path, source_column, targetColumn);
+    reverse_path = (int *)(uintptr_t)Mem_Alloc(UNIT_STACK_PATH_ALLOCATION_BYTES, (int)(intptr_t)raw_path, source_column, targetColumn);
     if ( reverse_path )
     {
       *reverse_path = 0;
@@ -761,7 +761,7 @@ int * Building_GenerateApproachTrack(int stackIndex, int buildingIndex, int a3, 
   raw_path = Unit_MoveTrack(stackIndex, source_row, building_row, source_column, building_kind, building_column);
   if ( raw_path )
   {
-    reverse_path = (int *)(uintptr_t)(unsigned int)Mem_Alloc(404, (int)(uintptr_t)raw_path, source_column, building_kind);
+    reverse_path = (int *)(uintptr_t)(unsigned int)Mem_Alloc(UNIT_STACK_PATH_ALLOCATION_BYTES, (int)(uintptr_t)raw_path, source_column, building_kind);
     if ( reverse_path )
     {
       *reverse_path = 0;
@@ -879,8 +879,8 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   buildingRecordOffset = BUILDING_RECORD_SIZE * buildingIndex;
   Debug_Log(a3, a4, a5, (int)(intptr_t)aUnit_movetra_3);
   HIDWORD(buildingRowCol) = *(unsigned __int8 *)(uintptr_t)(gameData + buildingRecordOffset + BUILDING_TABLE_OFFSET);
-  buildingKind = *(char *)(uintptr_t)(gameData + buildingRecordOffset + 509678);
-  LODWORD(buildingRowCol) = *(unsigned __int8 *)(uintptr_t)(gameData + buildingRecordOffset + 509675);
+  buildingKind = *(char *)(uintptr_t)(gameData + buildingRecordOffset + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET);
+  LODWORD(buildingRowCol) = *(unsigned __int8 *)(uintptr_t)(gameData + buildingRecordOffset + BUILDING_TILE_COLUMN_TABLE_OFFSET);
   /* buildingRowCol is a register PAIR: HIDWORD = row, LODWORD = column.
      Using the whole 64-bit value as the column made the tile address explode. */
   *(_WORD *)(uintptr_t)(TILE_INDEX(HIDWORD(buildingRowCol), (unsigned int)buildingRowCol)) = -1;
@@ -915,7 +915,7 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   forwardPath = rawPath;
   if ( rawPath )
   {
-    reverseBuffer = (int *)(uintptr_t)Mem_Alloc(404, (int)(intptr_t)rawPath, sourceColumn, buildingKind);
+    reverseBuffer = (int *)(uintptr_t)Mem_Alloc(UNIT_STACK_PATH_ALLOCATION_BYTES, (int)(intptr_t)rawPath, sourceColumn, buildingKind);
     reversePath = reverseBuffer;
     /* 415A96: `mov ecx, eax` after Unit_MoveTrack - the forward cursor is the
        raw path that was just returned. */
@@ -1184,15 +1184,15 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int screenX, int screenY, in
       if ( !*(_BYTE *)(uintptr_t)(result + 147894) || (result = *(unsigned __int8 *)(uintptr_t)(result + 147178), result == g_CurrentPlayerIndex) )
       {
         stackRecord = gameData + UNIT_STACK_STRIDE * stackIndex;
-        spriteVerticalOffset = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(uintptr_t)(stackRecord + 147180)];
+        spriteVerticalOffset = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(stackRecord + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET)];
         if ( g_ActiveUnitMoveTileIndex == -1 || g_ActiveUnitMoveTileIndex != stackIndex )
           SpriteForChar = UnitSpriteCache_FindEntryOrLoad(
-                            *(unsigned __int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147180),
-                            *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178),
+                            *(unsigned __int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET),
+                            *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET),
                             *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147197) & 7,
-                            *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147179));
+                            *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_FACING_DIRECTION_TABLE_OFFSET));
         else
-          SpriteForChar = DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, 8 * *(unsigned __int8 *)(uintptr_t)(stackRecord + 147179) + g_UnitAnimFrameIndex);
+          SpriteForChar = DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, 8 * *(unsigned __int8 *)(uintptr_t)(stackRecord + UNIT_STACK_FACING_DIRECTION_TABLE_OFFSET) + g_UnitAnimFrameIndex);
         unitSpriteCopy = SpriteForChar;
         tileRightX = screenX + 63;
         drawY = screenY + animOffsetY - spriteVerticalOffset;
@@ -1214,7 +1214,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int screenX, int screenY, in
         else
         {
           v13 = gameData;
-          if ( *(_BYTE *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + 147894) )
+          if ( *(_BYTE *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_IS_HIDDEN_ON_WORLD_MAP_TABLE_OFFSET) )
           {
             Sprite_DrawSimpleTrackingOffset(SpriteForChar, screenX, drawY, screenY, tileRightX, screenY + 63, 128, 1u);
           }
@@ -1223,7 +1223,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int screenX, int screenY, in
             Compat_RenderDeviceDrawMenuSprite(screenX, drawY, SpriteForChar, 1);
           }
         }
-        if ( (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147180)] & 1) == 0 )
+        if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET)] & 1) == 0 )
           WorldMap_DrawUnitStackOverlayGlyph(screenX, screenY, tilePtr);
         squadCount = Unit_GetSquadCount(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
         if ( squadCount > 1 )
@@ -1236,7 +1236,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int screenX, int screenY, in
           moraleSprite = DLX_GetSpriteForChar(g_MarksSpriteSet, 33);
           Compat_RenderDeviceDrawMenuSprite(screenX + 30, drawY + 48, moraleSprite, 1);
         }
-        if ( *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147894) )
+        if ( *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_IS_HIDDEN_ON_WORLD_MAP_TABLE_OFFSET) )
         {
           overlaySprite = DLX_GetSpriteForChar(g_MarksSpriteSet, 39);
           Compat_RenderDeviceDrawMenuSprite(screenX + 10, drawY + 5, overlaySprite, 1);
@@ -1350,7 +1350,7 @@ unsigned __int8 *__thiscall Map_UpdateConstructionSiteSwayAnimation(void *this_)
         }
       }
     }
-    for ( building_offset = 0; building_offset != 46700; building_offset += 467 )
+    for ( building_offset = 0; building_offset != BUILDING_TABLE_BYTES; building_offset += BUILDING_RECORD_SIZE )
     {
       building_record = (unsigned __int8 *)(uintptr_t)(building_offset + gameData + BUILDING_TABLE_OFFSET);
       result = building_record;
@@ -1387,7 +1387,7 @@ unsigned int __thiscall Map_UpdateIdleAnimatedBuildings(void *this_)
   {
     g_MapIdleBuildingAnimLastTick = Time_Now(0, 0);
     g_MapFlagAnimationFrame = ((_BYTE)g_MapFlagAnimationFrame + 1) & 0xF;
-    for ( building_offset = 0; building_offset != 46700; building_offset += 467 )
+    for ( building_offset = 0; building_offset != BUILDING_TABLE_BYTES; building_offset += BUILDING_RECORD_SIZE )
     {
       building_record = (unsigned __int8 *)(uintptr_t)(building_offset + gameData + BUILDING_TABLE_OFFSET);
       result = (unsigned int)(intptr_t)building_record;

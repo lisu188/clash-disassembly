@@ -22,7 +22,7 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int sideOwner)
   char newHealth; // ah
 
   slotIndex = 0;
-  unitRecord = (__int16 *)(uintptr_t)(g_MapData + 852);
+  unitRecord = (__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
   do
   {
     while ( 1 )
@@ -30,7 +30,7 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int sideOwner)
       result = *unitRecord;
       if ( result != -1 && *((unsigned __int8 *)unitRecord + 2) == sideOwner )
       {
-        apResilience = (unsigned __int8)g_UnitTypeBaseActionPoints_512580[88 * result] - 15;
+        apResilience = (unsigned __int8)g_UnitTypeBaseActionPoints_512580[UNIT_TYPE_METADATA_STRIDE * result] - 15;
         damage = Rng_RandRange(25, 35) - apResilience;
         if ( damage < 0 )
           damage = 0;
@@ -43,15 +43,15 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int sideOwner)
           break;
       }
       ++slotIndex;
-      unitRecord = (__int16 *)((char *)unitRecord + 31);
-      if ( slotIndex >= 22 )
+      unitRecord = (__int16 *)((char *)unitRecord + BATTLE_UNIT_ENTRY_STRIDE);
+      if ( slotIndex >= BATTLE_UNIT_ENTRY_COUNT )
         return result;
     }
     *unitRecord = -1;
     ++slotIndex;
-    unitRecord = (__int16 *)((char *)unitRecord + 31);
+    unitRecord = (__int16 *)((char *)unitRecord + BATTLE_UNIT_ENTRY_STRIDE);
   }
-  while ( slotIndex < 22 );
+  while ( slotIndex < BATTLE_UNIT_ENTRY_COUNT );
   return result;
 }
 // 42C5B3: variable 'v3' is possibly undefined
@@ -96,9 +96,9 @@ LABEL_5:
     if ( Input_IsKeyPressed(205) && g_SelectedUnitIndex != -1 )
     {
       mapDataCw = g_MapData;
-      unitOffsetCw = 31 * g_SelectedUnitIndex;
-      facingCW = *(_BYTE *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 855) + 1;
-      *(_BYTE *)(uintptr_t)(g_MapData + unitOffsetCw + 855) = facingCW;
+      unitOffsetCw = BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex;
+      facingCW = *(_BYTE *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET) + 1;
+      *(_BYTE *)(uintptr_t)(g_MapData + unitOffsetCw + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET) = facingCW;
       *(_BYTE *)(uintptr_t)(mapDataCw + unitOffsetCw + 855) = facingCW & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(205) )
@@ -110,9 +110,9 @@ LABEL_5:
     if ( Input_IsKeyPressed(203) && g_SelectedUnitIndex != -1 )
     {
       mapDataCcw = g_MapData;
-      unitOffsetCcw = 31 * g_SelectedUnitIndex;
-      facingCCW = *(_BYTE *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 855) - 1;
-      *(_BYTE *)(uintptr_t)(g_MapData + unitOffsetCcw + 855) = facingCCW;
+      unitOffsetCcw = BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex;
+      facingCCW = *(_BYTE *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET) - 1;
+      *(_BYTE *)(uintptr_t)(g_MapData + unitOffsetCcw + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET) = facingCCW;
       *(_BYTE *)(uintptr_t)(mapDataCcw + unitOffsetCcw + 855) = facingCCW & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(203) )
@@ -126,7 +126,7 @@ LABEL_5:
     {
       if ( g_SelectedUnitIndex != -1 )
       {
-        unitRecord = 31 * g_SelectedUnitIndex + g_MapData + 852;
+        unitRecord = BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET;
         facing = *(unsigned __int8 *)(uintptr_t)(unitRecord + 3);
         deltaY = Map_NeighborDY[2 * facing];
         movePath = UnitBattle_MoveTrack(
@@ -135,8 +135,8 @@ LABEL_5:
                 unitRecord,
                 deltaY + *(unsigned __int16 *)(uintptr_t)(unitRecord + 6),
                 deltaY);
-        LOWORD(IsKeyPressed) = 31 * g_SelectedUnitIndex;
-        *(_DWORD *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 875) = (_DWORD)(uintptr_t)(movePath);
+        LOWORD(IsKeyPressed) = BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex;
+        *(_DWORD *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + 875) = (_DWORD)(uintptr_t)(movePath);
         if ( movePath )
         {
           requiredAp = HIWORD(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(pathNode + 23) + 4));
@@ -147,7 +147,7 @@ LABEL_5:
           }
           else
           {
-            Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET));
             LOWORD(IsKeyPressed) = UnitBattle_Move(g_SelectedUnitIndex, v14, requiredAp, deltaY);
           }
         }

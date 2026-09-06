@@ -747,7 +747,7 @@ int  CastleProduction_DrawProductionStatus(DWORD renderContext)
   result = g_CastleProductionBuildingPtr;
   if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(g_CastleProductionBuildingPtr) != -1 )
   {
-    if ( Building_CountGarrison(g_CastleProductionBuildingPtr) < 12 || BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) > 1 )
+    if ( Building_CountGarrison(g_CastleProductionBuildingPtr) < BUILDING_GARRISON_SLOT_COUNT || BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) > 1 )
     {
       statusHeader_Strings[0] = (int)(intptr_t)UI_Locale_StatusHeader[0];
       statusHeader_Strings[1] = (int)(intptr_t)UI_Locale_StatusHeader[1];

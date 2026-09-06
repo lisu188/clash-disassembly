@@ -118,7 +118,7 @@ int * Rules_AdditionFunction(uintptr_t returnValue, double a2)
     {
       float_sum += Parser_NumberValueAsDouble(value);
     }
-    else if ( parsed[1] == 1 )
+    else if ( parsed[1] == CLIPS_TYPE_INTEGER )
     {
       integer_sum += Parser_NumberValueAsInt(value);
     }
@@ -131,12 +131,12 @@ int * Rules_AdditionFunction(uintptr_t returnValue, double a2)
   }
   if ( saw_float )
   {
-    *(_DWORD *)(returnValue + 4) = 0;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_FLOAT;
     *(_DWORD *)(returnValue + 8) = (int)(uintptr_t)Rules_AddDoubleValue(float_sum);
   }
   else
   {
-    *(_DWORD *)(returnValue + 4) = 1;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_INTEGER;
     *(_DWORD *)(returnValue + 8) = (int)(uintptr_t)Rules_AddIntegerValue(integer_sum);
   }
   return (int *)(uintptr_t)(unsigned int)*(_DWORD *)(returnValue + 8);
@@ -174,7 +174,7 @@ int * Rules_MultiplicationFunction(uintptr_t returnValue, double a2)
     }
     else
     {
-      if ( parsed[1] == 1 )
+      if ( parsed[1] == CLIPS_TYPE_INTEGER )
       {
         ltotal *= Parser_NumberValueAsInt(parsed[2]);
         if ( theExpression )
@@ -190,12 +190,12 @@ int * Rules_MultiplicationFunction(uintptr_t returnValue, double a2)
   }
   if ( useFloatTotal )
   {
-    *(_DWORD *)(returnValue + 4) = 0;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_FLOAT;
     result = (int)(uintptr_t)Rules_AddDoubleValue(ftotal);
   }
   else
   {
-    *(_DWORD *)(returnValue + 4) = 1;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_INTEGER;
     result = (int)(uintptr_t)Rules_AddIntegerValue(ltotal);
   }
   *(_DWORD *)(returnValue + 8) = result;
@@ -231,7 +231,7 @@ int * Rules_SubtractionFunction(uintptr_t returnValue, double a2)
       theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
-    if ( parsed[1] == 1 )
+    if ( parsed[1] == CLIPS_TYPE_INTEGER )
     {
       ltotal = Parser_NumberValueAsInt(parsed[2]);
     }
@@ -252,7 +252,7 @@ int * Rules_SubtractionFunction(uintptr_t returnValue, double a2)
     {
       ftotal = ftotal - Parser_NumberValueAsDouble(parsed[2]);
     }
-    else if ( parsed[1] == 1 )
+    else if ( parsed[1] == CLIPS_TYPE_INTEGER )
     {
       ltotal -= Parser_NumberValueAsInt(parsed[2]);
     }
@@ -265,12 +265,12 @@ int * Rules_SubtractionFunction(uintptr_t returnValue, double a2)
   }
   if ( useFloatTotal )
   {
-    *(_DWORD *)(returnValue + 4) = 0;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_FLOAT;
     result = (int)(uintptr_t)Rules_AddDoubleValue(ftotal);
   }
   else
   {
-    *(_DWORD *)(returnValue + 4) = 1;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_INTEGER;
     result = (int)(uintptr_t)Rules_AddIntegerValue(ltotal);
   }
   *(_DWORD *)(returnValue + 8) = result;
@@ -308,7 +308,7 @@ int * Rules_DivisionFunction(uintptr_t returnValue, double a2)
       theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
-    if ( parsed[1] == 1 )
+    if ( parsed[1] == CLIPS_TYPE_INTEGER )
     {
       ltotal = Parser_NumberValueAsInt(parsed[2]);
     }
@@ -325,16 +325,16 @@ int * Rules_DivisionFunction(uintptr_t returnValue, double a2)
       theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
-    if ( parsed[1] == 1 )
+    if ( parsed[1] == CLIPS_TYPE_INTEGER )
       isDivideByZero = Parser_NumberValueAsInt(parsed[2]) == 0;
     else
-      isDivideByZero = parsed[1] == 0 && Parser_NumberValueAsDouble(parsed[2]) == 0.0;
+      isDivideByZero = parsed[1] == CLIPS_TYPE_FLOAT && Parser_NumberValueAsDouble(parsed[2]) == 0.0;
     if ( isDivideByZero )
     {
       Rules_ReportDivideByZeroError();
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
-      *(_DWORD *)(returnValue + 4) = 0;
+      *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_FLOAT;
       result = (int)(uintptr_t)Rules_AddDoubleValue(1.0);
       *(_DWORD *)(returnValue + 8) = result;
       return (int *)(uintptr_t)(unsigned int)result;
@@ -343,7 +343,7 @@ int * Rules_DivisionFunction(uintptr_t returnValue, double a2)
     {
       ftotal = ftotal / Parser_NumberValueAsDouble(parsed[2]);
     }
-    else if ( parsed[1] == 1 )
+    else if ( parsed[1] == CLIPS_TYPE_INTEGER )
     {
       ltotal /= Parser_NumberValueAsInt(parsed[2]);
     }
@@ -356,12 +356,12 @@ int * Rules_DivisionFunction(uintptr_t returnValue, double a2)
   }
   if ( useFloatTotal )
   {
-    *(_DWORD *)(returnValue + 4) = 0;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_FLOAT;
     result = (int)(uintptr_t)Rules_AddDoubleValue(ftotal);
   }
   else
   {
-    *(_DWORD *)(returnValue + 4) = 1;
+    *(_DWORD *)(returnValue + 4) = CLIPS_TYPE_INTEGER;
     result = (int)(uintptr_t)Rules_AddIntegerValue(ltotal);
   }
   *(_DWORD *)(returnValue + 8) = result;
@@ -549,11 +549,11 @@ void  Rules_AbsFunction(_DWORD *returnValue, double a2)
   if ( !parseOk )
   {
 LABEL_7:
-    returnValue[1] = 1;
+    returnValue[1] = CLIPS_TYPE_INTEGER;
     returnValue[2] = Rules_AddIntegerValue(parseOk);
     return;
   }
-  if ( returnValue[1] == 1 )
+  if ( returnValue[1] == CLIPS_TYPE_INTEGER )
   {
     longValue = *(_DWORD *)(uintptr_t)(returnValue[2] + 16);
     if ( longValue < 0 )
@@ -587,7 +587,7 @@ void  Rules_MinFunction(_DWORD *returnValue, double a2)
   if ( !parseOk )
   {
 LABEL_13:
-    returnValue[1] = 1;
+    returnValue[1] = CLIPS_TYPE_INTEGER;
     returnValue[2] = Rules_AddIntegerValue(parseOk);
     return;
   }
@@ -598,9 +598,9 @@ LABEL_13:
     {
       if ( !Lexer_ParseValueList(argIndex, argValue, 110, a2) )
         return;
-      if ( returnValue[1] != 1 )
+      if ( returnValue[1] != CLIPS_TYPE_INTEGER )
         break;
-      if ( argValue[1] != 1 )
+      if ( argValue[1] != CLIPS_TYPE_INTEGER )
       {
         a2 = (double)*(int *)(uintptr_t)(returnValue[2] + 16);
         if ( a2 <= *(double *)(uintptr_t)(argValue[2] + 16) )
@@ -614,7 +614,7 @@ LABEL_10:
       if ( ++argIndex > numberOfArguments )
         return;
     }
-    if ( argValue[1] == 1 )
+    if ( argValue[1] == CLIPS_TYPE_INTEGER )
     {
       a2 = (double)*(int *)(uintptr_t)(argValue[2] + 16);
       if ( a2 >= *(double *)(uintptr_t)(returnValue[2] + 16) )
@@ -654,7 +654,7 @@ void  Rules_MaxFunction(_DWORD *returnValue, double a2)
   if ( !parseOk )
   {
 LABEL_13:
-    returnValue[1] = 1;
+    returnValue[1] = CLIPS_TYPE_INTEGER;
     returnValue[2] = Rules_AddIntegerValue(parseOk);
     return;
   }
@@ -665,9 +665,9 @@ LABEL_13:
     {
       if ( !Lexer_ParseValueList(argIndex, argValue, 110, a2) )
         return;
-      if ( returnValue[1] != 1 )
+      if ( returnValue[1] != CLIPS_TYPE_INTEGER )
         break;
-      if ( argValue[1] != 1 )
+      if ( argValue[1] != CLIPS_TYPE_INTEGER )
       {
         a2 = (double)*(int *)(uintptr_t)(returnValue[2] + 16);
         if ( a2 >= *(double *)(uintptr_t)(argValue[2] + 16) )
@@ -681,7 +681,7 @@ LABEL_10:
       if ( ++argIndex > numberOfArguments )
         return;
     }
-    if ( argValue[1] == 1 )
+    if ( argValue[1] == CLIPS_TYPE_INTEGER )
     {
       a2 = (double)*(int *)(uintptr_t)(argValue[2] + 16);
       if ( a2 <= *(double *)(uintptr_t)(returnValue[2] + 16) )

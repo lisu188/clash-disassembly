@@ -64,10 +64,10 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
   }
   while ( next_char );
   open_handle = IO_FOpen(path, (unsigned __int8 *)aWb, ~prefix_length, (DWORD)(intptr_t)sprite_set);
-  data_offset = 4096;
+  data_offset = DLX_DIRECTORY_BYTES;
   file_handle = open_handle;
   entry_index = 0;
-  if ( sprite_set[1025] > 0 )
+  if ( sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] > 0 )
   {
     entry_cursor = (DWORD)(intptr_t)sprite_set;
     do
@@ -76,12 +76,12 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
       data_offset += *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)entry_cursor + 14);
       entry_cursor += 4;
     }
-    while ( entry_index < sprite_set[1025] );
+    while ( entry_index < sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] );
   }
   g_DlxDirTotalDataOffset = data_offset;
-  fwrite_(g_DlxSpriteSetOffsetTable, 4096, file_handle, 1);
+  fwrite_(g_DlxSpriteSetOffsetTable, DLX_DIRECTORY_BYTES, file_handle, 1);
   write_index = 0;
-  if ( sprite_set[1025] > 0 )
+  if ( sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] > 0 )
   {
     sprite_slot = sprite_set;
     do
@@ -90,7 +90,7 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
       write_index = v20 + 1;
       ++sprite_slot;
     }
-    while ( write_index < sprite_set[1025] );
+    while ( write_index < sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] );
   }
   return fclose_(write_index);
 }
@@ -108,7 +108,7 @@ int  DLX_GetSpriteForChar(int sprite_set, int char_index)
 //----- (00405ED0) --------------------------------------------------------
 int  DLXSpriteSet_GetLastCharIndex(int sprite_set)
 {
-  LOWORD(sprite_set) = *(_WORD *)(uintptr_t)(sprite_set + 4100);
+  LOWORD(sprite_set) = *(_WORD *)(uintptr_t)(sprite_set + DLX_SPRITE_SET_ENTRY_COUNT_BYTE_OFFSET);
   return sprite_set - 1;
 }
 
@@ -139,11 +139,11 @@ char  DLXSpriteSet_DrawText(int sprite_set, int char_index, int dest_palette, un
   unsigned int target_green;
   unsigned int target_blue;
   unsigned __int16 last_char_index;
-  char remap_table[256]; // [esp+0h] [ebp-12Ch] BYREF
+  char remap_table[PALETTE_COLOR_COUNT]; // [esp+0h] [ebp-12Ch] BYREF
 
   (void)Time_Now(dest_palette, char_index);
   source_entry = source_palette;
-  for ( palette_index = 0; palette_index < 256; ++palette_index )
+  for ( palette_index = 0; palette_index < PALETTE_COLOR_COUNT; ++palette_index )
   {
     best_distance = 768;
     best_index = 0;
@@ -152,7 +152,7 @@ char  DLXSpriteSet_DrawText(int sprite_set, int char_index, int dest_palette, un
     target_blue = source_entry[2];
     candidate_index = 1;
     candidate_palette_entry = (unsigned __int8 *)(uintptr_t)(unsigned int)(dest_palette + 4);
-    while ( candidate_index < 256 )
+    while ( candidate_index < PALETTE_COLOR_COUNT )
     {
       distance = (int)target_red - candidate_palette_entry[0];
       if ( distance < 0 )
@@ -187,7 +187,7 @@ int  DLXSpriteSet_DrawFormattedText(DWORD sprite_set, int char_index, int dest_p
 {
   unsigned __int8 *loaded_palette; // eax
 
-  loaded_palette = (unsigned __int8 *)(uintptr_t)Mem_Alloc(1024, (int)(uintptr_t)palette_name, 0, sprite_set);
+  loaded_palette = (unsigned __int8 *)(uintptr_t)Mem_Alloc(PALETTE_TABLE_BYTES, (int)(uintptr_t)palette_name, 0, sprite_set);
   if ( loaded_palette )
     loaded_palette = (unsigned __int8 *)(uintptr_t)Palette_LoadFromQueryHandle((intptr_t)loaded_palette, (intptr_t)palette_name);
   DLXSpriteSet_DrawText(sprite_set, char_index, dest_palette, loaded_palette);
@@ -210,7 +210,7 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
   query_handle = FileSystem_ResolveReadPath(path, 1);
   if ( !query_handle )
     return sprite;
-  Compat_QueryRead(query_handle, g_DlxDirectoryEntryStartOffsets, 4096);
+  Compat_QueryRead(query_handle, g_DlxDirectoryEntryStartOffsets, DLX_DIRECTORY_BYTES);
   entry_offset = g_DlxDirectoryEntryStartOffsets[entry_index];
   if ( g_DlxDirectoryEntryEndOffsets[entry_index] )
     entry_end_offset = g_DlxDirectoryEntryEndOffsets[entry_index];
@@ -608,7 +608,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
     Tooltip_ShowText(
       1,
       aS,
-      UnitType_GetLocalizedName((unit_type)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180)));
+      UnitType_GetLocalizedName((unit_type)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET)));
     saved_render_device = g_RenderDevice;
     g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
     Diagnostics_TraceWorldMapActionEvent(
@@ -1444,7 +1444,7 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
       if ( unit_id < 0x8000 )
       {
         result = UNIT_STACK_STRIDE * unit_id;
-        if ( *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unit_id + 147894) )
+        if ( *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unit_id + UNIT_STACK_IS_HIDDEN_ON_WORLD_MAP_TABLE_OFFSET) )
           return Render_RestoreLostSurfaces();
       }
     }

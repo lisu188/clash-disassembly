@@ -78,7 +78,7 @@ int  WorldMap_HandleBuilderActionMenu(int widget, int delayTicks, int a3, DWORD 
               {
                 MiniMap_DrawTileCell(
                   (void *)(uintptr_t)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET),
-                  *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147176));
+                  *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
                 Audio_PlaySoundEffectByName(aStruktur, 64);
               }
             }
@@ -871,7 +871,7 @@ void  WorldMap_SyncSelectionForHumanPlayer(DWORD a1)
   gameDataPtr = (void *)(uintptr_t)gameData;
   if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
   {
-    if ( g_SelectedUnitIndex == -1 || *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180) == -1 )
+    if ( g_SelectedUnitIndex == -1 || *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1 )
     {
       g_SelectedUnitIndex = -1;
       WorldMap_RefreshActionButtonBarState((void *)(uintptr_t)gameData);

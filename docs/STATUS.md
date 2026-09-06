@@ -2,6 +2,59 @@
 
 Last consolidated: 2026-09-06.
 
+## Road Normalization and Numeric Cleanup: Combined Validation
+
+Integrated the shared Road lookup repair `8df94c4` with numeric cleanup merge
+`431e4c5`, retaining both histories and every independently reviewed change.
+Both final compiler builds, all eight public asset-free gates and 137 tooling
+tests pass. All 4157 recovered identities, defined symbol addresses/layouts and
+executable code/data match the repaired binaries used by the fresh first-Road
+replays. Only build-id and ELF section-table metadata differ. Rebuilt-source
+warning categories do not increase; raw link/header ratchets remain red without
+baseline changes. Final native coverage passes at 6167/6662 lines (92.57%), all
+718 required functions and zero uncovered functions.
+
+The normalizer now matches every uint16 tile ID, including the former invalid
+locale-array lookup range. Fresh original/GCC/Clang state and frame evidence
+retains the existing turn-6 first-Road endpoint and known HUD/fog differences;
+mission 05 remains partial. A disk-full/WSL interruption was recovered with
+lossless evidence compression and a user-authorized Ubuntu restart. All frozen
+runtime evidence was independently rechecked afterward. Exact commands, merge
+audit, metrics and limitations are in
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-6-shared-road-normalization-backing).
+
+## Numeric Cleanup Integration
+
+Combined numeric cleanup `5e64be0` with main's eight Road readability helpers at
+`bf15255`. Both histories and all other cleanup are preserved; three overlapping
+stride substitutions are superseded by main's typed/named expressions. The
+independent source review checks the combined code and all 4,157 manifest body
+hashes. WSL was unresponsive during integration, so the Linux validation below
+remains evidence for the separate parent batches, with no fresh merged build or
+runtime claim. See [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md#main-integration).
+
+## Recovered Numeric Constants: All Canonical Subsystems Reviewed
+
+Track: Win95 reconstruction, behavior-preserving numeric naming. Replaced 1,988
+numeric occurrences in 62 TUs, adding 90 private constants and reusing existing
+macros/enums. The complete census covers all 140 canonical TUs, including small
+integers and floats; remaining data/arithmetic and evidence deferrals retain
+locations and context. All 4,157 function identities and historical hashes remain.
+
+Both GCC 13 and Clang 18 preserve normalized object code, linked symbol layouts
+and `.text`/`.rodata`/`.data` bytes exactly. Macro expansions retain exact tokens;
+173 reviewed existing-enum substitutions account for the token differences.
+Both builds, four public asset-free gates, 135 tooling tests and generator checks
+pass. Existing link/header ratchet differences and native isolated crashes remain
+unchanged; no baseline is raised. Both headless first-Road replays reach the
+accepted turn-6 endpoint, and the final stack-helper supplement retains identical
+linked code and data to the route-tested binaries.
+
+No campaign or behavioral frontier is advanced: normal turn refresh and Road
+continuation remain next, mission 05 remains partial, and direct-route completion
+stays 6/20. Evidence, before/after counts, confidence, rejected candidates and
+exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
+
 ## Road Function Readability Review
 
 Track: Win95 reconstruction, helpers reached by mission-05 Road construction.

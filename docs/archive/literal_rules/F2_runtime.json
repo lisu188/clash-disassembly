@@ -1,0 +1,2932 @@
+[
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "CRT_RegisterFinalizableObject\\(\\(int\\)\\(intptr_t\\)\\&g_RenderPaletteRemapBuffer,\\ (?P<lit>256)\\);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Render_LoadResourceBackbuffer"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "_wcpp_4_ctor_array__\\(\\(int\\)\\(intptr_t\\)\\&g_DefaultPaletteTable,\\ (?P<lit>256)\\);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Render_LoadResourceBackbuffer"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "for\\ \\(\\ palette_index\\ =\\ 0;\\ palette_index\\ <\\ (?P<lit>256);\\ \\+\\+palette_index\\ \\)",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Compat_LoadPalCOLIntoTable"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "write_ptr\\ =\\ _wcpp_4_ctor_array__\\(palette_table,\\ (?P<lit>256)\\);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_BuildGrayscaleIdentityTable"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "for\\ \\(\\ i\\ =\\ 0;\\ i\\ <\\ (?P<lit>256);\\ \\+\\+i\\ \\)",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_BuildGrayscaleIdentityTable"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "palette_array\\ =\\ _wcpp_4_ctor_array__\\(palette_array,\\ (?P<lit>256)\\);",
+    "files": [
+      "src/render/00402E80_00404660_render_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Surface_ConstructBackbufferInstance"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "while\\ \\(\\ gray_level\\ <\\ (?P<lit>256)\\ \\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Render_SetPixelFormat"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "unsigned\\ int\\ converted_palette\\[(?P<lit>256)\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ApplyWithBrightnessOffset"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "for\\ \\(\\ palette_index\\ =\\ 0;\\ palette_index\\ <\\ (?P<lit>256);\\ \\+\\+palette_index\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ApplyWithBrightnessOffset"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "return\\ IO_StreamWrite\\(render_device\\[49\\],\\ 0,\\ \\(int\\)\\(intptr_t\\)converted_palette,\\ (?P<lit>256)\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ApplyWithBrightnessOffset"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "unsigned\\ int\\ source_palette\\[(?P<lit>256)\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_FadeOutToBlack"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "while\\ \\(\\ candidate_index\\ <\\ (?P<lit>256)\\ \\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Video_EnterGreyscaleTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "char\\ remap_table\\[(?P<lit>256)\\];",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "DLXSpriteSet_DrawText"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "for\\ \\(\\ palette_index\\ =\\ 0;\\ palette_index\\ <\\ (?P<lit>256);\\ \\+\\+palette_index\\ \\)",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "DLXSpriteSet_DrawText"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "while\\ \\(\\ candidate_index\\ <\\ (?P<lit>256)\\ \\)",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "DLXSpriteSet_DrawText"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "v12\\ =\\ _wcpp_4_ctor_array__\\(v12,\\ (?P<lit>256)\\);",
+    "files": [
+      "src/runtime/00461520_00463070_runtime_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "runtime",
+    "func": "Win_PlayModeChangeFrameTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "_wcpp_4_ctor_array__\\(\\(int\\)\\(intptr_t\\)paletteBuffer,\\ (?P<lit>256)\\);",
+    "files": [
+      "src/runtime/00461520_00463070_runtime_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "runtime",
+    "func": "Mission_PlayInfoSlideshow"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "entriesLeft\\ =\\ (?P<lit>256);",
+    "files": [
+      "src/runtime/00461520_00463070_runtime_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "runtime",
+    "func": "Palette_FindNearestColorIndex"
+  },
+  {
+    "kind": "regex",
+    "value": 256,
+    "name": "PALETTE_COLOR_COUNT",
+    "pattern": "while\\ \\(\\ colorIndex\\ <\\ (?P<lit>256)\\ \\);",
+    "files": [
+      "src/clips/004866CC_004876E4_clips_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "clips",
+    "func": "Surface_BuildPaletteFromBitmap"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "palette_end\\ =\\ result\\ \\+\\ (?P<lit>1024);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_QuantizeChannelsInPlace"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ write_ptr\\ !=\\ palette_table\\ \\+\\ (?P<lit>1024)\\ \\)",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ExpandRGBTripletsToTable"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ target_ptr\\ !=\\ target_palette\\ \\+\\ (?P<lit>1024)\\ \\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_CrossfadeStep"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ target_ptr\\ !=\\ target_palette\\ \\+\\ (?P<lit>1024)\\ \\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_FadeInFromBlack"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "loaded_palette\\ =\\ \\(unsigned\\ __int8\\ \\*\\)\\(uintptr_t\\)Mem_Alloc\\((?P<lit>1024),\\ \\(int\\)\\(uintptr_t\\)palette_name,\\ 0,\\ sprite_set\\);",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "DLXSpriteSet_DrawFormattedText"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "v12\\ =\\ Mem_Alloc\\((?P<lit>1024),\\ 0,\\ 0,\\ a5\\);",
+    "files": [
+      "src/runtime/00461520_00463070_runtime_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "runtime",
+    "func": "Win_PlayModeChangeFrameTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "unsigned\\ __int8\\ paletteBuffer\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/runtime/00461520_00463070_runtime_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "runtime",
+    "func": "Mission_PlayInfoSlideshow"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "char\\ paletteEntries\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/clips/004866CC_004876E4_clips_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "clips",
+    "func": "Surface_BuildPaletteFromBitmap"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "char\\ paletteEntries\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/media/00469680_0046B200_media_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "media",
+    "func": "AviPlayer_CreatePaletteFromBitmap"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "for\\ \\(\\ i\\ =\\ 0;\\ i\\ !=\\ (?P<lit>1024);\\ v6\\[i\\ \\+\\ 1\\]\\ =\\ 0\\ \\)",
+    "files": [
+      "src/media/00469680_0046B200_media_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "media",
+    "func": "AviPlayer_CreatePaletteFromBitmap"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_COPY_BYTES",
+    "pattern": "qmemcpy\\(palette_bytes,\\ new_palette,\\ (?P<lit>0x400u)\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ApplyWithBrightnessOffset"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_COPY_BYTES",
+    "pattern": "qmemcpy\\(\\&g_PaletteCrossfadeSourceBuffer,\\ render_device\\ \\+\\ 55,\\ (?P<lit>0x400u)\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_CrossfadeStep"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_COPY_BYTES",
+    "pattern": "lread\\(fileHandle,\\ paletteEntries,\\ (?P<lit>0x400u)\\);",
+    "files": [
+      "src/clips/004866CC_004876E4_clips_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "clips",
+    "func": "Surface_BuildPaletteFromBitmap"
+  },
+  {
+    "kind": "regex",
+    "value": 768,
+    "name": "PALETTE_RGB_DATA_BYTES",
+    "pattern": "char\\ palette_bytes\\[(?P<lit>768)\\];",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ExpandRGBTripletsToTable"
+  },
+  {
+    "kind": "regex",
+    "value": 768,
+    "name": "PALETTE_RGB_DATA_BYTES",
+    "pattern": "unsigned\\ char\\ palette_bytes\\[(?P<lit>768)\\];",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Compat_LoadPalCOLIntoTable"
+  },
+  {
+    "kind": "regex",
+    "value": 768,
+    "name": "PALETTE_RGB_DATA_BYTES",
+    "pattern": "if\\ \\(\\ palette_out_addr\\ \\&\\&\\ file_offset\\ \\+\\ (?P<lit>768)\\ <=\\ file_size\\ \\)",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Render_LoadPCXImage"
+  },
+  {
+    "kind": "regex",
+    "value": 768,
+    "name": "PALETTE_RGB_DATA_BYTES",
+    "pattern": "for\\ \\(\\ palette_offset\\ =\\ 0;\\ palette_offset\\ !=\\ (?P<lit>768);\\ palette_offset\\ \\+=\\ 3\\ \\)",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Render_LoadPCXImage"
+  },
+  {
+    "kind": "regex",
+    "value": 768,
+    "name": "PALETTE_RGB_READ_BYTES",
+    "pattern": "Compat_QueryRead\\(query_handle,\\ palette_bytes,\\ (?P<lit>0x300)\\);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ExpandRGBTripletsToTable"
+  },
+  {
+    "kind": "regex",
+    "value": 768,
+    "name": "PALETTE_RGB_READ_BYTES",
+    "pattern": "Compat_QuerySkipBytes\\(query_handle,\\ \\-(?P<lit>0x300)\\);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "LoadPalPCX"
+  },
+  {
+    "kind": "regex",
+    "value": 255,
+    "name": "PALETTE_CHANNEL_MAX",
+    "pattern": "if\\ \\(\\ channel_value\\ >\\ (?P<lit>255)\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ApplyWithBrightnessOffset"
+  },
+  {
+    "kind": "regex",
+    "value": 255,
+    "name": "PALETTE_CHANNEL_MAX",
+    "pattern": "channel_value\\ =\\ (?P<lit>255);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "render",
+    "func": "Palette_ApplyWithBrightnessOffset"
+  },
+  {
+    "kind": "regex",
+    "value": 307200,
+    "name": "SCREEN_PIXEL_COUNT",
+    "pattern": "for\\ \\(\\ i\\ =\\ 0;\\ i\\ <\\ (?P<lit>307200);\\ \\+\\+i\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "SCREEN_WIDTH=640 and SCREEN_HEIGHT=480 determine the fullscreen buffer; Video_EnterGreyscaleTransition and Video_ExitGreyscaleTransition independently iterate 307200 pixels on those surfaces.",
+    "area": "render",
+    "func": "Video_EnterGreyscaleTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 307200,
+    "name": "SCREEN_PIXEL_COUNT",
+    "pattern": "while\\ \\(\\ pixel_index\\ <\\ (?P<lit>307200)\\ \\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "SCREEN_WIDTH=640 and SCREEN_HEIGHT=480 determine the fullscreen buffer; Video_EnterGreyscaleTransition and Video_ExitGreyscaleTransition independently iterate 307200 pixels on those surfaces.",
+    "area": "render",
+    "func": "Video_EnterGreyscaleTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 307200,
+    "name": "SCREEN_PIXEL_COUNT",
+    "pattern": "for\\ \\(\\ i\\ =\\ 0;\\ i\\ <\\ (?P<lit>307200);\\ \\+\\+i\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "SCREEN_WIDTH=640 and SCREEN_HEIGHT=480 determine the fullscreen buffer; Video_EnterGreyscaleTransition and Video_ExitGreyscaleTransition independently iterate 307200 pixels on those surfaces.",
+    "area": "render",
+    "func": "Video_ExitGreyscaleTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 307200,
+    "name": "SCREEN_PIXEL_COUNT",
+    "pattern": "for\\ \\(\\ j\\ =\\ 0;\\ j\\ <\\ (?P<lit>307200);\\ \\+\\+j\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "SCREEN_WIDTH=640 and SCREEN_HEIGHT=480 determine the fullscreen buffer; Video_EnterGreyscaleTransition and Video_ExitGreyscaleTransition independently iterate 307200 pixels on those surfaces.",
+    "area": "render",
+    "func": "Video_ExitGreyscaleTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 307200,
+    "name": "SCREEN_PIXEL_COUNT",
+    "pattern": "for\\ \\(\\ k\\ =\\ 0;\\ k\\ <\\ (?P<lit>307200);\\ \\+\\+k\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "SCREEN_WIDTH=640 and SCREEN_HEIGHT=480 determine the fullscreen buffer; Video_EnterGreyscaleTransition and Video_ExitGreyscaleTransition independently iterate 307200 pixels on those surfaces.",
+    "area": "render",
+    "func": "Video_ExitGreyscaleTransition"
+  },
+  {
+    "kind": "regex",
+    "value": 640,
+    "name": "SCREEN_WIDTH",
+    "pattern": "CRT_RegisterFinalizableObject\\(\\(int\\)\\(intptr_t\\)\\&g_RenderBackbufferScanlineBuffer,\\ (?P<lit>640)\\);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing fixed SCREEN_WIDTH/SCREEN_HEIGHT framebuffer dimensions; exact fullscreen construction/scanline expression.",
+    "area": "render",
+    "func": "Render_LoadResourceBackbuffer"
+  },
+  {
+    "kind": "regex",
+    "value": 640,
+    "name": "SCREEN_WIDTH",
+    "pattern": "Render_ConstructSurfaceObject\\(\\(int\\)\\(intptr_t\\)\\&g_RenderDeviceStorage,\\ (?P<lit>640),\\ SCREEN_HEIGHT\\);",
+    "files": [
+      "src/render/00401A40_00402BB0_render_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing fixed SCREEN_WIDTH/SCREEN_HEIGHT framebuffer dimensions; exact fullscreen construction/scanline expression.",
+    "area": "render",
+    "func": "Render_LoadResourceBackbuffer"
+  },
+  {
+    "kind": "regex",
+    "value": 640,
+    "name": "SCREEN_WIDTH",
+    "pattern": "return\\ Render_ConstructSurfaceObject\\(surface_addr,\\ (?P<lit>640),\\ SCREEN_HEIGHT\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing fixed SCREEN_WIDTH/SCREEN_HEIGHT framebuffer dimensions; exact fullscreen construction/scanline expression.",
+    "area": "render",
+    "func": "RenderSurface_ConstructFullScreenBuffer"
+  },
+  {
+    "kind": "regex",
+    "value": 480,
+    "name": "SCREEN_HEIGHT",
+    "pattern": "palette_array\\ =\\ \\(int\\)\\(intptr_t\\)Render_ConstructScratchSurface\\(surface_addr,\\ 0x280u,\\ 0,\\ (?P<lit>480)\\)\\ \\+\\ 0xDC;",
+    "files": [
+      "src/render/00402E80_00404660_render_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing fixed SCREEN_WIDTH/SCREEN_HEIGHT framebuffer dimensions; exact fullscreen construction/scanline expression.",
+    "area": "render",
+    "func": "Surface_ConstructBackbufferInstance"
+  },
+  {
+    "kind": "regex",
+    "value": 4096,
+    "name": "DLX_DIRECTORY_BYTES",
+    "pattern": "if\\ \\(\\ !query_handle\\ \\|\\|\\ sprite_set\\[1026\\]\\ <=\\ (?P<lit>4096)\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 4096,
+    "name": "DLX_DIRECTORY_BYTES",
+    "pattern": "Compat_QueryRead\\(query_handle,\\ g_DlxSpriteSetOffsetTable,\\ (?P<lit>4096)\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 4096,
+    "name": "DLX_DIRECTORY_BYTES",
+    "pattern": "data_size\\ =\\ sprite_set\\[1026\\]\\ \\-\\ (?P<lit>4096);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 4096,
+    "name": "DLX_DIRECTORY_BYTES",
+    "pattern": "sprite_set\\[entry_index\\]\\ =\\ DLXSprite_ConstructFromBuffer\\(sprite_set\\[entry_index\\],\\ g_DlxSpriteSetOffsetTable\\[entry_index\\]\\ \\+\\ sprite_set\\[1024\\]\\ \\-\\ (?P<lit>4096),\\ entry_size\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 4096,
+    "name": "DLX_DIRECTORY_BYTES",
+    "pattern": "data_offset\\ =\\ (?P<lit>4096);",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Save"
+  },
+  {
+    "kind": "regex",
+    "value": 4096,
+    "name": "DLX_DIRECTORY_BYTES",
+    "pattern": "fwrite_\\(g_DlxSpriteSetOffsetTable,\\ (?P<lit>4096),\\ file_handle,\\ 1\\);",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Save"
+  },
+  {
+    "kind": "regex",
+    "value": 4096,
+    "name": "DLX_DIRECTORY_BYTES",
+    "pattern": "Compat_QueryRead\\(query_handle,\\ g_DlxDirectoryEntryStartOffsets,\\ (?P<lit>4096)\\);",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSprite_LoadCachedEntry"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1024)\\]\\ =\\ 0;",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1027,
+    "name": "DLX_SPRITE_SET_VTABLE_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1027)\\]\\ =\\ \\(_DWORD\\)\\(uintptr_t\\)\\&g_DLXSpriteSet_Vtable;",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1026,
+    "name": "DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1026)\\]\\ =\\ IO_QueryVTableStreamSize\\(query_handle\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1026,
+    "name": "DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX",
+    "pattern": "if\\ \\(\\ !query_handle\\ \\|\\|\\ sprite_set\\[(?P<lit>1026)\\]\\ <=\\ 4096\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1026,
+    "name": "DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1026)\\],",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1026,
+    "name": "DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX",
+    "pattern": "data_size\\ =\\ sprite_set\\[(?P<lit>1026)\\]\\ \\-\\ 4096;",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1024)\\]\\ =\\ \\(unsigned\\ int\\)nmalloc_\\(data_size,\\ 4\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX",
+    "pattern": "if\\ \\(\\ !sprite_set\\[(?P<lit>1024)\\]\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX",
+    "pattern": "Compat_QueryRead\\(query_handle,\\ \\(void\\ \\*\\)\\(uintptr_t\\)\\(unsigned\\ int\\)sprite_set\\[(?P<lit>1024)\\],\\ data_size\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX",
+    "pattern": "sprite_set\\[entry_index\\]\\ =\\ DLXSprite_ConstructFromBuffer\\(sprite_set\\[entry_index\\],\\ g_DlxSpriteSetOffsetTable\\[entry_index\\]\\ \\+\\ sprite_set\\[(?P<lit>1024)\\]\\ \\-\\ 4096,\\ entry_size\\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1025)\\]\\ =\\ entry_index;",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Load"
+  },
+  {
+    "kind": "regex",
+    "value": 1027,
+    "name": "DLX_SPRITE_SET_VTABLE_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1027)\\]\\ =\\ \\(int\\)\\(intptr_t\\)\\&g_DLXSpriteSet_Vtable;",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Destroy"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "if\\ \\(\\ sprite_set\\[(?P<lit>1025)\\]\\ >\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Destroy"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "while\\ \\(\\ entry_index\\ <\\ sprite_set\\[(?P<lit>1025)\\]\\ \\);",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Destroy"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX",
+    "pattern": "if\\ \\(\\ sprite_set\\[(?P<lit>1024)\\]\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Destroy"
+  },
+  {
+    "kind": "regex",
+    "value": 1027,
+    "name": "DLX_SPRITE_SET_VTABLE_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1027)\\]\\ =\\ \\(int\\)\\(intptr_t\\)\\&g_DLXSpriteSet_Vtable;",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_ConstructCopy"
+  },
+  {
+    "kind": "regex",
+    "value": 1026,
+    "name": "DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1026)\\]\\ =\\ source_set\\[1026\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_CopyEntriesFrom"
+  },
+  {
+    "kind": "regex",
+    "value": 1026,
+    "name": "DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX",
+    "pattern": "sprite_set\\[1026\\]\\ =\\ source_set\\[(?P<lit>1026)\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_CopyEntriesFrom"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1025)\\]\\ =\\ source_set\\[1025\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_CopyEntriesFrom"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "sprite_set\\[1025\\]\\ =\\ source_set\\[(?P<lit>1025)\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_CopyEntriesFrom"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "v7\\ =\\ sprite_set\\[(?P<lit>1025)\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_CopyEntriesFrom"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX",
+    "pattern": "sprite_set\\[(?P<lit>1024)\\]\\ =\\ 0;",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_CopyEntriesFrom"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "entry_count\\ =\\ sprite_set\\[(?P<lit>1025)\\];",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_CopyEntriesFrom"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "if\\ \\(\\ sprite_set\\[(?P<lit>1025)\\]\\ >\\ 0\\ \\)",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Save"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "while\\ \\(\\ entry_index\\ <\\ sprite_set\\[(?P<lit>1025)\\]\\ \\);",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Save"
+  },
+  {
+    "kind": "regex",
+    "value": 1025,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX",
+    "pattern": "while\\ \\(\\ write_index\\ <\\ sprite_set\\[(?P<lit>1025)\\]\\ \\);",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_Save"
+  },
+  {
+    "kind": "regex",
+    "value": 4100,
+    "name": "DLX_SPRITE_SET_ENTRY_COUNT_BYTE_OFFSET",
+    "pattern": "LOWORD\\(sprite_set\\)\\ =\\ \\*\\(_WORD\\ \\*\\)\\(uintptr_t\\)\\(sprite_set\\ \\+\\ (?P<lit>4100)\\);",
+    "files": [
+      "src/render/00405DB0_00407D20_render_004.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025.",
+    "area": "render",
+    "func": "DLXSpriteSet_GetLastCharIndex"
+  },
+  {
+    "kind": "regex",
+    "value": 1013,
+    "name": "CLIPS_SYMBOL_HASH_RANGE",
+    "pattern": "hashValue\\ =\\ Rules_HashSymbolName\\(\\(_BYTE\\*\\)\\(srcPtr\\),\\ (?P<lit>0x3F5u)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Str_Intern"
+  },
+  {
+    "kind": "regex",
+    "value": 1013,
+    "name": "CLIPS_SYMBOL_HASH_RANGE",
+    "pattern": "bucket_index\\ =\\ Rules_HashSymbolName\\(str,\\ (?P<lit>0x3F5u)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_FindSymbolEntry"
+  },
+  {
+    "kind": "regex",
+    "value": 503,
+    "name": "CLIPS_FLOAT_HASH_RANGE",
+    "pattern": "hashValue\\ =\\ Rules_HashDoubleValue\\(LODWORD\\(number\\),\\ SHIDWORD\\(number\\),\\ (?P<lit>0x1F7u)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_AddDoubleValue"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_INTEGER_BUCKET_COUNT",
+    "pattern": "bucket_index\\ =\\ Rules_HashIntegerValue\\(number,\\ (?P<lit>167)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_AddIntegerValue"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_INTEGER_BUCKET_COUNT",
+    "pattern": "result\\ =\\ \\(int\\ \\*\\)\\(uintptr_t\\)\\*\\(_DWORD\\ \\*\\)\\(uintptr_t\\)\\(g_ClipsIntegerHashTable\\ \\+\\ 4\\ \\*\\ Rules_HashIntegerValue\\(number,\\ (?P<lit>167)\\)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_FindIntegerValue"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_BITMAP_HASH_RANGE",
+    "pattern": "hashValue\\ =\\ Rules_HashBitmapValue\\(\\(int\\)\\(intptr_t\\)theBitMap,\\ (?P<lit>0xA7u),\\ size\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_AddBitmapValue"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_ALLOCATION_BYTES",
+    "pattern": "g_Clips_SymbolHashTable\\ =\\ \\(int\\)\\(intptr_t\\)Mem_SmallBlockAlloc\\((?P<lit>0xFD4u)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 2012,
+    "name": "CLIPS_FLOAT_ALLOCATION_BYTES",
+    "pattern": "g_ClipsFloatHashTable\\ =\\ \\(int\\)\\(intptr_t\\)Mem_SmallBlockAlloc\\((?P<lit>0x7DCu)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_INTEGER_ALLOCATION_BYTES",
+    "pattern": "g_ClipsIntegerHashTable\\ =\\ \\(int\\)\\(intptr_t\\)Mem_SmallBlockAlloc\\((?P<lit>0x29Cu)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_BITMAP_ALLOCATION_BYTES",
+    "pattern": "g_ClipsBitmapHashTable\\ =\\ \\(int\\)\\(intptr_t\\)Mem_SmallBlockAlloc\\((?P<lit>0x29Cu)\\);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_TABLE_BYTES",
+    "pattern": "for\\ \\(\\ i\\ =\\ 0;\\ i\\ !=\\ (?P<lit>4052);\\ i\\ \\+=\\ 4\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_TABLE_BYTES",
+    "pattern": "if\\ \\(\\ nextBucketOffset\\ >=\\ (?P<lit>4052)\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_GetNextSymbolMatch"
+  },
+  {
+    "kind": "regex",
+    "value": 2012,
+    "name": "CLIPS_FLOAT_TABLE_BYTES",
+    "pattern": "for\\ \\(\\ j\\ =\\ 0;\\ j\\ !=\\ (?P<lit>2012);\\ j\\ \\+=\\ 4\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_INTEGER_TABLE_BYTES",
+    "pattern": "for\\ \\(\\ k\\ =\\ 0;\\ k\\ !=\\ (?P<lit>668);\\ k\\ \\+=\\ 4\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_BITMAP_TABLE_BYTES",
+    "pattern": "for\\ \\(\\ m\\ =\\ 0;\\ m\\ !=\\ (?P<lit>668);\\ m\\ \\+=\\ 4\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_InitAtomTables"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_TABLE_BYTES",
+    "pattern": "symbolTableEnd\\ =\\ g_Clips_SymbolHashTable\\ \\+\\ (?P<lit>4052);",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_SetAtomicValueIndices"
+  },
+  {
+    "kind": "regex",
+    "value": 2012,
+    "name": "CLIPS_FLOAT_TABLE_BYTES",
+    "pattern": "floatTableEnd\\ =\\ g_ClipsFloatHashTable\\ \\+\\ (?P<lit>2012);",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_SetAtomicValueIndices"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_INTEGER_TABLE_BYTES",
+    "pattern": "integerTableEnd\\ =\\ g_ClipsIntegerHashTable\\ \\+\\ (?P<lit>668);",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_SetAtomicValueIndices"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_BITMAP_TABLE_BYTES",
+    "pattern": "bitmapTableEnd\\ =\\ g_ClipsBitmapHashTable\\ \\+\\ (?P<lit>668);",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_SetAtomicValueIndices"
+  },
+  {
+    "kind": "regex",
+    "value": 1013,
+    "name": "CLIPS_SYMBOL_BUCKET_COUNT",
+    "pattern": "for\\ \\(\\ i\\ =\\ 0;\\ i\\ <\\ (?P<lit>1013);\\ \\+\\+i\\ \\)",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_RestoreAtomicValueBuckets"
+  },
+  {
+    "kind": "regex",
+    "value": 503,
+    "name": "CLIPS_FLOAT_BUCKET_COUNT",
+    "pattern": "for\\ \\(\\ j\\ =\\ 0;\\ j\\ <\\ (?P<lit>503);\\ \\+\\+j\\ \\)",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_RestoreAtomicValueBuckets"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_INTEGER_BUCKET_COUNT",
+    "pattern": "for\\ \\(\\ k\\ =\\ 0;\\ k\\ <\\ (?P<lit>167);\\ \\+\\+k\\ \\)",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_RestoreAtomicValueBuckets"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_BITMAP_BUCKET_COUNT",
+    "pattern": "for\\ \\(\\ m\\ =\\ 0;\\ m\\ <\\ (?P<lit>167);\\ \\+\\+m\\ \\)",
+    "files": [
+      "src/clips/00482D70_0048469F_clips_002.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_RestoreAtomicValueBuckets"
+  },
+  {
+    "kind": "regex",
+    "value": 1013,
+    "name": "CLIPS_SYMBOL_BUCKET_COUNT",
+    "pattern": "symbolTableEnd\\ =\\ symbolBucket\\ \\+\\ (?P<lit>1013);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_ClearAtomInUseMarks"
+  },
+  {
+    "kind": "regex",
+    "value": 503,
+    "name": "CLIPS_FLOAT_BUCKET_COUNT",
+    "pattern": "floatTableEnd\\ =\\ floatBucket\\ \\+\\ (?P<lit>503);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_ClearAtomInUseMarks"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_INTEGER_BUCKET_COUNT",
+    "pattern": "integerTableEnd\\ =\\ integerBucket\\ \\+\\ (?P<lit>167);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_ClearAtomInUseMarks"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_BITMAP_BUCKET_COUNT",
+    "pattern": "bitmapTableEnd\\ =\\ bitmapBucket\\ \\+\\ (?P<lit>167);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_ClearAtomInUseMarks"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucketPtr\\ !=\\ \\(int\\ \\*\\*\\*\\)\\(uintptr_t\\)\\(symbolTable\\ \\+\\ (?P<lit>4052)\\)\\ \\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveSymbolTable"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_TABLE_BYTES",
+    "pattern": "result\\ =\\ \\(const\\ void\\ \\*\\)\\(uintptr_t\\)\\(symbolTable\\ \\+\\ (?P<lit>4052)\\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveSymbolTable"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_TABLE_BYTES",
+    "pattern": "tableEnd\\ =\\ \\(int\\ \\*\\*\\*\\)\\(uintptr_t\\)\\(symbolTable\\ \\+\\ (?P<lit>4052)\\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveSymbolTable"
+  },
+  {
+    "kind": "regex",
+    "value": 2012,
+    "name": "CLIPS_FLOAT_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucketPtr\\ !=\\ \\(int\\ \\*\\*\\*\\)\\(uintptr_t\\)\\(floatTable\\ \\+\\ (?P<lit>2012)\\)\\ \\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveFloatTable"
+  },
+  {
+    "kind": "regex",
+    "value": 2012,
+    "name": "CLIPS_FLOAT_TABLE_BYTES",
+    "pattern": "tableEnd\\ =\\ \\(int\\ \\*\\*\\)\\(uintptr_t\\)\\(floatTable\\ \\+\\ (?P<lit>2012)\\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveFloatTable"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_INTEGER_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucketPtr\\ !=\\ \\(int\\ \\*\\*\\*\\)\\(uintptr_t\\)\\(integerTable\\ \\+\\ (?P<lit>668)\\)\\ \\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveIntegerTable"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_INTEGER_TABLE_BYTES",
+    "pattern": "tableEnd\\ =\\ \\(int\\ \\*\\*\\)\\(uintptr_t\\)\\(integerTable\\ \\+\\ (?P<lit>668)\\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveIntegerTable"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_BITMAP_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucketPtr\\ !=\\ \\(int\\ \\*\\*\\*\\)\\(uintptr_t\\)\\(bitmapTable\\ \\+\\ (?P<lit>668)\\)\\ \\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveBitmapTable"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_BITMAP_TABLE_BYTES",
+    "pattern": "tableEnd\\ =\\ \\(int\\ \\*\\*\\)\\(uintptr_t\\)\\(bitmapTable\\ \\+\\ (?P<lit>668)\\);",
+    "files": [
+      "src/clips/004943E0_00495930_clips_001.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "clips",
+    "func": "Rules_BsaveBitmapTable"
+  },
+  {
+    "kind": "regex",
+    "value": 4052,
+    "name": "CLIPS_SYMBOL_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucket\\ !=\\ \\(_DWORD\\ \\*\\*\\)\\(uintptr_t\\)\\(symbolTable\\ \\+\\ (?P<lit>4052)\\)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteSymbolTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 1013,
+    "name": "CLIPS_SYMBOL_BUCKET_COUNT",
+    "pattern": "for\\ \\(\\ k\\ =\\ 0;\\ k\\ <\\ (?P<lit>1013);\\ \\+\\+k\\ \\)",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteSymbolTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 1013,
+    "name": "CLIPS_SYMBOL_BUCKET_COUNT",
+    "pattern": "while\\ \\(\\ symbolIndex\\ <\\ (?P<lit>1013)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteConstantsReferenceFile"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_BITMAP_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucket\\ !=\\ \\(_DWORD\\ \\*\\*\\)\\(uintptr_t\\)\\(bitmapTable\\ \\+\\ (?P<lit>668)\\)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteBitMapTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_BITMAP_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucket\\ !=\\ \\(int\\ \\*\\*\\)\\(uintptr_t\\)\\(bitmapTable\\ \\+\\ (?P<lit>668)\\)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteBitMapValuesFile"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_BITMAP_BUCKET_COUNT",
+    "pattern": "for\\ \\(\\ k\\ =\\ 0;\\ k\\ <\\ (?P<lit>167);\\ \\+\\+k\\ \\)",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteBitMapTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_BITMAP_BUCKET_COUNT",
+    "pattern": "for\\ \\(\\ k\\ =\\ 0;\\ k\\ <\\ (?P<lit>167);\\ \\+\\+k\\ \\)",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteBitMapValuesFile"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_BITMAP_BUCKET_COUNT",
+    "pattern": "while\\ \\(\\ currentBitmapIndex\\ <\\ (?P<lit>167)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteConstantsReferenceFile"
+  },
+  {
+    "kind": "regex",
+    "value": 2012,
+    "name": "CLIPS_FLOAT_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucket\\ !=\\ \\(_DWORD\\ \\*\\*\\)\\(uintptr_t\\)\\(floatTable\\ \\+\\ (?P<lit>2012)\\)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteFloatTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 503,
+    "name": "CLIPS_FLOAT_BUCKET_COUNT",
+    "pattern": "while\\ \\(\\ bucketIndex\\ <\\ (?P<lit>503)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteFloatTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 503,
+    "name": "CLIPS_FLOAT_BUCKET_COUNT",
+    "pattern": "while\\ \\(\\ v15\\ <\\ (?P<lit>503)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteConstantsReferenceFile"
+  },
+  {
+    "kind": "regex",
+    "value": 668,
+    "name": "CLIPS_INTEGER_TABLE_BYTES",
+    "pattern": "while\\ \\(\\ bucket\\ !=\\ \\(_DWORD\\ \\*\\*\\)\\(uintptr_t\\)\\(integerTable\\ \\+\\ (?P<lit>668)\\)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteIntegerTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_INTEGER_BUCKET_COUNT",
+    "pattern": "while\\ \\(\\ bucketIndex\\ <\\ (?P<lit>167)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteIntegerTableFile"
+  },
+  {
+    "kind": "regex",
+    "value": 167,
+    "name": "CLIPS_INTEGER_BUCKET_COUNT",
+    "pattern": "while\\ \\(\\ integerIndex\\ <\\ (?P<lit>167)\\ \\);",
+    "files": [
+      "src/runtime/004D6210_004D80F0_runtime_005.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts.",
+    "area": "runtime",
+    "func": "Compiler_WriteConstantsReferenceFile"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "CLASH95_TENTATIVE\\ _BYTE\\ g_DefaultPaletteTable\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "CLASH95_TENTATIVE\\ _BYTE\\ g_PaletteScratchSurfaceBuffer\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "CLASH95_TENTATIVE\\ _BYTE\\ g_CastleScreenPaletteBuffer\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "CLASH95_TENTATIVE\\ unsigned\\ __int8\\ g_MenuScreenPaletteBuffer\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "_BYTE\\ g_DefaultPaletteTable\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "_BYTE\\ g_PaletteScratchSurfaceBuffer\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "_BYTE\\ g_CastleScreenPaletteBuffer\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "regex",
+    "value": 1024,
+    "name": "PALETTE_TABLE_BYTES",
+    "pattern": "unsigned\\ __int8\\ g_MenuScreenPaletteBuffer\\[(?P<lit>1024)\\];",
+    "files": [
+      "src/state/00000000_0054FFFF_recovered_state.cpp"
+    ],
+    "confidence": "behavior-confirmed",
+    "evidence": "Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h.",
+    "area": "state"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "returnValue\\[1\\]\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_CoerceFormToNumericArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 2,
+    "name": "CLIPS_TYPE_SYMBOL",
+    "pattern": "if\\ \\(\\ valueBuffer\\[1\\]\\ ==\\ (?P<lit>2)\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ 3\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ 8\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_GetLogicalNameArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 3,
+    "name": "CLIPS_TYPE_STRING",
+    "pattern": "if\\ \\(\\ valueBuffer\\[1\\]\\ ==\\ 2\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ (?P<lit>3)\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ 8\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_GetLogicalNameArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 8,
+    "name": "CLIPS_TYPE_INSTANCE_NAME",
+    "pattern": "if\\ \\(\\ valueBuffer\\[1\\]\\ ==\\ 2\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ 3\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ (?P<lit>8)\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_GetLogicalNameArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ valueBuffer\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_GetLogicalNameArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 3,
+    "name": "CLIPS_TYPE_STRING",
+    "pattern": "if\\ \\(\\ valueBuffer\\[1\\]\\ ==\\ (?P<lit>3)\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ 2\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_GetFileNameArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 2,
+    "name": "CLIPS_TYPE_SYMBOL",
+    "pattern": "if\\ \\(\\ valueBuffer\\[1\\]\\ ==\\ 3\\ \\|\\|\\ valueBuffer\\[1\\]\\ ==\\ (?P<lit>2)\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_GetFileNameArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 2,
+    "name": "CLIPS_TYPE_SYMBOL",
+    "pattern": "if\\ \\(\\ valueBuffer\\[1\\]\\ ==\\ (?P<lit>2)\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_GetModuleNameArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ theType\\ >\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_CoerceFormToNumericArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ theType\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/00481720_00482D40_clips_001.cpp"
+    ],
+    "func": "Rules_CoerceFormToNumericArg",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "else\\ if\\ \\(\\ parsed\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_AdditionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ parsed\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MultiplicationFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ parsed\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_SubtractionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "else\\ if\\ \\(\\ parsed\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_SubtractionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ parsed\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_DivisionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 0,
+    "name": "CLIPS_TYPE_FLOAT",
+    "pattern": "isDivideByZero\\ =\\ parsed\\[1\\]\\ ==\\ (?P<lit>0)\\ \\&\\&\\ Parser_NumberValueAsDouble\\(parsed\\[2\\]\\)\\ ==\\ 0\\.0;",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_DivisionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "else\\ if\\ \\(\\ parsed\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_DivisionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "returnValue\\[1\\]\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_AbsFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ returnValue\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_AbsFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "returnValue\\[1\\]\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MinFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ returnValue\\[1\\]\\ !=\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MinFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ argValue\\[1\\]\\ !=\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MinFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ argValue\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MinFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "returnValue\\[1\\]\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MaxFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ returnValue\\[1\\]\\ !=\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MaxFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ argValue\\[1\\]\\ !=\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MaxFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "if\\ \\(\\ argValue\\[1\\]\\ ==\\ (?P<lit>1)\\ \\)",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MaxFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 0,
+    "name": "CLIPS_TYPE_FLOAT",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>0);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_AdditionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_AdditionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 0,
+    "name": "CLIPS_TYPE_FLOAT",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>0);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MultiplicationFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_MultiplicationFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 0,
+    "name": "CLIPS_TYPE_FLOAT",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>0);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_SubtractionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_SubtractionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 0,
+    "name": "CLIPS_TYPE_FLOAT",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>0);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_DivisionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_TYPE_INTEGER",
+    "pattern": "\\*\\(_DWORD\\ \\*\\)\\(returnValue\\ \\+\\ 4\\)\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/clips/004A0080_004A1CF0_clips_001.cpp"
+    ],
+    "func": "Rules_DivisionFunction",
+    "confidence": "behavior-confirmed",
+    "evidence": "Existing ClipsType mapping is independently confirmed by Rules_ComputeFieldHashValue / Rules_HashFactFieldList. Here DATA_OBJECT type1 selects integer payload / Rules_AddIntegerValue, type0 selects double payload / Rules_AddDoubleValue. Logical-name/file types2/3/8 select textual interned payloads. No argument counts or array indexes are substituted.",
+    "area": "clips"
+  },
+  {
+    "kind": "enum",
+    "value": 1,
+    "name": "CLIPS_STRATEGY_BREADTH",
+    "pattern": "newStrategy\\ =\\ (?P<lit>1);",
+    "files": [
+      "src/media/0047C7A0_0047DF90_media_014.cpp"
+    ],
+    "func": "Rules_SetStrategyCommand",
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_SetStrategyCommand compares matching breadth/lex/mea/complexity/simplicity/random strings before assigning newStrategy. Independently, Rules_GetStrategyName and Rules_InsertActivationSorted already dispatch CLIPS_STRATEGY members to those names/handlers (EC1 proof).",
+    "area": "media"
+  },
+  {
+    "kind": "enum",
+    "value": 2,
+    "name": "CLIPS_STRATEGY_LEX",
+    "pattern": "newStrategy\\ =\\ (?P<lit>2);",
+    "files": [
+      "src/media/0047C7A0_0047DF90_media_014.cpp"
+    ],
+    "func": "Rules_SetStrategyCommand",
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_SetStrategyCommand compares matching breadth/lex/mea/complexity/simplicity/random strings before assigning newStrategy. Independently, Rules_GetStrategyName and Rules_InsertActivationSorted already dispatch CLIPS_STRATEGY members to those names/handlers (EC1 proof).",
+    "area": "media"
+  },
+  {
+    "kind": "enum",
+    "value": 3,
+    "name": "CLIPS_STRATEGY_MEA",
+    "pattern": "newStrategy\\ =\\ (?P<lit>3);",
+    "files": [
+      "src/media/0047C7A0_0047DF90_media_014.cpp"
+    ],
+    "func": "Rules_SetStrategyCommand",
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_SetStrategyCommand compares matching breadth/lex/mea/complexity/simplicity/random strings before assigning newStrategy. Independently, Rules_GetStrategyName and Rules_InsertActivationSorted already dispatch CLIPS_STRATEGY members to those names/handlers (EC1 proof).",
+    "area": "media"
+  },
+  {
+    "kind": "enum",
+    "value": 4,
+    "name": "CLIPS_STRATEGY_COMPLEXITY",
+    "pattern": "newStrategy\\ =\\ (?P<lit>4);",
+    "files": [
+      "src/media/0047C7A0_0047DF90_media_014.cpp"
+    ],
+    "func": "Rules_SetStrategyCommand",
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_SetStrategyCommand compares matching breadth/lex/mea/complexity/simplicity/random strings before assigning newStrategy. Independently, Rules_GetStrategyName and Rules_InsertActivationSorted already dispatch CLIPS_STRATEGY members to those names/handlers (EC1 proof).",
+    "area": "media"
+  },
+  {
+    "kind": "enum",
+    "value": 5,
+    "name": "CLIPS_STRATEGY_SIMPLICITY",
+    "pattern": "newStrategy\\ =\\ (?P<lit>5);",
+    "files": [
+      "src/media/0047C7A0_0047DF90_media_014.cpp"
+    ],
+    "func": "Rules_SetStrategyCommand",
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_SetStrategyCommand compares matching breadth/lex/mea/complexity/simplicity/random strings before assigning newStrategy. Independently, Rules_GetStrategyName and Rules_InsertActivationSorted already dispatch CLIPS_STRATEGY members to those names/handlers (EC1 proof).",
+    "area": "media"
+  },
+  {
+    "kind": "enum",
+    "value": 6,
+    "name": "CLIPS_STRATEGY_RANDOM",
+    "pattern": "newStrategy\\ =\\ (?P<lit>6);",
+    "files": [
+      "src/media/0047C7A0_0047DF90_media_014.cpp"
+    ],
+    "func": "Rules_SetStrategyCommand",
+    "confidence": "behavior-confirmed",
+    "evidence": "Rules_SetStrategyCommand compares matching breadth/lex/mea/complexity/simplicity/random strings before assigning newStrategy. Independently, Rules_GetStrategyName and Rules_InsertActivationSorted already dispatch CLIPS_STRATEGY members to those names/handlers (EC1 proof).",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00471C60_00473570_media_008.cpp"
+    ],
+    "func": "Compat_StringHolderScalarDeletingDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00471C60_00473570_media_008.cpp"
+    ],
+    "func": "Compat_StringHolderScalarDeletingDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00471C60_00473570_media_008.cpp"
+    ],
+    "func": "Compat_StringHolderDestroyStack",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00471C60_00473570_media_008.cpp"
+    ],
+    "func": "Compat_StringHolderDestroyStack",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004753E0_00477CC0_media_010.cpp"
+    ],
+    "func": "FileSystem_DestructMountTable",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004753E0_00477CC0_media_010.cpp"
+    ],
+    "func": "FileSystem_DestructMountTable",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "Compat_FileStreamRelease",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ ==\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "Compat_FileStreamRelease",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "Compat_FileStreamRelease",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "Compat_FileFinderRelease",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "Compat_FileFinderRelease",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "FileSystem_DiskMountScalarDeletingDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "FileSystem_DiskMountScalarDeletingDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "FileSystem_DiskMountVariantScalarDeletingDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "FileSystem_DiskMountVariantScalarDeletingDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "File_DirNodeScalarDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "File_DirNodeScalarDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "File_CacheNodeScalarDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ ==\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "File_CacheNodeScalarDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "else\\ if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ ==\\ 0\\ \\)",
+    "files": [
+      "src/media/00477CE0_00479020_media_011.cpp"
+    ],
+    "func": "File_CacheNodeScalarDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004790E0_0047AA80_media_012.cpp"
+    ],
+    "func": "File_SourceScalarDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004790E0_0047AA80_media_012.cpp"
+    ],
+    "func": "File_SourceScalarDtor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004790E0_0047AA80_media_012.cpp"
+    ],
+    "func": "Compat_QueryDestruct",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "else\\ if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004790E0_0047AA80_media_012.cpp"
+    ],
+    "func": "Compat_QueryDestruct",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004790E0_0047AA80_media_012.cpp"
+    ],
+    "func": "Compat_QueryCloseAndDestruct",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/media/004790E0_0047AA80_media_012.cpp"
+    ],
+    "func": "Compat_QueryCloseAndDestruct",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/00402E80_00404660_render_002.cpp"
+    ],
+    "func": "Surface_DestructRawBuffer",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/00402E80_00404660_render_002.cpp"
+    ],
+    "func": "Surface_DestructRawBuffer",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/00402E80_00404660_render_002.cpp"
+    ],
+    "func": "Render_DestructScratchSurface",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/00402E80_00404660_render_002.cpp"
+    ],
+    "func": "Render_DestructScratchSurface",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "Surface_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "Surface_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "SurfaceCursor_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "else\\ if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "SurfaceCursor_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "RenderSurface_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "RenderSurface_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "RenderSurface_DestroyLinkedBlitCursor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "RenderSurface_DestroyBlitCursor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "else\\ if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "RenderSurface_DestroyBlitCursor",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 4,
+    "name": "CRT_DTOR_FLAG_ARRAY_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>4)\\)\\ !=\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "DLXSpriteSet_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 2,
+    "name": "CRT_DTOR_FLAG_RELEASE_STORAGE",
+    "pattern": "if\\ \\(\\ \\(flags\\ \\&\\ (?P<lit>2)\\)\\ ==\\ 0\\ \\)",
+    "files": [
+      "src/render/004046D0_00405D20_render_003.cpp"
+    ],
+    "func": "DLXSpriteSet_Destroy",
+    "confidence": "behavior-confirmed",
+    "evidence": "Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags.",
+    "area": "render"
+  },
+  {
+    "kind": "regex",
+    "value": 1000,
+    "name": "CSS_MILLISECONDS_PER_SECOND",
+    "pattern": "bufferBytes\\ =\\ g_CSS_StreamBufferMs\\ \\*\\ formatInfo\\[2\\]\\ /\\ (?P<lit>1000);",
+    "files": [
+      "src/media/0046E870_004701E0_media_006.cpp"
+    ],
+    "func": "CSS_StartSampleVoice",
+    "confidence": "behavior-confirmed",
+    "evidence": "CSS stream buffer length multiplies g_CSS_StreamBufferMs by bytes/second formatInfo[2] and divides1000 (media/0046E870...:190). Independently, two stream-service loops convert g_CSS_StreamServiceRateHz to Sleep milliseconds using1000/rate (media/0046B610...:1356,1438). Exact decimal int token retained.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 1000,
+    "name": "CSS_MILLISECONDS_PER_SECOND",
+    "pattern": "Sleep\\((?P<lit>1000)\\ /\\ g_CSS_StreamServiceRateHz\\);",
+    "files": [
+      "src/media/0046B610_0046E5D0_media_005.cpp"
+    ],
+    "func": "CSS_StreamReadingThreadProc",
+    "confidence": "behavior-confirmed",
+    "evidence": "CSS stream buffer length multiplies g_CSS_StreamBufferMs by bytes/second formatInfo[2] and divides1000 (media/0046E870...:190). Independently, two stream-service loops convert g_CSS_StreamServiceRateHz to Sleep milliseconds using1000/rate (media/0046B610...:1356,1438). Exact decimal int token retained.",
+    "area": "media"
+  },
+  {
+    "kind": "regex",
+    "value": 1000,
+    "name": "CSS_MILLISECONDS_PER_SECOND",
+    "pattern": "Sleep\\((?P<lit>1000)\\ /\\ g_CSS_StreamServiceRateHz\\);",
+    "files": [
+      "src/media/0046B610_0046E5D0_media_005.cpp"
+    ],
+    "func": "CSS_StreamBufferServiceThreadProc",
+    "confidence": "behavior-confirmed",
+    "evidence": "CSS stream buffer length multiplies g_CSS_StreamBufferMs by bytes/second formatInfo[2] and divides1000 (media/0046E870...:190). Independently, two stream-service loops convert g_CSS_StreamServiceRateHz to Sleep milliseconds using1000/rate (media/0046B610...:1356,1438). Exact decimal int token retained.",
+    "area": "media"
+  }
+]

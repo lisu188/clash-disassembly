@@ -137,8 +137,8 @@ LABEL_13:
     UnitBattle_UpdateIdleAnimatedUnits();
     unitIndex = WCIsvListBase_PopFrontValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, 0);
     Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", unitIndex, side, g_UnitBattleAiCandidateQueueTail, turnResult);
-    unitRecordAddr = g_MapData + 31 * unitIndex;
-    if ( *(__int16 *)(uintptr_t)(unitRecordAddr + 852) != -1 && side == *(_BYTE *)(uintptr_t)(unitRecordAddr + 854) )
+    unitRecordAddr = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * unitIndex;
+    if ( *(__int16 *)(uintptr_t)(unitRecordAddr + BATTLE_UNIT_ENTRIES_OFFSET) != -1 && side == *(_BYTE *)(uintptr_t)(unitRecordAddr + 854) )
       break;
 LABEL_20:
     if ( !g_UnitBattleAiCandidateQueueTail )
@@ -735,7 +735,7 @@ int  Battle_BuildRoleDeploymentBuckets(int unitsPtr, int unitCount, unsigned __i
         g_BattleDeploymentBucketRole3[bucket3Count++] = (int)(intptr_t)unitRecord;
       }
       ++unitIndex;
-      unitRecord = (__int16 *)((char *)unitRecord + 31);
+      unitRecord = (__int16 *)((char *)unitRecord + BATTLE_UNIT_ENTRY_STRIDE);
     }
     while ( unitIndex < unitCount );
   }
@@ -873,7 +873,7 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 deployMode, int placement
           deployModeTableBase = 7 * deployModeCopy;
           best_candidate = BattleDeploymentBucketReadPointer(48 * bestRow + 4 * bestCol);
           bestUnitPtr = (char *)best_candidate;
-          bestUnitTypeOffset = 88 * *(__int16 *)bestUnitPtr;
+          bestUnitTypeOffset = UNIT_TYPE_METADATA_STRIDE * *(__int16 *)bestUnitPtr;
           candidateRankMod10 = (unsigned __int8)g_BattleRoleDeploymentBucketTable[candidateTableIndex] % 10;
           bestBucketTableValue = (unsigned __int8)g_BattleRoleDeploymentBucketTable[(unsigned __int8)g_UnitTypeRuntimeCoreMetadata[bestUnitTypeOffset / UNIT_TYPE_METADATA_STRIDE].role + deployModeTableBase];
           deployModeTableBase = 10;
@@ -953,7 +953,7 @@ int  Building_ShowGateDoorDialog_v1(int buildingPtr, int stringBuffer, DWORD ren
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + PLAYER_RELIGION_FLAG_TABLE_OFFSET);
   _wcpp_4_ctor_array__(stringBuffer, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_3;
@@ -1047,7 +1047,7 @@ int  Building_ShowGateDoorDialog_v2(int buildingPtr, int a2, DWORD renderContext
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + PLAYER_RELIGION_FLAG_TABLE_OFFSET);
   _wcpp_4_ctor_array__(a2, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_6;
@@ -1141,7 +1141,7 @@ int  Building_ShowGateDoorDialog_v3(int buildingPtr, int objectArray, DWORD rend
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + PLAYER_RELIGION_FLAG_TABLE_OFFSET);
   _wcpp_4_ctor_array__(objectArray, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_9;
@@ -1235,7 +1235,7 @@ int  Building_ShowGateDoorDialog_v4(int buildingPtr, int ctorArrayBuffer, DWORD 
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + PLAYER_RELIGION_FLAG_TABLE_OFFSET);
   _wcpp_4_ctor_array__(ctorArrayBuffer, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrD_12;
@@ -1397,16 +1397,16 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
   {
     do
     {
-      srcSlot = &building[31 * *slotIndexPtr + 18];
+      srcSlot = &building[UNIT_SLOT_RECORD_BYTES * *slotIndexPtr + 18];
       qmemcpy(destSlot, srcSlot, 0x1Cu);
       srcSlot += 28;
       destSlot[14] = *(_WORD *)srcSlot;
       *((_BYTE *)destSlot + 30) = srcSlot[2];
-      *(_WORD *)&building[31 * *slotIndexPtr + 18] = -1;
+      *(_WORD *)&building[UNIT_SLOT_RECORD_BYTES * *slotIndexPtr + 18] = -1;
       BUILDING_GARRISON_SERVICE_STATE(building, *slotIndexPtr) &= ~BUILDING_GARRISON_TRAINING_TURNS_MASK;
       movedSlotIndex = *slotIndexPtr++;
       ++movedCount;
-      destSlot = (__int16 *)((char *)destSlot + 31);
+      destSlot = (__int16 *)((char *)destSlot + UNIT_SLOT_RECORD_BYTES);
       BUILDING_GARRISON_SERVICE_STATE(building, movedSlotIndex) &= ~BUILDING_GARRISON_REPAIR_TURNS_MASK;
     }
     while ( movedCount < 10 && *slotIndexPtr != -1 );
@@ -1450,7 +1450,7 @@ int  Building_CountFreeGarrisonSlots(int buildingId)
       break;
     if ( *(__int16 *)(uintptr_t)(slotPtr + 18) == -1 )
       ++freeCount;
-    slotPtr += 31;
+    slotPtr += UNIT_SLOT_RECORD_BYTES;
   }
   return freeCount;
 }

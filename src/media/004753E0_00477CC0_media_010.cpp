@@ -526,7 +526,7 @@ int  FileSystem_DestructMountTable(_DWORD *mount_table, char flags)
   int v8; // ecx
   int v9; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(mount_table)), ((_DWORD)(uintptr_t)(&g_FileSystemMountTable_DtorArrayTag)));
     j_j__nfree_();
@@ -540,7 +540,7 @@ int  FileSystem_DestructMountTable(_DWORD *mount_table, char flags)
     PathEntryArray_DestructElements(v3);
     v5 = Compat_StringHolderScalarDeletingDtor(v4 - 8, 0);
     v6 = Compat_StringHolderScalarDeletingDtor(v5 - 8, 0);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     {
       j__nfree_();
       return v9;

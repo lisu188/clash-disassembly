@@ -118,6 +118,195 @@
 #define UNIT_SLOT_FLAG_SPENT_TURN 0x02
 #define UNIT_SLOT_FLAG_LOW_MORALE 0x04
 #define UNIT_SLOT_FLAG_PLAGUE 0x08
+/* Exact-spelling recovered constants: literal_rules/F1..F3 record evidence.
+ * TABLE_OFFSET constants are absolute displacements, not typed element indices. */
+/* BattleUnitEntry.owner_player_index at game-state base 852 + 2 */
+#define BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET 854
+/* BattleUnitEntry.facing_direction at game-state base 852 + 3 */
+#define BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET 855
+/* BattleUnitEntry.grid_x at game-state base 852 + 4 */
+#define BATTLE_UNIT_GRID_X_TABLE_OFFSET 856
+/* BattleUnitEntry.grid_y at game-state base 852 + 6 */
+#define BATTLE_UNIT_GRID_Y_TABLE_OFFSET 858
+/* BattleUnitEntry.action_points at game-state base 852 + 8 */
+#define BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET 860
+/* BattleUnitEntry.health_percent at game-state base 852 + 9 */
+#define BATTLE_UNIT_HEALTH_PERCENT_TABLE_OFFSET 861
+/* BattleUnitEntry.stance_bits at game-state base 852 + 12 */
+#define BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET 864
+/* BattleUnitEntry.anim_frame_and_effect_bits at game-state base 852 + 17 */
+#define BATTLE_UNIT_ANIM_FRAME_AND_EFFECT_BITS_TABLE_OFFSET 869
+/* BattleUnitEntry.battle_state_bits at game-state base 852 + 22 */
+#define BATTLE_UNIT_BATTLE_STATE_BITS_TABLE_OFFSET 874
+/* PlayerRuntimeState.display_name at game-state base 140024 + 4 */
+#define PLAYER_DISPLAY_NAME_TABLE_OFFSET 140028
+/* PlayerRuntimeState.camera_left at game-state base 140024 + 15 */
+#define PLAYER_CAMERA_LEFT_TABLE_OFFSET 140039
+/* PlayerRuntimeState.camera_top at game-state base 140024 + 19 */
+#define PLAYER_CAMERA_TOP_TABLE_OFFSET 140043
+/* PlayerRuntimeState.controller_mode at game-state base 140024 + 27 */
+#define PLAYER_CONTROLLER_MODE_TABLE_OFFSET 140051
+/* PlayerRuntimeState.religion_flag at game-state base 140024 + 39 */
+#define PLAYER_RELIGION_FLAG_TABLE_OFFSET 140063
+/* PlayerRuntimeState.tech_level at game-state base 140024 + 47 */
+#define PLAYER_TECH_LEVEL_TABLE_OFFSET 140071
+/* PlayerRuntimeState.battle_action_taken_flag at game-state base 140024 + 49 */
+#define PLAYER_BATTLE_ACTION_TAKEN_FLAG_TABLE_OFFSET 140073
+/* PlayerRuntimeState.consecutive_idle_battle_turns at game-state base 140024 + 53 */
+#define PLAYER_CONSECUTIVE_IDLE_BATTLE_TURNS_TABLE_OFFSET 140077
+/* PlayerRuntimeState.queen_relationship_state at game-state base 140024 + 1419 */
+#define PLAYER_QUEEN_RELATIONSHIP_STATE_TABLE_OFFSET 141443
+/* UnitStackRecord.tile_column at game-state base 147174 + 2 */
+#define UNIT_STACK_TILE_COLUMN_TABLE_OFFSET 147176
+/* UnitStackRecord.owner_player_index at game-state base 147174 + 4 */
+#define UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET 147178
+/* UnitStackRecord.facing_direction at game-state base 147174 + 5 */
+#define UNIT_STACK_FACING_DIRECTION_TABLE_OFFSET 147179
+/* UnitStackRecord.unit_slots at game-state base 147174 + 6 */
+#define UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET 147180
+/* UnitSlotRecord.current_health_percent at game-state base 147180 + 9 */
+#define UNIT_STACK_SLOT_CURRENT_HEALTH_PERCENT_TABLE_OFFSET 147189
+/* UnitSlotRecord.stance_bits at game-state base 147180 + 12 */
+#define UNIT_STACK_SLOT_STANCE_BITS_TABLE_OFFSET 147192
+/* UnitSlotRecord.aux_runtime_state at game-state base 147180 + 18 */
+#define UNIT_STACK_SLOT_AUX_RUNTIME_STATE_TABLE_OFFSET 147198
+/* UnitStackRecord.queued_path at game-state base 147174 + 316 */
+#define UNIT_STACK_QUEUED_PATH_TABLE_OFFSET 147490
+/* UnitStackRecord.is_hidden_on_world_map at game-state base 147174 + 720 */
+#define UNIT_STACK_IS_HIDDEN_ON_WORLD_MAP_TABLE_OFFSET 147894
+/* BuildingRecord.tile_column at game-state base 509674 + 1 */
+#define BUILDING_TILE_COLUMN_TABLE_OFFSET 509675
+/* BuildingRecord.owner_player_index at game-state base 509674 + 2 */
+#define BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET 509676
+/* BuildingRecord.footprint_class at game-state base 509674 + 4 */
+#define BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET 509678
+/* BuildingRecord.construction_turns_remaining at game-state base 509674 + 16 */
+#define BUILDING_CONSTRUCTION_TURNS_REMAINING_TABLE_OFFSET 509690
+/* BuildingRecord.garrison_slots at game-state base 509674 + 18 */
+#define BUILDING_GARRISON_SLOTS_TABLE_OFFSET 509692
+/* BuildingRecord.garrison_service_state at game-state base 509674 + 390 */
+#define BUILDING_GARRISON_SERVICE_STATE_TABLE_OFFSET 510064
+/* BuildingRecord.unit_licence_type_ids at game-state base 509674 + 402 */
+#define BUILDING_UNIT_LICENCE_TYPE_IDS_TABLE_OFFSET 510076
+/* BuildingRecord.active_production_licence_slot_index at game-state base 509674 + 414 */
+#define BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX_TABLE_OFFSET 510088
+/* BuildingRecord.castle_addon_flags at game-state base 509674 + 416 */
+#define BUILDING_CASTLE_ADDON_FLAGS_TABLE_OFFSET 510090
+/* BuildingRecord.wall_strength at game-state base 509674 + 421 */
+#define BUILDING_WALL_STRENGTH_TABLE_OFFSET 510095
+/* BuildingRecord.peasant_count at game-state base 509674 + 430 */
+#define BUILDING_PEASANT_COUNT_TABLE_OFFSET 510104
+/* BuildingRecord.satisfaction at game-state base 509674 + 434 */
+#define BUILDING_SATISFACTION_TABLE_OFFSET 510108
+/* BuildingRecord.plague_state at game-state base 509674 + 435 */
+#define BUILDING_PLAGUE_STATE_TABLE_OFFSET 510109
+/* BuildingRecord.tax_rate at game-state base 509674 + 436 */
+#define BUILDING_TAX_RATE_TABLE_OFFSET 510110
+/* BuildingRecord.stored_money at game-state base 509674 + 438 */
+#define BUILDING_STORED_MONEY_TABLE_OFFSET 510112
+/* BuildingRecord.tech_level_bits at game-state base 509674 + 444 */
+#define BUILDING_TECH_LEVEL_BITS_TABLE_OFFSET 510118
+/* BuildingRecord.prisoner_slots at game-state base 509674 + 445 */
+#define BUILDING_PRISONER_SLOTS_TABLE_OFFSET 510119
+/* BuildingRecord.castle_fact_id at game-state base 509674 + 463 */
+#define BUILDING_CASTLE_FACT_ID_TABLE_OFFSET 510137
+
+/* Exact-spelling recovered constants: literal_rules/F1..F3 record evidence.
+ * TABLE_OFFSET constants are absolute displacements, not typed element indices. */
+/* src/recovered_structs.h:135-160 sizeof(UnitSlotRecord)==31; RECOVERED_STRUCTURES.json:1135 BuildingRecord.garrison_slots[12] uses 31-byte UnitSlot records copied by Building_UnitsLeave. */
+#define UNIT_SLOT_RECORD_BYTES 31
+/* src/recovered_structs.h:171-178 QueuedPathBuffer is 404 bytes; Unit_MoveTrack 00414390 allocates 404 and stores count plus up to 100 four-byte waypoints, later copied as UNIT_STACK_PATH_BYTES. */
+#define UNIT_STACK_PATH_ALLOCATION_BYTES 404
+/* RECOVERED_STRUCTURES.json:1476 battle_unit_entries[22] starts at 852 and occupancy begins 1534 (difference682); Battle_PlaceUnit 004327B0 and HandleBattleResults traverse offsets 0..682 by31. */
+#define BATTLE_UNIT_ENTRIES_BYTES 682
+/* RECOVERED_STRUCTURES.json:4518 BuildingRecord[100] and BuildingRecord size467; Building_New scans records by467 until46700 and the table at509674 ends556374. */
+#define BUILDING_TABLE_BYTES 46700
+/* RECOVERED_STRUCTURES.json:4510 UnitStackRecord[500] and src/recovered_structs.h sizeof725; gameData stack region147174 ends509674 and AI_TickNationPostTurn traverses362500 bytes by725. */
+#define UNIT_STACK_TABLE_BYTES 362500
+/* RECOVERED_STRUCTURES.json:1135 garrison_slots[12] begins18, next service state begins390 (difference372); Building_New, Building_NewTurn and Building_CalcGarrisonFactStrength traverse12 slots by31. */
+#define BUILDING_GARRISON_SLOTS_BYTES 372
+/* src/recovered_structs.h:185 embeds10 UnitSlotRecord entries size31; slots start6 and queued_path begins316 (difference310), with AI_TickNationPostTurn traversing j<310 by31. */
+#define UNIT_STACK_SLOTS_BYTES 310
+/* RECOVERED_STRUCTURES.json:1476 battle_unit_entries[22]; Battle_RestoreSavedActionPointsBeforeResultCopy advances31 bytes and restores22 saved AP entries, matching Battle_PlaceUnit byte bound682. */
+#define BATTLE_UNIT_ENTRY_COUNT 22
+/* RECOVERED_STRUCTURES.json:1135 garrison_slots[12] stores31-byte entries; Building_Destroy/Building_CountFreeGarrisonSlots bound slot-index traversal at12 with base+18. */
+#define BUILDING_GARRISON_SLOT_COUNT 12
+/* src/recovered_structs.h UnitTypeMetadataRecord is88 bytes; g_UnitTypeFlags is int/DWORD-addressed at type_flags offset18, and 22*unit_type selects the same 88-byte table entry. Only g_UnitTypeFlags indexing is matched. */
+#define UNIT_TYPE_METADATA_DWORD_STRIDE 22
+/* Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h. */
+#define PALETTE_COLOR_COUNT 256
+/* Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h. */
+#define PALETTE_TABLE_BYTES 1024
+/* Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h. */
+#define PALETTE_TABLE_COPY_BYTES 0x400u
+/* Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h. */
+#define PALETTE_RGB_DATA_BYTES 768
+/* Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h. */
+#define PALETTE_RGB_READ_BYTES 0x300
+/* Palette_BuildGrayscaleIdentityTable (0x401D10) constructs and iterates 256 four-byte entries; Palette_ExpandRGBTripletsToTable (0x401B20) expands 768 RGB bytes into 1024 table bytes; Palette_ApplyWithBrightnessOffset (0x404C80) independently copies 0x400u bytes and submits 256 entries. Original sub_401AB0 (clash95.asm:1215) advances four-byte entries to base+400h. */
+#define PALETTE_CHANNEL_MAX 255
+/* SCREEN_WIDTH=640 and SCREEN_HEIGHT=480 determine the fullscreen buffer; Video_EnterGreyscaleTransition and Video_ExitGreyscaleTransition independently iterate 307200 pixels on those surfaces. */
+#define SCREEN_PIXEL_COUNT 307200
+/* DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025. */
+#define DLX_DIRECTORY_BYTES 4096
+/* DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025. */
+#define DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX 1024
+/* DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025. */
+#define DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX 1025
+/* DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025. */
+#define DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX 1026
+/* DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025. */
+#define DLX_SPRITE_SET_VTABLE_DWORD_INDEX 1027
+/* DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025. */
+#define DLX_SPRITE_SET_ENTRY_COUNT_BYTE_OFFSET 4100
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_SYMBOL_BUCKET_COUNT 1013
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_SYMBOL_TABLE_BYTES 4052
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_SYMBOL_ALLOCATION_BYTES 0xFD4u
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_SYMBOL_HASH_RANGE 0x3F5u
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_FLOAT_BUCKET_COUNT 503
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_FLOAT_TABLE_BYTES 2012
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_FLOAT_ALLOCATION_BYTES 0x7DCu
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_FLOAT_HASH_RANGE 0x1F7u
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_INTEGER_BUCKET_COUNT 167
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_INTEGER_TABLE_BYTES 668
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_INTEGER_ALLOCATION_BYTES 0x29Cu
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_BITMAP_BUCKET_COUNT 167
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_BITMAP_TABLE_BYTES 668
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_BITMAP_ALLOCATION_BYTES 0x29Cu
+/* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
+#define CLIPS_BITMAP_HASH_RANGE 0xA7u
+/* Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags. */
+#define CRT_DTOR_FLAG_ARRAY_STORAGE 4
+/* Compat_FileStreamRelease (0x477D60) tests bit4 before _wcpp_4_dtor_array_store__ plus j_j__nfree_, and bit2 before j__nfree_; DLXSpriteSet_Destroy (0x405C60) independently uses the same paths. Every included function was checked for this array-helper/release family. These mechanical destructor bits are not ordinary file mode flags. */
+#define CRT_DTOR_FLAG_RELEASE_STORAGE 2
+/* CSS stream buffer length multiplies g_CSS_StreamBufferMs by bytes/second formatInfo[2] and divides1000 (media/0046E870...:190). Independently, two stream-service loops convert g_CSS_StreamServiceRateHz to Sleep milliseconds using1000/rate (media/0046B610...:1356,1438). Exact decimal int token retained. */
+#define CSS_MILLISECONDS_PER_SECOND 1000
+
+/* Exact-spelling recovered constants: literal_rules/F1..F3 record evidence.
+ * TABLE_OFFSET constants are absolute displacements, not typed element indices. */
+/* clash95.asm loc_424B38: inc edx adds one to tile movement cost before sub_410010 minimum-AP comparison; loc_424E62: mov edx,1 followed by sub_410130 spends construction AP after sub_410330 queued movement. UnitStack_SpendActionPointsClamped (0x410130) subtracts spendAmount from occupied UnitSlot AP bytes. Highlight loc_425445 independently increments movement cost before the same minimum-AP comparison. */
+#define ROAD_BUILD_CONSTRUCTION_ACTION_POINTS 1
+/* clash95.asm loc_4251B2 calls sub_424020/sub_424120 bridge-overlay predicates; loc_425201 calls sub_410010 then cmp eax,6 and jge loc_425425 to mark and refresh an available Road target. Recovered MapTile_HasAlignedBridgeApproachRoadOverlay/MapTile_IsBareBridgeCrossingRoadOverlayCandidate and UnitStack_GetMinCurrentActionPoints corroborate bridge-highlight-specific AP threshold; this is not asserted to be the total construction cost. */
+#define ROAD_BUILD_BRIDGE_HIGHLIGHT_MIN_ACTION_POINTS 6
+/* clash95.asm loc_4255D3 increments dword_527C38 then and ebx,7 and stores the frame index. sub_425120 consumes that index to address dword_514294 bounce offsets for four direction marker positions. Original table at00514294 and fixture original-road.bin offset0x88 contain first-eight offsets -8,-4,0,4,8,4,0,-4; mask names eight-frame wrap, not the nine-DWORD backing region capacity. */
+#define ROAD_BUILD_MARKER_ANIMATION_FRAME_MASK 7
+/* clash95.asm loc_4255D3 calls Time_Now then sub eax,0Ah and unsigned cmp/jbe against dword_527C28; eligible branch saves a fresh Time_Now value, advances the masked marker frame, and redraws four adjacent tiles. Builder_StartRoadBuildMode reproduces this exact subtraction/comparison and RoadBuildMode_HighlightBuildableAdjacentTile consumes the resulting bounce index; ticks deliberately avoids imposing an unverified wall-clock unit or changing strict comparison behavior. */
+#define ROAD_BUILD_MARKER_ANIMATION_INTERVAL_TICKS 10
+
 /* Religious-site category returned by MapTile_GetReligiousSiteCategory
  * (080_building_ui.inc.c:8256): the overlay id at terrain record +2 maps to one
  * of these; 0 = not a religious site. */

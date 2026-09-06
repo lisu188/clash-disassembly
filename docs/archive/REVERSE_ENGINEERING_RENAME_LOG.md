@@ -15,6 +15,34 @@ comparisons pass within the documented limits; no campaign milestone advances.
 Confidence: high for the measured lookup and initialization contracts.
 [Commands, evidence and limits](../HUMAN_READABILITY.md#batch-6-shared-road-normalization-backing).
 
+## 2026-09-06 - F0-F6: Numeric constants across canonical recovered code
+
+Track: Win95 reconstruction, behavior-preserving naming. Reviewed all 140
+canonical TUs and applied 1,988 expression/function-scoped replacements in 62:
+1,815 exact-spelling macro uses and 173 existing-enum uses. Added 90 private
+constants with original instruction plus layout/data-flow evidence, generated
+90 guards, and refreshed 395 current function-body hashes. All 4,157 identities,
+signatures and legacy hashes remain. Confidence is high within the explicitly
+recorded domains; no field, API, save format or campaign state changed.
+
+Small integers and floats now participate in the complete inventory. Numeric
+code tokens decrease from 81,247 to 79,259. Remaining data and evidence queues
+are retained per location; equal-valued wall-sprite/path and compensating-address
+candidates are explicitly rejected. The historical provenance ledger prefix
+remains byte-identical, with 127 aggregate rows added for this batch.
+
+GCC 13 and Clang 18 retain identical normalized object code, linked profiles and
+executable code/data bytes. Both builds and four public gates, 135 tooling tests
+and generator freshness pass. Existing raw link/header differences and native
+isolated crashes are unchanged, with no raised ratchets. Both headless first-Road
+replays reach the accepted turn-6 endpoint; the F6 supplement has identical
+linked code/data to those tested binaries. Mission 05 remains partial, 6/20
+direct routes complete. No behavioral blocker is removed.
+
+Full provenance, rejected/ambiguous candidates, native coverage, exact commands
+and durable evidence locations: [numeric recovery record](../MAGIC_NUMBER_RECOVERY.md)
+and `artifacts/magic-numbers-20260906/`. Historical rules below remain intact.
+
 ## 2026-09-06 - Road readability: four directional queries
 
 Track: Win95 reconstruction. Reviewed North (`0x423BB0`), South (`0x423C50`),
