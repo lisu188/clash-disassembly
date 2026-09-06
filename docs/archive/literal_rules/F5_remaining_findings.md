@@ -212,3 +212,23 @@ python3 tools/literal_inventory.py --census-sites \
   > artifacts/magic-numbers-20260906/census-after.json
 python3 -m unittest discover -s tests/tools -p test_literal_inventory.py -v
 ```
+
+## Integration with main bf152559
+
+The conflict-resolved source in this same `62e9` worktree integrates main revision `bf152559fa07368e011e6feabd38dc6533c188ea` with cleanup commit `5e64be0425f3578c6c109fbb4db6a922e657a286`. Main's eight Road-helper refactors are retained; their typed/named expressions supersede three overlapping cleanup sites. The original batch's 1,988 substitutions, counts and provenance above remain frozen. `artifacts/magic-numbers-20260906/census-after.json` is unchanged (SHA-256 `6eeb4548dbde6dd4c06caf8fa4a057563d49b3989a3498170c8d82d79d55b068`).
+
+The separate `artifacts/magic-numbers-20260906/census-merge.json` covers all 140 TUs and reports **79,241 numeric tokens: 79,063 integers and 178 floats**, including 50,919 integers below ten. Its dispositions are 0 replaceable, 5,245 legitimate and 73,996 unresolved. All six F5 rules still match once; the same three legacy candidates remain rejected/deferred. Only `src/buildings/00422B50_004254E0_buildings_005.cpp` differs from the frozen after census, with 18 fewer numeric tokens. This integration difference is not an additional cleanup-substitution claim. The artifact was captured after conflict resolution but before the merge commit, so its `commit` field identifies the cleanup HEAD, not a completed merge revision.
+
+WSL was unresponsive during this read-only inventory run. It ran with Windows Python 3.11 from the same worktree, using the command below; this is not Linux build/test validation, which remains owned by the coordinator. The two census summaries, all 140 file paths, integer/float/classification totals, the sole changed TU and all six disposition match counts were reconciled.
+
+```powershell
+@'
+import subprocess, sys
+from pathlib import Path
+with Path("artifacts/magic-numbers-20260906/census-merge.json").open("w", encoding="utf-8") as output:
+    subprocess.run([
+        sys.executable, "tools/literal_inventory.py", "--census-sites",
+        "--dispositions", "docs/archive/literal_rules/F5_remaining_dispositions.json",
+    ], stdout=output, check=True)
+'@ | & 'C:/Users/andrz/AppData/Local/Programs/Python/Python311/python.exe' -
+```

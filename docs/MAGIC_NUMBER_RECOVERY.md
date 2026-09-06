@@ -2,6 +2,8 @@
 
 Track: Win95 reconstruction, behavior-preserving constant naming across all
 140 canonical recovered translation units. Campaign status remains unchanged.
+The naming-only batch below is frozen in commit `5e64be0`; the separate main
+integration is recorded at the end.
 
 ## Change and evidence
 
@@ -60,9 +62,10 @@ scope/ledger accounting.
 
 Baseline: `227ae3435b46f96ac0533692bd8dbb1f241271a0`. Commands ran in WSL from
 the current worktree, with the Windows Git administration paths translated to
-Linux paths. Evidence is under `artifacts/magic-numbers-20260906/`.
+Linux paths. Private local evidence is under `artifacts/magic-numbers-20260906/`
+and is absent from clean checkouts.
 The reconciled result index is
-`artifacts/magic-numbers-20260906/final-validation.json`.
+artifacts/magic-numbers-20260906/final-validation.json.
 
 | Gate | GCC 13 | Clang 18 |
 | --- | --- | --- |
@@ -98,22 +101,22 @@ roads 867/879. Every decoded unit-slot byte and the full visibility hash agree
 between profiles; the visibility hash matches the previously accepted original
 checkpoint. Each run retains 20 saves and nonblank presented frames. Exact
 commands, private asset-root isolation, before/after states and frame metrics
-are in `artifacts/magic-numbers-20260906/routes/README.md` and
-`artifacts/magic-numbers-20260906/routes/verification.json`.
+are in artifacts/magic-numbers-20260906/routes/README.md and
+artifacts/magic-numbers-20260906/routes/verification.json.
 The replays precede the 13-site F6 supplement. Final linked executable code and
 stored data are separately compared byte for byte with both those route-tested
 binaries and the original pre-cleanup binaries in each profile's
 supplement parity records under
-`artifacts/magic-numbers-20260906/gcc-13/supplement-parity.json` and
-`artifacts/magic-numbers-20260906/clang-18/supplement-parity.json`.
+artifacts/magic-numbers-20260906/gcc-13/supplement-parity.json and
+artifacts/magic-numbers-20260906/clang-18/supplement-parity.json.
 This does not promote mission 05 or claim whole-frame visual equivalence.
 
 An independent reconstruction audit verifies that the original sources plus
 the reviewed substitutions reproduce every current canonical TU byte for byte.
 It separately checks all signatures, manifest history, 90 constant definitions,
 341 untouched aggregate initializer regions and eight palette declaration-bound
-edits. See `artifacts/magic-numbers-20260906/source-review.json` and
-`artifacts/magic-numbers-20260906/source-review.md`.
+edits. See artifacts/magic-numbers-20260906/source-review.json and
+artifacts/magic-numbers-20260906/source-review.md.
 
 ## Commands and retained attempts
 
@@ -171,3 +174,28 @@ lines. The historical ledger prefix is
 byte-identical; the new batch's corrected aggregate has 125 rows totaling exactly
 1,975 sites, followed by two F6 rows totaling 13 sites. Earlier invalid attempts
 and reviews remain in the evidence directory.
+
+## Main integration
+
+Integrated cleanup commit `5e64be0425f3578c6c109fbb4db6a922e657a286` with main
+revision `bf152559fa07368e011e6feabd38dc6533c188ea`. Main had independently
+refactored eight Road helpers in the buildings TU. Those eight bodies and their
+trailing diagnostic-comment removal are retained exactly from main. The other
+139 canonical TUs and the remaining 27 bodies in that buildings TU retain the
+cleanup version. Three cleanup stride substitutions are superseded by main's
+already-named or typed expressions. Both documentation histories are retained.
+
+The merge review checks all 4,157 current body hashes and historical identities,
+and private/public headers remain identical to the validated cleanup. Its
+local report is artifacts/magic-numbers-20260906/merge-review.json. The separate
+inventory at artifacts/magic-numbers-20260906/census-merge.json contains 79,241
+numeric tokens; the frozen naming-batch census and evidence remain unchanged.
+
+WSL stopped responding during integration, including process launches and
+distribution status queries. The conflict resolution and independent source
+composition review ran through Windows Python and Git. Fresh merged Linux
+builds, object comparisons and runtime replays were not run. The successful
+Linux gates above belong to the frozen cleanup batch, and main's separate
+Road-helper validation remains recorded in [HUMAN_READABILITY.md](HUMAN_READABILITY.md).
+No claim of a fresh merged executable or runtime validation follows from the
+source review, and no ratchet or campaign status is changed.

@@ -2,6 +2,16 @@
 
 Last consolidated: 2026-09-06.
 
+## Numeric Cleanup Integration
+
+Combined numeric cleanup `5e64be0` with main's eight Road readability helpers at
+`bf15255`. Both histories and all other cleanup are preserved; three overlapping
+stride substitutions are superseded by main's typed/named expressions. The
+independent source review checks the combined code and all 4,157 manifest body
+hashes. WSL was unresponsive during integration, so the Linux validation below
+remains evidence for the separate parent batches, with no fresh merged build or
+runtime claim. See [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md#main-integration).
+
 ## Recovered Numeric Constants: All Canonical Subsystems Reviewed
 
 Track: Win95 reconstruction, behavior-preserving numeric naming. Replaced 1,988
@@ -23,6 +33,48 @@ No campaign or behavioral frontier is advanced: normal turn refresh and Road
 continuation remain next, mission 05 remains partial, and direct-route completion
 stays 6/20. Evidence, before/after counts, confidence, rejected candidates and
 exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
+
+## Road Function Readability Review
+
+Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
+Eight functions have been reviewed individually: bridge approach, crossing cost,
+overlay normalization input, connection-mask rebuild and all four directional
+Road queries. Reused pinned tile
+fields, removed redundant decompiler state, and preserved original return/call
+semantics. Both compiler builds and public asset-free gates pass; bounded
+original-instruction fixtures support the structured rewrites. Existing
+link/header ratchets remain red; no baseline is raised. The normalization
+lookup for IDs `819..861` still uses incorrect legacy backing and is explicitly
+deferred. Runtime/campaign milestones and the turn-7 frontier remain unchanged.
+See [HUMAN_READABILITY.md](HUMAN_READABILITY.md#function-review-road-helpers-2026-09-06)
+for per-function evidence, exact commands and validation limits.
+
+## Main Integration: GNU++20 Recovery and Strategic AI
+
+Track: Win95 reconstruction; frontier: integrate completed work into `main`.
+The GNU++20 migration and first-Road recovery are committed together with
+upstream PR #87's strategic-priority return-value repair, signed regrouping
+comparisons and matcher-completeness tooling. The incoming production-body
+regression now runs as GNU++20 on both supported compilers.
+
+Fresh GCC 13 and Clang 18 builds and all eight asset-free gates pass. The final
+tooling suite passes 120/120; coverage is 6169/6662 lines (92.60%) across all 718
+required functions. The final native run has 1061 passes, zero assertion failures
+and 528 isolated crashes out of 1589; the initial 1059/530 run is also retained,
+without claiming new recovered contracts. Warning checks pass at 6618/6628; existing
+raw link/header failures remain at 427/679 and 14 differences. No baseline is
+raised, and full GitHub CI is not green. The load-sensitive first tooling
+attempt and unfinished work are preserved.
+
+The final default headless suite reports 11 passes, two existing first-mission
+selection failures and eight skips. Menu Exit and castle economy pass in this
+run; historical timing failures are not declared fixed. Restored-header
+rebuilds reproduce both production executable/archive hashes exactly.
+
+No campaign endpoint or visual-fidelity claim advances. The first-Road endpoint
+below remains the highest compared C++ state. Integration commits, exact
+commands, history audit, preserved worktrees and validation limits are recorded
+in [INTEGRATION_20260906.md](INTEGRATION_20260906.md).
 
 ## Builder Road Menu: Original-Matching First Construction
 

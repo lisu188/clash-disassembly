@@ -28,6 +28,66 @@ Full provenance, rejected/ambiguous candidates, native coverage, exact commands
 and durable evidence locations: [numeric recovery record](../MAGIC_NUMBER_RECOVERY.md)
 and `artifacts/magic-numbers-20260906/`. Historical rules below remain intact.
 
+## 2026-09-06 - Road readability: four directional queries
+
+Track: Win95 reconstruction. Reviewed North (`0x423BB0`), South (`0x423C50`),
+West (`0x423CF0`) and East (`0x423E10`) separately. Reused the pinned tile
+road/bridge field and retained every membership test. West now expresses its
+marker/type/coordinate shortcut directly; removed comma/XOR register artifacts
+without eager Road reads. Building IDs remain numeric, with no new semantic
+record. Four canonical hashes change; public identities and layouts stay fixed.
+Original/frozen-before/actual-after comparisons pass 1,056,520 query cases per
+body set per compiler profile, with explicit legacy-lookup exclusions and guarded
+shortcut reads. Confidence: high within the recorded domain.
+[Evidence, per-function review and limits](../HUMAN_READABILITY.md#batch-5-four-directional-road-queries).
+
+## 2026-09-06 - Road readability: connection-mask rebuild
+
+Track: Win95 reconstruction. Reviewed `Map_RebuildRoadOverlayAtTile` (`0x423E90`)
+individually: one connection mask, original W/S/E/N order, typed road-word write,
+explicit row-base return, and removal of obsolete register-local diagnostics.
+No public name, constant, layout or behavior change; one canonical hash changes.
+Original full-callee probe covers 1,024 input/table cases in four compiler
+profiles, with exact return/write and remaining-memory comparisons. Confidence:
+high for the bounded refactor. Known normalization backing debt remains deferred.
+[Validation and limits](../HUMAN_READABILITY.md#batch-4-map_rebuildroadoverlayattile).
+
+## 2026-09-06 - Road readability: normalized overlay input
+
+Track: Win95 reconstruction, mission-05 Road helpers. Reviewed
+`Map_NormalizeRoadOverlayTileId` (`0x423FC0`); renamed `result` to `overlayTileId`
+from four tile-road-field callers and original register data flow. No operations,
+types or public identities change. Four compiler profiles retain identical
+normalized TU code. Confidence is high for the name; the legacy cross-array
+lookup for IDs `819..861` remains a separate, explicitly deferred storage defect.
+Validation and evidence are in
+[HUMAN_READABILITY.md](../HUMAN_READABILITY.md#batch-3-map_normalizeroadoverlaytileid).
+
+## 2026-09-06 - Road readability: bridge crossing cost
+
+Track: Win95 reconstruction, mission-05 Road helpers. Reviewed
+`Map_GetBridgeCrossingCostOrZero` (`0x424370`) individually; replaced raw terrain
+offset arithmetic with the pinned `MapTileRecord::terrain_tile_id` and one named
+word read. Original return values stay five for `603..610`, zero otherwise.
+No public rename, new semantic layout or gameplay milestone; one canonical body
+hash changes. Confidence: high within valid map/low-address inputs, supported by
+524,288 actual-original cases matching old/new bodies in four compiler profiles.
+Evidence and limitations are in
+[HUMAN_READABILITY.md](../HUMAN_READABILITY.md#batch-2-map_getbridgecrossingcostorzero).
+
+## 2026-09-06 - Road readability: aligned bridge approach predicate
+
+Track: Win95 reconstruction, mission-05 Road helpers. Reviewed function
+`MapTile_HasAlignedBridgeApproachRoadOverlay` (`0x424020`) individually against
+original assembly and existing original-measured fixtures. Reused pinned
+`MapTileRecord` fields, removed duplicate decompiler counters, and made the live
+48-DWORD first-match/alignment gates explicit. No public rename or new structure
+semantics; one canonical body hash changes. Confidence: high for the bounded
+refactor. The campaign frontier remains turn-7 Road continuation.
+
+Validation, deferred candidates and exact evidence commands are recorded in
+[HUMAN_READABILITY.md](../HUMAN_READABILITY.md#function-review-road-helpers-2026-09-06).
+
 ## 2026-07-14 - Enum extraction EC2: ClipsType (merged onto the src/recovered refactor)
 
 Extracts the CLIPS 6.0 primitive value-type codes as `typedef enum ClipsType`
