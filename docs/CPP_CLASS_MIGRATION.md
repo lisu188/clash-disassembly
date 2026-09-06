@@ -41,3 +41,20 @@ The next stage is the four-query UnitStack/QueuedPath extraction, followed by
 separate class-file relocation, differential gates and headless route evidence.
 Remaining stages cover world/construction, buildings/battle, strategic and
 persistence, rendering/media, application/SDL, then the full integration matrix.
+
+## Four-query extraction
+
+Four canonical implementations now belong to borrowing UnitStack and QueuedPath
+classes, defined out of line in their original translation units. Original ABI
+adapters retain their names/signatures and explicit retention. These are the
+current-AP minimum, readiness, builder and first-waypoint queries. Original
+algorithm order, sentinel behavior and unknown bytes remain intact. Constructors
+only bind addresses. Local alignment-one alias views preserve packed word loads.
+
+Production-source differential tests compile the frozen before bodies, actual
+canonical methods and ABI adapters under GCC13/Clang18 at O0/O2. Each profile
+checks 6,176 stack and 38,928 path cases across 16 alignments, complete 725-byte
+records and guards. Alignment trapping applies to the canonical methods and
+adapters; the historical reference retains its original x86 access contract.
+The next separately reviewable step relocates these unchanged methods into
+class-named files while retaining their adapter/storage anchors and source order.

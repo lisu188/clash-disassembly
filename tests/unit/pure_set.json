@@ -989,8 +989,9 @@
    "original_line": 5338,
    "source": "src/units/00414390_00416750_units_004.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "QueuedPath_StartsAtTile"
+    "kind": "method",
+    "qualified_name": "clash95::QueuedPath::QueuedPath_StartsAtTile",
+    "header": "src/units/QueuedPath.hpp"
    }
   },
   {

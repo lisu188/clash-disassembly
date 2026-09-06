@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "reference_commit": "6f7537268e784c538133b714e3ccb77cf54052e4",
+  "profiles": {
+    "gcc": {
+      "linked_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC1EPj",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC1El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        }
+      ],
+      "archive_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC1EPj",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC1El",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        }
+      ]
+    },
+    "clang": {
+      "linked_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        }
+      ],
+      "archive_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        }
+      ]
+    }
+  }
+}

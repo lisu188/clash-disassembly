@@ -173,6 +173,12 @@ class WorldMap { const char *label_; const char *label() const { return label_; 
         self.assertEqual(self.errors('class WorldMap { using table_type = int[3]; '
                                      'table_type &table_; };'), [])
 
+    def test_layout_assertion_comparisons_are_not_assignments(self):
+        self.assertEqual(self.errors('struct Record { int value; }; '
+                                     'static_assert(sizeof(Record) == 4, "size"); '
+                                     'static_assert(sizeof(Record) >= 4, "minimum"); '
+                                     'class WorldMap {};'), [])
+
     def test_include_policy_calls_header_closure_gate(self):
         self.write('src/world/Bindings.h', '#include "../recovered_all.h"\n')
         self.write('src/world/WorldMap.hpp', '#include "Bindings.h"\n')

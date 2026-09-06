@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "reference_commit": "6f7537268e784c538133b714e3ccb77cf54052e4",
+  "origin": "Exact pre-migration function snapshots from artifacts/cpp-classes/20260906/pilot/before; token-body hashes match the reference commit manifest. Tests rename only the function entrypoint.",
+  "functions": [
+    {
+      "name": "QueuedPath_StartsAtTile",
+      "fixture": "QueuedPath_StartsAtTile.cpp",
+      "file_sha256": "b195223bb3b67a163192ba776f07f26e90e9f3ef610e1c60c555c5102d951498",
+      "body_sha256": "a8e08e0abb95475cf1a652ecb451a92271651d9c071666e6f8ba1f8520c277ce",
+      "source": "src/units/00414390_00416750_units_004.cpp",
+      "original_address": "0x00415CD0"
+    },
+    {
+      "name": "UnitStack_GetMinCurrentActionPoints",
+      "fixture": "UnitStack_GetMinCurrentActionPoints.cpp",
+      "file_sha256": "79e521ee6c5c85577113ab59948c54ac8eec661b016e1ac40d206293a0c0d75f",
+      "body_sha256": "b1552ec1e1532d3189e2ba721e68b04896aee3e20b8dae05178fa0e620fa5e00",
+      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "original_address": "0x00410010"
+    },
+    {
+      "name": "UnitStack_HasBuilder",
+      "fixture": "UnitStack_HasBuilder.cpp",
+      "file_sha256": "4e413da29d44ba2d54625c58fc03b88232276ba4eed73ae3d9601b3ab6331980",
+      "body_sha256": "58602c482273bebdb5ae584a8fc8567cc23f64169840e9e8d93b615045a5d54b",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x00411AB0"
+    },
+    {
+      "name": "UnitStack_HasReadyUnits",
+      "fixture": "UnitStack_HasReadyUnits.cpp",
+      "file_sha256": "2c6d18036e1e65c077999b67f84dda654597e84b32dee35140bff610e9e07c89",
+      "body_sha256": "7e84486f526228bf4b26fbed8934b3d1bc99082a824647b3ab2468901d60c87c",
+      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "original_address": "0x0040F9F0"
+    }
+  ]
+}

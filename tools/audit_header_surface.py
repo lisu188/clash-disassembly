@@ -164,7 +164,7 @@ def _inline_header_behavior_errors(text: str) -> list[str]:
         r'(?:(?:\s*(?:\.|->)\s*[A-Za-z_][A-Za-z0-9_]*)|'
         r'(?:\s*\[\s*(?:[A-Za-z_][A-Za-z0-9_]*|[0-9]+)\s*\]))*\s*;\s*\Z')
     simple_binding = r'[A-Za-z_][A-Za-z0-9_]*\s*\(\s*(?:[*&]\s*)?(?:[A-Za-z_][A-Za-z0-9_]*|[0-9]+)(?:\s*(?:\.|->)\s*[A-Za-z_][A-Za-z0-9_]*)*\s*\)'
-    for assignment in re.finditer(r'=\s*([^;{}]+)', code):
+    for assignment in re.finditer(r'(?<![=!<>])=(?!=)\s*([^;{}]+)', code):
         if re.search(r'\busing\s+[A-Za-z_][A-Za-z0-9_]*\s*$', code[:assignment.start()]):
             # A type alias has no runtime initialization. Its canonical name
             # dependencies are still inspected by the separate token pass.

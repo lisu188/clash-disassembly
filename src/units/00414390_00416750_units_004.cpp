@@ -10,6 +10,7 @@
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/QueuedPath.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00414390) --------------------------------------------------------
@@ -1017,8 +1018,16 @@ void  Pathing_DisableBridgeCrossings(int a1, char a2, DWORD a3)
 // 52556C: using guessed type int g_PathingAllowBridgeCrossings;
 
 //----- (00415CD0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  QueuedPath_StartsAtTile(_DWORD *pathBuffer, int tileRow, int tileColumn)
 {
+  return clash95::QueuedPath(pathBuffer).QueuedPath_StartsAtTile(tileRow, tileColumn);
+}
+
+BOOL clash95::QueuedPath::QueuedPath_StartsAtTile(int tileRow, int tileColumn) const
+{
+  typedef _DWORD PathWord __attribute__((aligned(1), may_alias));
+  PathWord *pathBuffer = (PathWord *)bytes_;
   int firstStep; // eax
 
   if ( !*pathBuffer )
@@ -1026,6 +1035,8 @@ BOOL  QueuedPath_StartsAtTile(_DWORD *pathBuffer, int tileRow, int tileColumn)
   firstStep = pathBuffer[1];
   return (unsigned __int8)firstStep == tileRow && BYTE1(firstStep) == tileColumn;
 }
+
+
 
 //----- (00415D00) --------------------------------------------------------
 BOOL  QueuedPath_StartsInBuildingFootprint(_DWORD *pathBuffer, int buildingIndex)

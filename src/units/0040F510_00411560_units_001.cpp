@@ -11,6 +11,7 @@
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitStack.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0040F510) --------------------------------------------------------
@@ -233,8 +234,15 @@ signed int  UnitStack_UpdateVision(int stackIndex)
 }
 
 //----- (0040F9F0) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  UnitStack_HasReadyUnits(int stackPtr)
 {
+  return clash95::UnitStack((intptr_t)stackPtr).UnitStack_HasReadyUnits();
+}
+
+signed int clash95::UnitStack::UnitStack_HasReadyUnits() const
+{
+  int stackPtr = (int)address_;
   UnitStackRecord *stack;
   int slotIndex;
 
@@ -249,6 +257,8 @@ signed int  UnitStack_HasReadyUnits(int stackPtr)
   }
   return 0;
 }
+
+
 
 //----- (0040FA20) --------------------------------------------------------
 __int16 * UnitStack_ClearReadyFlags(int stackPtr)
@@ -482,13 +492,21 @@ LABEL_4:
 // 5202F0: using guessed type int dword_5202F0;
 
 //----- (00410010) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  UnitStack_GetMinCurrentActionPoints(intptr_t stackPtr)
 {
-  __int16 *slotPtr; // eax
+  return clash95::UnitStack(stackPtr).UnitStack_GetMinCurrentActionPoints();
+}
+
+signed int clash95::UnitStack::UnitStack_GetMinCurrentActionPoints() const
+{
+  intptr_t stackPtr = address_;
+  typedef __int16 SlotTypeWord __attribute__((aligned(1), may_alias));
+  SlotTypeWord *slotPtr; // eax
   int slotIndex; // edx
   int minActionPoints; // ebx
 
-  slotPtr = (__int16 *)(stackPtr + 37);
+  slotPtr = (SlotTypeWord *)(stackPtr + 37);
   slotIndex = 1;
   minActionPoints = *((unsigned __int8 *)slotPtr - 23);
   do
@@ -498,11 +516,13 @@ signed int  UnitStack_GetMinCurrentActionPoints(intptr_t stackPtr)
     if ( minActionPoints > *((unsigned __int8 *)slotPtr + 8) )
       minActionPoints = *((unsigned __int8 *)slotPtr + 8);
     ++slotIndex;
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    slotPtr = (SlotTypeWord *)((char *)slotPtr + 31);
   }
   while ( slotIndex < 10 );
   return minActionPoints;
 }
+
+
 
 //----- (004100B0) --------------------------------------------------------
 signed int  UnitStack_GetMaxOrderTier(intptr_t stackPtr)

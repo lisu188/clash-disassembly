@@ -9,6 +9,7 @@
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitStack.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (004115E0) --------------------------------------------------------
@@ -331,13 +332,20 @@ LABEL_16:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00411AB0) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  UnitStack_HasBuilder(int stackIndex)
 {
-  __int16 *slotPtr; // edx
+  return clash95::UnitStack((intptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET)).UnitStack_HasBuilder();
+}
+
+signed int clash95::UnitStack::UnitStack_HasBuilder() const
+{
+  typedef __int16 SlotTypeWord __attribute__((aligned(1), may_alias));
+  SlotTypeWord *slotPtr; // edx
   int slotIndex; // eax
   int slotType; // ecx
 
-  slotPtr = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET + 6);
+  slotPtr = (SlotTypeWord *)(uintptr_t)(address_ + 6);
   slotIndex = 0;
   while ( 1 )
   {
@@ -347,12 +355,14 @@ signed int  UnitStack_HasBuilder(int stackIndex)
     if ( slotType == UNIT_TYPE_BUILDER )
       break;
     ++slotIndex;
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    slotPtr = (SlotTypeWord *)((char *)slotPtr + 31);
     if ( slotIndex >= 10 )
       return 0;
   }
   return 1;
 }
+
+
 // 5202E4: using guessed type int gameData;
 
 //----- (00411B30) --------------------------------------------------------
