@@ -1424,20 +1424,15 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int tileRow, int tileColumn)
 //----- (004254E0) --------------------------------------------------------
 int  RoadBuildMode_BuildInSelectedDirection(int widget, DWORD a2, double a3)
 {
-  /* asm 004254E0 picks `direction` (edx) from a jump table covering widget ids
-   * 0x1B..0x1E only; its default arm falls through with whatever edx held on
-   * entry, and edx is not a parameter of this __usercall -- indeterminate in
-   * the original. Only the four road buttons reach this handler, so that arm is
-   * unreachable; seed a value Road_Build's switch rejects (it returns 0 outside
-   * {0,2,4,6}) instead of reading an uninitialised local. AMBIGUOUS-BY-ORIGINAL. */
-  int direction = -1; // edx
-  int widgetRecord; // ecx
+  // The original default retains incoming EDX, absent from the recovered ABI.
+  // Preserve the canonical fallback for that path. AMBIGUOUS-BY-ORIGINAL.
+  int direction = -1;
 
-  /* asm 004254E0: `mov ecx, eax` (= widget); after the animation call (which
-   * pushes/pops ecx) `mov ecx, [ecx+10h]` reads widget->id as the selector. */
-  widgetRecord = widget;
   UIWidget_PlayPressedReleaseAnimationWithDelay(widget, widget);
-  switch ( *(_DWORD *)(uintptr_t)(widgetRecord + 16) )
+  // The animation pumps events; read the selector only after it returns.
+  const WorldMapActionWidgetRecord *widgetRecord =
+      (const WorldMapActionWidgetRecord *)(uintptr_t)widget;
+  switch ( widgetRecord->default_sprite_index )
   {
     case 0x1B:
       direction = DIRECTION8_WEST;
@@ -1459,7 +1454,5 @@ int  RoadBuildMode_BuildInSelectedDirection(int widget, DWORD a2, double a3)
   g_WorldMapTileOverlayDrawHook = (int (__fastcall *)(_DWORD, _DWORD))RoadBuildMode_HighlightBuildableAdjacentTile;
   return WorldMap_RedrawViewport(1);
 }
-// 4254EA: variable 'v5' is possibly undefined
-// 425510: variable 'v4' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);

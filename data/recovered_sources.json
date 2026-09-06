@@ -3123,7 +3123,7 @@
       "original_line": 6580,
       "source": "src/buildings/00422B50_004254E0_buildings_005.cpp",
       "linkage": "external",
-      "body_sha256": "94f74ac71c7524643d2f3b1a37070c295c0561ba8552b3c111ab25a01d9b6980",
+      "body_sha256": "49df3684d2376d17d0c5b542393e27c354cb1c6095562305aa1189250a55f132",
       "original_address_range": {
         "start": "0x004254E0",
         "end_exclusive": "0x00425540"

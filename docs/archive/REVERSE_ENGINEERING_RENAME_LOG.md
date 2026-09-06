@@ -1,5 +1,19 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: selected-direction callback
+
+Track: Win95 reconstruction. Reviewed `RoadBuildMode_BuildInSelectedDirection`
+(`0x4254E0`) individually. Reused the pinned widget sprite field, removed the
+redundant integer alias and retained selector/selected-unit reads after animation.
+The original four-case dispatch and hook/build/redraw ordering are unchanged.
+Original valid-selector traces and separate canonical unsupported-selector traces
+match before/after bodies in four compiler profiles. The original default EDX
+and forwarded-argument meanings remain explicitly unresolved. No public rename,
+layout or behavior change; one canonical hash changes and all 4157 identities
+remain. Both builds and eight public gates pass. Confidence: high within the
+bounded call contract, with no new runtime or campaign milestone.
+[Commands, regression and limitations](../HUMAN_READABILITY.md#batch-8-roadbuildmode_buildinselecteddirection).
+
 ## 2026-09-06 - Road readability: bare bridge crossing candidate
 
 Track: Win95 reconstruction. Reviewed `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`

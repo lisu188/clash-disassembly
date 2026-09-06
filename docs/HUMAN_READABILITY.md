@@ -495,6 +495,78 @@ metadata commands are at
 artifacts/readability/road-functions-20260906/batch-07/run-metadata.sh.
 These private local scripts are absent from clean checkouts.
 
+### Batch 8: `RoadBuildMode_BuildInSelectedDirection`
+
+The callback at `0x4254E0` now reads the existing, pinned
+`WorldMapActionWidgetRecord::default_sprite_index` instead of a raw DWORD at
+an integer widget alias plus 16. The typed pointer and selector read remain
+after the press animation, which pumps events. The current selected unit is
+still read afterward; the callback clears the overlay hook, calls `Road_Build`,
+installs the highlight hook and returns the viewport redraw result in order.
+Removed stale register diagnostics and retained unresolved forwarded arguments.
+
+The original jump table maps sprite selectors `0x1B..0x1E` to the existing
+directions WEST=0, SOUTH=2, EAST=4 and NORTH=6. The typed field is signed, while
+the former raw load was unsigned; all 32-bit patterns have the same four-case
+classification. Unsupported selectors retain the canonical `-1` fallback.
+Original incoming EDX controls that default but is absent from the recovered
+ABI, so original fidelity is not claimed for that path. The comment retains
+this ambiguity without asserting that the path is unreachable.
+
+Track: Win95 reconstruction, the reached Road handler family. Evidence includes
+the original function and jump table, the existing 53-byte widget layout, the
+animation implementation and the installed callback fields. This is the tenth
+individually reviewed Road helper; only its canonical body hash changes.
+All 4157 identities, signatures, layouts and legacy hashes remain unchanged.
+
+The private probe executes the unchanged original callback and four-entry jump
+table against three explicit recording boundaries: animation, Road construction
+and redraw. All 128 valid-selector traces match both the frozen before and
+actual after bodies on GCC 13 and Clang 18 at O0/O2. Another 112 unsupported
+selector cases preserve the frozen C++ behavior in the same four profiles;
+these are deliberately separate from original-fidelity claims.
+The asset-free regression in `tests/tools/test_road_direction_dispatch.py`
+retains those traces as data and checks every named field in all four strict
+compiler profiles, with warnings as errors and trapping UBSan except packed
+alignment. It uses the actual native callee signatures, including the
+animation's `uintptr_t` widget parameter.
+
+Each trace records call order, widget arguments, selected unit, direction,
+forwarded DWORD and eight finite binary64 patterns, hook transitions, final
+state and the redraw return. Animation changes the selector and selected unit;
+construction and redraw also mutate observed state to catch cached values or
+late hook restores. Symbol addresses are compared through explicit hook
+identities and a checked callback low-byte match; raw addresses differ across
+executables. Widget bytes and unrelated test state remain as expected.
+These checks establish the handler's call contract, without proving the three
+instrumented callees' gameplay, animation or rendering behavior. NaNs,
+infinities and arbitrary invalid widget pointers are outside this fixture.
+Confidence is high for the bounded refactor, with the original default path
+and the richer meanings of the forwarded arguments still unresolved.
+
+Both supported incremental builds and all eight public asset-free gates pass.
+Only this handler's executable section changes: GCC remains 203 bytes and Clang
+changes from 220 to 219. The other 145 compiled objects and 35 neighboring
+executable sections retain identical bytes, instructions and relocations.
+Linked data classes, sizes and order remain unchanged. Scoped warnings stay
+24 GCC / 35 Clang, with existing raw link/header ratchet failures retained and
+no baseline changes. No new native coverage, route replay or frame claim is
+made; batch 6 remains the runtime baseline and the turn-7 frontier is unchanged.
+The final full tooling suite passes all 141 tests in 25.543 seconds. Manifest,
+split-source and generated metadata/header/include checks pass; raw link
+differences remain 428 GCC / 680 Clang and the header ratchet retains its 14
+known failures. Final production and new public-test files remain frozen.
+
+Private source freezes, original evidence, callback traces and build commands
+are retained under artifacts/readability/road-functions-20260906/batch-08/.
+The original-proof directory records capture, original measurement, canonical
+comparison and exact command files; build-validation records the incremental
+builds, public gates and tooling suite. Reproduce the focused public test with:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_direction_dispatch.py -v
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

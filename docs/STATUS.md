@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-06.
 
+## Road Direction Dispatch Readability
+
+Track: Win95 reconstruction, the reached Road handler family.
+`RoadBuildMode_BuildInSelectedDirection` (`0x4254E0`) now uses the existing
+widget record's named sprite field, preserving reads after animation and the
+build/hook/redraw order. All 128 original valid-selector traces and 112 separate
+canonical unsupported-selector traces match the before and after bodies in
+four compiler profiles. The original unsupported-selector ambiguity remains.
+
+Both builds, all eight public asset-free gates and 141 tooling tests pass; only
+this handler's executable section changes. Warnings, all 4157 identities and data layouts
+remain unchanged. The first-Road runtime baseline and turn-7 blocker remain;
+no runtime or campaign milestone advances. Evidence, exact commands, confidence
+and limits: [HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-8-roadbuildmode_buildinselecteddirection).
+
 ## Bare Bridge Candidate Readability
 
 Track: Win95 reconstruction, the reached mission-05 Road helper family.
@@ -76,10 +91,10 @@ exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
 ## Road Function Readability Review
 
 Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
-Nine functions have been reviewed individually: bridge approach, crossing cost,
+Ten functions have been reviewed individually: bridge approach, crossing cost,
 overlay normalization input, connection-mask rebuild, all four directional
-Road queries and the bare bridge candidate. Reused pinned tile fields and removed
-redundant decompiler state.
+Road queries, the bare bridge candidate and the direction-dispatch callback.
+Reused pinned tile/widget fields and removed redundant decompiler state.
 The separately identified `819..861` normalization defect is now repaired using
 the original shared Road backing and guarded initialization. All 65,536 tile IDs
 and previously excluded directional queries match original instructions in four
