@@ -776,29 +776,25 @@ int  Map_NormalizeRoadOverlayTileId(int result)
 //----- (00424020) --------------------------------------------------------
 signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int refRow, int refColumn, int column, int row)
 {
-  int v6; // edx
-  int v7; // ebx
-  int matchedApproachIndex; // ecx
-  int overlayTileId; // ebx
-  unsigned int v10; // eax
-  int approachIndex; // edx
-  int colOffset; // edi
-
   WorldMap_EnsureBuilderWidgetTables();
-  v6 = gameData + TILE_TERRAIN_ROW_STRIDE * row;
-  v7 = 14 * column;
-  matchedApproachIndex = -1;
-  overlayTileId = *(unsigned __int16 *)(uintptr_t)(v6 + v7 + 2);
-  v10 = 0;
-  approachIndex = 0;
-  do
+  const MapTileRecord *tile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
+  const int overlayTileId = tile->overlay_tile_id;
+  int matchedApproachIndex = -1;
+
+  // Original 0x42407F scans 48 live DWORDs, including aliased marker data.
+  // Preserve the first match: its index selects the required alignment axis.
+  for (int approachIndex = 0; approachIndex < 48; ++approachIndex)
   {
     if ( overlayTileId == g_BridgeApproachRoadOverlayTileIds[approachIndex] )
-      matchedApproachIndex = v10;
-    ++v10;
-    ++approachIndex;
+    {
+      matchedApproachIndex = approachIndex;
+      break;
+    }
   }
-  while ( v10 < 0x30 && matchedApproachIndex == -1 );
+
+  if ( matchedApproachIndex == -1 )
+    return 0;
   if ( matchedApproachIndex >= 6 )
   {
     if ( column != refColumn )
@@ -808,16 +804,9 @@ signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int refRow, int refColum
   {
     return 0;
   }
-  if ( matchedApproachIndex != -1 )
-  {
-    colOffset = 2 * column;
-    if ( *(unsigned __int16 *)(uintptr_t)(7 * colOffset + TILE_TERRAIN_ROW_STRIDE * row + gameData) >= 0x25Bu
-      && *(unsigned __int16 *)(uintptr_t)(7 * colOffset + TILE_TERRAIN_ROW_STRIDE * row + gameData) <= 0x262u )
-    {
-      return 1;
-    }
-  }
-  return 0;
+
+  const int terrainTileId = tile->terrain_tile_id;
+  return terrainTileId >= 603 && terrainTileId <= 610;
 }
 // 51420C: using guessed type int g_BridgeApproachRoadOverlayTileIds[];
 // 5202E4: using guessed type int gameData;

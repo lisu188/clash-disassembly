@@ -2953,7 +2953,7 @@
       "original_line": 5911,
       "source": "src/buildings/00422B50_004254E0_buildings_005.cpp",
       "linkage": "external",
-      "body_sha256": "f05e57276fe3d55a387602839db9a92eb0d3ee22da0ee05bbba8bfce7f487665",
+      "body_sha256": "b389390f807870e8252279ecd44f1dbea2b40418ce03a684475a446417244e10",
       "original_address_range": {
         "start": "0x00424020",
         "end_exclusive": "0x00424120"

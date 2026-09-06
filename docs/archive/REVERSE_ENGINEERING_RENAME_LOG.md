@@ -1,5 +1,18 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: aligned bridge approach predicate
+
+Track: Win95 reconstruction, mission-05 Road helpers. Reviewed function
+`MapTile_HasAlignedBridgeApproachRoadOverlay` (`0x424020`) individually against
+original assembly and existing original-measured fixtures. Reused pinned
+`MapTileRecord` fields, removed duplicate decompiler counters, and made the live
+48-DWORD first-match/alignment gates explicit. No public rename or new structure
+semantics; one canonical body hash changes. Confidence: high for the bounded
+refactor. The campaign frontier remains turn-7 Road continuation.
+
+Validation, deferred candidates and exact evidence commands are recorded in
+[HUMAN_READABILITY.md](../HUMAN_READABILITY.md#function-review-road-helpers-2026-09-06).
+
 ## 2026-07-14 - Enum extraction EC2: ClipsType (merged onto the src/recovered refactor)
 
 Extracts the CLIPS 6.0 primitive value-type codes as `typedef enum ClipsType`

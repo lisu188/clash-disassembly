@@ -76,6 +76,70 @@ python3 tools/audit_c_readability.py
 
 The audit counts common decompiler debt and ranks the highest-debt source files. It is a prioritization metric, not an acceptance gate: counts must never be reduced by speculative renaming or semantic rewrites.
 
+## Function review: Road helpers, 2026-09-06
+
+Track: Win95 reconstruction. Review the reached mission-05 Road family one
+function at a time, retaining the original-matching first-construction endpoint
+as the runtime baseline. This work improves readability; it does not promote a
+campaign route or resolve the turn-7 continuation blocker.
+
+### Batch 1: `MapTile_HasAlignedBridgeApproachRoadOverlay`
+
+The function at `0x424020` now uses the existing, layout-pinned `MapTileRecord`
+for terrain and overlay reads, one first-match loop instead of duplicate
+counters, and explicit failure returns. The original scan covers 48 live DWORDs,
+including aliased marker data. It must not become a constant bridge-ID list.
+The first matching index still chooses row alignment below six and column
+alignment otherwise; terrain IDs `603..610` remain the accepted range.
+
+Evidence: `clash95.asm` routine `sub_424020`, the canonical body in
+`src/buildings/00422B50_004254E0_buildings_005.cpp`, the size/offset assertions in
+`src/recovered_structs.h`, and the existing original-measured fixtures in
+`tests/tools/fixtures/builder_road/`. Confidence is high for this bounded
+behavior-preserving change. No public symbols, signatures, layouts, constants,
+or legacy hashes change; only this canonical body hash changes.
+
+The existing 672-case regression passes GCC 13 and Clang 18 at O0/O2, including
+636 bridge cases with every scan position, duplicate matches and live aliases.
+All 120 tooling tests pass. Manifest, split-source, generated-header and include
+freshness checks pass. The header ratchet retains its 14 existing failures.
+Fresh GCC/Clang compile and link builds and all four public CTest gates pass.
+Warning totals are 6618/6628, exactly matching freshly built untouched source.
+Raw link ratchets reproduce 427/679 existing differences with zero manifest
+cross-check errors. No baseline is raised.
+Before/after linked symbol names/classes and data sizes/order match, as do all
+4157 recovered archive entries. Only the reviewed function changes size
+(GCC 299 to 227 bytes; Clang 360 to 289), shifting later text addresses.
+
+Normalized object comparison covers all 35 text sections in the touched TU for
+four compiler profiles. Only this predicate changes, plus its existing inlined
+copies in `Road_Build` and `RoadBuildMode_HighlightBuildableAdjacentTile` under
+Clang O2. Independent review verifies scan order, first-match exits, unsigned
+word reads, call order and the unchanged AP fallback. Machine-code identity is
+not claimed for a structured rewrite.
+
+Exact local commands, source freezes, compiler snapshots and diffs are retained
+under `artifacts/readability/road-functions-20260906/`, including the baseline
+source freeze and batch-01 validation/build scripts. The comparison script is
+`artifacts/readability/road-functions-20260906/batch-01/compare_objects.py`;
+the check runner is
+`artifacts/readability/road-functions-20260906/batch-01/validate.sh`.
+Reproduce the focused gate from the WSL repository root with:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_builder_road.py -v
+python3 tools/update_split_manifest_hashes.py
+python3 tools/audit_split_sources.py
+python3 tools/gen_subsystem_headers.py --check
+python3 tools/gen_subsystem_headers.py --check-tu-includes
+```
+
+Deferred: larger Road modal functions need separate input/rendering review.
+Row/column names remain unchanged because UI-axis terminology is inconsistent.
+The proposed selector parameter name `delayTicks` was rejected: the called
+animation helper ignores that argument and uses a fixed 20-tick delay. No new
+visual-fidelity, mission-arrival or campaign-completion claim follows.
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.
