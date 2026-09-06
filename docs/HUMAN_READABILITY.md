@@ -173,7 +173,8 @@ results and exact compiler commands are retained under
 All 35 TU text sections are compared at O0/O2 in both compilers; only this
 function changes. Both incremental builds and the four public CTests pass.
 Linked symbol/data profiles and all 4157 archive identities match batch 1;
-the rebuilt TU's warning categories are unchanged (19 GCC / 39 Clang), without
+source-attributed warning categories are unchanged (19 GCC / 39 Clang; the full
+affected compilation blocks contain 28/39, including header diagnostics), without
 claiming incremental logs as a fresh whole-build warning count. Manifest,
 split-source, headers/includes and the existing builder regression pass.
 Changed non-archive Markdown passes the path check; the whole-tree check flags
@@ -183,6 +184,32 @@ No baseline is raised, and no new runtime milestone is claimed.
 No public rename, new constant or new semantic layout is introduced. The next
 candidates are the Road normalization and connection helpers; larger
 input/rendering functions remain separately scoped.
+
+### Batch 3: `Map_NormalizeRoadOverlayTileId`
+
+Renamed the input `result` to `overlayTileId` without changing its `int` type,
+bounds, arithmetic, lookup or returns. All four directional-connection callers
+read the unsigned road/bridge word at tile offset four before calling this
+helper. Original `sub_423FC0` in `clash95.asm` confirms the fallback input and
+the existing remapping branches. Confidence is high for this parameter name.
+
+All 35 text sections of the containing TU have identical normalized instructions
+and relocations in GCC 13 and Clang 18 at O0/O2. One canonical body hash changes;
+declarations, layout and function identity remain unchanged. Evidence and exact
+commands are under `artifacts/readability/road-functions-20260906/batch-03/`.
+Both incremental builds and all four public CTests pass. The complete linked
+`.text` sections are byte-identical to batch 2 in both Debug profiles; all 4157
+archive identities, linked profiles and affected compilation warning counts
+(28 GCC / 39 Clang, including headers) are unchanged. Existing raw link/header
+ratchet failures remain separate; no baseline is raised.
+
+Deferred recovery: the original lookup for IDs `819..861` addresses
+`0x51423C..0x514290`, within the live Road backing region. The canonical
+expression still indexes beyond the separate `UI_Locale_BuildingNames_I` pointer
+array. This naming-only batch preserves that legacy defect and does not claim
+lookup fidelity. Names implying localized strings, immutable Road constants or
+animation semantics were rejected. Recover this storage relationship separately
+with original-backed evidence; retain the current campaign/runtime milestones.
 
 ## Next migration batches
 

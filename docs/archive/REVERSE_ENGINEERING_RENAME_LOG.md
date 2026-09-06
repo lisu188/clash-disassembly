@@ -1,5 +1,16 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: normalized overlay input
+
+Track: Win95 reconstruction, mission-05 Road helpers. Reviewed
+`Map_NormalizeRoadOverlayTileId` (`0x423FC0`); renamed `result` to `overlayTileId`
+from four tile-road-field callers and original register data flow. No operations,
+types or public identities change. Four compiler profiles retain identical
+normalized TU code. Confidence is high for the name; the legacy cross-array
+lookup for IDs `819..861` remains a separate, explicitly deferred storage defect.
+Validation and evidence are in
+[HUMAN_READABILITY.md](../HUMAN_READABILITY.md#batch-3-map_normalizeroadoverlaytileid).
+
 ## 2026-09-06 - Road readability: bridge crossing cost
 
 Track: Win95 reconstruction, mission-05 Road helpers. Reviewed

@@ -763,13 +763,13 @@ int  Map_RebuildRoadOverlayAtTile(int row, int column)
 // 5202E4: using guessed type int gameData;
 
 //----- (00423FC0) --------------------------------------------------------
-int  Map_NormalizeRoadOverlayTileId(int result)
+int  Map_NormalizeRoadOverlayTileId(int overlayTileId)
 {
-  if ( result >= 819 && result <= 861 )
-    return *((unsigned __int16 *)UI_Locale_BuildingNames_I + result + 1);
-  if ( result >= 877 && result <= 949 )
-    return ((result - 877) % 6 / 3 == 0) + 866;
-  return result;
+  if ( overlayTileId >= 819 && overlayTileId <= 861 )
+    return *((unsigned __int16 *)UI_Locale_BuildingNames_I + overlayTileId + 1);
+  if ( overlayTileId >= 877 && overlayTileId <= 949 )
+    return ((overlayTileId - 877) % 6 / 3 == 0) + 866;
+  return overlayTileId;
 }
 // 513BD4: using guessed type char *off_513BD4[26];
 
