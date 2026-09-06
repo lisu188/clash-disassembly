@@ -8,8 +8,8 @@ construct compiler, an actual filesystem session, or a campaign route.
 ## Original instruction evidence
 
 The protected `clash95.asm` procedure `sub_4A7140` retains the basename in ESI,
-formats `%s%d_%d.c`, and tests ECX to choose append (`a`) or fresh-file (`w`)
-mode. After the open it tests the preserved ECX again. Only a successful fresh
+formats the filename pattern "%s%d_%d.c", and tests ECX to choose append (`a`) or
+fresh-file (`w`) mode. After the open it tests the preserved ECX again. Only a successful fresh
 open emits `#include "<basename>.h"` followed by a blank line, to the returned
 stream. Open failure reports `constructs-to-c` and the generated filename,
 then returns zero. Formatting return values do not replace the stream result.
@@ -101,5 +101,20 @@ Local validation used GCC 14.2 and Clang 17: eight 64-bit compiler profiles,
 the negative mutations and both source checks pass. The local kernel rejects
 32-bit ELF execution, so the original-execution test and eight 32-bit production
 profiles explicitly skip locally. On GitHub Actions those execution failures
-are errors, not skips. Full supported-compiler and original-instruction results
-must be read from the PR's CI run. No retail assets are required by this test.
+are errors, not skips. No retail assets are required by this test.
+
+The exact patch was then validated in the isolated preparation run
+[34056545731](https://github.com/lisu188/clash-disassembly/actions/runs/34056545731).
+All seven focused tests pass without skips, including the original 32-bit
+instruction execution and all 16 supported GCC 13/Clang 18 production profiles.
+The split-source and generated-header audits also pass. The ten published
+Git blobs match the local patch exactly. The diagnostic workflow and compressed
+transport files are not included in the implementation tree.
+
+The first normal PR run
+[34056654565](https://github.com/lisu188/clash-disassembly/actions/runs/34056654565)
+passes all 204 tooling tests. Its Markdown checker misclassified the filename
+format as a repository path; this documentation-only follow-up distinguishes
+that pattern without changing the checker. Build/coverage results and the
+remaining link/header failures must be read from the final PR run; no runtime
+or campaign result follows from these tests.
