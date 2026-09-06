@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-06.
 
+## Construct-Code File Opener
+
+Track: Win95 reconstruction, bounded construct-compiler file output. The opener
+at `0x004A7140` now preserves the basename printf argument, the opened stream,
+and the original append/fresh-file decision. All 26 callers supply the recovered
+ECX mode separately from the existing EBP I/O context. All 4157 identities and
+frozen validation baselines remain; 15 current function-body hashes change.
+The regression executes a hash-pinned reassembly of the original procedure
+against the actual recovered body with controlled dependency hooks. Local
+64-bit fixtures pass; 32-bit execution requires the CI host. Commands, evidence,
+and remaining pointer/formatter/helper limitations are in
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md).
+No campaign, whole-compiler, native-crash-count or visual milestone is promoted;
+normal mission-05 turn refresh and Road continuation remain the gameplay target.
+
 ## Road Adjacent Highlight Readability
 
 Track: Win95 reconstruction, reached mission-05 Road helpers. The adjacent-tile

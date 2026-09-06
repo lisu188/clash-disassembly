@@ -133,7 +133,7 @@ signed int  Compiler_WriteModuleTableFile(const char *fileName, const char *path
   fileVersion = 2;
   Output_WriteFormatted(0, 0, headerFile, (int)(intptr_t)aIncludeModulde, 0);
   portItemCount = 0;
-  result = Rules_OpenConstructCodeFile(fileNameLocal, (int)(intptr_t)pathNameLocal, 1, 0);
+  result = Rules_OpenConstructCodeFile(fileNameLocal, (int)(intptr_t)pathNameLocal, 1, 0, 0);
   moduleFile = result;
   if ( result )
   {
