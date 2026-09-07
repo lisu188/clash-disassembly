@@ -105,9 +105,12 @@ signed int Rules_PrintErrorID(int module, int code, int newline) {
   return -17;
 }
 int Output_Write(int logical, int text, int context) {
-  const int expectedRoute[] = {low(route1), low(route2), low(route3)};
-  if (writes < 0 || writes > 2) failed = 1;
-  if (logical != expectedRoute[writes] || context != currentName) failed = 1;
+  int expectedRoute = 0;
+  if (writes == 0) expectedRoute = low(route1);
+  else if (writes == 1) expectedRoute = low(route2);
+  else if (writes == 2) expectedRoute = low(route3);
+  else failed = 1;
+  if (logical != expectedRoute || context != currentName) failed = 1;
   if (writes == 0 && text != low(aIllegalLogical)) failed = 1;
   if (writes == 1 && text != currentName) failed = 1;
   if (writes == 2 && text != low(aFunction_)) failed = 1;
