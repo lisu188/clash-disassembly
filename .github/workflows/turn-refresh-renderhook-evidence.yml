@@ -26,22 +26,23 @@ jobs:
           text=Path('clash95.asm').read_text(encoding='latin-1')
           raw=Path('clash95.asm').read_bytes()
           print('ASSEMBLY_SHA256',hashlib.sha256(raw).hexdigest())
-          for name in ('sub_40AD40','sub_40A500'):
-              m=re.search(rf'(?ms)^\s*{name}\s+proc\b.*?^\s*{name}\s+endp\b',text)
+          def proc(name):
+              m=re.search(rf'(?ms)^\s*{re.escape(name)}\s+proc\b.*?^\s*{re.escape(name)}\s+endp\b',text)
               if not m: raise SystemExit(name+' not found')
-              proc=m.group(0)
+              body=m.group(0)
               print('===',name,'===')
-              print(proc)
+              print(body)
               norm=[]
-              for line in proc.splitlines()[1:-1]:
+              for line in body.splitlines()[1:-1]:
                   code=line.split(';',1)[0].strip()
                   if code and not code.endswith(':'):
                       norm.append(re.sub(r'\s+',' ',code))
               print('NORM_SHA256',name,hashlib.sha256('\n'.join(norm).encode()).hexdigest())
+          for name in ('sub_40AD40','Render_LoadResourceSprite','sub_406980'):
+              proc(name)
           print('=== CALLERS sub_40AD40 ===')
+          lines=text.splitlines()
           for m in re.finditer(r'(?m)^\s*call\s+sub_40AD40\b',text):
-              pre=text[:m.start()].splitlines()
-              lines=text.splitlines()
-              idx=len(pre)
+              idx=len(text[:m.start()].splitlines())
               print('\n'.join(lines[max(0,idx-10):min(len(lines),idx+11)]))
           PY
