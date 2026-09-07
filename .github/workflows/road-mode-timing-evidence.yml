@@ -1,0 +1,62 @@
+name: Road mode timing evidence
+
+on:
+  push:
+    branches:
+      - diagnostics/road-mode-timing-evidence
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d2b31c250fe078109fda41807c7c1e9b80e9706a
+          persist-credentials: false
+      - name: Extract original Road timing procedures
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, re
+          from pathlib import Path
+          raw = Path('clash95.asm').read_bytes()
+          text = raw.decode('latin-1')
+          lines = text.splitlines()
+          print('ASSEMBLY_SHA256', hashlib.sha256(raw).hexdigest())
+          def extract_addr(addr):
+              names = [f'sub_{addr.upper()}', f'sub_{addr.lower()}']
+              for name in names:
+                  m = re.search(rf'(?ms)^\s*{re.escape(name)}\s+proc\b.*?^\s*{re.escape(name)}\s+endp\b', text)
+                  if m:
+                      print(f'=== {name} ===')
+                      print(m.group(0))
+                      return name, m.group(0)
+              hits = [i for i,l in enumerate(lines) if addr.upper() in l.upper()]
+              print('ADDRESS_MATCHES', addr, hits[:20])
+              for i in hits[:8]:
+                  print('\n'.join(lines[max(0,i-12):min(len(lines),i+20)]))
+              return None, None
+          road_name, road = extract_addr('425540')
+          time_name, timing = extract_addr('4207B0')
+          if road:
+              print('=== ROAD CALLS AROUND TIME ===')
+              for i,l in enumerate(road.splitlines()):
+                  if '4207B0' in l or 'Time_Now' in l or (time_name and time_name in l):
+                      rr = road.splitlines()
+                      print('\n'.join(rr[max(0,i-8):min(len(rr),i+9)]))
+          if timing:
+              print('=== TIME NORMALIZED ===')
+              norm=[]
+              for l in timing.splitlines()[1:-1]:
+                  c=l.split(';',1)[0].strip()
+                  if c and not c.endswith(':'):
+                      norm.append(re.sub(r'\s+',' ',c))
+              print('\n'.join(norm))
+              print('TIME_NORM_SHA256', hashlib.sha256('\n'.join(norm).encode()).hexdigest())
+          if not road_name:
+              raise SystemExit('road procedure not found')
+          PY
