@@ -205,7 +205,7 @@ int  Rules_DeftemplateGenerateCode(const char *fileName, const char *fileNameBuf
               &fileCount,
               moduleArrayVersion,
               headerFilePtr,
-              (char)(intptr_t)aStructDeftempl,
+              aStructDeftempl,
               **(const char ***)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20),
               0,
               0);
@@ -237,7 +237,7 @@ LABEL_9:
               &fileCount,
               recordArrayVersion,
               headerFilePtr,
-              (char)(intptr_t)aStructDeftem_0,
+              aStructDeftem_0,
               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
               0,
               0);
@@ -271,7 +271,7 @@ LABEL_8:
               &fileCount,
               slotArrayVersion,
               headerFilePtr,
-              (char)(intptr_t)aStructTemplate,
+              aStructTemplate,
               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
               0,
               0);

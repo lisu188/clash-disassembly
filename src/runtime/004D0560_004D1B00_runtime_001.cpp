@@ -40,7 +40,7 @@ int  ObjectsCompiler_WriteClassPointerArray(
              fileCount,
              1,
              headerFP,
-             (char)(intptr_t)aDefclass_7,
+             aDefclass_7,
              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 44),
              0,
              0);
@@ -106,7 +106,7 @@ signed int  ObjectsCompiler_WriteClassHashTable(
          fileCount,
          1,
          a4,
-         (char)(intptr_t)aDefclass_7,
+         aDefclass_7,
          (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 40),
          0,
          0);
@@ -149,7 +149,7 @@ void  ObjectsCompiler_WriteSlotNameHashTable(const char *fileName, const char *p
          fileCount,
          1,
          a4,
-         (char)(intptr_t)aSlot_name,
+         aSlot_name,
          (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 36),
          0,
          0);
@@ -237,7 +237,7 @@ LABEL_5:
                fileCount,
                arrayVersion,
                headerFPCopy,
-               (char)(intptr_t)aSlot_name_0,
+               aSlot_name_0,
                (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 32),
                0,
                0);
@@ -519,7 +519,7 @@ int  ObjectsCompiler_WriteClassLinkPointerArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)(intptr_t)aDefclass_7,
+             aDefclass_7,
              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 8),
              *a11,
              codeFile);
@@ -623,7 +623,7 @@ int  ObjectsCompiler_WriteSlotDescArray(
              fileCount,
              *arrayVersion,
              headerFP,
-             (char)(intptr_t)aSlot_desc,
+             aSlot_desc,
              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 12),
              *reopenOldFile,
              codeFile);
@@ -745,7 +745,7 @@ signed int  ObjectsCompiler_WriteSlotDescPointerArray(
           fileCount,
           *arrayVersion,
           a5,
-          (char)(intptr_t)aSlot_desc_0,
+          aSlot_desc_0,
           (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 16),
           *a11,
           codeFile);
@@ -803,7 +803,7 @@ int  ObjectsCompiler_WriteSlotIndexMapArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)(intptr_t)aUnsigned,
+             aUnsigned,
              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 20),
              *a11,
              codeFile);
@@ -869,7 +869,7 @@ int  ObjectsCompiler_WriteHandlerArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)(intptr_t)aHandler_1,
+             aHandler_1,
              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 24),
              *a11,
              codeFile);
@@ -944,7 +944,7 @@ int  ObjectsCompiler_WriteHandlerIndexMapArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)(intptr_t)aUnsigned,
+             aUnsigned,
              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 28),
              *a11,
              codeFile);

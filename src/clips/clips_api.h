@@ -260,7 +260,7 @@ signed int  Rules_ExpressionToCode(int theFile, __int16 *theExpression, int a3, 
 signed int Rules_RegisterConstructsToCFunction(void);
 int  Rules_AddCodeGeneratorItem(int itemName, int priority, int initFunction, int beforeFunction, int generateFunction, int arrayCount);
 int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DWORD *arrayVersion, _DWORD *canBeReopened, int codeFile);
-int  Rules_ConstructCodeFileOpen(int theFile, const char *fileName, int imageID, const char *fileID, int *fileCount, int arrayVersion, int headerFP, char structureName, const char *structPrefix, int reopenOldFile, const char **codeFile);
+int  Rules_ConstructCodeFileOpen(int theFile, const char *fileName, int imageID, const char *fileID, int *fileCount, int arrayVersion, int headerFP, const char *structureName, const char *structPrefix, int reopenOldFile, const char **codeFile);
 signed int Rules_RegisterModuleItemIdAssigner(void);
 int  Rules_WriteConstructHeaderToCode(int theFile, int theConstruct, signed int maxIndices, int a4, int imageID, char constructPrefix);
 int  Rules_WriteConstructModuleItemHeaderToCode(int theFile, int theModule, int a3, int a4, char constructPrefix);

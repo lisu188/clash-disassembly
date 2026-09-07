@@ -1172,7 +1172,7 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
                     &version,
                     v50,
                     fileIDCopy,
-                    (char)(intptr_t)aDefclass_modul,
+                    aDefclass_modul,
                     **(const char ***)(uintptr_t)(g_ClipsConstructCompilerData + 20),
                     v42,
                     v18);
@@ -1191,7 +1191,7 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
                       &version,
                       v51,
                       fileIDCopy,
-                      (char)(intptr_t)aDefclass_6,
+                      aDefclass_6,
                       (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 4),
                       v43,
                       v19);
