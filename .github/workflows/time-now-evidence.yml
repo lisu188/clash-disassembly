@@ -1,0 +1,44 @@
+name: Time Now evidence
+
+on:
+  push:
+    branches:
+      - diagnostics/road-mode-timing-evidence
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d2b31c250fe078109fda41807c7c1e9b80e9706a
+          persist-credentials: false
+      - name: Extract Time_Now
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib,re
+          from pathlib import Path
+          text=Path('clash95.asm').read_text(encoding='latin-1')
+          m=re.search(r'(?ms)^\s*Time_Now\s+proc\b.*?^\s*Time_Now\s+endp\b',text)
+          if not m:
+              hits=[i for i,l in enumerate(text.splitlines()) if 'Time_Now' in l]
+              print('HITS',hits[:30])
+              for i in hits[:10]:
+                  ls=text.splitlines(); print('\n'.join(ls[max(0,i-10):min(len(ls),i+20)]))
+              raise SystemExit(2)
+          proc=m.group(0)
+          print(proc)
+          norm=[]
+          for l in proc.splitlines()[1:-1]:
+              c=l.split(';',1)[0].strip()
+              if c and not c.endswith(':'):
+                  norm.append(re.sub(r'\s+',' ',c))
+          print('NORMALIZED')
+          print('\n'.join(norm))
+          print('SHA256',hashlib.sha256('\n'.join(norm).encode()).hexdigest())
+          PY
