@@ -55,6 +55,47 @@ private:
   const std::uint32_t *words_;
 };
 
+class DLXSpriteSetMutableView final {
+public:
+  explicit constexpr DLXSpriteSetMutableView(void *spriteSet) noexcept
+      : words_(static_cast<std::uint32_t *>(spriteSet)) {}
+
+  constexpr void *data() const noexcept {
+    return words_;
+  }
+
+  constexpr DLXSpriteSetView readOnly() const noexcept {
+    return DLXSpriteSetView(words_);
+  }
+
+  constexpr void setEntryHandle(std::size_t index, std::uint32_t handle) noexcept {
+    words_[index] = handle;
+  }
+
+  constexpr void setDataHandle(std::uint32_t handle) noexcept {
+    words_[DLXSpriteSetView::kDataHandleIndex] = handle;
+  }
+
+  constexpr void clearDataHandle() noexcept {
+    setDataHandle(0);
+  }
+
+  constexpr void setEntryCount(std::uint32_t count) noexcept {
+    words_[DLXSpriteSetView::kEntryCountIndex] = count;
+  }
+
+  constexpr void setFileSize(std::uint32_t size) noexcept {
+    words_[DLXSpriteSetView::kFileSizeIndex] = size;
+  }
+
+  constexpr void setVtableHandle(std::uint32_t handle) noexcept {
+    words_[DLXSpriteSetView::kVtableHandleIndex] = handle;
+  }
+
+private:
+  std::uint32_t *words_;
+};
+
 static_assert(DLXSpriteSetView::kDataHandleIndex * sizeof(std::uint32_t) == 4096);
 static_assert(DLXSpriteSetView::kEntryCountIndex * sizeof(std::uint32_t) == 4100);
 static_assert(DLXSpriteSetView::kFileSizeIndex * sizeof(std::uint32_t) == 4104);

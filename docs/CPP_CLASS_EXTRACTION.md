@@ -39,7 +39,9 @@ The view currently exposes only fields supported by reached accessors and initia
 
 Several offsets are intentionally unaligned. The view reads them with `memcpy`; replacing them with aligned native references or pointer casts would introduce undefined behavior on the host and would not describe the original packed layout honestly.
 
-The view does not own the object and does not define native constructors, destructors, or virtual methods. Existing ABI-facing recovered functions remain the runtime entrypoints for this batch.
+`CAviDecompressorMutableView` adds only the reached writes already present in `CAviDecompressor_InitOverlays`, `CAviDecompressor_InitPos`, and `CAviDecompressor_InitRect`. It preserves their field widths and write order and uses `memcpy` stores for the unaligned destination rectangle.
+
+Neither AVI view owns the object or defines native constructors, destructors, or virtual methods. Existing ABI-facing recovered functions remain the runtime entrypoints for this batch.
 
 ### `PathEntryLayout` / `PathEntryArrayLayout`
 
@@ -57,7 +59,9 @@ These are layout models, not a claim that the original compiler used the same mo
 
 The proven object footprint is 4112 bytes: sprite handles occupy the leading DWORD table, followed by the data-buffer handle at byte `4096`, entry count at `4100`, file size at `4104`, and vtable handle at `4108`. The loader's recovered loop admits at most 1023 directory entries. `DLXSpriteSet_GetLastCharIndex` intentionally reads the low 16 bits of the entry-count field; the view preserves that behavior through `serializedEntryCount()` rather than silently widening it.
 
-The view does not claim ownership of sprite handles or the backing data allocation. Destruction and copying remain in the recovered ABI functions until their exact allocation and flag contracts are migrated with original-backed tests.
+`DLXSpriteSetMutableView` provides explicit writes for sprite handles and the four proven trailing fields. It does not allocate or free anything; the recovered load/copy/destroy functions still own those lifecycle contracts.
+
+Neither DLX view claims ownership of sprite handles or the backing data allocation. Destruction and copying remain in the recovered ABI functions until their exact allocation and flag contracts are migrated with original-backed tests.
 
 ## Candidate audit
 
@@ -74,8 +78,8 @@ The score is a review queue, not a proof threshold. A high score means the famil
 ## Next targets
 
 1. Convert the small `CAviDecompressor` accessor family to use `CAviDecompressorView` after original-vs-recovered output comparison and manifest hash updates are prepared.
-2. Recover a minimal write-capable AVI view for destination rectangle and overlay setters, keeping unaligned access explicit.
-3. Use `DLXSpriteSetView` to drive a separately validated cleanup of the load/save/get-character accessor family without changing ownership semantics.
+2. Migrate `CAviDecompressor_InitOverlays`, `CAviDecompressor_InitPos`, and `CAviDecompressor_InitRect` to `CAviDecompressorMutableView` in the same separately validated body-change campaign.
+3. Use `DLXSpriteSetView` / `DLXSpriteSetMutableView` to drive a separately validated cleanup of the load/save/get-character family without changing ownership semantics.
 4. Review `CSyncObject` only to the extent supported by its map-confirmed synchronization seam.
 5. Continue typed `UnitStackRecord` / `UnitSlotRecord` adoption as record readability work, without misclassifying the strategic save-state slab as an original C++ class.
 6. Use the audit to identify vtable/constructor/destructor clusters in render and media before touching broader CLIPS or gameplay families.

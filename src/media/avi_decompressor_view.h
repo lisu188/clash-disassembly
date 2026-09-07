@@ -131,6 +131,57 @@ private:
   const std::byte *bytes_;
 };
 
+class CAviDecompressorMutableView final {
+public:
+  explicit CAviDecompressorMutableView(void *instance) noexcept
+      : bytes_(static_cast<std::byte *>(instance)) {}
+
+  static CAviDecompressorMutableView fromPlayerHandle(void *playerHandle) noexcept {
+    std::uint32_t instance = 0;
+    std::memcpy(&instance, playerHandle, sizeof(instance));
+    return CAviDecompressorMutableView(
+        reinterpret_cast<void *>(static_cast<std::uintptr_t>(instance)));
+  }
+
+  void *data() const noexcept {
+    return bytes_;
+  }
+
+  CAviDecompressorView readOnly() const noexcept {
+    return CAviDecompressorView(bytes_);
+  }
+
+  void setOverlaysEnabled(bool enabled) noexcept {
+    store<std::uint8_t>(CAviDecompressorView::kOverlaysEnabledOffset,
+                        enabled ? 1u : 0u);
+  }
+
+  void setPosition(std::int32_t x, std::int32_t y) noexcept {
+    store<std::int32_t>(CAviDecompressorView::kDestinationRightOffset, 0);
+    store<std::int32_t>(CAviDecompressorView::kDestinationBottomOffset, 0);
+    store<std::uint8_t>(CAviDecompressorView::kPositionModeOffset, 1);
+    store<std::int32_t>(CAviDecompressorView::kDestinationLeftOffset, x);
+    store<std::int32_t>(CAviDecompressorView::kDestinationTopOffset, y);
+  }
+
+  void setDestinationRect(std::int32_t left, std::int32_t top,
+                          std::int32_t right, std::int32_t bottom) noexcept {
+    store<std::int32_t>(CAviDecompressorView::kDestinationLeftOffset, left);
+    store<std::int32_t>(CAviDecompressorView::kDestinationTopOffset, top);
+    store<std::int32_t>(CAviDecompressorView::kDestinationRightOffset, right);
+    store<std::int32_t>(CAviDecompressorView::kDestinationBottomOffset, bottom);
+    store<std::uint8_t>(CAviDecompressorView::kPositionModeOffset, 1);
+  }
+
+private:
+  template <typename T>
+  void store(std::size_t offset, T value) noexcept {
+    std::memcpy(bytes_ + offset, &value, sizeof(value));
+  }
+
+  std::byte *bytes_;
+};
+
 static_assert(CAviDecompressorView::kDestroyVtableOffset + sizeof(std::uint32_t)
               == CAviDecompressorView::kObjectSize);
 
