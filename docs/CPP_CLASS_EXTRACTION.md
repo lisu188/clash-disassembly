@@ -63,6 +63,23 @@ The proven object footprint is 4112 bytes: sprite handles occupy the leading DWO
 
 Neither DLX view claims ownership of sprite handles or the backing data allocation. Destruction and copying remain in the recovered ABI functions until their exact allocation and flag contracts are migrated with original-backed tests.
 
+### `WCIsvListBaseView`
+
+`src/buildings/wcisv_list_view.h` reuses the existing `WCCompatListBase` and `WCCompatLink` layouts instead of introducing duplicate storage. This family has stronger original-class evidence than the generic game-state records: `clash95.map` names `WCIsvListBase` methods directly, the recovered ctor/dtor variants establish the object lifecycle and vtable transitions, and the basic list operations independently consume the same fields.
+
+The recovered list object is exactly 24 bytes:
+
+- head link handle at `+0`;
+- vtable handle at `+4`;
+- tail link handle at `+8`;
+- element count at `+12`;
+- allocator callback handle at `+16`;
+- deallocator callback handle at `+20`.
+
+Each link node is exactly 8 bytes with the next-link handle at `+0` and stored value at `+4`. `WCIsvListBase_AllocLinkNode` allocates eight bytes, `base_insert` and `base_sget` maintain head/tail/count, `AppendValue` and `PopFrontValue` use the node value, and `ReleaseLinkNode` independently consumes the deallocator field at `+20`.
+
+`WCIsvListBaseView` and `WCIsvListBaseMutableView` are non-owning views over those already-recovered bytes. They do not replace the existing allocation, destruction, list traversal, or virtual-dispatch functions. The compatibility storage remains authoritative until a separately validated body migration is performed.
+
 ## Candidate audit
 
 Run:
@@ -80,9 +97,9 @@ The score is a review queue, not a proof threshold. A high score means the famil
 1. Convert the small `CAviDecompressor` accessor family to use `CAviDecompressorView` after original-vs-recovered output comparison and manifest hash updates are prepared.
 2. Migrate `CAviDecompressor_InitOverlays`, `CAviDecompressor_InitPos`, and `CAviDecompressor_InitRect` to `CAviDecompressorMutableView` in the same separately validated body-change campaign.
 3. Use `DLXSpriteSetView` / `DLXSpriteSetMutableView` to drive a separately validated cleanup of the load/save/get-character family without changing ownership semantics.
-4. Review `CSyncObject` only to the extent supported by its map-confirmed synchronization seam.
-5. Continue typed `UnitStackRecord` / `UnitSlotRecord` adoption as record readability work, without misclassifying the strategic save-state slab as an original C++ class.
-6. Use the audit to identify vtable/constructor/destructor clusters in render and media before touching broader CLIPS or gameplay families.
+4. Migrate the bounded `WCIsvListBase` basic helpers (`base_next`, `base_insert`, `base_sget`, allocation/release, append/pop) to the typed view after original-backed equivalence checks.
+5. Keep `CSyncObject` deferred until more than the map-confirmed `Unlock` seam and current placeholder storage are recovered.
+6. Continue typed `UnitStackRecord` / `UnitSlotRecord` adoption as record readability work, without misclassifying the strategic save-state slab as an original C++ class.
 
 ## Validation rules
 
