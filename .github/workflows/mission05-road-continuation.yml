@@ -1,0 +1,42 @@
+name: Mission 05 Road continuation diagnostic
+
+on:
+  push:
+    branches:
+      - diagnostics/mission05-road-continuation
+
+permissions:
+  contents: read
+
+jobs:
+  gcc-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build and route dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev g++-13 xvfb xdotool
+      - name: Configure
+        env:
+          CXX: g++-13
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+      - name: Build bootstrap
+        run: cmake --build build --target clash95_bootstrap -j2
+      - name: Replay turn-7 and second Road segment
+        env:
+          CLASH95_CAMPAIGN_ROUTE_DURABLE_ARTIFACT_RUN_ID: github-${{ github.run_id }}
+          CLASH95_ARTIFACT_PRUNE_AFTER_RUN: "0"
+          CLASH95_CAMPAIGN_ROUTE_FAIL_TAIL_LINES: "1200"
+        run: |
+          bash tests/run_campaign_route_script_smoke.sh \
+            build/bin/clash95_bootstrap 05 \
+            tests/first_campaign_arc_routes/mission_05_road_continuation_probe.env
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mission05-road-continuation-gcc
+          path: artifacts/campaign-routes/mission-05
+          retention-days: 7
+          if-no-files-found: warn
