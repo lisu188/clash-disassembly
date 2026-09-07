@@ -51,6 +51,14 @@ The view does not own the object and does not define native constructors, destru
 
 These are layout models, not a claim that the original compiler used the same modern C++ declaration syntax or inheritance graph.
 
+### `DLXSpriteSetView`
+
+`src/render/dlx_sprite_set_view.h` models the map-confirmed `DLXSpriteSet` object as a non-owning 32-bit storage view. `DLXSpriteSet_Load`, destroy/copy construction, save, character lookup, and release all corroborate the same trailing metadata layout.
+
+The proven object footprint is 4112 bytes: sprite handles occupy the leading DWORD table, followed by the data-buffer handle at byte `4096`, entry count at `4100`, file size at `4104`, and vtable handle at `4108`. The loader's recovered loop admits at most 1023 directory entries. `DLXSpriteSet_GetLastCharIndex` intentionally reads the low 16 bits of the entry-count field; the view preserves that behavior through `serializedEntryCount()` rather than silently widening it.
+
+The view does not claim ownership of sprite handles or the backing data allocation. Destruction and copying remain in the recovered ABI functions until their exact allocation and flag contracts are migrated with original-backed tests.
+
 ## Candidate audit
 
 Run:
@@ -67,7 +75,7 @@ The score is a review queue, not a proof threshold. A high score means the famil
 
 1. Convert the small `CAviDecompressor` accessor family to use `CAviDecompressorView` after original-vs-recovered output comparison and manifest hash updates are prepared.
 2. Recover a minimal write-capable AVI view for destination rectangle and overlay setters, keeping unaligned access explicit.
-3. Review `DLXSpriteSet` from its map-confirmed load/save/draw method family.
+3. Use `DLXSpriteSetView` to drive a separately validated cleanup of the load/save/get-character accessor family without changing ownership semantics.
 4. Review `CSyncObject` only to the extent supported by its map-confirmed synchronization seam.
 5. Continue typed `UnitStackRecord` / `UnitSlotRecord` adoption as record readability work, without misclassifying the strategic save-state slab as an original C++ class.
 6. Use the audit to identify vtable/constructor/destructor clusters in render and media before touching broader CLIPS or gameplay families.
