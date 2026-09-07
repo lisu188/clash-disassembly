@@ -2,6 +2,18 @@
 
 Last consolidated: 2026-09-07.
 
+## Road Build-Mode Timing Register Cleanup
+
+Track: Win95 reconstruction, reached mission-05 Road mode. The marker-animation
+loop in `Builder_StartRoadBuildMode` now calls `Time_Now(0, 0)` at both original
+timestamp sites instead of passing three undefined decompiler temporaries. The
+protected Road procedure performs both calls without setting argument registers,
+and the protected `Time_Now` implementation saves/restores incoming ECX/EDX but
+overwrites them before computing its timestamp, so these values are not inputs.
+Only this function's current manifest hash changes; all 4157 identities and
+frozen baselines remain. Evidence: [ROAD_MODE_TIMING_RECOVERY.md](ROAD_MODE_TIMING_RECOVERY.md).
+No campaign milestone advances; normal turn-7 refresh and Road continuation remain next.
+
 ## Illegal Logical-Name Reporter
 
 Track: Win95 reconstruction, reached CLIPS I/O error handling.
