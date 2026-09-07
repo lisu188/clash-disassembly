@@ -1,0 +1,106 @@
+name: Illegal logical-name recovery preparation
+
+on:
+  push:
+    branches:
+      - diagnostics/illegal-logical-name-recovery
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: preparation
+          persist-credentials: false
+
+      - uses: actions/checkout@v4
+        with:
+          path: source
+          ref: abed99837033043da180481a9e90975780d012b9
+          persist-credentials: false
+
+      - name: Install supported compilers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends g++-13 clang-18
+
+      - name: Apply bounded recovery
+        working-directory: source
+        run: python3 ../preparation/.diagnostics/prepare_illegal_logical.py
+
+      - name: Validate focused contract and repository metadata
+        working-directory: source
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 -m unittest discover -s tests/tools -p test_illegal_logical_name.py -v 2>&1 | tee illegal-logical-focused.log
+          python3 tools/audit_split_sources.py
+          python3 tools/gen_subsystem_headers.py --check
+          python3 tools/gen_subsystem_headers.py --check-tu-includes
+          python3 -m unittest discover -s tests/tools -p test_cpp_headers.py -v
+          python3 tests/check_markdown_links.py
+          git diff --check
+
+      - name: Publish verified source Git objects only
+        working-directory: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == 'abed99837033043da180481a9e90975780d012b9'
+          paths = sorted([
+              'data/recovered_sources.json',
+              'docs/IO_LOGICAL_NAME_RECOVERY.md',
+              'docs/STATUS.md',
+              'src/clips/0049CE10_0049E8D0_clips_005.cpp',
+              'src/clips/0049E930_0049FF80_clips_006.cpp',
+              'src/clips/clips_internal.h',
+              'tests/tools/test_illegal_logical_name.py',
+          ])
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          changed = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
+          assert changed == paths, (changed, paths)
+
+          def post(endpoint, payload):
+              return json.loads(subprocess.check_output(
+                  ['gh', 'api', '--method', 'POST', 'repos/lisu188/clash-disassembly/git/' + endpoint, '--input', '-'],
+                  input=json.dumps(payload).encode()))
+
+          entries = []
+          for name in paths:
+              data = Path(name).read_bytes()
+              expected = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+              blob = post('blobs', {'encoding': 'base64', 'content': base64.b64encode(data).decode()})
+              assert blob['sha'] == expected, name
+              entries.append({'path': name, 'mode': '100644', 'type': 'blob', 'sha': expected})
+
+          tree = post('trees', {
+              'base_tree': '9e6f24178ae8abca54af4d94087922fafa53de7b',
+              'tree': entries,
+          })
+          result = {'tree_sha': tree['sha'], 'files': entries}
+          Path('../publication.json').write_text(json.dumps(result, indent=2) + '\n')
+          print('PUBLISHED_TREE', json.dumps(result, sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: illegal-logical-recovery-preparation
+          path: |
+            publication.json
+            source/illegal-logical-focused.log
+          retention-days: 7
+          if-no-files-found: warn
