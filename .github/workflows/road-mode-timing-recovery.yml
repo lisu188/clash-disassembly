@@ -1,0 +1,84 @@
+name: Road mode timing recovery preparation
+
+on:
+  push:
+    branches:
+      - diagnostics/road-mode-timing-evidence
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: preparation
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: source
+          ref: d2b31c250fe078109fda41807c7c1e9b80e9706a
+          persist-credentials: false
+      - name: Apply bounded Road timing recovery
+        working-directory: source
+        run: python3 ../preparation/.diagnostics/prepare_road_mode_timing.py
+      - name: Validate focused contract and repository metadata
+        working-directory: source
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 -m unittest discover -s tests/tools -p test_road_mode_timing.py -v 2>&1 | tee road-mode-timing-focused.log
+          python3 tools/audit_split_sources.py
+          python3 tools/update_split_manifest_hashes.py
+          python3 tools/gen_subsystem_headers.py --check
+          python3 tools/gen_subsystem_headers.py --check-tu-includes
+          python3 tests/check_markdown_links.py
+          git diff --check
+      - name: Publish verified source Git objects only
+        working-directory: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, subprocess
+          from pathlib import Path
+          assert subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip() == 'd2b31c250fe078109fda41807c7c1e9b80e9706a'
+          paths = sorted([
+              'data/recovered_sources.json',
+              'docs/ROAD_MODE_TIMING_RECOVERY.md',
+              'docs/STATUS.md',
+              'src/buildings/00425540_00426FC0_buildings_006.cpp',
+              'tests/tools/test_road_mode_timing.py',
+          ])
+          subprocess.run(['git','add','--',*paths], check=True)
+          changed = subprocess.check_output(['git','diff','--cached','--name-only'], text=True).splitlines()
+          assert changed == paths, (changed, paths)
+          def post(endpoint, payload):
+              return json.loads(subprocess.check_output(
+                  ['gh','api','--method','POST','repos/lisu188/clash-disassembly/git/'+endpoint,'--input','-'],
+                  input=json.dumps(payload).encode()))
+          entries=[]
+          for name in paths:
+              data=Path(name).read_bytes()
+              expected=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+              blob=post('blobs', {'encoding':'base64','content':base64.b64encode(data).decode()})
+              assert blob['sha'] == expected, name
+              entries.append({'path':name,'mode':'100644','type':'blob','sha':expected})
+          tree=post('trees', {'base_tree':'ab386deff4fdcd101ffac23019ef4b5459e99d0a','tree':entries})
+          result={'tree_sha':tree['sha'],'files':entries}
+          Path('../publication.json').write_text(json.dumps(result, indent=2)+'\n')
+          print('PUBLISHED_TREE', json.dumps(result, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: road-mode-timing-recovery-preparation
+          path: |
+            publication.json
+            source/road-mode-timing-focused.log
+          retention-days: 7
+          if-no-files-found: warn
