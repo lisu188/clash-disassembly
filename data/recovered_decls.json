@@ -17725,7 +17725,7 @@
     },
     "Rules_ReportIllegalLogicalName": {
       "class": "manifest",
-      "decl": "signed int Rules_ReportIllegalLogicalName(void);",
+      "decl": "signed int Rules_ReportIllegalLogicalName(int functionName);",
       "home": "clips"
     },
     "Rules_ReportInstanceFileProcessError": {
