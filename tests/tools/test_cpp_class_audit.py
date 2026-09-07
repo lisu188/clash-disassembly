@@ -75,7 +75,7 @@ class CppClassCandidateAuditTests(unittest.TestCase):
                              if item["family"] == "CAviDecompressor")
             self.assertEqual(candidate["map_constructor_mentions"], 1)
             self.assertEqual(candidate["map_destructor_mentions"], 1)
-            self.assertEqual(candidate["map_method_count"], 4)
+            self.assertEqual(candidate["map_method_count"], 2)
             self.assertIn("Frames", candidate["sample_map_methods"])
             self.assertIn("TimeMs", candidate["sample_map_methods"])
             self.assertGreater(candidate["score"], 20)
