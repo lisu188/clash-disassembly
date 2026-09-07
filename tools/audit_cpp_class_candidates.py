@@ -44,10 +44,8 @@ def collect_map_evidence(root, evidence):
         dtor_classes = set(WATCOM_DTOR_RE.findall(line))
         for class_name in ctor_classes:
             evidence[class_name]["map_constructor_mentions"] += 1
-            evidence[class_name]["map_methods"].add("<ctor>")
         for class_name in dtor_classes:
             evidence[class_name]["map_destructor_mentions"] += 1
-            evidence[class_name]["map_methods"].add("<dtor>")
         for class_name in set(WATCOM_METHOD_RE.findall(line)) - ctor_classes - dtor_classes:
             method_match = re.search(r"W\?([^\s:]+)\$:" + re.escape(class_name) + r"\$", line)
             method_name = method_match.group(1) if method_match else "<method>"
