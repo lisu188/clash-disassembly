@@ -1,0 +1,65 @@
+name: Unit new-turn evidence
+
+on:
+  push:
+    branches:
+      - diagnostics/unit-new-turn-evidence
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: f4c7a1dd0432870e57b866d5981446d0c1962a7f
+          persist-credentials: false
+      - name: Extract Unit_NewTurn and reached caller evidence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib,re
+          from pathlib import Path
+          raw=Path('clash95.asm').read_bytes()
+          text=raw.decode('latin-1')
+          lines=text.splitlines()
+          print('ASSEMBLY_SHA256', hashlib.sha256(raw).hexdigest())
+          def find_proc(candidates):
+              for name in candidates:
+                  m=re.search(rf'(?ms)^\s*{re.escape(name)}\s+proc\b.*?^\s*{re.escape(name)}\s+endp\b', text)
+                  if m:
+                      return name,m.group(0)
+              return None,None
+          name,proc=find_proc(('sub_4118E0','Unit_NewTurn'))
+          if not proc:
+              hits=[i for i,l in enumerate(lines) if '4118E0' in l.upper() or 'Unit_NewTurn' in l]
+              print('TARGET_HITS',hits[:20])
+              for i in hits[:10]: print('\n'.join(lines[max(0,i-15):min(len(lines),i+30)]))
+              raise SystemExit('Unit_NewTurn procedure not found')
+          print('=== UNIT NEW TURN',name,'===')
+          print(proc)
+          norm=[]
+          for line in proc.splitlines()[1:-1]:
+              code=line.split(';',1)[0].strip()
+              if code and not code.endswith(':'):
+                  norm.append(re.sub(r'\s+',' ',code))
+          print('UNIT_NEW_TURN_NORM_SHA256',hashlib.sha256('\n'.join(norm).encode()).hexdigest())
+          print('=== KEY ADDRESS WINDOWS ===')
+          plines=proc.splitlines()
+          for addr in ('41194F','4119A2','4119FD','411A18','411A67'):
+              hits=[i for i,l in enumerate(plines) if addr in l.upper()]
+              print('---',addr,'hits',hits,'---')
+              for i in hits: print('\n'.join(plines[max(0,i-10):min(len(plines),i+14)]))
+          print('=== CALLS IN UNIT NEW TURN ===')
+          for i,l in enumerate(plines):
+              if re.search(r'\bcall\b',l):
+                  print(f'{i:03d}: {l.strip()}')
+          print('=== ORIGINAL CALLERS ===')
+          callnames={name,'sub_4118E0','Unit_NewTurn'}
+          for i,l in enumerate(lines):
+              if any(re.search(rf'\bcall\s+{re.escape(n)}\b',l) for n in callnames):
+                  print('\n'.join(lines[max(0,i-14):min(len(lines),i+15)]))
+          PY
