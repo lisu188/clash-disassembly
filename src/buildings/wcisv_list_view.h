@@ -28,7 +28,7 @@ class WCIsvListBaseView final {
 public:
   static constexpr std::size_t kObjectSize = sizeof(WCCompatListBase);
 
-  explicit constexpr WCIsvListBaseView(const WCIsvListBase *list) noexcept
+  explicit WCIsvListBaseView(const WCIsvListBase *list) noexcept
       : list_(reinterpret_cast<const WCCompatListBase *>(list)) {}
 
   explicit constexpr WCIsvListBaseView(const WCCompatListBase *list) noexcept
@@ -72,7 +72,7 @@ private:
 
 class WCIsvListBaseMutableView final {
 public:
-  explicit constexpr WCIsvListBaseMutableView(WCIsvListBase *list) noexcept
+  explicit WCIsvListBaseMutableView(WCIsvListBase *list) noexcept
       : list_(reinterpret_cast<WCCompatListBase *>(list)) {}
 
   explicit constexpr WCIsvListBaseMutableView(WCCompatListBase *list) noexcept
