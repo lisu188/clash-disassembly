@@ -5,8 +5,8 @@ import subprocess
 
 p1 = Path('src/clips/0049CE10_0049E8D0_clips_005.cpp')
 p2 = Path('src/clips/0049E930_0049FF80_clips_006.cpp')
-hdr = Path('src/clips/clips_internal.h')
 manifest = Path('data/recovered_sources.json')
+decl_path = Path('data/recovered_decls.json')
 before = json.loads(manifest.read_text())
 
 def replace_in_function(path, name, old, new):
@@ -38,12 +38,15 @@ if text.count(old) != 1:
     raise SystemExit('target body mismatch')
 p2.write_text(text.replace(old, new))
 
-h = hdr.read_text()
+decls = json.loads(decl_path.read_text())
+rec = decls['functions']['Rules_ReportIllegalLogicalName']
 old_decl = 'signed int Rules_ReportIllegalLogicalName(void);'
 new_decl = 'signed int Rules_ReportIllegalLogicalName(int functionName);'
-if h.count(old_decl) != 1:
-    raise SystemExit('target declaration mismatch')
-hdr.write_text(h.replace(old_decl, new_decl))
+if rec.get('decl') != old_decl:
+    raise SystemExit(f'unexpected canonical declaration: {rec.get("decl")!r}')
+rec['decl'] = new_decl
+decl_path.write_text(json.dumps(decls, indent=2) + '\n')
+subprocess.run(['python3', 'tools/gen_subsystem_headers.py', '--write'], check=True)
 
 shutil.copyfile('../preparation/.diagnostics/test_illegal_logical_name.py', 'tests/tools/test_illegal_logical_name.py')
 shutil.copyfile('../preparation/.diagnostics/IO_LOGICAL_NAME_RECOVERY.md', 'docs/IO_LOGICAL_NAME_RECOVERY.md')
@@ -71,3 +74,4 @@ for o,n in zip(before['functions'], after['functions'], strict=True):
     else:
         assert {k:v for k,v in o.items() if k != 'body_sha256'} == {k:v for k,v in n.items() if k != 'body_sha256'}
 print('Changed current body hashes:', sorted(changed))
+print('Canonical declaration:', rec['decl'])
