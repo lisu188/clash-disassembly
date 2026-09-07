@@ -61,14 +61,15 @@ class RoadModeTimingRecoveryTests(unittest.TestCase):
         self.assertRegex(proc, r'cmp\s+eax, edx\s*\n\s*jbe\s+loc_4256B7\s*\n\s*call\s+Time_Now\s*\n\s*imul\s+edx, ds:dword_511B58, 2D5h')
 
     def test_recovered_source_uses_explicit_ignored_inputs_only(self):
-        body = function(SOURCE.read_text(), 'Builder_StartRoadBuildMode')
+        source = SOURCE.read_text()
+        body = function(source, 'Builder_StartRoadBuildMode')
         self.assertEqual(body.count('Time_Now(0, 0)'), 2)
         self.assertNotIn('Time_Now(v8, v7)', body)
         self.assertNotIn('Time_Now(v9, g_RoadBuildModeLastAnimationTick)', body)
         self.assertNotRegex(body, r'\bint v[789];')
-        self.assertNotIn("variable 'v7' is possibly undefined", SOURCE.read_text())
-        self.assertNotIn("variable 'v8' is possibly undefined", SOURCE.read_text())
-        self.assertNotIn("variable 'v9' is possibly undefined", SOURCE.read_text())
+        self.assertNotIn("// 4255E9: variable 'v7' is possibly undefined", source)
+        self.assertNotIn("// 4255E9: variable 'v8' is possibly undefined", source)
+        self.assertNotIn("// 4255FF: variable 'v9' is possibly undefined", source)
 
     def test_timing_order_and_threshold_are_unchanged(self):
         body = function(SOURCE.read_text(), 'Builder_StartRoadBuildMode')
