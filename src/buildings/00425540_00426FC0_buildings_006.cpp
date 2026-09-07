@@ -20,9 +20,6 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
   signed int result; // eax
   int v4; // ebx
   int v6; // ecx
-  int v7; // edx
-  int v8; // ecx
-  int v9; // ecx
   int unitStackRecordBase; // esi
   int tileDeltaY; // eax
   int *selectedDirectionMarker; // edx
@@ -48,9 +45,9 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
         DD_Pump((int)(intptr_t)g_RenderState, v4);
         WorldMap_HandleScrollKeysAndIdle(a1);
         WorldMap_RedrawFrame(v4);
-        if ( Time_Now(v8, v7) - ROAD_BUILD_MARKER_ANIMATION_INTERVAL_TICKS > (unsigned int)g_RoadBuildModeLastAnimationTick )
+        if ( Time_Now(0, 0) - ROAD_BUILD_MARKER_ANIMATION_INTERVAL_TICKS > (unsigned int)g_RoadBuildModeLastAnimationTick )
         {
-          g_RoadBuildModeLastAnimationTick = Time_Now(v9, g_RoadBuildModeLastAnimationTick);
+          g_RoadBuildModeLastAnimationTick = Time_Now(0, 0);
           v4 = ((_BYTE)g_RoadBuildModeAnimationFrameIndex + 1) & ROAD_BUILD_MARKER_ANIMATION_FRAME_MASK;
           g_RoadBuildModeAnimationFrameIndex = v4;
           WorldMap_RedrawTileIfVisible(
@@ -139,9 +136,6 @@ LABEL_13:
   }
   return result;
 }
-// 4255E9: variable 'v8' is possibly undefined
-// 4255E9: variable 'v7' is possibly undefined
-// 4255FF: variable 'v9' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5142B8: using guessed type int dword_5142B8;
 // 5142ED: using guessed type int dword_5142ED;
