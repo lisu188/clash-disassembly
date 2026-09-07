@@ -1,0 +1,107 @@
+name: Construct error-reporting recovery preparation
+
+on:
+  push:
+    branches:
+      - diagnostics/construct-error-reporting-evidence
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: preparation
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: source
+          ref: 7745ab12c188480d7c5b1f456c5a3361ef113ec5
+          persist-credentials: false
+      - name: Install supported fixture compilers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends g++-13 clang-18
+      - name: Apply exact bounded recovery patch
+        working-directory: source
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, lzma, subprocess
+          from pathlib import Path
+          patch = lzma.decompress(Path('../preparation/.diagnostics/construct-errors.xz').read_bytes())
+          assert hashlib.sha256(patch).hexdigest() == 'fee0ca2a8efde3f8dfc5e3852350ff9276fc099c3654511ae17556aa969cfa9f'
+          assembly = hashlib.sha256(Path('clash95.asm').read_bytes()).hexdigest()
+          before = json.loads(Path('data/recovered_sources.json').read_text())
+          subprocess.run(['git', 'apply', '--check'], input=patch, check=True)
+          subprocess.run(['git', 'apply'], input=patch, check=True)
+          after = json.loads(Path('data/recovered_sources.json').read_text())
+          changed = []
+          assert len(before['functions']) == len(after['functions']) == 4157
+          for old, new in zip(before['functions'], after['functions'], strict=True):
+              if old != new:
+                  assert {k: v for k, v in old.items() if k != 'body_sha256'} == {k: v for k, v in new.items() if k != 'body_sha256'}
+                  changed.append(old['name'])
+          assert sorted(changed) == ['Rules_OpenFileErrorMessage', 'Rules_ReportSystemError']
+          assert hashlib.sha256(Path('clash95.asm').read_bytes()).hexdigest() == assembly
+          print('Only two current body hashes changed:', changed)
+          print('Protected assembly unchanged:', assembly)
+          PY
+      - name: Compare composed original and production messages
+        working-directory: source
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 -m unittest discover -s tests/tools -p test_construct_error_reporting.py -v 2>&1 | tee construct-errors-focused.log
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0, 'tests/tools')
+          import test_construct_error_reporting as t
+          print('CASES', len(t.CASES), 'TRACE_BYTES', len(t.EXPECTED), 'SHA256', t.EXPECTED_SHA256)
+          PY
+      - name: Audit source, headers and documentation
+        working-directory: source
+        run: |
+          python3 tools/audit_split_sources.py
+          python3 tools/gen_subsystem_headers.py --check
+          python3 tools/gen_subsystem_headers.py --check-tu-includes
+          python3 tests/check_markdown_links.py
+          git diff --check
+      - name: Publish verified source Git objects only
+        working-directory: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, subprocess
+          from pathlib import Path
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == '7745ab12c188480d7c5b1f456c5a3361ef113ec5'
+          paths = ['data/recovered_sources.json', 'docs/CONSTRUCT_CODE_FILE_RECOVERY.md', 'docs/STATUS.md', 'src/clips/00481720_00482D40_clips_001.cpp', 'src/clips/004849EE_0048667D_clips_003.cpp', 'tests/tools/test_construct_error_reporting.py']
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          assert subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines() == sorted(paths)
+          def post(endpoint, payload):
+              return json.loads(subprocess.check_output(['gh', 'api', '--method', 'POST', 'repos/lisu188/clash-disassembly/git/' + endpoint, '--input', '-'], input=json.dumps(payload).encode()))
+          entries = []
+          for name in paths:
+              content = Path(name).read_bytes()
+              expected = hashlib.sha1(b'blob ' + str(len(content)).encode() + b'\0' + content).hexdigest()
+              blob = post('blobs', {'encoding': 'base64', 'content': base64.b64encode(content).decode()})
+              assert blob['sha'] == expected, name
+              entries.append({'path': name, 'mode': '100644', 'type': 'blob', 'sha': expected})
+          tree = post('trees', {'base_tree': 'dca86b92020a0cd35db396b562cbc415dc784fc3', 'tree': entries})
+          result = {'tree_sha': tree['sha'], 'files': entries}
+          Path('../publication.json').write_text(json.dumps(result, indent=2) + '\n')
+          print('PUBLISHED_TREE', json.dumps(result, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: construct-errors-preparation
+          path: |
+            publication.json
+            source/construct-errors-focused.log
+          retention-days: 7
+          if-no-files-found: warn
