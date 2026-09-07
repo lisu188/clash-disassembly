@@ -27,9 +27,17 @@ def procedure(name):
     return m.group(0)
 
 def function(text, name):
-    i = text.index(name + '(')
-    line = text.rfind('\n', 0, i) + 1
-    brace = text.index('{', i)
+    pattern = re.compile(
+        rf'(?m)^[ \t]*[A-Za-z_][A-Za-z0-9_ \t:*&]*\b{re.escape(name)}\s*\([^;\n]*\)\s*$'
+    )
+    matches = list(pattern.finditer(text))
+    if len(matches) != 1:
+        raise AssertionError(f'{name}: expected one definition, found {len(matches)}')
+    match = matches[0]
+    line = match.start()
+    brace = text.find('{', match.end())
+    if brace < 0 or text[match.end():brace].strip():
+        raise AssertionError(f'{name}: malformed definition')
     depth = 0
     for j in range(brace, len(text)):
         if text[j] == '{':
