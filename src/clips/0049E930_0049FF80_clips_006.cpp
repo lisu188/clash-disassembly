@@ -146,7 +146,7 @@ signed int * Rules_HostFormat(double context)
   }
   else
   {
-    Rules_ReportIllegalLogicalName();
+    Rules_ReportIllegalLogicalName((int)(intptr_t)aFormat);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return emptyResult;
@@ -444,7 +444,7 @@ LABEL_8:
     logicalName = (char *)(uintptr_t)Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdin, v4, context);
     if ( !logicalName )
     {
-      Rules_ReportIllegalLogicalName();
+      Rules_ReportIllegalLogicalName((int)(intptr_t)aReadline);
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
       result = Str_Intern(aReadError, v11);
@@ -520,20 +520,13 @@ char * Rules_ReadLineWithEscaping(int logicalName, int *currentPosition, unsigne
 // 49F2DB: variable 'v7' is possibly undefined
 
 //----- (0049F310) --------------------------------------------------------
-signed int Rules_ReportIllegalLogicalName(void)
+signed int Rules_ReportIllegalLogicalName(int functionName)
 {
-  int v0; // ecx
-  int v1; // ecx
-  int v2; // ecx
-
   Rules_PrintErrorID((int)(intptr_t)aIofun, 1, 0);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIllegalLogical, v0);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
-  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction_, v2);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIllegalLogical, functionName);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, functionName);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction_, functionName);
 }
-// 49F330: variable 'v0' is possibly undefined
-// 49F33C: variable 'v1' is possibly undefined
-// 49F34B: variable 'v2' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0049F360) --------------------------------------------------------

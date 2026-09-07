@@ -2,6 +2,18 @@
 
 Last consolidated: 2026-09-07.
 
+## Illegal Logical-Name Reporter
+
+Track: Win95 reconstruction, reached CLIPS I/O error handling.
+`Rules_ReportIllegalLogicalName` now retains the function-name token supplied in
+original EAX and all six callers pass the exact `printout`, `read`, `open`,
+`close`, `format`, or `readline` identifier. The three undefined output values
+are removed while preserving fresh `werror` reads, message order and final
+return. Seven current body hashes change; all 4157 identities and frozen
+baselines remain. Evidence and limits: [IO_LOGICAL_NAME_RECOVERY.md](IO_LOGICAL_NAME_RECOVERY.md).
+No campaign milestone advances; mission-05 turn refresh and Road continuation
+remain the gameplay target.
+
 ## Construct-File Error Reporting
 
 Track: Win95 reconstruction, the error reporters reached by construct-file
