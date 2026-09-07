@@ -71,7 +71,9 @@ jobs:
               'tests/tools/test_illegal_logical_name.py',
           }
           allowed = required | {'data/subsystem_api.json'}
-          paths = sorted(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
+          tracked = subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines()
+          untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], text=True).splitlines()
+          paths = sorted(set(tracked + untracked))
           assert required <= set(paths), (required - set(paths), paths)
           assert set(paths) <= allowed, (set(paths) - allowed, paths)
           subprocess.run(['git', 'add', '--', *paths], check=True)
