@@ -707,35 +707,18 @@ signed int Rules_ReportLocalVariableError(void)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485C80) --------------------------------------------------------
-signed int __fastcall Rules_ReportSystemError(int module CLASH95_UNUSED, int errorID)
+signed int __fastcall Rules_ReportSystemError(int module, int errorID)
 {
-  int v3; // ecx
-  int v4; // ecx
-  int v5; // ecx
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // ecx
-  int v10; // ecx
-
   Rules_PrintErrorID((int)(intptr_t)aPrntutil, 3, 1);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aClipsSystemErr, v3);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aId, v4);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v5, v5);
-  Rules_PrintLongInteger(v6, errorID);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_503EF0, v7);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aClipsDataStruc, v8);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aThisErrorMayHa, v9);
-  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_504060, v10);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aClipsSystemErr, module);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aId, module);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], module, module);
+  Rules_PrintLongInteger((int)(intptr_t)g_IO_LogicalNameTable_WError[0], errorID);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_503EF0, module);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aClipsDataStruc, module);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aThisErrorMayHa, module);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_504060, module);
 }
-// 485CA5: variable 'v3' is possibly undefined
-// 485CB4: variable 'v4' is possibly undefined
-// 485CC0: variable 'v5' is possibly undefined
-// 485CCC: variable 'v6' is possibly undefined
-// 485CDB: variable 'v7' is possibly undefined
-// 485CEA: variable 'v8' is possibly undefined
-// 485CF9: variable 'v9' is possibly undefined
-// 485D08: variable 'v10' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485D20) --------------------------------------------------------

@@ -114,26 +114,15 @@ int  Rules_GetFileNameArg(int whichArgument, int functionName, double a3)
 // 4818A7: variable 'v3' is possibly undefined
 
 //----- (004818C0) --------------------------------------------------------
-signed int __fastcall Rules_OpenFileErrorMessage(int functionName CLASH95_UNUSED, int fileName)
+signed int __fastcall Rules_OpenFileErrorMessage(int functionName, int fileName)
 {
-  int v3; // ecx
-  int v4; // ecx
-  int v5; // ecx
-  int v6; // ecx
-  int v7; // ecx
-
   Rules_PrintErrorID((int)(intptr_t)aArgacces, 2, 0);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v3);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWasUnableToOpe, v5);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, v6);
-  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_FileError, v7);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, functionName);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, functionName);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWasUnableToOpe, functionName);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, functionName);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_FileError, functionName);
 }
-// 4818E2: variable 'v3' is possibly undefined
-// 4818EE: variable 'v4' is possibly undefined
-// 4818FD: variable 'v5' is possibly undefined
-// 481909: variable 'v6' is possibly undefined
-// 481918: variable 'v7' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00481930) --------------------------------------------------------

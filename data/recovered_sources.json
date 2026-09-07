@@ -22707,7 +22707,7 @@
       "original_line": 112,
       "source": "src/clips/00481720_00482D40_clips_001.cpp",
       "linkage": "external",
-      "body_sha256": "9aea5299fcae29043db04f0e87adaba71b6e56024a08dc1f9750bee2e15640ec",
+      "body_sha256": "a535106748b4bd715a9fe943317112b292d0d900745fd096f8548a1602ab61a3",
       "original_address_range": {
         "start": "0x004818C0",
         "end_exclusive": "0x00481930"
@@ -24220,7 +24220,7 @@
       "original_line": 3630,
       "source": "src/clips/004849EE_0048667D_clips_003.cpp",
       "linkage": "external",
-      "body_sha256": "6de5ba4834bb889e655d392156a6c87a4998f71296554ead1cf3df0be1e7491c",
+      "body_sha256": "340fae4f09e6682dd8c7220aaeae037bb0e452eb52f6ec7904ca508eacfb088b",
       "original_address_range": {
         "start": "0x00485C80",
         "end_exclusive": "0x00485D20"

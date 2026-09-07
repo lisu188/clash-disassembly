@@ -277,3 +277,89 @@ git diff --check
 
 No mission-05 bridge continuation, valid arrival save, tactical or visual
 milestone is established by this recovery.
+
+## Error-reporting follow-up, 2026-09-07
+
+Track: Win95 reconstruction; base `7745ab1`. This batch recovers the two error
+reporters reached by the construct-file wrappers, without changing their API,
+callers, message data or lower-level router implementations.
+
+`Rules_OpenFileErrorMessage` (`0x004818C0`) now retains the function-name argument
+across error-prefix output and writes that name rather than an undefined local.
+`Rules_ReportSystemError` (`0x00485C80`) similarly retains the module argument
+and sends the signed numeric error ID to the current error logical name, rather
+than an undefined destination. Both helpers preserve the final output result,
+message order, newlines and a fresh read of the error logical name before each
+output. The unused register-derived output context is now a defined value.
+
+The original procedures save incoming EAX in ECX and the second argument in ESI.
+Their callees preserve ECX: `sub_4859A0`, `sub_485770` and `Output_Write` save and
+restore it. The retained identifier is therefore the original parameter, not
+an inferred initializer. Only these two recovered bodies and their current
+manifest hashes change. All 4,157 identities, historical hashes, declarations,
+shared data and warning/link/header/coverage baselines remain untouched.
+
+### Composed message regression
+
+[The new regression](../tests/tools/test_construct_error_reporting.py) extracts
+both repaired bodies and the unchanged `Rules_PrintErrorID` and
+`Rules_PrintLongInteger` implementations. It uses the actual message constants
+from recovered state. An independent executable reassembles all four original
+procedures, each hash-pinned to the protected listing; it does not substitute a
+handwritten prefix or number helper for the original instructions. Only the
+final output sink and decimal formatter are controlled dependencies. Message
+text, write boundaries, logical-name routing, formatting calls and final returns
+are compared with explicit expected transcripts.
+
+The 4,608 scenarios cover both reporters, every identifier-address low byte,
+every filename-address low byte, signed error-number boundaries, empty and
+percent-containing names, three output-result schedules, and three callback
+modes. The callback modes leave state unchanged, switch the error destination
+after each write, or mutate the identifier/filename text during prefix output.
+These cases reject cached destinations or prematurely copied input text, and
+check that failed output results do not silently short-circuit later writes.
+Null strings and inaccessible/high 64-bit pointers are not valid test inputs.
+
+The complete expected trace is 1,165,323 bytes with SHA-256:
+
+```
+10441056a6f01f73150715715e4fa6b5a97a6ba795917ac9bbc6a299fe7b082e
+```
+
+Seven test methods cover the pinned original procedures, actual constants,
+manifest-backed body identities, scenario matrix, composed original execution,
+all production profiles, and eight independently rejected mutations. Mutations
+reintroduce wrong identifiers, wrong filenames, wrong integer destinations,
+pointer narrowing, missing output, an incorrect return value or a cached route.
+The native matrix is GCC/Clang, O0/O2, 32/64-bit and signed/unsigned plain char,
+with warnings as errors and undefined-behavior traps on production fixtures.
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_construct_error_reporting.py -v
+python3 tools/audit_split_sources.py
+python3 tools/gen_subsystem_headers.py --check
+python3 tools/gen_subsystem_headers.py --check-tu-includes
+git diff --check
+```
+
+Local validation passes all seven methods, including eight 64-bit profiles and
+the mutation checks, with nine explicit skips for the original and eight
+production 32-bit executions unsupported by this kernel. GCC 14.2 and Clang 17
+are the available local compilers. CI must execute the original and all 16
+supported-compiler profiles; an execution failure there is an error, not a skip.
+The initial local harness needed a freestanding memcpy implementation for Clang
+and a corrected unused-parameter mutation fixture. Those failed attempts are
+retained; neither required weakening recovered-code checks. Local source and
+generated-header audits pass.
+
+### Remaining boundaries
+
+This proves bounded message construction to a controlled sink, not full router
+correctness, real file-error handling or a retail executable replay. Existing
+integer pointer arguments still require valid low-address input storage on a
+64-bit host; in particular this does not repair a truncated high-stack filename
+passed by an upstream caller. Other callers may still pass lost or incorrect
+identifiers. The existing static numeric buffer and its concurrency/reentrancy
+limitations are unchanged. No image, filesystem, native crash-count or campaign
+milestone is promoted. Mission-05 turn refresh and Road continuation remain the
+active gameplay frontier.

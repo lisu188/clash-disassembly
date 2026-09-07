@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-07.
 
+## Construct-File Error Reporting
+
+Track: Win95 reconstruction, the error reporters reached by construct-file
+output. `Rules_OpenFileErrorMessage` and `Rules_ReportSystemError` now retain
+the original identifier arguments and route numeric error output correctly,
+without undefined locals. Message order, final output returns and live logical
+name reads remain original-backed. Two current body hashes change; all 4157
+identities and frozen baselines remain. The composed regression includes the
+actual prefix/number helpers, 4,608 scenarios and eight negative mutations.
+Local 64-bit tests pass; original/32-bit execution requires the CI host.
+Evidence and limits:
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md#error-reporting-follow-up-2026-09-07).
+No router, full-filesystem or campaign promotion follows. Normal mission-05
+turn refresh and Road continuation remain the gameplay target.
+
 ## Construct-Code Array Open Contract
 
 Track: Win95 reconstruction, bounded construct-compiler output. The array-open
