@@ -63,6 +63,23 @@ The proven object footprint is 4112 bytes: sprite handles occupy the leading DWO
 
 Neither DLX view claims ownership of sprite handles or the backing data allocation. Destruction and copying remain in the recovered ABI functions until their exact allocation and flag contracts are migrated with original-backed tests.
 
+### `DLXSpriteView`
+
+`src/render/dlx_sprite_view.h` models the 22-byte sprite record referenced by `DLXSpriteSet`. This is intentionally classified as a storage view rather than a confirmed original class seam: the recovered constructor/destructor family is strong, but the linker map does not currently provide the same class-qualified evidence available for `DLXSpriteSet` or `CAviDecompressor`.
+
+The 22-byte size is corroborated by sprite-set loading/copying and independent unit/building sprite caches that all allocate 22 bytes. The exposed fields are limited to values with direct consumers:
+
+- height at `+0`, matching `DLX_GetSpriteHeight`;
+- width at `+2`, matching `DLX_GetSpriteWidth`;
+- the serialized 10-byte header boundary;
+- payload handle at `+10`;
+- serialized record size at `+14`;
+- payload-ownership flag at `+18`.
+
+The header word at `+4` and bytes `+6..+9` remain deliberately unnamed. `DLXSprite_ConstructFromBuffer`, `DLXSprite_LoadCachedEntry`, `DLXSprite_CopyFrom`, `DLXSprite_Save`, and `DLXSprite_Destroy` independently support the payload/size/ownership fields. The mutable view only exposes those three lifecycle-state writes; it does not allocate, copy, save, or free the payload.
+
+All 32-bit fields after the serialized header are unaligned, so the view uses byte-safe `memcpy` loads and stores rather than aligned native references.
+
 ### `WCIsvListBaseView`
 
 `src/buildings/wcisv_list_view.h` reuses the existing `WCCompatListBase` and `WCCompatLink` layouts instead of introducing duplicate storage. This family has stronger original-class evidence than the generic game-state records: `clash95.map` names `WCIsvListBase` methods directly, the recovered ctor/dtor variants establish the object lifecycle and vtable transitions, and the basic list operations independently consume the same fields.
@@ -88,7 +105,7 @@ Run:
 python3 tools/audit_cpp_class_candidates.py
 ```
 
-The audit ranks symbol families using class-shaped evidence: vtable mentions, constructor/destructor names, `thiscall`, Watcom array runtime helpers, family size, and cross-file presence. JSON output is available with `--json`.
+The audit ranks symbol families using both recovered-source and original-linker-map evidence. Source-side signals include vtable mentions, constructor/destructor names, `thiscall`, Watcom array runtime helpers, family size, and cross-file presence. Original-map signals include Watcom class-qualified constructors, destructors and methods plus ordinary `Class::method` spellings. JSON output is available with `--json`.
 
 The score is a review queue, not a proof threshold. A high score means the family deserves manual map/assembly/layout review before extraction.
 
@@ -96,7 +113,7 @@ The score is a review queue, not a proof threshold. A high score means the famil
 
 1. Convert the small `CAviDecompressor` accessor family to use `CAviDecompressorView` after original-vs-recovered output comparison and manifest hash updates are prepared.
 2. Migrate `CAviDecompressor_InitOverlays`, `CAviDecompressor_InitPos`, and `CAviDecompressor_InitRect` to `CAviDecompressorMutableView` in the same separately validated body-change campaign.
-3. Use `DLXSpriteSetView` / `DLXSpriteSetMutableView` to drive a separately validated cleanup of the load/save/get-character family without changing ownership semantics.
+3. Use `DLXSpriteSetView`, `DLXSpriteSetMutableView`, and `DLXSpriteView` to drive a separately validated cleanup of the sprite load/save/copy/accessor family without changing ownership semantics.
 4. Migrate the bounded `WCIsvListBase` basic helpers (`base_next`, `base_insert`, `base_sget`, allocation/release, append/pop) to the typed view after original-backed equivalence checks.
 5. Keep `CSyncObject` deferred until more than the map-confirmed `Unlock` seam and current placeholder storage are recovered.
 6. Continue typed `UnitStackRecord` / `UnitSlotRecord` adoption as record readability work, without misclassifying the strategic save-state slab as an original C++ class.
