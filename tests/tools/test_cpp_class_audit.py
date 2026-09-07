@@ -60,6 +60,54 @@ class CppClassCandidateAuditTests(unittest.TestCase):
                              if item["family"] == "PathEntryArray")
             self.assertGreaterEqual(candidate["array_runtime_mentions"], 1)
 
+    def test_watcom_map_methods_add_original_class_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "src").mkdir()
+            (root / "clash95.map").write_text(
+                " 0001:000627B0       W?$ct:CAviDecompressor$n()_\n"
+                " 0001:00062B10       W?$dt:CAviDecompressor$n()_\n"
+                " 0001:00063250       W?Frames$:CAviDecompressor$n.x()i\n"
+                " 0001:00063570       W?TimeMs$:CAviDecompressor$n.x()l\n",
+                encoding="latin-1",
+            )
+            candidate = next(item for item in audit.collect_candidates(root)
+                             if item["family"] == "CAviDecompressor")
+            self.assertEqual(candidate["map_constructor_mentions"], 1)
+            self.assertEqual(candidate["map_destructor_mentions"], 1)
+            self.assertEqual(candidate["map_method_count"], 4)
+            self.assertIn("Frames", candidate["sample_map_methods"])
+            self.assertIn("TimeMs", candidate["sample_map_methods"])
+            self.assertGreater(candidate["score"], 20)
+
+    def test_map_only_class_family_is_included(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "src").mkdir()
+            (root / "clash95.map").write_text(
+                " 0001:000756BA       W?base_next$:WCIsvListBase$n.x(pnx$WCSLink$$i)pn$2$\n"
+                " 0001:000756D0       W?base_insert$:WCIsvListBase$n(pn$WCSLink$$)v\n",
+                encoding="latin-1",
+            )
+            candidate = next(item for item in audit.collect_candidates(root)
+                             if item["family"] == "WCIsvListBase")
+            self.assertEqual(candidate["symbol_count"], 0)
+            self.assertEqual(candidate["file_count"], 0)
+            self.assertEqual(candidate["map_method_count"], 2)
+
+    def test_cpp_qualified_map_symbol_is_recognized(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "src").mkdir()
+            (root / "clash95.map").write_text(
+                " 0001:00004DB0       DLXSpriteSet::save\n",
+                encoding="latin-1",
+            )
+            candidate = next(item for item in audit.collect_candidates(root)
+                             if item["family"] == "DLXSpriteSet")
+            self.assertEqual(candidate["map_method_count"], 1)
+            self.assertIn("save", candidate["sample_map_methods"])
+
 
 if __name__ == "__main__":
     unittest.main()
