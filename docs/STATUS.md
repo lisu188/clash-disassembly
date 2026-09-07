@@ -1,6 +1,22 @@
 # Current Status
 
-Last consolidated: 2026-09-06.
+Last consolidated: 2026-09-07.
+
+## Construct-Code File Close Contract
+
+Track: Win95 reconstruction, bounded construct-compiler output. The close
+wrapper at `0x004A7920` now closes the stream rather than a metadata pointer or
+undefined local. It passes the original `CONSCOMP` error identifier and removes
+an undefined, unused format argument. Signed threshold decisions, append mode,
+callback ordering and unsigned version updates remain unchanged. One current
+manifest body hash changes; all 4157 identities and frozen baselines remain.
+The focused regression covers 2,656 returning cases, four terminating-error
+cases and seven rejected mutations against the actual body and a hash-pinned
+original-listing reassembly. Local 64-bit profiles pass; original/32-bit runs
+require the CI host. Evidence and limits:
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md#close-wrapper-follow-up-2026-09-07).
+No native crash-count, whole-compiler or campaign promotion follows; normal
+mission-05 turn refresh and Road continuation remain the gameplay target.
 
 ## Construct-Code File Opener
 

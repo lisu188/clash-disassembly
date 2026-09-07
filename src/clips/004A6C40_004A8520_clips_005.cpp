@@ -844,8 +844,6 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
   int curFile; // esi
   int v8; // edx
   int codeFileInfo; // ecx
-  int v10; // ecx
-  char v11; // [esp+0h] [ebp-Ch]
 
   curFile = result;
   v8 = maxIndices;
@@ -855,7 +853,7 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
     if ( !canBeReopened )
       return result;
     *canBeReopened = 1;
-    fclose_(codeFile);
+    fclose_(curFile);
     return 0;
   }
   if ( canBeReopened )
@@ -864,7 +862,7 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
   {
     if ( !canBeReopened || !codeFile )
     {
-      Rules_ReportSystemError(codeFile, 3);
+      Rules_ReportSystemError((int)(intptr_t)aConscomp, 3);
       IO_RunRouterExitCallbacks(2);
     }
     if ( !*(_DWORD *)(uintptr_t)codeFileInfo )
@@ -872,21 +870,17 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
     curFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion, 1);
     if ( !curFile )
     {
-      Rules_ReportSystemError(codeFileInfo, 4);
+      Rules_ReportSystemError((int)(intptr_t)aConscomp, 4);
       IO_RunRouterExitCallbacks(2);
     }
   }
-  Output_WriteFormatted(codeFileInfo, v8, curFile, (int)(intptr_t)asc_507DA0, v11);
-  fclose_(v10);
+  Output_WriteFormatted(0, 0, curFile, (int)(intptr_t)asc_507DA0);
+  fclose_(curFile);
   *theCount = 0;
   result = 0;
   ++*arrayVersion;
   return result;
 }
-// 4A7983: variable 'v9' is possibly undefined
-// 4A79C0: variable 'v8' is possibly undefined
-// 4A79C0: variable 'v11' is possibly undefined
-// 4A79CA: variable 'v10' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (004A79F0) --------------------------------------------------------
