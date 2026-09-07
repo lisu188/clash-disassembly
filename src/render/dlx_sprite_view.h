@@ -12,11 +12,10 @@ public:
   static constexpr std::size_t kObjectSize = 22;
   static constexpr std::size_t kHeightOffset = 0;
   static constexpr std::size_t kWidthOffset = 2;
-  static constexpr std::size_t kFormatCodeOffset = 4;
+  static constexpr std::size_t kSerializedHeaderSize = 10;
   static constexpr std::size_t kPayloadHandleOffset = 10;
   static constexpr std::size_t kSerializedSizeOffset = 14;
   static constexpr std::size_t kOwnsPayloadOffset = 18;
-  static constexpr std::size_t kSerializedHeaderSize = 10;
 
   explicit DLXSpriteView(const void *sprite) noexcept
       : bytes_(static_cast<const std::byte *>(sprite)) {}
@@ -29,10 +28,6 @@ public:
     return load<std::uint16_t>(kWidthOffset);
   }
 
-  std::uint16_t formatCode() const noexcept {
-    return load<std::uint16_t>(kFormatCodeOffset);
-  }
-
   std::uint32_t payloadHandle() const noexcept {
     return load<std::uint32_t>(kPayloadHandleOffset);
   }
@@ -43,10 +38,6 @@ public:
 
   bool ownsPayload() const noexcept {
     return load<std::uint32_t>(kOwnsPayloadOffset) != 0;
-  }
-
-  std::uint32_t payloadSize() const noexcept {
-    return serializedSize() - kSerializedHeaderSize;
   }
 
   const void *data() const noexcept {
@@ -102,6 +93,7 @@ private:
   std::byte *bytes_;
 };
 
+static_assert(DLXSpriteView::kPayloadHandleOffset == DLXSpriteView::kSerializedHeaderSize);
 static_assert(DLXSpriteView::kOwnsPayloadOffset + sizeof(std::uint32_t)
               == DLXSpriteView::kObjectSize);
 
