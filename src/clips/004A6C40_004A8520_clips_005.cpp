@@ -892,38 +892,29 @@ int  Rules_ConstructCodeFileOpen(
         int *fileCount,
         int arrayVersion,
         int headerFP,
-        char structureName,
+        const char *structureName,
         const char *structPrefix,
         int reopenOldFile,
         const char **codeFile)
 {
-  const char **codeFileInfo; // ecx
-  const char *curFileName; // edi
-  int curFileID; // edx
-  int curVersion; // eax
-  int result; // eax
-  int v18; // edx
-  int v19; // ecx
-  int v20; // edx
-  int v21; // ecx
-  int v22; // edx
-  int v23; // edx
-  int v24; // [esp-8h] [ebp-68h]
-  char arrayNameBuffer[80]; // [esp+0h] [ebp-60h] BYREF
-  int savedImageID; // [esp+50h] [ebp-10h]
+  unsigned char *codeFileInfo = (unsigned char *)codeFile;
+  const char *curFileName;
+  int curFileID;
+  int curVersion;
+  char arrayNameBuffer[80];
 
-  savedImageID = imageID;
-  codeFileInfo = codeFile;
   if ( reopenOldFile )
   {
     if ( !codeFile )
     {
-      Rules_ReportSystemError(0, 5);
+      Rules_ReportSystemError((int)(intptr_t)aConscomp, 5);
       IO_RunRouterExitCallbacks(2);
     }
-    curFileName = *codeFileInfo;
-    curFileID = (int)(intptr_t)codeFileInfo[1];
-    curVersion = (int)(intptr_t)codeFileInfo[2];
+    _DWORD storedFileName;
+    memcpy(&storedFileName, codeFileInfo, sizeof(storedFileName));
+    curFileName = (const char *)(uintptr_t)storedFileName;
+    memcpy(&curFileID, codeFileInfo + 4, sizeof(curFileID));
+    memcpy(&curVersion, codeFileInfo + 8, sizeof(curVersion));
   }
   else
   {
@@ -932,46 +923,31 @@ int  Rules_ConstructCodeFileOpen(
     curVersion = *fileCount;
     if ( codeFile )
     {
-      codeFile[2] = (const char *)(uintptr_t)curVersion;
-      *codeFile = fileName;
-      codeFile[1] = fileID;
+      _DWORD storedFileName = (_DWORD)(uintptr_t)fileName;
+      memcpy(codeFileInfo + 8, &curVersion, sizeof(curVersion));
+      memcpy(codeFileInfo, &storedFileName, sizeof(storedFileName));
+      memcpy(codeFileInfo + 4, &curFileID, sizeof(curFileID));
     }
   }
   if ( theFile )
   {
-    Output_WriteFormatted((int)(intptr_t)codeFileInfo, curFileID, theFile, (int)(intptr_t)asc_508250, arrayNameBuffer[0]);
+    Output_WriteFormatted(0, 0, theFile, (int)(intptr_t)asc_508250);
     return theFile;
   }
-  else
+  int result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)(intptr_t)fileName, reopenOldFile);
+  if ( !result )
+    return 0;
+  if ( reopenOldFile )
   {
-    result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)(intptr_t)fileName, reopenOldFile);
-    if ( result )
-    {
-      if ( reopenOldFile )
-      {
-        Output_WriteFormatted(result, result, result, (int)(intptr_t)asc_508250, arrayNameBuffer[0]);
-        return v23;
-      }
-      else
-      {
-        v24 = savedImageID;
-        ++*fileCount;
-        sprintf_(arrayNameBuffer, "%s%d_%d", structPrefix, v24, arrayVersion);
-        Output_WriteFormatted(v19, v18, v19, (int)(intptr_t)aSS_0, structureName);
-        Output_WriteFormatted(v21, v20, headerFP, (int)(intptr_t)aExternSS, structureName);
-        return v22;
-      }
-    }
+    Output_WriteFormatted(0, 0, result, (int)(intptr_t)asc_508250);
+    return result;
   }
+  *fileCount = (int)((unsigned int)*fileCount + 1u);
+  sprintf_(arrayNameBuffer, "%s%d_%d", structPrefix, imageID, arrayVersion);
+  Output_WriteFormatted(0, 0, result, (int)(intptr_t)aSS_0, (int)(intptr_t)structureName, (int)(intptr_t)arrayNameBuffer);
+  Output_WriteFormatted(0, 0, headerFP, (int)(intptr_t)aExternSS, (int)(intptr_t)structureName, (int)(intptr_t)arrayNameBuffer);
   return result;
 }
-// 4A7A2A: variable 'v13' is possibly undefined
-// 4A7A8F: variable 'v19' is possibly undefined
-// 4A7A8F: variable 'v18' is possibly undefined
-// 4A7AA5: variable 'v21' is possibly undefined
-// 4A7AA5: variable 'v20' is possibly undefined
-// 4A7AAD: variable 'v22' is possibly undefined
-// 4A7AFE: variable 'v23' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004A7B10) --------------------------------------------------------

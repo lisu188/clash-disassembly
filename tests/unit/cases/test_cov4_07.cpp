@@ -596,22 +596,22 @@ TEST(cov4_07_classslots, one_real_class_reaches_slots_function) {
 TEST(cov4_07_ccfo, a1_nonzero_early_return) {
   static int a5val = 7;
   TOUCH(Rules_ConstructCodeFileOpen(99, "cov4_07", 0, (const char *)(intptr_t)1,
-                                     &a5val, 0, 0, 'x', "cov4_07_a9", 0, 0));
+                                     &a5val, 0, 0, "x", "cov4_07_a9", 0, 0));
 }
 
 TEST(cov4_07_ccfo, a10_nonzero_open_success) {
-  static const char *a11arr[3];
+  static _DWORD a11arr[3];
   static char pathPrefix[512];
 
   /* Plain /tmp (rather than this session's scratchpad dir) so the file
    * write target is stable across whatever environment actually builds and
    * runs this test suite. */
   snprintf(pathPrefix, sizeof pathPrefix, "/tmp/cov4_07_ccfo_a10_");
-  a11arr[0] = pathPrefix;
-  a11arr[1] = (const char *)(intptr_t)3;
-  a11arr[2] = (const char *)(intptr_t)4;
+  a11arr[0] = (_DWORD)(uintptr_t)(pathPrefix);
+  a11arr[1] = (_DWORD)(uintptr_t)((const char *)(intptr_t)3);
+  a11arr[2] = (_DWORD)(uintptr_t)((const char *)(intptr_t)4);
 
-  TOUCH(Rules_ConstructCodeFileOpen(0, 0, 0, 0, 0, 0, 0, 'y', 0, 1, a11arr));
+  TOUCH(Rules_ConstructCodeFileOpen(0, 0, 0, 0, 0, 0, 0, "y", 0, 1, (const char **)a11arr));
 }
 
 TEST(cov4_07_ccfo, a10_zero_open_success) {
@@ -621,7 +621,7 @@ TEST(cov4_07_ccfo, a10_zero_open_success) {
   snprintf(pathPrefix, sizeof pathPrefix, "/tmp/cov4_07_ccfo_a10z_");
 
   TOUCH(Rules_ConstructCodeFileOpen(0, pathPrefix, 5, (const char *)(intptr_t)2,
-                                     &a5val, 9, 0, 'z', "cov4_07_a9z", 0, 0));
+                                     &a5val, 9, 0, "z", "cov4_07_a9z", 0, 0));
 }
 
 /* =========================================================================

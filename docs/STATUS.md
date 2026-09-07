@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-07.
 
+## Construct-Code Array Open Contract
+
+Track: Win95 reconstruction, bounded construct-compiler output. The array-open
+wrapper at `0x004A79F0` restores full structure-name pointers, the 12-byte
+reopen descriptor, both output arguments and stable stream returns. All 34
+canonical callers transport the original pointer. Fresh-file count increments
+retain original 32-bit wraparound. Existing test identities and all 4157
+recovered identities remain; 22 current body hashes change, no frozen baseline.
+The focused regression covers 2,032 returning cases, two terminating errors,
+nine negative mutations and original caller checks. Local 64-bit profiles pass;
+original/32-bit execution requires CI. Evidence and limits:
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md#array-open-wrapper-follow-up-2026-09-07).
+No complete construct-compiler, filesystem or campaign promotion follows.
+Normal mission-05 turn refresh and Road continuation remain the gameplay target.
+
 ## Construct-Code File Close Contract
 
 Track: Win95 reconstruction, bounded construct-compiler output. The close

@@ -60,7 +60,7 @@ int  Deffunction_WriteConstructCodeFiles(const char *fileName, const char *pathN
              &fileCount,
              moduleArrayVersion,
              v25,
-             (char)(intptr_t)aDeffunction_mo,
+             aDeffunction_mo,
              **(const char ***)(uintptr_t)(g_DeffunctionCodeGeneratorItem + 20),
              0,
              0);
@@ -93,7 +93,7 @@ LABEL_6:
               &fileCount,
               deffunctionArrayVersion,
               v25,
-              (char)(intptr_t)aDeffunction_8,
+              aDeffunction_8,
               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DeffunctionCodeGeneratorItem + 20) + 4),
               0,
               0);
@@ -1269,7 +1269,7 @@ int  Defglobal_WriteConstructsToCCode(const char *fileName, const char *pathName
              &fileCount,
              moduleArrayVersion,
              v24,
-             (char)(intptr_t)aStructDefgloba,
+             aStructDefgloba,
              **(const char ***)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20),
              0,
              0);
@@ -1301,7 +1301,7 @@ LABEL_6:
               &fileCount,
               defglobalArrayVersion,
               v24,
-              (char)(intptr_t)aStructDefglo_0,
+              aStructDefglo_0,
               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20) + 4),
               0,
               0);

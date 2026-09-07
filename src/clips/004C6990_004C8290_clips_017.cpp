@@ -998,7 +998,7 @@ int  Deffacts_ToCode(const char *fileName, const char *pathName, int imageID, in
              &fileCount,
              moduleArrayVersion,
              savedHeaderFP,
-             (char)(intptr_t)aStructDeffacts,
+             aStructDeffacts,
              **(const char ***)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20),
              0,
              0);
@@ -1030,7 +1030,7 @@ LABEL_6:
               &fileCount,
               deffactsArrayVersion,
               savedHeaderFP,
-              (char)(intptr_t)aStructDeffac_0,
+              aStructDeffac_0,
               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20) + 4),
               0,
               0);

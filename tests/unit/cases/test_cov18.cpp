@@ -25,23 +25,23 @@ TEST(cov18_registerctoc, basic)
 TEST(cov18_codefileopen, a10_zero_a11_null)
 {
     int counter = 0;
-    TOUCH(Rules_ConstructCodeFileOpen(0, "cov18test", 3, "ext", &counter, 1, 2, 'x', "prefix", 0, 0));
+    TOUCH(Rules_ConstructCodeFileOpen(0, "cov18test", 3, "ext", &counter, 1, 2, "x", "prefix", 0, 0));
 }
 
 TEST(cov18_codefileopen, a10_zero_a11_present)
 {
     int counter = 0;
-    const char *a11arr[3];
-    a11arr[0] = "n1"; a11arr[1] = "n2"; a11arr[2] = "n3";
-    TOUCH(Rules_ConstructCodeFileOpen(0, "cov18test2", 5, "ext2", &counter, 4, 5, 'y', "prefix2", 0, a11arr));
+    _DWORD a11arr[3];
+    a11arr[0] = (_DWORD)(uintptr_t)("n1"); a11arr[1] = (_DWORD)(uintptr_t)("n2"); a11arr[2] = (_DWORD)(uintptr_t)("n3");
+    TOUCH(Rules_ConstructCodeFileOpen(0, "cov18test2", 5, "ext2", &counter, 4, 5, "y", "prefix2", 0, (const char **)a11arr));
 }
 
 TEST(cov18_codefileopen, a10_nonzero_a11_present)
 {
     int counter = 0;
-    const char *a11arr[3];
-    a11arr[0] = "n1b"; a11arr[1] = "n2b"; a11arr[2] = "n3b";
-    TOUCH(Rules_ConstructCodeFileOpen(0, "cov18test3", 2, "ext3", &counter, 1, 1, 'z', "prefix3", 1, a11arr));
+    _DWORD a11arr[3];
+    a11arr[0] = (_DWORD)(uintptr_t)("n1b"); a11arr[1] = (_DWORD)(uintptr_t)("n2b"); a11arr[2] = (_DWORD)(uintptr_t)("n3b");
+    TOUCH(Rules_ConstructCodeFileOpen(0, "cov18test3", 2, "ext3", &counter, 1, 1, "z", "prefix3", 1, (const char **)a11arr));
 }
 
 TEST(cov18_codefileopen, a1_nonzero_early_return)
@@ -50,7 +50,7 @@ TEST(cov18_codefileopen, a1_nonzero_early_return)
     unsigned char fakeEnv[256];
     memset(fakeEnv, 0, sizeof(fakeEnv));
     int counter = 0;
-    TOUCH(Rules_ConstructCodeFileOpen((int)(intptr_t)fakeEnv, "cov18test4", 1, "ext4", &counter, 1, 1, 'w', "prefix4", 0, 0));
+    TOUCH(Rules_ConstructCodeFileOpen((int)(intptr_t)fakeEnv, "cov18test4", 1, "ext4", &counter, 1, 1, "w", "prefix4", 0, 0));
 }
 
 /* ---- Rules_WriteConstructHeaderToCode ---- */

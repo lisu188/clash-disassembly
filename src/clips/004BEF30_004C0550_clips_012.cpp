@@ -1048,7 +1048,7 @@ LABEL_16:
            &fileCount,
            moduleArrayVersion,
            v32,
-           (char)(intptr_t)aStructDefrulem,
+           aStructDefrulem,
            **(const char ***)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20),
            0,
            0);
@@ -1080,7 +1080,7 @@ LABEL_15:
            &fileCount,
            defruleArrayVersion,
            v32,
-           (char)(intptr_t)aStructDefrule,
+           aStructDefrule,
            (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 4),
            0,
            0);
@@ -1126,7 +1126,7 @@ LABEL_9:
           &fileCount,
           joinArrayVersion,
           v32,
-          (char)(intptr_t)aStructJoinnode,
+          aStructJoinnode,
           (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 8),
           0,
           0);

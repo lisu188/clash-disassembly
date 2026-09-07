@@ -118,7 +118,7 @@ TEST(thin00_ccfo, a1_nonzero_returns_a1) {
   thin00_make_fake_stream(stream, state);
   TOUCH(Rules_ConstructCodeFileOpen(
       (int)(intptr_t)stream, "thin00.txt", 0, (const char *)(intptr_t)0,
-      &a5val, 0, 0, 'x', "thin00_a9", 0, 0));
+      &a5val, 0, 0, "x", "thin00_a9", 0, 0));
 }
 
 /* =========================================================================

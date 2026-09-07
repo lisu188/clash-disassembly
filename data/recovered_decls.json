@@ -13364,7 +13364,7 @@
     },
     "Rules_ConstructCodeFileOpen": {
       "class": "manifest",
-      "decl": "int  Rules_ConstructCodeFileOpen(int theFile, const char *fileName, int imageID, const char *fileID, int *fileCount, int arrayVersion, int headerFP, char structureName, const char *structPrefix, int reopenOldFile, const char **codeFile);",
+      "decl": "int  Rules_ConstructCodeFileOpen(int theFile, const char *fileName, int imageID, const char *fileID, int *fileCount, int arrayVersion, int headerFP, const char *structureName, const char *structPrefix, int reopenOldFile, const char **codeFile);",
       "home": "clips"
     },
     "Rules_ConstructHandleVectorDtor": {

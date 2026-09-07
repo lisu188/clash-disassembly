@@ -185,3 +185,95 @@ is retained where reached, not declared safe for real I/O. All metadata pointers
 in the fixture use low-address storage. High 64-bit pointer transport and the
 neighboring open-array wrapper remain separate recovery work. No mission-05,
 full-gameplay or visual milestone advances.
+
+## Array-open wrapper follow-up, 2026-09-07
+
+Track: Win95 reconstruction. Base `f12a97c`. The bounded follow-up at
+`0x004A79F0`, `Rules_ConstructCodeFileOpen`, restores complete structure-name
+pointers, the original 12-byte descriptor layout, output arguments and stable
+stream returns. It is not a retail construct-compiler or gameplay validation.
+
+### Interface and memory evidence
+
+The original procedure receives a structure-name pointer through stack argument
+`arg_C`. All 34 original callers supply full string addresses. The recovered
+`char` parameter and caller-side pointer-to-char casts discarded that evidence.
+The parameter is now `const char *`, and only the corresponding argument changes
+at those 34 call sites. The canonical declaration and generated API agree.
+The 15 existing exploratory test calls retain their identities and assertions,
+using string arguments and packed descriptor initialization for the corrected
+interface instead of character literals and native-pointer-stride arrays.
+
+Original descriptor accesses are at offsets zero, four and eight. Fresh opens
+store version, filename address and file identifier, in that order, before the
+existing-stream test. Reopens read these three original-width fields even on a
+64-bit host. The legacy `const char **` public parameter remains to avoid a wider
+caller-storage rewrite; it represents opaque 12-byte storage here, not a native
+pointer array. Byte copies preserve these exact widths without aliasing through
+incompatible typed lvalues. No public structure or data-table size changes.
+
+Existing streams receive only the comma/newline separator and return the same
+stream. Failed opens return zero without incrementing the file count. Successful
+reopens receive only the separator. Fresh opens increment the live count, format
+the array name, write the definition to the opened stream and the declaration
+to `headerFP`, then return the opened stream independently of formatting results.
+The increment explicitly reproduces 32-bit wraparound, including `INT_MAX`.
+Error 5 receives `CONSCOMP` before the original exit callback. A callback returning
+with null metadata remains an invalid path; no guessed recovery is added.
+
+Only 22 current recovered body hashes change (the wrapper and its 21 caller
+functions). All 4,157 identities, historical hashes and warning/link/header/
+coverage baselines remain unchanged. No campaign fixture is promoted.
+
+### Executable checks and limitations
+
+[The new regression](../tests/tools/test_construct_code_file_open.py) executes
+2,032 returning cases and two terminating-error cases against the extracted
+production body and a hash-pinned reassembly of the original listing. The
+matrix includes all 256 structure-pointer low bytes, six signed reopen modes,
+existing/missing streams, successful/failed opens, absent/present descriptors,
+count wraparound, and observable dependency mutations. Guard words after the
+12-byte descriptor detect accidental native-pointer-width stores. Dependency
+mutations check live count reads, descriptor persistence, second-output string
+reads and independence from helper return values. Nine negative mutations
+reintroduce wrong streams, offsets, pointer narrowing, mode, count and errors.
+
+The 198,674-byte expected returning trace is frozen with SHA-256:
+
+```
+2e9ccce3f5ab3a53589e8472775dfebca87aed71ef73924d3d7c788f1a9a93ff
+```
+
+The original assembly is not changed. Its reassembly only translates listing
+syntax and explicitly spells the DWORD operand size already given by the
+original stack-argument declaration. GNU assembler's
+[Intel syntax documentation](https://sourceware.org/binutils/docs/as/i386_002dVariations.html)
+is secondary syntax guidance, not the behavioral authority.
+
+Tests exercise GCC/Clang O0/O2, 32/64-bit and signed/unsigned-char builds, with
+undefined-behavior traps. Local GCC 14.2/Clang 17 64-bit profiles pass; this
+container cannot execute 32-bit ELF, so those profiles and the original oracle
+are explicitly skipped locally. On GitHub Actions these cases must execute or
+fail rather than skip. Full supported-compiler and original-instruction results
+must come from the retained Actions run, not the local result.
+
+The output seam still transports arguments as 32-bit words. On a 64-bit host,
+the tests validate the low-32-bit identity of the stack-resident array-name
+buffer and the actual text captured by the formatting hook, without
+pretending that an arbitrary truncated stack pointer can be dereferenced by
+the real output dependency. General high-pointer support, unbounded long-name
+formatting, real filesystem I/O and dependency correctness remain separate work.
+The error callback is tested for terminating null-metadata inputs only.
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_construct_code_file_open.py -v
+python3 -m unittest discover -s tests/tools -p 'test_construct_code_file*.py' -v
+python3 tools/audit_split_sources.py
+python3 tools/gen_subsystem_headers.py --check
+python3 tools/gen_subsystem_headers.py --check-tu-includes
+python3 tests/check_markdown_links.py
+git diff --check
+```
+
+No mission-05 bridge continuation, valid arrival save, tactical or visual
+milestone is established by this recovery.
