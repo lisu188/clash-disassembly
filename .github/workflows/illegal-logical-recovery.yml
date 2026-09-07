@@ -60,7 +60,8 @@ jobs:
           from pathlib import Path
 
           assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == 'abed99837033043da180481a9e90975780d012b9'
-          paths = sorted([
+          required = {
+              'data/recovered_decls.json',
               'data/recovered_sources.json',
               'docs/IO_LOGICAL_NAME_RECOVERY.md',
               'docs/STATUS.md',
@@ -68,7 +69,11 @@ jobs:
               'src/clips/0049E930_0049FF80_clips_006.cpp',
               'src/clips/clips_internal.h',
               'tests/tools/test_illegal_logical_name.py',
-          ])
+          }
+          allowed = required | {'data/subsystem_api.json'}
+          paths = sorted(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
+          assert required <= set(paths), (required - set(paths), paths)
+          assert set(paths) <= allowed, (set(paths) - allowed, paths)
           subprocess.run(['git', 'add', '--', *paths], check=True)
           changed = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
           assert changed == paths, (changed, paths)
