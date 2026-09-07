@@ -1,0 +1,65 @@
+name: Illegal logical-name evidence
+
+on:
+  push:
+    branches:
+      - diagnostics/illegal-logical-name-evidence
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: abed99837033043da180481a9e90975780d012b9
+          persist-credentials: false
+      - name: Extract original procedure and caller windows
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, re
+          from pathlib import Path
+          raw = Path('clash95.asm').read_bytes()
+          lines = raw.decode('latin-1').splitlines()
+          print('ASSEMBLY_SHA256', hashlib.sha256(raw).hexdigest())
+          proc_re = re.compile(r'^\s*(sub_[0-9A-Fa-f]+)\s+proc\b')
+          end_re = re.compile(r'^\s*(sub_[0-9A-Fa-f]+)\s+endp\b')
+          target = 'sub_49F310'
+          starts = {m.group(1): i for i,line in enumerate(lines) if (m := proc_re.search(line))}
+          if target not in starts:
+              # address comments can exist even when a semantic/public label replaced sub_ name
+              candidates = [i for i,line in enumerate(lines) if '49F310' in line]
+              print('TARGET_ADDRESS_MATCHES', candidates[:20])
+              raise SystemExit(2)
+          start = starts[target]
+          end = next(i for i in range(start+1, len(lines)) if re.search(rf'^\s*{target}\s+endp\b', lines[i]))
+          print('=== TARGET PROCEDURE ===')
+          print('\n'.join(lines[start:end+1]))
+          print('=== CALLERS ===')
+          for i,line in enumerate(lines):
+              if re.search(rf'\bcall\s+{target}\b', line):
+                  owner = None
+                  owner_start = 0
+                  for j in range(i, -1, -1):
+                      m = proc_re.search(lines[j])
+                      if m:
+                          owner = m.group(1); owner_start = j; break
+                  print(f'--- {owner} call_line={i+1} ---')
+                  lo=max(owner_start,i-14); hi=min(len(lines),i+15)
+                  print('\n'.join(f'{k+1}: {lines[k]}' for k in range(lo,hi)))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: illegal-logical-evidence
+          path: |
+            clash95.asm
+            data/recovered_sources.json
+            src/clips/0049CE10_0049E8D0_clips_005.cpp
+            src/clips/0049E930_0049FF80_clips_006.cpp
+            src/clips/clips_internal.h
+            src/clips/clips_api.h
+          retention-days: 7
