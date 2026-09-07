@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-SYMBOL_RE = re.compile(r"\b([A-Z][A-Za-z0-9]*_[A-Za-z0-9_]+)\b")
+SYMBOL_RE = re.compile(r"\b(?:g_)?([A-Z][A-Za-z0-9]*_[A-Za-z0-9_]+)\b")
 VTABLE_RE = re.compile(r"(?:V[Tt]able|[Vv]table)")
 CTOR_RE = re.compile(r"(?:Construct|Ctor|CopyConstruct)", re.IGNORECASE)
 DTOR_RE = re.compile(r"(?:Destruct|Dtor|Destructor|DeletingDtor)", re.IGNORECASE)
