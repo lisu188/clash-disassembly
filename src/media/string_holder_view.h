@@ -4,17 +4,26 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <type_traits>
 
 namespace clash95::media {
 
+struct StringHolderStorage final {
+  std::uint32_t text_handle;
+  std::uint32_t vtable_handle;
+};
+
 class StringHolderView final {
 public:
-  static constexpr std::size_t kObjectSize = 8;
-  static constexpr std::size_t kTextHandleOffset = 0;
-  static constexpr std::size_t kVtableHandleOffset = 4;
+  static constexpr std::size_t kObjectSize = sizeof(StringHolderStorage);
+  static constexpr std::size_t kTextHandleOffset = offsetof(StringHolderStorage, text_handle);
+  static constexpr std::size_t kVtableHandleOffset = offsetof(StringHolderStorage, vtable_handle);
 
   explicit StringHolderView(const void *holder) noexcept
       : bytes_(static_cast<const std::byte *>(holder)) {}
+
+  explicit StringHolderView(const StringHolderStorage *holder) noexcept
+      : bytes_(reinterpret_cast<const std::byte *>(holder)) {}
 
   std::uint32_t textHandle() const noexcept {
     return load<std::uint32_t>(kTextHandleOffset);
@@ -53,6 +62,9 @@ public:
   explicit StringHolderMutableView(void *holder) noexcept
       : bytes_(static_cast<std::byte *>(holder)) {}
 
+  explicit StringHolderMutableView(StringHolderStorage *holder) noexcept
+      : bytes_(reinterpret_cast<std::byte *>(holder)) {}
+
   StringHolderView readOnly() const noexcept {
     return StringHolderView(bytes_);
   }
@@ -82,8 +94,11 @@ private:
   std::byte *bytes_;
 };
 
-static_assert(StringHolderView::kVtableHandleOffset + sizeof(std::uint32_t)
-              == StringHolderView::kObjectSize);
+static_assert(std::is_standard_layout_v<StringHolderStorage>);
+static_assert(std::is_trivially_copyable_v<StringHolderStorage>);
+static_assert(sizeof(StringHolderStorage) == 8);
+static_assert(offsetof(StringHolderStorage, text_handle) == 0);
+static_assert(offsetof(StringHolderStorage, vtable_handle) == 4);
 
 } // namespace clash95::media
 
