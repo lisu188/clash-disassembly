@@ -4,12 +4,12 @@
 #include "buildings_internal.h"
 #include "buildings_state.h"
 #include "buildings_shared_state.h"
+#include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
-#include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0041D030) --------------------------------------------------------

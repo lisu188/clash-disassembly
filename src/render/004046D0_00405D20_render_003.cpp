@@ -323,7 +323,7 @@ _DWORD * Render_BlitSurface(_DWORD *result, int force_flag, char a3, DWORD a4)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00404A40) --------------------------------------------------------
-int  Surface_SwapDirtyTrackingFlag(int surface, int new_flag)
+int  Render_SetResourceHandle(int surface, int new_flag)
 {
   clash95::render::RenderSurfaceTrackingMutableView tracking(
       (void *)(uintptr_t)surface);

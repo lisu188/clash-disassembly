@@ -21239,7 +21239,7 @@
       "legacy_body_sha256": "c9de9f060fcba510d6a2e6d8f78b96d51c20b5cf7bcd8d760c0726a6516b8fe0"
     },
     {
-      "name": "Surface_SwapDirtyTrackingFlag",
+      "name": "Render_SetResourceHandle",
       "original_address": "0x00404A40",
       "original_source": "src/recovered/render/00401A40_render.inc.c",
       "original_line": 2649,
