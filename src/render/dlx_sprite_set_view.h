@@ -27,6 +27,10 @@ public:
     return words_[index];
   }
 
+  constexpr std::uint32_t entryHandleSigned(std::ptrdiff_t index) const noexcept {
+    return words_[index];
+  }
+
   constexpr std::uint32_t dataHandle() const noexcept {
     return words_[kDataHandleIndex];
   }
