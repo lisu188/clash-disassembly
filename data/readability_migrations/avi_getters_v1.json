@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "source": "src/media/004637B0_00465D30_media_001.cpp",
+  "includes": [
+    "avi_decompressor_view.h"
+  ],
+  "functions": [
+    {
+      "name": "CAviDecompressor_Frames",
+      "expected_body_sha256": "2a6d4e5131bc9254d453abf22dd30df2577a7bae1a3eed74b9cd044342569524",
+      "replacement_body": "{\n  return clash95::media::CAviDecompressorView::fromPlayerHandle(\n           (const void *)(uintptr_t)playerHandle)\n      .frames();\n}"
+    },
+    {
+      "name": "CAviDecompressor_Fps",
+      "expected_body_sha256": "4b782c022f17516700e7364e3d164a9e7094a0c0030ba9198547cfd44a440928",
+      "replacement_body": "{\n  return clash95::media::CAviDecompressorView::fromPlayerHandle(\n           (const void *)(uintptr_t)playerHandle)\n      .fps();\n}"
+    },
+    {
+      "name": "CAviDecompressor_IsPlaying",
+      "expected_body_sha256": "0ae1999b10bb3a40a1193fe54a57c999d34d406f8dd3df0be1e3bdc456f27258",
+      "replacement_body": "{\n  return clash95::media::CAviDecompressorView::fromPlayerHandle(\n           (const void *)(uintptr_t)playerHandle)\n      .isPlaying();\n}"
+    },
+    {
+      "name": "CAviDecompressor_Palette",
+      "expected_body_sha256": "8fc8f5b0aaf77b1df5e5bb92905b9dd443ae0b352b0ebf7e1ad7d9d86f5cb70f",
+      "replacement_body": "{\n  return (int)clash95::media::CAviDecompressorView::fromPlayerHandle(\n                   (const void *)(uintptr_t)playerHandle)\n      .paletteHandle();\n}"
+    },
+    {
+      "name": "CAviDecompressor_Header",
+      "expected_body_sha256": "a4463b7eff4f92889ebbbd5af76a79d942bfdf06f38f8457b42c0792cc674abc",
+      "replacement_body": "{\n  return (int)clash95::media::CAviDecompressorView::fromPlayerHandle(\n                   (const void *)(uintptr_t)playerHandle)\n      .bitmapHeaderHandle();\n}"
+    },
+    {
+      "name": "CAviDecompressor_DecodedFrame",
+      "expected_body_sha256": "e24b31b2b0bc2ad7d4fe13e5eb762cca450d65d1057c7ad694d895268ba42aec",
+      "replacement_body": "{\n  return clash95::media::CAviDecompressorView::fromPlayerHandle(\n           (const void *)(uintptr_t)playerHandle)\n      .decodedFrame();\n}"
+    },
+    {
+      "name": "CAviDecompressor_SumSleepTime",
+      "expected_body_sha256": "badbf7edd73acfbb6dcb968e13ecfdccc5fc30233995da920044edbedaffbe38",
+      "replacement_body": "{\n  return clash95::media::CAviDecompressorView::fromPlayerHandle(\n           (const void *)(uintptr_t)playerHandle)\n      .sumSleepTime();\n}"
+    }
+  ]
+}
