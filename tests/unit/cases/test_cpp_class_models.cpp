@@ -72,6 +72,20 @@ TEST(cpp_class_models, avi_decompressor_view) {
   CHECK_EQ(view.destinationTop(), 12);
   CHECK_EQ(view.destinationRight(), 311);
   CHECK_EQ(view.destinationBottom(), 212);
+
+  const clash95::media::AviDestinationRect rect = view.destinationRect();
+  CHECK_EQ(rect.left, 11);
+  CHECK_EQ(rect.top, 12);
+  CHECK_EQ(rect.right, 311);
+  CHECK_EQ(rect.bottom, 212);
+
+  std::int32_t copied_rect[4] = {};
+  view.copyDestinationRect(copied_rect);
+  CHECK_EQ(copied_rect[0], 11);
+  CHECK_EQ(copied_rect[1], 12);
+  CHECK_EQ(copied_rect[2], 311);
+  CHECK_EQ(copied_rect[3], 212);
+
   CHECK_EQ(view.frameEventHandle(), 0x1357u);
   CHECK_EQ(view.destroyVtableHandle(), 0x2468u);
 }
