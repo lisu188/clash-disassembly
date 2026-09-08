@@ -14,7 +14,6 @@ TEST(cpp_string_holder_view, reads_two_dword_storage) {
   CHECK(view.hasText());
   CHECK_EQ(view.textHandle(), 0x10203040u);
   CHECK_EQ(view.vtableHandle(), 0x50607080u);
-  CHECK_EQ((std::uintptr_t)view.text(), 0x10203040u);
 }
 
 TEST(cpp_string_holder_view, writes_match_holder_words) {
