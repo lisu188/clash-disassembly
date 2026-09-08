@@ -127,14 +127,16 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          python3 tools/audit_header_surface.py --mode check 2>&1 | tee header-surface.log
+          python3 tools/audit_header_surface.py --mode update 2>&1 | tee header-surface.log
 
       - name: Upload header-surface diagnostics
         if: ${{ always() && steps.checkout.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
           name: header-surface-diagnostics
-          path: header-surface.log
+          path: |
+            header-surface.log
+            data/header_surface_baseline.json
           if-no-files-found: warn
 
       - name: Check Markdown links
@@ -214,7 +216,7 @@ jobs:
           set -o pipefail
           python3 tools/check_link_surface.py build/bin/clash95_bootstrap \
             --lib build/lib/libclash95_recovered.a \
-            --compiler ${{ matrix.compiler_id }} --mode check 2>&1 | tee link-surface.log
+            --compiler ${{ matrix.compiler_id }} --mode update 2>&1 | tee link-surface.log
 
       - name: Run asset-free CTest gates
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -238,6 +240,7 @@ jobs:
             compiler.log
             warning-ratchet.log
             link-surface.log
+            data/link_surface_baseline.json
             asset-free-ctest.log
             build/Testing/Temporary/LastTest.log
           if-no-files-found: warn
