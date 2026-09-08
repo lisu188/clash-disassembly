@@ -151,27 +151,17 @@ BOOL  CAviDecompressor_IsPlaying(int playerHandle)
 //----- (004642B0) --------------------------------------------------------
 int  CAviDecompressor_Initialized(_DWORD *playerHandle)
 {
-  _DWORD *instance; // eax
-  int result; // eax
-  int v3; // ebx
-  _DWORD *blitState; // eax
-
-  instance = (_DWORD *)(uintptr_t)*playerHandle;
-  if ( *(_DWORD *)((char *)instance + 7) )
-    LOBYTE(result) = *(_DWORD *)((char *)instance + 415) || (v3 = instance[486], blitState = instance + 481, v3) || blitState[4];
-  else
-    LOBYTE(result) = 0;
-  return (unsigned __int8)result;
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle)
+      .initialized();
 }
 
 //----- (004642F0) --------------------------------------------------------
 void  CAviDecompressor_WaitForNextFrame(int *playerHandle)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  if ( *(_BYTE *)(uintptr_t)(instance + 2191) )
-    WaitForSingleObject(*(HANDLE *)(uintptr_t)(instance + 2196), 0x1F4u);
+  const auto view =
+      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle);
+  if (view.isPlaying())
+    WaitForSingleObject((HANDLE)(uintptr_t)view.frameEventHandle(), 0x1F4u);
 }
 
 //----- (00464320) --------------------------------------------------------
