@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "source": "src/media/004637B0_00465D30_media_001.cpp",
+  "includes": ["avi_decompressor_view.h"],
+  "functions": [
+    {
+      "name": "CAviDecompressor_GetRect",
+      "expected_body_sha256": "c140690f37b202a9b936ea1fb8f6187d1792067fd4bbd7c7a3dd5bc2c1d65715",
+      "replacement_body": "{\n  const clash95::media::AviDestinationRect rect =\n      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle)\n          .destinationRect();\n  rectOut[0] = (_DWORD)rect.left;\n  rectOut[1] = (_DWORD)rect.top;\n  rectOut[2] = (_DWORD)rect.right;\n  rectOut[3] = (_DWORD)rect.bottom;\n}"
+    }
+  ]
+}
