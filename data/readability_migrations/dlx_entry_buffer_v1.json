@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "source": "src/render/00405DB0_00407D20_render_004.cpp",
+  "includes": [
+    "dlx_sprite_set_view.h",
+    "dlx_sprite_view.h"
+  ],
+  "functions": [
+    {
+      "name": "DLX_GetSpriteForChar",
+      "expected_body_sha256": "728bb7e84c5eec8ec302c9abb601be8efb5408b32cf94cc9d2e6d752a39d622f",
+      "replacement_body": "{\n  const clash95::render::DLXSpriteSetView spriteSet(\n      (const void *)(uintptr_t)sprite_set);\n  return (int)spriteSet.entryHandleSigned((std::ptrdiff_t)char_index);\n}"
+    },
+    {
+      "name": "DLXSprite_ConstructFromBuffer",
+      "expected_body_sha256": "6af33c8e11d7c1cfc2b18be7009972446380202bd2cc0c74f243e170ea9ea7e3",
+      "replacement_body": "{\n  clash95::render::DLXSpriteMutableView sprite((void *)(uintptr_t)result);\n  sprite.setOwnsPayload(false);\n  sprite.setSerializedSize((std::uint32_t)data_size);\n  sprite.copySerializedHeaderFrom((const void *)(uintptr_t)source_buffer);\n  sprite.setPayloadHandle((std::uint32_t)(source_buffer + 10));\n  return result;\n}"
+    }
+  ]
+}
