@@ -80,6 +80,21 @@ The header word at `+4` and bytes `+6..+9` remain deliberately unnamed. `DLXSpri
 
 All 32-bit fields after the serialized header are unaligned, so the view uses byte-safe `memcpy` loads and stores rather than aligned native references.
 
+### `RenderSurfaceView`
+
+`src/render/render_surface_view.h` separates the two surface-storage shapes that the recovered renderer currently conflates through raw `_DWORD *` arithmetic. This is a storage/layout view, not a claim that the original renderer used the same modern C++ inheritance declarations.
+
+The common software-surface object is exactly 188 bytes. `Render_CreateSurface` writes width and height into the first four bytes, clears the pixel-buffer handle at `+4`, constructs the body at `+8`, and installs the surface method table at `+184`. Independent render helpers and unit tests consume the same layout: `RenderSurface_IsLinearSoftware` requires the pixel handle and recognized method table, and rendering code reads `surface[1]` as the linear pixel buffer.
+
+The exposed common fields are therefore limited to:
+
+- width at `+0`;
+- height at `+2`;
+- low32 pixel-buffer handle at `+4`;
+- low32 method-table handle at `+184`.
+
+`RenderSurfaceWithStrideView` records the 192-byte variant already represented by `RenderSurfaceStorage`. Its only additional promoted field is the row stride at `+188`, independently consumed by `Surface_GetReadIncrFromStride` and `Surface_GetWriteIncrFromStride`. The views do not expose the many still-unresolved words inside the `+8..+183` body and do not introduce native virtual dispatch.
+
 ### `WCIsvListBaseView`
 
 `src/buildings/wcisv_list_view.h` reuses the existing `WCCompatListBase` and `WCCompatLink` layouts instead of introducing duplicate storage. This family has stronger original-class evidence than the generic game-state records: `clash95.map` names `WCIsvListBase` methods directly, the recovered ctor/dtor variants establish the object lifecycle and vtable transitions, and the basic list operations independently consume the same fields.
@@ -115,8 +130,9 @@ The score is a review queue, not a proof threshold. A high score means the famil
 2. Migrate `CAviDecompressor_InitOverlays`, `CAviDecompressor_InitPos`, and `CAviDecompressor_InitRect` to `CAviDecompressorMutableView` in the same separately validated body-change campaign.
 3. Use `DLXSpriteSetView`, `DLXSpriteSetMutableView`, and `DLXSpriteView` to drive a separately validated cleanup of the sprite load/save/copy/accessor family without changing ownership semantics.
 4. Migrate the bounded `WCIsvListBase` basic helpers (`base_next`, `base_insert`, `base_sget`, allocation/release, append/pop) to the typed view after original-backed equivalence checks.
-5. Keep `CSyncObject` deferred until more than the map-confirmed `Unlock` seam and current placeholder storage are recovered.
-6. Continue typed `UnitStackRecord` / `UnitSlotRecord` adoption as record readability work, without misclassifying the strategic save-state slab as an original C++ class.
+5. Adopt `RenderSurfaceView` in the small surface accessors and linear-software helpers before touching the broader renderer method-table dispatch.
+6. Keep `CSyncObject` deferred until more than the map-confirmed `Unlock` seam and current placeholder storage are recovered.
+7. Continue typed `UnitStackRecord` / `UnitSlotRecord` adoption as record readability work, without misclassifying the strategic save-state slab as an original C++ class.
 
 ## Validation rules
 
