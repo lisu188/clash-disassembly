@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "source": "src/render/004046D0_00405D20_render_003.cpp",
+  "includes": [
+    "render_surface_view.h"
+  ],
+  "functions": [
+    {
+      "name": "Surface_GetReadIncrFromStride",
+      "expected_body_sha256": "58b8af2cb2e64a1124102c76ce047e73c4f2c613b464a8102d0317fbcea9db95",
+      "replacement_body": "{\n  return clash95::render::RenderSurfaceWithStrideView(\n             (const void *)(uintptr_t)surface)\n      .rowStride();\n}"
+    },
+    {
+      "name": "Surface_GetWriteIncrFromStride",
+      "expected_body_sha256": "58b8af2cb2e64a1124102c76ce047e73c4f2c613b464a8102d0317fbcea9db95",
+      "replacement_body": "{\n  return clash95::render::RenderSurfaceWithStrideView(\n             (const void *)(uintptr_t)surface)\n      .rowStride();\n}"
+    }
+  ]
+}
