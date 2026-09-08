@@ -24,17 +24,33 @@ Each callback records its arguments and a full 96-byte canaried sprite arena
 snapshot. Both variants must have identical traces, final sprite arena, payload
 bytes and directory backing. Independent assertions additionally check operation
 order, read extents, query/handle identity, field widths, ownership and canaries;
-the assertions are not a second implementation of the whole loader. Two negative
-controls prove that changing ownership or caching the size before the header
-callback fails the contract.
+the assertions are not a second implementation of the whole loader. Negative
+controls prove that changing ownership, caching size before the header callback,
+or introducing signed subtraction at the integer boundary fails validation.
 
-There are 18 scenarios, each run with aligned and deliberately unaligned sprite
+There are 20 scenarios, each run with aligned and deliberately unaligned sprite
 storage under GCC 13 and Clang 18 at O0/O2: next-offset and EOF paths, null query,
 signed index `-1` within padded backing, index `1023`, zero-length payload,
 unsigned underflow/high-bit/all-ones sizes, mutations during EOF/seek/header/
 allocation/payload callbacks, returning and terminal quit hooks, and truncating
 64-bit allocator returns including a zero low32 result. A non-PIE executable
 keeps the fixture objects in the signed-low32 address range.
+The full matrix uses `-fsanitize=signed-integer-overflow` with
+`-fno-sanitize-recover=signed-integer-overflow`. Other undefined-behavior checks,
+including the frozen decompiler's unrelated unaligned-access check, are not
+enabled. Both `0x80000000` and `0x80000009` header DWORDs must retain unsigned
+subtraction before conversion to the signed local. The explicit negative mutant
+uses `(int)view.serializedSize() - (int)kSerializedHeaderSize` and must emit a
+signed-overflow diagnostic for each boundary under each compiler/optimization.
+These two values produce valid positive wrapped DWORD differences in the
+canonical expression; converting the first operand to signed before subtraction
+instead falls below `INT_MIN`.
+
+The initial 18-scenario evidence is preserved in commit `2853532` and its
+pre-integration artifacts: 36 paired cases per compiler/optimization, 144 paired
+cases total. The strengthened suite runs 40 paired cases per profile, 160 paired
+cases total, plus eight independently selected signed-subtraction negative
+executions (two boundaries times four compiler/optimization profiles).
 The tests prefer those versioned compilers, fall back to the available compiler
 of the same family, and skip a missing compiler family, following the existing
 asset-free tooling tests. Acceptance evidence names the actual compiler versions.

@@ -9,14 +9,50 @@ Track: Win95 reconstruction, bounded render-storage readability.
 and serialized-size fields and reuses the ten-byte header constant. Original
 field widths, callback order, current cached arguments and raw ownership bytes
 remain. One current body hash changes; all 4157 identities and historical
-metadata remain. The actual-source fixture passes 144 paired cases across
-GCC 13/Clang 18 at O0/O2, with ownership and stale-size negative controls.
-Both builds, all eight public asset-free gates and 258 tooling tests pass;
+metadata remain. The actual-source fixture passes 160 paired cases across
+GCC 13/Clang 18 at O0/O2, with ownership, stale-size and signed-overflow negative
+controls. Main integration preserves the incoming Road work and archives the
+competing signed-subtraction specification; the original uint32 subtraction wins
+the conflict. Both builds, all eight public asset-free gates and 263 tooling tests pass;
 existing header/link ratchet failures remain unchanged. Evidence, native/runtime
 results and retained original/canonical differences:
 [DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).
 No campaign milestone advances; normal mission-05 turn-7 refresh and Road
 continuation remain the gameplay target.
+
+## Road Construction Readability
+
+Track: Win95 reconstruction, reached mission-05 Road construction/movement.
+`Road_Build`, the fifteenth individually reviewed Road-family function, now
+separates direction selection from shared construction and movement. Typed
+coordinates/overlays and named locals replace register aliases and cross-case
+gotos. Zero-sensitive restoration, persistent turn stamps, fresh state reads and
+the 404-byte path-copy sequence remain; AP addition now matches original wrap.
+All 494 original-measured scenarios match the actual body in four compiler
+profiles. Both builds, eight public gates and all 257 tooling tests pass, with
+only the target code changed and seven fewer Clang warnings. Unknown original
+bridge-mapping inputs remain explicitly unresolved. Identities, layouts and
+frozen baselines remain.
+The first-Road runtime baseline and turn-7 continuation frontier are unchanged.
+Evidence, commands, validation and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-12-road_build).
+
+## Road Modal Loop Readability And Cursor Arithmetic
+
+Track: Win95 reconstruction, reached mission-05 Road mode. The fourteenth
+individually reviewed Road-family function, `Builder_StartRoadBuildMode`, now
+uses named carried state, typed coordinates/flags, flat directions and shared
+cleanup. Original-backed unsigned timer arithmetic and masked signed cursor
+division also repair a negative-coordinate mismatch and undefined arithmetic
+edges. The upstream ignored-clock-argument repair is retained.
+All 429 original-measured cases match the actual body in four compiler profiles,
+including 6760 callback boundaries. Both builds and eight public gates pass;
+all 255 tooling tests pass. Only the target executable section changes and each
+compiler has one fewer warning. Identities, layouts and frozen ratchet baselines
+remain.
+The first-Road runtime baseline and normal turn-7 continuation blocker remain
+unchanged. Evidence, commands, original/native boundary limits and validation:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-11-builder_startroadbuildmode).
 
 ## Road Build-Mode Timing Register Cleanup
 

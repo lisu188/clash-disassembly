@@ -15,6 +15,41 @@ controls. Both builds, eight public gates and 258 tooling tests pass; existing
 ratchet failures remain. No original-loader or campaign completion is claimed.
 [Evidence, validation and deferred differences](../DLX_CACHED_ENTRY_RECOVERY.md).
 
+## 2026-09-08 - Road readability: construction and movement
+
+Track: Win95 reconstruction. Reviewed `Road_Build` (`0x424400`) individually.
+Replaced register aliases with named state and existing packed fields; separated
+four direction choices from the shared construction/movement tail and flattened
+the known bridge mapping. Preserved provisional writes, zero-sensitive rollback,
+turn stamps, callback reloads and the 404-byte path-copy/free/execute/AP/panel
+order. Required AP now uses original wrapping addition and signed comparison.
+The original unmapped approach stack slot remains explicitly unresolved.
+All 494 accepted original traces match the actual body in four compiler profiles;
+492 defined-before traces also match, with two signed-overflow cases excluded.
+Both builds, eight public gates and all 257 tooling tests pass; eight compiled
+negative controls are rejected. Only target code changes, with seven fewer
+Clang warnings. One canonical body hash changes; all 4157 identities,
+legacy hashes and layouts remain. Confidence is high in the documented domain;
+no campaign or visual milestone is promoted.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-12-road_build).
+
+## 2026-09-08 - Road readability: modal loop and cursor arithmetic
+
+Track: Win95 reconstruction. Reviewed `Builder_StartRoadBuildMode` (`0x425540`)
+individually. Named the carried frame-call argument and cursor deltas, reused
+typed stack/widget fields, flattened marker selection and unified cleanup.
+Original unsigned timer subtraction, masked shifts and signed cursor division
+replace arithmetic scars; this repairs an existing negative-cursor mismatch as
+well as undefined edge cases. The upstream explicit clock arguments remain.
+All 429 original-measured cases match the actual body in four compiler profiles;
+six compiled negative controls are rejected. Confidence is high within the
+documented scalar arithmetic and scripted call contract. Both builds and eight
+public gates and all 255 tooling tests pass, with one fewer warning under each
+compiler and only the target executable section changed. One canonical hash changes; all 4157
+identities, legacy hashes, signatures and layouts remain. No global helper,
+campaign or visual milestone is promoted.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-11-builder_startroadbuildmode).
+
 ## 2026-09-06 - Road readability: adjacent-tile highlight callback
 
 Track: Win95 reconstruction. Reviewed `RoadBuildMode_HighlightBuildableAdjacentTile`

@@ -280,7 +280,8 @@ static void contract(const Result &result) {
   require(result.arena == expected, "header/fields/ownership/canary write footprint changed");
 }
 
-int main() {
+int main(int argc, char **argv) {
+  require(argc <= 2, "expected at most one exact case-name filter");
   std::vector<Case> cases;
   Case c;
   cases.push_back(c);
@@ -291,6 +292,8 @@ int main() {
   c = {}; c.name = "zero-payload"; c.recordSize = 10; cases.push_back(c);
   c = {}; c.name = "uint32-underflow"; c.recordSize = 6; cases.push_back(c);
   c = {}; c.name = "header-high-bit-size"; c.headerSize = 0x80000010u; cases.push_back(c);
+  c = {}; c.name = "header-int-min"; c.headerSize = 0x80000000u; cases.push_back(c);
+  c = {}; c.name = "header-int-min-plus-nine"; c.headerSize = 0x80000009u; cases.push_back(c);
   c = {}; c.name = "header-max-size"; c.headerSize = UINT32_MAX; cases.push_back(c);
   c = {}; c.name = "EOF-mutates-start"; c.useEof = true; c.mutateStartAtEof = true; cases.push_back(c);
   c = {}; c.name = "seek-mutates-size"; c.seekSize = 41; cases.push_back(c);
@@ -302,14 +305,18 @@ int main() {
   c = {}; c.name = "wide-allocator-success"; c.wideAllocatorReturn = true; cases.push_back(c);
   c = {}; c.name = "wide-allocator-zero-low32"; c.wideAllocatorReturn = true; c.allocationFails = true; cases.push_back(c);
   unsigned count = 0;
-  for (const Case &test : cases) for (alignment = 0; alignment != 2; ++alignment) {
-    current = test;
-    const Result oracle = run(frozen_LoadCachedEntry);
-    contract(oracle);
-    const Result actual = run(DLXSprite_LoadCachedEntry);
-    contract(actual);
-    require(actual == oracle, "actual source differs from frozen trace/full-byte state");
-    ++count;
+  for (const Case &test : cases) {
+    if (argc == 2 && std::strcmp(argv[1], test.name) != 0) continue;
+    for (alignment = 0; alignment != 2; ++alignment) {
+      current = test;
+      const Result oracle = run(frozen_LoadCachedEntry);
+      contract(oracle);
+      const Result actual = run(DLXSprite_LoadCachedEntry);
+      contract(actual);
+      require(actual == oracle, "actual source differs from frozen trace/full-byte state");
+      ++count;
+    }
   }
+  require(count != 0, "unknown case-name filter");
   std::printf("%u cases; actual/frozen traces and byte contracts agree\n", count);
 }

@@ -18,6 +18,10 @@ import unittest
 
 REPO = Path(__file__).resolve().parents[2]
 FIXTURE = Path(__file__).resolve().parent / "fixtures/dlx_cached_entry"
+SIGNED_OVERFLOW_FLAGS = (
+    "-fsanitize=signed-integer-overflow",
+    "-fno-sanitize-recover=signed-integer-overflow",
+)
 sys.path.insert(0, str(REPO / "tools"))
 from split_source_index import scan_definitions, body_sha256  # noqa: E402
 
@@ -63,6 +67,7 @@ class DLXCachedEntryTests(unittest.TestCase):
                     executable = directory / (Path(compiler).name + optimization)
                     command = [
                         compiler, "-std=gnu++20", optimization, "-fno-pie", "-no-pie",
+                        *SIGNED_OVERFLOW_FLAGS,
                         "-Wall", "-Wextra", "-Werror", "-I", str(REPO / "src"),
                         str(harness), "-o", str(executable),
                     ]
@@ -70,13 +75,60 @@ class DLXCachedEntryTests(unittest.TestCase):
                     self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
                     ran = subprocess.run([str(executable)], capture_output=True, text=True)
                     self.assertEqual(ran.returncode, 0, ran.stdout + ran.stderr)
-                    self.assertIn("36 cases; actual/frozen traces and byte contracts agree", ran.stdout)
+                    self.assertIn("40 cases; actual/frozen traces and byte contracts agree", ran.stdout)
 
     def test_actual_loader_gcc(self):
         self.check_compiler(("g++-13", "g++"))
 
     def test_actual_loader_clang(self):
         self.check_compiler(("clang++-18", "clang++"))
+
+    def check_signed_subtraction_mutant(self, candidates):
+        if not sys.platform.startswith("linux"):
+            self.skipTest("recovered low32 executable checks run in Linux/WSL")
+        compiler = next((shutil.which(name) for name in candidates if shutil.which(name)), None)
+        if compiler is None:
+            self.skipTest("required C++ compiler unavailable: " + ", ".join(candidates))
+        original = (FIXTURE / "baseline.cpp").read_text(encoding="utf-8")
+        mutant = original.replace(
+            "payload_size = *(_DWORD *)(uintptr_t)(sprite + 14) - 10;",
+            "payload_size = (int)clash95::render::DLXSpriteView(\n"
+            "      (const void *)(uintptr_t)sprite).serializedSize()\n"
+            "      - (int)clash95::render::DLXSpriteView::kSerializedHeaderSize;",
+        )
+        self.assertNotEqual(original, mutant)
+        template = (FIXTURE / "harness.cpp").read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory(prefix="clash-dlx-signed-subtraction-") as temporary:
+            directory = Path(temporary)
+            harness = directory / "signed-subtraction.cpp"
+            harness.write_text(
+                template.replace("@FROZEN_BODY@", original).replace("@ACTUAL_BODY@", mutant),
+                encoding="utf-8",
+            )
+            for optimization in ("-O0", "-O2"):
+                executable = directory / (Path(compiler).name + optimization)
+                command = [
+                    compiler, "-std=gnu++20", optimization, "-fno-pie", "-no-pie",
+                    *SIGNED_OVERFLOW_FLAGS, "-I", str(REPO / "src"),
+                    str(harness), "-o", str(executable),
+                ]
+                built = subprocess.run(command, capture_output=True, text=True)
+                self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
+                for case, signed_value in (
+                    ("header-int-min", "-2147483648"),
+                    ("header-int-min-plus-nine", "-2147483639"),
+                ):
+                    with self.subTest(compiler=compiler, optimization=optimization, boundary=case):
+                        ran = subprocess.run([str(executable), case], capture_output=True, text=True)
+                        self.assertNotEqual(ran.returncode, 0, "signed-subtraction mutant escaped UBSan")
+                        self.assertIn("signed integer overflow", ran.stderr)
+                        self.assertIn(signed_value, ran.stderr)
+
+    def test_signed_subtraction_boundary_mutant_gcc(self):
+        self.check_signed_subtraction_mutant(("g++-13", "g++"))
+
+    def test_signed_subtraction_boundary_mutant_clang(self):
+        self.check_signed_subtraction_mutant(("clang++-18", "clang++"))
 
     def test_contract_detects_ownership_and_stale_size_regressions(self):
         if not sys.platform.startswith("linux"):

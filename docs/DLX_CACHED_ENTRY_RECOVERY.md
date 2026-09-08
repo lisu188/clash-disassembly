@@ -72,7 +72,7 @@ callbacks for huge or negative read counts. They do not prove malformed-asset
 safety, overflowing address/entry arithmetic, real allocation/filesystem
 behavior, ownership correctness or whole-original-loader equivalence.
 
-## Validation results
+## Initial batch validation results
 
 | Check | Fresh baseline | Final migration |
 | --- | --- | --- |
@@ -152,6 +152,59 @@ varying during the final wait; the other 5,099 remain unresolved in the lower-le
 area. Only five fall in the cursor-local crop. Location overlap does not prove
 an animation cause, and those differences are not attributed to this migration.
 No visual parity, repaired HUD or fresh original execution is claimed.
+
+## Integration with main
+
+The completed batch is preserved in `2853532`. Main advanced independently to
+`55872f9`, adding the Road modal-loop/construction work and PR 128's competing
+DLX migration. The integration retains both incoming Road bodies and their
+tests/docs verbatim, and retains this batch's entire validated render TU.
+All 4,157 identities and non-body manifest fields remain; only the DLX current
+hash differs from that incoming main. The active v1 plan remains the direct
+pre-view migration. The [unsigned v2 plan](../data/readability_migrations/dlx_cached_entry_unsigned_v2.json)
+also accepts PR 128's `f25e22a1...` body and converges to the same `133ed67a...`
+result. All 16 active plans replay without edits; both DLX entry points apply
+only this function and then replay idempotently.
+
+PR 128 converted serialized size to signed `int` before subtraction. That
+overflows for header-mutated DWORD values `0x80000000..0x80000009`. Its exact
+specification is [archived with provenance](archive/readability_migrations/README.md);
+neither history is discarded. The fixture now covers both endpoints, for 20
+scenarios x two alignments x four compiler profiles: **160 paired cases**.
+Positive executions use signed-integer-overflow sanitization with recovery
+disabled. An upstream-shaped mutation fails at both endpoints under both
+compilers at O0/O2 (eight negative executions). Alignment and unrelated
+sanitizers are excluded from this existing packed-storage contract. All six
+focused tests pass, and the frozen pre-view oracle/provenance remain unchanged.
+
+Both clean integration builds and all eight public asset-free gates pass.
+Compared with the initial post-edit builds, only the two incoming Road objects
+change; all 141 others, including the DLX object, are byte-identical. Within the
+changed objects, only `Road_Build` and `Builder_StartRoadBuildMode` executable
+sections change. Linked profiles remain unchanged. Warnings decrease to 6581
+GCC / 6583 Clang; the raw link ratchet output remains the same 428 / 680
+differences. The full merged tooling suite passes **263 tests, zero skips**,
+with all 663 bound inputs unchanged during execution. Source, metadata and
+generator checks pass; the same 14 header-ratchet failures remain byte-identical
+to the fresh original baseline.
+
+The compiled integration audit explains every differing stored byte through
+actual ELF relocations: 1,299 bytes in 737 pointer slots under GCC and 1,113
+bytes in 689 slots under Clang. This includes the changed Clang jump-table
+offsets inside the incoming `Road_Build` body. No unexplained game-data bytes,
+symbol addresses, sizes or layouts change; initializer pointers retain their
+targets. Full reconstruction evidence is in integration-audit-compiled.
+
+The integrated native run has 1087 passes, zero assertion failures and the
+exact same 527 isolated crash identities out of 1614. Coverage remains
+6160/6651 lines (92.62%), with all 718 frozen functions reached. Two stale
+unsharded gcov checksum diagnostics identify the rebuilt Road objects; the
+reported metric uses the fresh 16 worker shards. No ratchet is raised.
+Integration evidence is retained in this batch's integration-audit,
+integration-fixture, integration-tooling and integration-validation artifacts.
+
+The user's standing preference for frequent main synchronization and prompt
+merging of validated batches is recorded in [AGENTS.md](../AGENTS.md).
 
 ## Validation commands and retained evidence
 
