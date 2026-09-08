@@ -1,6 +1,22 @@
 # Current Status
 
-Last consolidated: 2026-09-07.
+Last consolidated: 2026-09-08.
+
+## DLX Cached-Entry View Migration
+
+Track: Win95 reconstruction, bounded render-storage readability.
+`DLXSprite_LoadCachedEntry` now uses the existing sprite views for payload
+and serialized-size fields and reuses the ten-byte header constant. Original
+field widths, callback order, current cached arguments and raw ownership bytes
+remain. One current body hash changes; all 4157 identities and historical
+metadata remain. The actual-source fixture passes 144 paired cases across
+GCC 13/Clang 18 at O0/O2, with ownership and stale-size negative controls.
+Both builds, all eight public asset-free gates and 258 tooling tests pass;
+existing header/link ratchet failures remain unchanged. Evidence, native/runtime
+results and retained original/canonical differences:
+[DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).
+No campaign milestone advances; normal mission-05 turn-7 refresh and Road
+continuation remain the gameplay target.
 
 ## Road Build-Mode Timing Register Cleanup
 

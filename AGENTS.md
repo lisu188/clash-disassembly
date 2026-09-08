@@ -161,6 +161,13 @@ than a copy kept in sync by hand.
 ## 10. Workflow
 
 - Work on one explicit track and frontier per batch.
+- Keep integration frequent: fetch origin and integrate `origin/main` at session
+  start, between completed batches, and before publishing. Merge completed,
+  validated work into `main` promptly, push it, and refresh the active worktree
+  from the resulting main. This is the user's standing preference; no separate
+  merge confirmation is needed for authorized work. Preserve other agents'
+  changes and coordinate access to a shared main checkout; do not force-push or
+  reset away unrelated work.
 - Delegate independent evidence gathering, bounded audits, and validation when
   useful. Give each editing agent disjoint file ownership before it writes;
   never let concurrent agents modify the same files or shared Git index.
