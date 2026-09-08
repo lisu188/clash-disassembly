@@ -35,4 +35,15 @@ TEST(cpp_class_models, dlx_last_char_preserves_original_low16_read) {
   CHECK_EQ(view.entryCount(), 0x12340005u);
   CHECK_EQ(view.serializedEntryCount(), 5u);
   CHECK_EQ(view.lastCharIndex(), 4u);
+  CHECK_EQ(view.legacyLastCharResult(0x4567ABCDu), 0x45670004u);
+}
+
+TEST(cpp_class_models, dlx_last_char_full_eax_decrement_borrows) {
+  using clash95::render::DLXSpriteSetView;
+
+  std::array<std::uint32_t, DLXSpriteSetView::kObjectDwordCount> storage{};
+  storage[DLXSpriteSetView::kEntryCountIndex] = 0u;
+
+  const DLXSpriteSetView view(storage.data());
+  CHECK_EQ(view.legacyLastCharResult(0x4567ABCDu), 0x4566FFFFu);
 }
