@@ -58,3 +58,19 @@ TEST(cpp_class_views, dlx_sprite_mutable_view_preserves_raw_offsets) {
   CHECK_EQ(view.readOnly().payloadHandle(), 0);
   CHECK(!view.readOnly().ownsPayload());
 }
+
+TEST(cpp_class_views, dlx_sprite_serialized_header_copy_is_exactly_ten_bytes) {
+  unsigned char source[clash95::render::DLXSpriteView::kSerializedHeaderSize] = {
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  unsigned char storage[clash95::render::DLXSpriteView::kObjectSize];
+  std::memset(storage, 0xA5, sizeof(storage));
+
+  clash95::render::DLXSpriteMutableView(storage).copySerializedHeaderFrom(source);
+
+  CHECK_EQ(std::memcmp(storage, source,
+                       clash95::render::DLXSpriteView::kSerializedHeaderSize), 0);
+  for (std::size_t i = clash95::render::DLXSpriteView::kSerializedHeaderSize;
+       i < sizeof(storage); ++i) {
+    CHECK_EQ(storage[i], 0xA5u);
+  }
+}
