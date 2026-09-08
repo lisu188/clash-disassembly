@@ -14,7 +14,7 @@ class RenderSurfaceViewContractTests(unittest.TestCase):
         offsets = {
             name: int(value)
             for name, value in re.findall(
-                r"k(Width|Height|PixelBufferHandle|MethodTableHandle|RowStride)Offset\s*=\s*(\d+)",
+                r"k(Width|Height|PixelBufferHandle|MethodTableHandle)Offset\s*=\s*(\d+)",
                 text,
             )
         }
@@ -25,8 +25,15 @@ class RenderSurfaceViewContractTests(unittest.TestCase):
                 "Height": 2,
                 "PixelBufferHandle": 4,
                 "MethodTableHandle": 184,
-                "RowStride": 188,
             },
+        )
+        self.assertIn(
+            "kRowStrideOffset = RenderSurfaceView::kObjectSize;",
+            text,
+        )
+        self.assertIn(
+            "static_assert(RenderSurfaceWithStrideView::kRowStrideOffset == 188);",
+            text,
         )
 
     def test_storage_sizes_remain_188_and_192(self):
