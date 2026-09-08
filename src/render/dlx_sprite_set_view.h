@@ -51,6 +51,13 @@ public:
     return static_cast<std::uint16_t>(serializedEntryCount() - 1u);
   }
 
+  constexpr std::uint32_t legacyLastCharResult(
+      std::uint32_t incomingValue) const noexcept {
+    const std::uint32_t withSerializedCount =
+        (incomingValue & 0xFFFF0000u) | serializedEntryCount();
+    return withSerializedCount - 1u;
+  }
+
 private:
   const std::uint32_t *words_;
 };
