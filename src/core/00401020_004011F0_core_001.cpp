@@ -35,7 +35,7 @@ int  Game_Init(int a1, char a2, DWORD allocContext)
   result = Mem_Alloc(GAMEDATA_SAVE_IMAGE_BYTES, a1, a2, allocContext);
   if ( result )
   {
-    result = _wcpp_4_ctor_array__(result + UNIT_STACK_TABLE_OFFSET, UNIT_STACK_TABLE_COUNT) - 147174;
+    result = _wcpp_4_ctor_array__(result + UNIT_STACK_TABLE_OFFSET, UNIT_STACK_TABLE_COUNT) - UNIT_STACK_TABLE_OFFSET;
     gameData = result;
   }
   else

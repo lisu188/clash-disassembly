@@ -1353,7 +1353,7 @@ int __stdcall CSS_StreamReadingThreadProc(int threadParam CLASH95_UNUSED)
     CSS_ServiceStreamingChannels();
     LeaveCriticalSection((LPCRITICAL_SECTION)(&g_StreamServiceLockEntryCount + 1));
     --g_StreamServiceLockEntryCount;
-    Sleep(1000 / g_CSS_StreamServiceRateHz);
+    Sleep(CSS_MILLISECONDS_PER_SECOND / g_CSS_StreamServiceRateHz);
   }
   LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_StreamReadThreadLockRefCount + 1));
   --g_CSS_StreamReadThreadLockRefCount;
@@ -1435,7 +1435,7 @@ int __stdcall CSS_StreamBufferServiceThreadProc(int threadParam CLASH95_UNUSED)
     }
     LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_MixerLockNestingCount + 1));
     --g_CSS_MixerLockNestingCount;
-    Sleep(1000 / g_CSS_StreamServiceRateHz);
+    Sleep(CSS_MILLISECONDS_PER_SECOND / g_CSS_StreamServiceRateHz);
   }
   LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_StreamServiceThreadLockRefCount + 1));
   --g_CSS_StreamServiceThreadLockRefCount;

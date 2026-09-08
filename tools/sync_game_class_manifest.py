@@ -12,8 +12,8 @@ from recovered_implementation import implementation_name, manifest_sources
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def synchronize(manifest: dict, registry: dict) -> dict:
-    errors = validate_registry(registry, manifest)
+def synchronize(manifest: dict, registry: dict, declarations: dict | None = None) -> dict:
+    errors = validate_registry(registry, manifest, declarations)
     if errors:
         raise ValueError("\n".join(errors))
     result = json.loads(json.dumps(manifest))
@@ -48,7 +48,8 @@ def main() -> int:
     path = ROOT / "data/recovered_sources.json"
     manifest = json.loads(path.read_text())
     registry = json.loads((ROOT / "data/game_class_registry.json").read_text())
-    result = synchronize(manifest, registry)
+    declarations = json.loads((ROOT / "data/recovered_decls.json").read_text())
+    result = synchronize(manifest, registry, declarations)
     if args.write:
         path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     elif manifest != result:

@@ -172,32 +172,32 @@ TEST(cov2_08_reorderagenda, nonzero_result_enters_loop) {
  * for tidiness. */
 TEST(cov2_08_ccfopen, top_level_shortcut_a1_truthy) {
   static int a5val;
-  static const char *a11arr[4];
+  static _DWORD a11arr[4];
   a5val = 0;
   memset(a11arr, 0, sizeof a11arr);
-  CHECK_EQ(Rules_ConstructCodeFileOpen(77, "foo", 1, "bar", &a5val, 9, 8, 'X',
-                                        "pfx_", 0, a11arr),
+  CHECK_EQ(Rules_ConstructCodeFileOpen(77, "foo", 1, "bar", &a5val, 9, 8, "X",
+                                        "pfx_", 0, (const char **)a11arr),
            77);
 }
 
 TEST(cov2_08_ccfopen, a10_zero_positional_args_with_a11) {
   static int a5val;
-  static const char *a11arr[4];
+  static _DWORD a11arr[4];
   a5val = 0;
   memset(a11arr, 0, sizeof a11arr);
-  TOUCH(Rules_ConstructCodeFileOpen(0, "foo", 1, "bar", &a5val, 9, 8, 'X',
-                                     "pfx_", 0, a11arr));
+  TOUCH(Rules_ConstructCodeFileOpen(0, "foo", 1, "bar", &a5val, 9, 8, "X",
+                                     "pfx_", 0, (const char **)a11arr));
 }
 
 TEST(cov2_08_ccfopen, a10_nonzero_resolved_name_with_a11) {
   static int a5val;
-  static const char *a11arr[4];
+  static _DWORD a11arr[4];
   a5val = 0;
-  a11arr[0] = "AA";
-  a11arr[1] = "BB";
-  a11arr[2] = "CC";
-  TOUCH(Rules_ConstructCodeFileOpen(0, "foo", 1, "bar", &a5val, 9, 8, 'X',
-                                     "pfx_", 1, a11arr));
+  a11arr[0] = (_DWORD)(uintptr_t)("AA");
+  a11arr[1] = (_DWORD)(uintptr_t)("BB");
+  a11arr[2] = (_DWORD)(uintptr_t)("CC");
+  TOUCH(Rules_ConstructCodeFileOpen(0, "foo", 1, "bar", &a5val, 9, 8, "X",
+                                     "pfx_", 1, (const char **)a11arr));
 }
 
 /* a10!=0 with a11==NULL: reports a system error and unwinds via
@@ -206,7 +206,7 @@ TEST(cov2_08_ccfopen, a10_nonzero_resolved_name_with_a11) {
 TEST(cov2_08_ccfopen, a10_nonzero_null_a11_reports_error) {
   static int a5val;
   a5val = 0;
-  TOUCH(Rules_ConstructCodeFileOpen(0, "foo", 1, "bar", &a5val, 9, 8, 'X',
+  TOUCH(Rules_ConstructCodeFileOpen(0, "foo", 1, "bar", &a5val, 9, 8, "X",
                                      "pfx_", 1, 0));
 }
 

@@ -42,9 +42,9 @@ signed int clash95::UnitStack::UnitStack_GetMinCurrentActionPoints() const
     if ( minActionPoints > *((unsigned __int8 *)slotPtr + 8) )
       minActionPoints = *((unsigned __int8 *)slotPtr + 8);
     ++slotIndex;
-    slotPtr = (SlotTypeWord *)((char *)slotPtr + 31);
+    slotPtr = (SlotTypeWord *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
   }
-  while ( slotIndex < 10 );
+  while ( slotIndex < UNIT_STACK_SLOT_COUNT );
   return minActionPoints;
 }
 
@@ -65,8 +65,8 @@ signed int clash95::UnitStack::UnitStack_HasBuilder() const
     if ( slotType == UNIT_TYPE_BUILDER )
       break;
     ++slotIndex;
-    slotPtr = (SlotTypeWord *)((char *)slotPtr + 31);
-    if ( slotIndex >= 10 )
+    slotPtr = (SlotTypeWord *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
+    if ( slotIndex >= UNIT_STACK_SLOT_COUNT )
       return 0;
   }
   return 1;

@@ -1,0 +1,40 @@
+{
+  "original_function": {
+    "name": "Map_NormalizeRoadOverlayTileId",
+    "start": "0x423fc0",
+    "end_exclusive": "0x42401c",
+    "bytes": 92,
+    "sha256": "503b4a0545e4661e5b980214b796a015b0389e6542a4445f4365a8f716124fbe"
+  },
+  "original_results": {
+    "first_input": 0,
+    "last_input": 65535,
+    "count": 65536,
+    "encoding": "little-endian signed int32 results in ascending input order",
+    "bytes": 262144,
+    "sha256": "618529ba918c63e02b3065ccb406fc6d93e253588026ce80ecac2d2d7a45bb2b"
+  },
+  "shared_lookup": {
+    "road_fixture": "original-road.bin",
+    "road_original_address": "0x51420c",
+    "road_offset": 48,
+    "first_input": 819,
+    "entries": 43,
+    "encoding": "little-endian unsigned uint16",
+    "original_word_load": "0x42400e",
+    "first_word_address": "0x51423c",
+    "last_word_address": "0x514290",
+    "sha256": "686680dfe8a819b4f3038e2eaa1beb48d22ec772f29bc7f52251b87508c33be2"
+  },
+  "measurement": {
+    "artifact": "artifacts/readability/road-functions-20260906/batch-05-query-proof/original-results.bin",
+    "byte_offset": 4194304,
+    "commands": "artifacts/readability/road-functions-20260906/batch-05-query-proof/commands.json",
+    "fresh_replay_commands": "artifacts/readability/road-functions-20260906/batch-06/normalizer-proof/commands.json",
+    "original_probe_sha256": "473cae723454eb6a928e2695f24fca8d1d23535655a006c37ea4641403823056",
+    "method": "Native i386 probe invokes the unchanged original entry at 0x423FC0 with its input in EAX. The original Road data is linked at 0x51420C. No normalizer instructions or lookup data are substituted.",
+    "executable_and_data_provenance": "provenance.json",
+    "pointer_relocations": "pointer-relocations.json"
+  },
+  "limits": "The public test uses the output digest and existing data fixtures; it does not execute original instructions or require retail files. Canonical initializer callbacks are address-only recording boundaries that must remain uncalled. These checks establish normalization and shared initialization behavior, not rendering or route completion."
+}

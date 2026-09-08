@@ -78,24 +78,24 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
   Debug_Log(army_index, a3, a4, (int)(intptr_t)aPrzegrupujza_0);
   v7 = *(unsigned __int8 *)(uintptr_t)(gameData + building_offset + BUILDING_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v6 + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(v7) ^ v7) - HIDWORD(v7)) > 1
-    || (v8 = *(unsigned __int8 *)(uintptr_t)(building_offset + gameData + 509675) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * v6 + gameData + 147176),
+    || (v8 = *(unsigned __int8 *)(uintptr_t)(building_offset + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * v6 + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
         (int)((HIDWORD(v8) ^ v8) - HIDWORD(v8)) > 1) )
   {
     v9 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( (int)((HIDWORD(v9) ^ v9) - HIDWORD(v9)) > 1
-      || (v34 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + 509675) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + 147176),
+      || (v34 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
           (int)((HIDWORD(v34) ^ v34) - HIDWORD(v34)) > 1) )
     {
       v10 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
       if ( (int)((HIDWORD(v10) ^ v10) - HIDWORD(v10)) > 1
-        || (v35 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + 509675) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + 147176),
+        || (v35 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
             (int)((HIDWORD(v35) ^ v35) - HIDWORD(v35)) > 1) )
       {
         v11 = UNIT_STACK_STRIDE * army;
         dx = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
         if ( (int)abs32(dx) > 1
-          || (v11 = *(__int16 *)(uintptr_t)(v11 + gameData + 147176),
-              v36 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + 509675) + 1 - v11,
+          || (v11 = *(__int16 *)(uintptr_t)(v11 + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
+              v36 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET) + 1 - v11,
               (int)((HIDWORD(v36) ^ v36) - HIDWORD(v36)) > 1) )
         {
           approach_track = (const void *)(uintptr_t)Building_GenerateNearApproachTrack(army, building, v6, v11, dx);
@@ -110,23 +110,23 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
   }
   v15 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(v15) ^ v15) - HIDWORD(v15)) > 1
-    || (v37 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + 509675) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + 147176),
+    || (v37 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
         (int)((HIDWORD(v37) ^ v37) - HIDWORD(v37)) > 1) )
   {
     v16 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( (int)((HIDWORD(v16) ^ v16) - HIDWORD(v16)) > 1
-      || (v38 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + 509675) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + 147176),
+      || (v38 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
           (int)((HIDWORD(v38) ^ v38) - HIDWORD(v38)) > 1) )
     {
       v17 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
       if ( (int)((HIDWORD(v17) ^ v17) - HIDWORD(v17)) > 1
-        || (v39 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + 509675) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + 147176),
+        || (v39 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TILE_COLUMN_TABLE_OFFSET) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
             (int)((HIDWORD(v39) ^ v39) - HIDWORD(v39)) > 1) )
       {
         v18 = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
         if ( (int)((HIDWORD(v18) ^ v18) - HIDWORD(v18)) > 1 )
           return 0;
-        v19 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + 509675) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + 147176);
+        v19 = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET) + 1 - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
         if ( (int)((HIDWORD(v19) ^ v19) - HIDWORD(v19)) > 1 )
           return 0;
       }
@@ -143,14 +143,14 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
     qmemcpy(merge_cursor, first_source_slot, 0x1Cu);
     qmemcpy(merge_cursor + 28, first_source_slot + 14, 3u);
     ++first_copy_count;
-    first_source_slot = (__int16 *)((char *)first_source_slot + 31);
-    merge_cursor += 31;
+    first_source_slot = (__int16 *)((char *)first_source_slot + UNIT_SLOT_RECORD_BYTES);
+    merge_cursor += UNIT_SLOT_RECORD_BYTES;
     ++total_units;
   }
   while ( first_copy_count < 10 );
   garrison_copy_count = 0;
   garrison_source_slot = (__int16 *)(uintptr_t)(UNIT_RECORD(building) + 18);
-  garrison_merge_cursor = &merged_units[31 * total_units];
+  garrison_merge_cursor = &merged_units[UNIT_SLOT_RECORD_BYTES * total_units];
   do
   {
     if ( *garrison_source_slot == -1 )
@@ -158,16 +158,16 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
     qmemcpy(garrison_merge_cursor, garrison_source_slot, 0x1Cu);
     qmemcpy(garrison_merge_cursor + 28, garrison_source_slot + 14, 3u);
     ++garrison_copy_count;
-    garrison_source_slot = (__int16 *)((char *)garrison_source_slot + 31);
-    garrison_merge_cursor += 31;
+    garrison_source_slot = (__int16 *)((char *)garrison_source_slot + UNIT_SLOT_RECORD_BYTES);
+    garrison_merge_cursor += UNIT_SLOT_RECORD_BYTES;
     ++total_units;
   }
-  while ( garrison_copy_count < 12 );
+  while ( garrison_copy_count < BUILDING_GARRISON_SLOT_COUNT );
   sorted_flag = 0;
   if ( total_units > 1 )
   {
     outer_index = 0;
-    outer_offset = 31;
+    outer_offset = UNIT_SLOT_RECORD_BYTES;
     sort_limit = total_units - 1;
     do
     {
@@ -181,10 +181,10 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
         compare_offset = outer_offset;
         do
         {
-          if ( (signed char)merged_units[31 * compare_index + 9] > (signed char)merged_units[compare_offset + 9] )
+          if ( (signed char)merged_units[UNIT_SLOT_RECORD_BYTES * compare_index + 9] > (signed char)merged_units[compare_offset + 9] )
           {
             sorted_flag = 0;
-            swap_a = &merged_units[31 * compare_index];
+            swap_a = &merged_units[UNIT_SLOT_RECORD_BYTES * compare_index];
             qmemcpy(swap_buffer, swap_a, sizeof(swap_buffer));
             qmemcpy(swap_tail, swap_a + 28, sizeof(swap_tail));
             swap_b = &merged_units[compare_offset];
@@ -197,7 +197,7 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
         }
         while ( inner_index < total_units );
       }
-      outer_offset += 31;
+      outer_offset += UNIT_SLOT_RECORD_BYTES;
       ++outer_index;
     }
     while ( outer_index < sort_limit );
@@ -210,14 +210,14 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
     {
       if ( (signed char)merged_units[healthy_scan_offset + 9] >= 8 )
         ++keep_count;
-      healthy_scan_offset += 31;
+      healthy_scan_offset += UNIT_SLOT_RECORD_BYTES;
     }
-    while ( healthy_scan_offset < 31 * total_units );
+    while ( healthy_scan_offset < UNIT_SLOT_RECORD_BYTES * total_units );
   }
   if ( keep_count > 10 )
     keep_count = 10;
-  if ( total_units - 12 > keep_count )
-    keep_count = total_units - 12;
+  if ( total_units - BUILDING_GARRISON_SLOT_COUNT > keep_count )
+    keep_count = total_units - BUILDING_GARRISON_SLOT_COUNT;
   writeback_cursor = merged_units;
   first_write_index = 0;
   first_dest_slot = (_WORD *)(uintptr_t)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TABLE_OFFSET + 6);
@@ -232,15 +232,15 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
       qmemcpy(first_dest_slot, writeback_cursor, 0x1Cu);
       qmemcpy(first_dest_slot + 14, writeback_cursor + 28, 3u);
     }
-    writeback_cursor += 31;
+    writeback_cursor += UNIT_SLOT_RECORD_BYTES;
     ++first_write_index;
-    first_dest_slot = (_WORD *)((char *)first_dest_slot + 31);
+    first_dest_slot = (_WORD *)((char *)first_dest_slot + UNIT_SLOT_RECORD_BYTES);
   }
   while ( first_write_index < 10 );
   garrison_write_index = 0;
   remainder_count = total_units - keep_count;
   garrison_dest_slot = (_WORD *)(uintptr_t)(UNIT_RECORD(building) + 18);
-  garrison_writeback_cursor = &merged_units[31 * keep_count];
+  garrison_writeback_cursor = &merged_units[UNIT_SLOT_RECORD_BYTES * keep_count];
   do
   {
     if ( garrison_write_index >= remainder_count )
@@ -252,11 +252,11 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
       qmemcpy(garrison_dest_slot, garrison_writeback_cursor, 0x1Cu);
       qmemcpy(garrison_dest_slot + 14, garrison_writeback_cursor + 28, 3u);
     }
-    garrison_writeback_cursor += 31;
+    garrison_writeback_cursor += UNIT_SLOT_RECORD_BYTES;
     ++garrison_write_index;
-    garrison_dest_slot = (_WORD *)((char *)garrison_dest_slot + 31);
+    garrison_dest_slot = (_WORD *)((char *)garrison_dest_slot + UNIT_SLOT_RECORD_BYTES);
   }
-  while ( garrison_write_index < 12 );
+  while ( garrison_write_index < BUILDING_GARRISON_SLOT_COUNT );
   if ( !keep_count )
     UnitStack_KillByIndex(army, garrison_write_index, (DWORD)(intptr_t)garrison_writeback_cursor, a5);
   return 1;
@@ -355,8 +355,8 @@ void  AI_EvaluateStrategicTargetAtTile(
     }
     if ( (filter_type == -1 || target_type == filter_type)
       && (filter_owner == -1
-       || (target_type != 1 || *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * target_id + 509676) == filter_owner)
-       && (target_type != 2 || *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * target_id + 147178) == filter_owner)) )
+       || (target_type != 1 || *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * target_id + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == filter_owner)
+       && (target_type != 2 || *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * target_id + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == filter_owner)) )
     {
       score = (double)(int)AI_CalcStrategicPriorityScore(target_type, tile_x, origin_x, tile_y, origin_y);
       if ( score > *best_score_out )
@@ -461,7 +461,7 @@ signed int  createUnit(double a1, int tile_x, int tile_y, int player_index, unit
   (void)a1; /* The extra C double used SSE; tile_y remained the fifth GP argument. */
   Unit_Create(first_unit_type, player_index, tile_x, 0, tile_y);
   owner = player_index;
-  slot_offset = 31;
+  slot_offset = UNIT_SLOT_RECORD_BYTES;
   next_unit_type = (unit_type)second_unit_type_promoted;
   tile_x_offset = 200 * tile_x;
   tile_offset = 2 * tile_y;
@@ -470,7 +470,7 @@ signed int  createUnit(double a1, int tile_x, int tile_y, int player_index, unit
     stack_id = *(unsigned __int16 *)(uintptr_t)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET);
     UnitSlot_InitFromType(slot_offset + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_id + 6, next_unit_type, player_index);
     next_unit_type = (unit_type)(unsigned int)(va_arg(args, int));
-    slot_offset += 31;
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
   }
   va_end(args);
   return Rules_SyncArmyFactStrength(
@@ -509,14 +509,14 @@ int  createCastle(
   Diagnostics_TraceBootstrapEvent("createCastle-fill-slots");
   tile_x_offset = 200 * tile_x;
   next_unit_type = (unit_type)second_unit_type_promoted;
-  slot_offset = 31;
+  slot_offset = UNIT_SLOT_RECORD_BYTES;
   tile_offset = 2 * tile_y;
   while ( next_unit_type != -1 )
   {
     stack_id = *(unsigned __int16 *)(uintptr_t)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET);
     UnitSlot_InitFromType(slot_offset + UNIT_STACK_STRIDE * stack_id + gameData + UNIT_STACK_TABLE_OFFSET + 6, next_unit_type, player_index);
     next_unit_type = (unit_type)(unsigned int)(va_arg(args, int));
-    slot_offset += 31;
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
   }
   va_end(args);
   Rules_SyncArmyFactStrength(
@@ -530,7 +530,7 @@ int  createCastle(
   Building_New(building_type, *(unsigned __int16 *)(uintptr_t)(tile_offset + tile_x_offset + gameData + TILE_MAP_OFFSET), st7_0, castle_name, 1);
   Diagnostics_TraceBootstrapEvent("createCastle-post-building-new");
   unit_index = *(unsigned __int16 *)(uintptr_t)(tile_offset + tile_x_offset + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
-  *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * unit_index + gameData + 509690) = 0;
+  *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * unit_index + gameData + BUILDING_CONSTRUCTION_TURNS_REMAINING_TABLE_OFFSET) = 0;
   Diagnostics_TraceBootstrapEvent("createCastle-update-per-turn");
   Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * unit_index + gameData + BUILDING_TABLE_OFFSET, 0);
   Diagnostics_TraceBootstrapEvent("createCastle-log-facts");
@@ -751,8 +751,8 @@ BOOL  Mission_CheckObjectiveComplete(DWORD a1, double a2)
     case 0:
       mission0_stack_index = 0;
 LABEL_6:
-      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + 147180) <= 0x28
-        && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + 147178) == 1 )
+      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28
+        && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 1 )
       {
         if ( mission0_last_blocker_index != mission0_stack_index || mission0_last_blocker_turn != GAME_TURN_COUNTER )
         {
@@ -762,12 +762,12 @@ LABEL_6:
             "mission_objective_blocked",
             mission0_stack_index,
             *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + UNIT_STACK_TABLE_OFFSET),
-            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + 147176),
+            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
             Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * mission0_stack_index));
         }
         return 0;
       }
-      while ( ++mission0_stack_index < 500 )
+      while ( ++mission0_stack_index < UNIT_STACK_TABLE_COUNT )
       {
         if ( mission0_stack_index >= 0 )
           goto LABEL_6;
@@ -779,13 +779,13 @@ LABEL_6:
       Mission_TraceObjectiveBlocked(1, 16, 11, MapTile_GetReligiousSiteCategory(16, 11));
       return 0;
     case 2:
-      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 564710) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 564710) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         2,
         41,
         68,
-        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 564710) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
+        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 564710) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET));
       return 0;
     case 3:
     case 0xD:
@@ -794,13 +794,13 @@ LABEL_6:
       Mission_TraceObjectiveBlocked(ACTIVE_MISSION_INDEX, *(unsigned __int16 *)(uintptr_t)(gameData + GAME_TURN_COUNTER_OFFSET), 10, 0);
       return 0;
     case 4:
-      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         4,
         56,
         69,
-        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
+        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET));
       return 0;
     case 5:
       building_scan_index = (unsigned __int8)g_LanguageIndex;
@@ -811,7 +811,7 @@ LABEL_35:
         enemy_building_record = UNIT_RECORD(enemy_building_index);
         if ( (unsigned int)*(char *)(uintptr_t)(enemy_building_record + 4) >= 4
           || *(__int16 *)(uintptr_t)(enemy_building_record + 16) == -1
-          || *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * enemy_building_index + 509676) != 3 )
+          || *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * enemy_building_index + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != 3 )
         {
           while ( ++enemy_building_index < 100 )
           {
@@ -820,27 +820,27 @@ LABEL_35:
           }
           enemy_stack_index = 0;
 LABEL_42:
-          if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + 147180) > 0x28
-            || *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + 147178) != 3 )
+          if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) > 0x28
+            || *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) != 3 )
           {
-            while ( ++enemy_stack_index < 500 )
+            while ( ++enemy_stack_index < UNIT_STACK_TABLE_COUNT )
             {
               if ( enemy_stack_index >= 0 )
                 goto LABEL_42;
             }
             return 1;
           }
-          Mission_TraceObjectiveBlocked(5, enemy_stack_index, *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + 147178), Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * enemy_stack_index));
+          Mission_TraceObjectiveBlocked(5, enemy_stack_index, *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET), Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * enemy_stack_index));
           return 0;
         }
-        Mission_TraceObjectiveBlocked(5, enemy_building_index, *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * enemy_building_index + 509676), *(__int16 *)(uintptr_t)(enemy_building_record + 16));
+        Mission_TraceObjectiveBlocked(5, enemy_building_index, *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * enemy_building_index + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET), *(__int16 *)(uintptr_t)(enemy_building_record + 16));
         return 0;
       }
 LABEL_18:
       building_record = UNIT_RECORD(building_scan_index);
       if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4 && *(__int16 *)(uintptr_t)(building_record + 16) != -1 )
       {
-        building_owner = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building_scan_index + gameData + 509676);
+        building_owner = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * building_scan_index + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET);
         if ( building_owner == 1 || building_owner == 2 )
         {
           Mission_TraceObjectiveBlocked(5, building_scan_index, building_owner, *(__int16 *)(uintptr_t)(building_record + 16));
@@ -856,27 +856,27 @@ LABEL_18:
 LABEL_27:
       if ( (unsigned int)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_scan_index + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28 )
       {
-        stack_owner = *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_scan_index + 147178);
+        stack_owner = *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_scan_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET);
         if ( stack_owner == 1 || stack_owner == 2 )
         {
           Mission_TraceObjectiveBlocked(5, stack_scan_index, stack_owner, Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_scan_index));
           return 0;
         }
       }
-      while ( ++stack_scan_index < 500 )
+      while ( ++stack_scan_index < UNIT_STACK_TABLE_COUNT )
       {
         if ( stack_scan_index >= 0 )
           goto LABEL_27;
       }
       return 1;
     case 6:
-      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574456) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574456) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         6,
         90,
         41,
-        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574456) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
+        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574456) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET));
       return 0;
     case 7:
       all_treasures_taken = !MapTile_HasHiddenTreasure(55, 45) && !MapTile_HasHiddenTreasure(50, 27) && !MapTile_HasHiddenTreasure(35, 63) && !MapTile_HasHiddenTreasure(14, 68);
@@ -896,17 +896,17 @@ LABEL_27:
       kill_stack_index = 0;
       while ( 1 )
       {
-        if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * kill_stack_index + 147180) <= 0x28 )
+        if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * kill_stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 )
         {
           kill_stack_offset = UNIT_STACK_STRIDE * kill_stack_index;
           kill_stack_record = gameData + UNIT_STACK_STRIDE * kill_stack_index;
-          if ( *(_BYTE *)(uintptr_t)(kill_stack_record + 147178) )
+          if ( *(_BYTE *)(uintptr_t)(kill_stack_record + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) )
           {
-            if ( Map_IsTileVisibleToPlayer(*(__int16 *)(uintptr_t)(kill_stack_record + 147174), *(__int16 *)(uintptr_t)(kill_stack_record + 147176), 0) )
+            if ( Map_IsTileVisibleToPlayer(*(__int16 *)(uintptr_t)(kill_stack_record + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(kill_stack_record + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET), 0) )
             {
               Camera_CenterOnUnit(kill_stack_index);
               Audio_PlayArtifactSound(0);
-              UI_StartTileBlinkFlash(*(__int16 *)(uintptr_t)(kill_stack_offset + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(kill_stack_offset + gameData + 147176), v16);
+              UI_StartTileBlinkFlash(*(__int16 *)(uintptr_t)(kill_stack_offset + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(kill_stack_offset + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET), v16);
               Unit_Kill(kill_stack_offset + gameData + UNIT_STACK_TABLE_OFFSET, 0, a1, a2);
               Timer_BusyWaitWithCallback(100, v17, v18);
             }
@@ -914,23 +914,23 @@ LABEL_27:
         }
         do
         {
-          if ( ++kill_stack_index >= 500 )
+          if ( ++kill_stack_index >= UNIT_STACK_TABLE_COUNT )
             return objective_met;
         }
         while ( kill_stack_index < 0 );
       }
     case 8:
       garrison_slot_offset = 0;
-      while ( *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 562420) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + garrison_slot_offset + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
+      while ( *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 562420) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + garrison_slot_offset + BUILDING_GARRISON_SLOTS_TABLE_OFFSET) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
       {
-        garrison_slot_offset += 31;
-        if ( garrison_slot_offset >= 372 )
+        garrison_slot_offset += UNIT_SLOT_RECORD_BYTES;
+        if ( garrison_slot_offset >= BUILDING_GARRISON_SLOTS_BYTES )
           return 1;
       }
-      Mission_TraceObjectiveBlocked(8, 30, 23, garrison_slot_offset / 31);
+      Mission_TraceObjectiveBlocked(8, 30, 23, garrison_slot_offset / UNIT_SLOT_RECORD_BYTES);
       return 0;
     case 9:
-      player_offset = 1423;
+      player_offset = PLAYER_DATA_STRIDE;
       while ( !*(_DWORD *)(uintptr_t)(gameData + player_offset + PLAYER_RUNTIME_STATE_OFFSET) )
       {
         player_offset += PLAYER_DATA_STRIDE;
@@ -942,17 +942,17 @@ LABEL_27:
     case 0xA:
       owner2_stack_index = 0;
 LABEL_75:
-      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + 147180) <= 0x28
-        && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + 147178) == 2 )
+      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28
+        && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 2 )
       {
         Mission_TraceObjectiveBlocked(
           10,
           owner2_stack_index,
           *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + UNIT_STACK_TABLE_OFFSET),
-          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + 147176));
+          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
         return 0;
       }
-      while ( ++owner2_stack_index < 500 )
+      while ( ++owner2_stack_index < UNIT_STACK_TABLE_COUNT )
       {
         if ( owner2_stack_index >= 0 )
           goto LABEL_75;
@@ -964,22 +964,22 @@ LABEL_75:
       Mission_TraceObjectiveBlocked(11, 2, 44, MapTile_GetReligiousSiteCategory(2, 44));
       return 0;
     case 0xC:
-      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 568202) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 568202) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         12,
         59,
         14,
-        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 568202) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
+        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 568202) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET));
       return 0;
     case 0xE:
-      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 566822) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 566822) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         14,
         52,
         24,
-        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 566822) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
+        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 566822) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET));
       return 0;
     case 0xF:
       owner4_building_index = 0;
@@ -987,9 +987,9 @@ LABEL_86:
       owner4_building_record = UNIT_RECORD(owner4_building_index);
       if ( (unsigned int)*(char *)(uintptr_t)(owner4_building_record + 4) < 4
         && *(__int16 *)(uintptr_t)(owner4_building_record + 16) != -1
-        && *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * owner4_building_index + 509676) == 4 )
+        && *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * owner4_building_index + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 4 )
       {
-        Mission_TraceObjectiveBlocked(15, owner4_building_index, *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * owner4_building_index + 509676), *(__int16 *)(uintptr_t)(owner4_building_record + 16));
+        Mission_TraceObjectiveBlocked(15, owner4_building_index, *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * owner4_building_index + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET), *(__int16 *)(uintptr_t)(owner4_building_record + 16));
         return 0;
       }
       while ( ++owner4_building_index < 100 )
@@ -999,30 +999,30 @@ LABEL_86:
       }
       owner4_stack_index = 0;
 LABEL_94:
-      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + 147180) <= 0x28
-        && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + 147178) == 4 )
+      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28
+        && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 4 )
       {
         Mission_TraceObjectiveBlocked(
           15,
           owner4_stack_index,
           *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + UNIT_STACK_TABLE_OFFSET),
-          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + 147176));
+          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
         return 0;
       }
-      while ( ++owner4_stack_index < 500 )
+      while ( ++owner4_stack_index < UNIT_STACK_TABLE_COUNT )
       {
         if ( owner4_stack_index >= 0 )
           goto LABEL_94;
       }
       return 1;
     case 0x10:
-      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574660) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574660) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         16,
         91,
         43,
-        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574660) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
+        *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 574660) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET));
       return 0;
     case 0x11:
       treasures_taken_m17 = !MapTile_HasHiddenTreasure(50, 34) && !MapTile_HasHiddenTreasure(51, 73) && !MapTile_HasHiddenTreasure(77, 34) && !MapTile_HasHiddenTreasure(24, 49);
@@ -1041,23 +1041,23 @@ LABEL_94:
       }
       kill_stack_index_m17 = 0;
 LABEL_105:
-      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * kill_stack_index_m17 + 147180) <= 0x28 )
+      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * kill_stack_index_m17 + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 )
       {
         kill_stack_offset_m17 = UNIT_STACK_STRIDE * kill_stack_index_m17;
         kill_stack_record_m17 = gameData + UNIT_STACK_STRIDE * kill_stack_index_m17;
-        if ( *(_BYTE *)(uintptr_t)(kill_stack_record_m17 + 147178) != 1 )
+        if ( *(_BYTE *)(uintptr_t)(kill_stack_record_m17 + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) != 1 )
         {
-          if ( Map_IsTileVisibleToPlayer(*(__int16 *)(uintptr_t)(kill_stack_record_m17 + 147174), *(__int16 *)(uintptr_t)(kill_stack_record_m17 + 147176), 1) )
+          if ( Map_IsTileVisibleToPlayer(*(__int16 *)(uintptr_t)(kill_stack_record_m17 + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(kill_stack_record_m17 + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET), 1) )
           {
             Camera_CenterOnUnit(kill_stack_index_m17);
             Audio_PlayArtifactSound(0);
-            UI_StartTileBlinkFlash(*(__int16 *)(uintptr_t)(kill_stack_offset_m17 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(kill_stack_offset_m17 + gameData + 147176), v29);
+            UI_StartTileBlinkFlash(*(__int16 *)(uintptr_t)(kill_stack_offset_m17 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(kill_stack_offset_m17 + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET), v29);
             Unit_Kill(kill_stack_offset_m17 + gameData + UNIT_STACK_TABLE_OFFSET, 1, a1, a2);
             Timer_BusyWaitWithCallback(100, v30, v31);
           }
         }
       }
-      while ( ++kill_stack_index_m17 < 500 )
+      while ( ++kill_stack_index_m17 < UNIT_STACK_TABLE_COUNT )
       {
         if ( kill_stack_index_m17 >= 0 )
           goto LABEL_105;
@@ -1065,9 +1065,9 @@ LABEL_105:
       return objective_met;
     case 0x12:
       personage_count = 0;
-      for ( i = 0; i != 372; i += 31 )
+      for ( i = 0; i != BUILDING_GARRISON_SLOTS_BYTES; i += UNIT_SLOT_RECORD_BYTES )
       {
-        garrison_unit_type = *(__int16 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 573450) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + i + 509692);
+        garrison_unit_type = *(__int16 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 573450) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + i + BUILDING_GARRISON_SLOTS_TABLE_OFFSET);
         if ( garrison_unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || garrison_unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
           ++personage_count;
       }
@@ -1150,7 +1150,7 @@ int Mission_CheckFailureCondition(void)
   switch ( ACTIVE_MISSION_INDEX )
   {
     case 3:
-      return *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 560616) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) != 0;
+      return *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 560616) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != 0;
     case 4:
     case 0xE:
       return *(unsigned __int16 *)(uintptr_t)(gameData + GAME_TURN_COUNTER_OFFSET) > 0x14u;
@@ -1163,16 +1163,16 @@ int Mission_CheckFailureCondition(void)
       personage_count = 0;
       stack_index = 0;
 LABEL_7:
-      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 && !*(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147178) )
+      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 && !*(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) )
       {
         for ( i = 0; i < 10; ++i )
         {
-          slot_unit_type = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + 31 * i + 147180);
+          slot_unit_type = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_SLOT_RECORD_BYTES * i + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET);
           if ( slot_unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slot_unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
             ++personage_count;
         }
       }
-      while ( ++stack_index < 500 )
+      while ( ++stack_index < UNIT_STACK_TABLE_COUNT )
       {
         if ( stack_index >= 0 )
           goto LABEL_7;
@@ -1182,11 +1182,11 @@ LABEL_19:
       building_record = UNIT_RECORD(building_index);
       if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4
         && *(__int16 *)(uintptr_t)(building_record + 16) != -1
-        && !*(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * building_index + gameData + 509676) )
+        && !*(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * building_index + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) )
       {
-        for ( j = 0; j < 12; ++j )
+        for ( j = 0; j < BUILDING_GARRISON_SLOT_COUNT; ++j )
         {
-          garrison_unit_type = *(__int16 *)(uintptr_t)(31 * j + gameData + BUILDING_RECORD_SIZE * building_index + 509692);
+          garrison_unit_type = *(__int16 *)(uintptr_t)(UNIT_SLOT_RECORD_BYTES * j + gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_GARRISON_SLOTS_TABLE_OFFSET);
           if ( garrison_unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || garrison_unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
             ++personage_count;
         }
@@ -1198,7 +1198,7 @@ LABEL_19:
       }
       return personage_count < 12;
     case 0xD:
-      return *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 561026) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) != 1;
+      return *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 561026) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != 1;
     case 0xF:
       return MISSION_FAILURE_FLAG;
     case 0x12:
@@ -1209,17 +1209,17 @@ LABEL_19:
       return 0;
   }
 LABEL_34:
-  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_p1 + 147180) <= 0x28
-    && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_p1 + 147178) == 1 )
+  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_p1 + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28
+    && *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_p1 + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 1 )
   {
     for ( k = 0; k < 10; ++k )
     {
-      slot_unit_type_p1 = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index_p1 + gameData + 31 * k + 147180);
+      slot_unit_type_p1 = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index_p1 + gameData + UNIT_SLOT_RECORD_BYTES * k + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET);
       if ( slot_unit_type_p1 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slot_unit_type_p1 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         ++personage_count_p1;
     }
   }
-  while ( ++stack_index_p1 < 500 )
+  while ( ++stack_index_p1 < UNIT_STACK_TABLE_COUNT )
   {
     if ( stack_index_p1 >= 0 )
       goto LABEL_34;
@@ -1229,11 +1229,11 @@ LABEL_46:
   building_record_p1 = UNIT_RECORD(building_index_p1);
   if ( (unsigned int)*(char *)(uintptr_t)(building_record_p1 + 4) < 4
     && *(__int16 *)(uintptr_t)(building_record_p1 + 16) != -1
-    && *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * building_index_p1 + gameData + 509676) == 1 )
+    && *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * building_index_p1 + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == 1 )
   {
-    for ( m = 0; m < 12; ++m )
+    for ( m = 0; m < BUILDING_GARRISON_SLOT_COUNT; ++m )
     {
-      garrison_unit_type_p1 = *(__int16 *)(uintptr_t)(31 * m + gameData + BUILDING_RECORD_SIZE * building_index_p1 + 509692);
+      garrison_unit_type_p1 = *(__int16 *)(uintptr_t)(UNIT_SLOT_RECORD_BYTES * m + gameData + BUILDING_RECORD_SIZE * building_index_p1 + BUILDING_GARRISON_SLOTS_TABLE_OFFSET);
       if ( garrison_unit_type_p1 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || garrison_unit_type_p1 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         ++personage_count_p1;
     }

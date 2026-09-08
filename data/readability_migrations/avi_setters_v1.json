@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "source": "src/media/004637B0_00465D30_media_001.cpp",
+  "includes": [
+    "avi_decompressor_view.h"
+  ],
+  "functions": [
+    {
+      "name": "CAviDecompressor_InitPos",
+      "expected_body_sha256": "e442f9ac53ed9813232665dd2714d1577d8d22255e6f24b388f16bd7372caacb",
+      "replacement_body": "{\n  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)\n      .setPosition(x, y);\n}"
+    },
+    {
+      "name": "CAviDecompressor_InitRect",
+      "expected_body_sha256": "f14c38961e580a5ba18808c0fbec69ea3d78b55ee9a41593fa86d45402cf3877",
+      "replacement_body": "{\n  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)\n      .setDestinationRect((int)rect[0], (int)rect[1], (int)rect[2], (int)rect[3]);\n}"
+    },
+    {
+      "name": "CAviDecompressor_InitOverlays",
+      "expected_body_sha256": "7a129bacc45a8c663f771a8bb164aba464c734ee141a520a01119bec67e21980",
+      "replacement_body": "{\n  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(\n           (void *)(uintptr_t)playerHandle)\n      .setOverlaysEnabled(enabled != 0);\n}"
+    }
+  ]
+}

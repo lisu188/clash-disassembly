@@ -177,7 +177,7 @@ void  Audio_PlayWorldMapUnitMoveSound(int tileRow, int tileColumn, signed int mo
       stemCursor += 2;
     }
     while ( stemNextChar );
-    if ( (g_UnitTypeFlags[22 * unitTypeId] & 1) != 0 )
+    if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * unitTypeId] & 1) != 0 )
     {
       suffixChars = (char*)(airSuffix);
       airSuffix[1] = HIBYTE(g_WorldMapUnitMoveSoundSuffixCode);
@@ -248,7 +248,7 @@ LABEL_25:
       suffixCursor += 2;
     }
     while ( suffixNextChar );
-    volumeTableIndex = 88 * unitTypeId;
+    volumeTableIndex = UNIT_TYPE_METADATA_STRIDE * unitTypeId;
     extChars = a_wav_0;
     extCursor = &soundPathBuffer[strlen(soundPathBuffer)];
     do
@@ -432,7 +432,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
         stemCursor += 2;
       }
       while ( stemNextChar );
-      if ( (g_UnitTypeFlags[22 * unitTypeId] & 1) != 0 )
+      if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * unitTypeId] & 1) != 0 )
       {
         suffixChars = (char*)(airSuffix);
         airSuffix[1] = HIBYTE(g_BattleMapUnitMoveSoundSuffixCode);
@@ -476,7 +476,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
         suffixCursor += 2;
       }
       while ( suffixNextChar );
-      volumeTableIndex = 88 * unitTypeId;
+      volumeTableIndex = UNIT_TYPE_METADATA_STRIDE * unitTypeId;
       extChars = a_wav_2;
       extCursor = &soundPathBuffer[strlen(soundPathBuffer)];
       do
@@ -1144,11 +1144,11 @@ int * Port_GenerateApproachTrack(int unitStackIndex)
   *(_WORD *)(uintptr_t)(14 * portColumn + bottomRowByteOffset + gameData) = 0;
   *(_WORD *)(uintptr_t)(rightColumnByteOffset + portRowByteOffset + gameData) = 0;
   *(_WORD *)(uintptr_t)(rightColumnByteOffset + bottomRowByteOffset + gameData) = 0;
-  stackColumn = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176);
+  stackColumn = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
   trackList = Unit_MoveTrack(unitStackIndex, *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), portRow, stackColumn, portRow, portColumn);
   if ( trackList )
   {
-    reversedTrack = (int *)(uintptr_t)Mem_Alloc(404, (int)(intptr_t)trackList, stackColumn, portRow);
+    reversedTrack = (int *)(uintptr_t)Mem_Alloc(UNIT_STACK_PATH_ALLOCATION_BYTES, (int)(intptr_t)trackList, stackColumn, portRow);
     trackReadPtr = reversedTrack;
     if ( reversedTrack )
       *reversedTrack = 0;
@@ -1277,7 +1277,7 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
             {
               unitStackBase = UNIT_STACK_STRIDE * tileUnitIndex;
               if ( (unsigned int)*(__int16 *)(uintptr_t)(unitStackBase + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28
-                && *(unsigned __int8 *)(uintptr_t)(unitStackBase + gameData + 147178) == g_CurrentPlayerIndex )
+                && *(unsigned __int8 *)(uintptr_t)(unitStackBase + gameData + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == g_CurrentPlayerIndex )
               {
                 break;
               }

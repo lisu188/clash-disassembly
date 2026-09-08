@@ -995,7 +995,7 @@ CLASH95_TEST_VISIBLE void MainMenu_WriteButtonWidgetTemplateRecord(
         int action_callback,
         const char *sound_name)
 {
-  memset(record, 0, 53);
+  memset(record, 0, WORLD_MAP_ACTION_WIDGET_RECORD_SIZE);
   *(_DWORD *)(record + 0) = left;
   *(_DWORD *)(record + 4) = top;
   record[8] = 1;
@@ -1040,7 +1040,7 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
    */
   memset(g_MainMenuButtonWidgetsTemplate, 0, sizeof(g_MainMenuButtonWidgetsTemplate));
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_MainMenuButtonWidgetsTemplate + 53 * 0,
+    g_MainMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
     159,
     136,
     0,
@@ -1048,7 +1048,7 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&MainMenu_RequestLoadGameMenu,
     aMainMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_MainMenuButtonWidgetsTemplate + 53 * 1,
+    g_MainMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
     152,
     168,
     6,
@@ -1056,7 +1056,7 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&MainMenu_RequestCampaignMenu,
     aMainMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_MainMenuButtonWidgetsTemplate + 53 * 2,
+    g_MainMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
     185,
     204,
     12,
@@ -1064,7 +1064,7 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&MainMenu_RequestExit,
     aMainMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_MainMenuButtonWidgetsTemplate + 53 * 3,
+    g_MainMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
     357,
     136,
     18,
@@ -1072,7 +1072,7 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&MainMenu_RequestOptionsMenu,
     aMainMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_MainMenuButtonWidgetsTemplate + 53 * 4,
+    g_MainMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
     344,
     168,
     24,
@@ -1080,14 +1080,14 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&MainMenu_RequestMultiplayerMenu,
     aMainMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_MainMenuButtonWidgetsTemplate + 53 * 5,
+    g_MainMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
     388,
     204,
     30,
     33,
     (int)(uintptr_t)&MainMenu_RequestCreditsCinematic,
     aMainMenuButtonClickSound);
-  *(_DWORD *)(g_MainMenuButtonWidgetsTemplate + 53 * 6) = -1;
+  *(_DWORD *)(g_MainMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 6) = -1;
 }
 
 void CampaignMenu_RebuildButtonWidgetTemplate(void)
@@ -1102,7 +1102,7 @@ void CampaignMenu_RebuildButtonWidgetTemplate(void)
    */
   memset(g_CampaignMenuButtonWidgetsTemplate, 0, sizeof(g_CampaignMenuButtonWidgetsTemplate));
   CampaignMenu_WriteButtonWidgetTemplateRecord(
-    g_CampaignMenuButtonWidgetsTemplate + 53 * 0,
+    g_CampaignMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
     152,
     279,
     0,
@@ -1110,14 +1110,14 @@ void CampaignMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&MultiplayerSetup_HandleConfirmButtonRelease,
     aCampaignMenuButtonClickSound);
   CampaignMenu_WriteButtonWidgetTemplateRecord(
-    g_CampaignMenuButtonWidgetsTemplate + 53 * 1,
+    g_CampaignMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
     384,
     279,
     2,
     3,
     (int)(uintptr_t)&MultiplayerSetup_HandleCancelButtonRelease,
     aCampaignMenuButtonClickSound);
-  *(_DWORD *)(g_CampaignMenuButtonWidgetsTemplate + 53 * 2) = -1;
+  *(_DWORD *)(g_CampaignMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2) = -1;
 }
 
 void LoadMenu_RebuildButtonWidgetTemplate(void)
@@ -1131,7 +1131,7 @@ void LoadMenu_RebuildButtonWidgetTemplate(void)
    */
   memset(g_LoadMenuButtonWidgetsTemplate, 0, sizeof(g_LoadMenuButtonWidgetsTemplate));
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_LoadMenuButtonWidgetsTemplate + 53 * 0,
+    g_LoadMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
     249,
     392,
     0,
@@ -1139,14 +1139,14 @@ void LoadMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&LoadMenu_HandleSlotConfirmButtonRelease,
     aLoadMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_LoadMenuButtonWidgetsTemplate + 53 * 1,
+    g_LoadMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
     329,
     408,
     2,
     3,
     (int)(uintptr_t)&MultiplayerSetup_HandleBackButtonRelease,
     aLoadMenuButtonClickSound);
-  *(_DWORD *)(g_LoadMenuButtonWidgetsTemplate + 53 * 2) = -1;
+  *(_DWORD *)(g_LoadMenuButtonWidgetsTemplate + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2) = -1;
 }
 
 /* Existing reconstruction helper: keep its private C symbol in both C++ profiles. */
@@ -1194,7 +1194,7 @@ void Options_RebuildMainMenuWidgetTemplates(void)
    */
   memset(g_OptionsMenuWidgetTemplateBlob, 0, sizeof(g_OptionsMenuWidgetTemplateBlob));
   CampaignMenu_WriteButtonWidgetTemplateRecord(
-    g_OptionsMenuWidgetTemplateBlob + 53 * 0,
+    g_OptionsMenuWidgetTemplateBlob + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
     180,
     246,
     3,
@@ -1202,7 +1202,7 @@ void Options_RebuildMainMenuWidgetTemplates(void)
     (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
     aOptionsMenuButtonClickSound);
   CampaignMenu_WriteButtonWidgetTemplateRecord(
-    g_OptionsMenuWidgetTemplateBlob + 53 * 1,
+    g_OptionsMenuWidgetTemplateBlob + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
     180,
     280,
     9,
@@ -1210,7 +1210,7 @@ void Options_RebuildMainMenuWidgetTemplates(void)
     (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
     aOptionsMenuButtonClickSound);
   CampaignMenu_WriteButtonWidgetTemplateRecord(
-    g_OptionsMenuWidgetTemplateBlob + 53 * 2,
+    g_OptionsMenuWidgetTemplateBlob + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
     180,
     312,
     15,
@@ -1218,7 +1218,7 @@ void Options_RebuildMainMenuWidgetTemplates(void)
     (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
     aOptionsMenuButtonClickSound);
   CampaignMenu_WriteButtonWidgetTemplateRecord(
-    g_OptionsMenuWidgetTemplateBlob + 53 * 3,
+    g_OptionsMenuWidgetTemplateBlob + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
     180,
     344,
     21,
@@ -1226,7 +1226,7 @@ void Options_RebuildMainMenuWidgetTemplates(void)
     (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
     aOptionsMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_OptionsMenuWidgetTemplateBlob + 53 * 4,
+    g_OptionsMenuWidgetTemplateBlob + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
     248,
     392,
     24,
@@ -1234,14 +1234,14 @@ void Options_RebuildMainMenuWidgetTemplates(void)
     (int)(uintptr_t)&PlayGameMenu_HandleCloseButton,
     aOptionsMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
-    g_OptionsMenuWidgetTemplateBlob + 53 * 5,
+    g_OptionsMenuWidgetTemplateBlob + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
     329,
     408,
     26,
     27,
     (int)(uintptr_t)&Options_InitMainMenuSlidersAndWidgets,
     aOptionsMenuButtonClickSound);
-  *(_DWORD *)(void *)(g_OptionsMenuWidgetTemplateBlob + 53 * 6) = -1;
+  *(_DWORD *)(void *)(g_OptionsMenuWidgetTemplateBlob + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 6) = -1;
 
   /*
    * Slider records (original values: min=323 max=473, cross rows 140/166/192,

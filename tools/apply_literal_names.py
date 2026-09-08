@@ -127,8 +127,8 @@ def validate_rules(rules, entries_by_name, prelude, enums):
     return errors
 
 
-def rule_files(rule):
-    files = lc.apply_files()
+def rule_files(rule, files=None):
+    files = lc.apply_files() if files is None else files
     globs = rule.get("files")
     if not globs:
         return files
@@ -144,7 +144,12 @@ def resolve(rules, entries_by_name, families, batch, enums=None):
     enum_rules = [r for r in rules if r.get("kind") == "enum"]
     values = {r["value"] for r in name_rules}
 
-    all_files = sorted({f for r in rules for f in rule_files(r)})
+    # Freeze the canonical source inventory once per resolution. Re-reading
+    # the 4,157-function manifest for every rule at every source/site made
+    # large, surgically scoped batches needlessly expensive.
+    canonical_files = lc.apply_files()
+    files_by_rule = {id(r): frozenset(rule_files(r, canonical_files)) for r in rules}
+    all_files = sorted({f for files in files_by_rule.values() for f in files})
     for rel in all_files:
         path = os.path.join(lc.REPO, rel)
         with open(path, errors="replace") as f:
@@ -160,7 +165,7 @@ def resolve(rules, entries_by_name, families, batch, enums=None):
         increments = []
         for (idx, value) in sites:
             matching = [r for r in name_rules
-                        if r["value"] == value and rel in rule_files(r)]
+                        if r["value"] == value and rel in files_by_rule[id(r)]]
             if not matching:
                 continue
             tok = toks[idx]
@@ -248,7 +253,7 @@ def resolve(rules, entries_by_name, families, batch, enums=None):
         if any(r.get("func") for r in rx_enum_rules):
             rx_fn_lookup, _lo, _fr = lc.build_fn_map(text)
         for rule in rx_enum_rules:
-            if rel not in rule_files(rule):
+            if rel not in files_by_rule[id(rule)]:
                 continue
             is_enum = rule.get("kind") == "enum"
             value = rule["value"] if is_enum else entries_by_name[rule["name"]]["value"]
@@ -269,7 +274,7 @@ def resolve(rules, entries_by_name, families, batch, enums=None):
                     "file": rel, "line": line, "start": s, "end": e,
                     "value": value, "raw": raw,
                     "class": "enum" if is_enum else "regex",
-                    "name": rule["name"], "fn": None,
+                    "name": rule["name"], "fn": want_fn or (rx_fn_lookup(s) if rx_fn_lookup else None),
                     "expr": re.sub(r"\s+", " ", m.group(0))[:160],
                 }
                 if is_enum:
@@ -342,8 +347,13 @@ def append_accum(plan, accum_path):
     rows = []
     entries_by_name, _ = lc.load_manifest()
     spelling = {e["name"]: e["spelling"] for e in entries_by_name}
-    for r in plan["rules"]:
-        name = r["name"]
+    rules_by_name = {}
+    for rule in plan["rules"]:
+        rules_by_name.setdefault(rule["name"], []).append(rule)
+    # The summary is already aggregated by constant. Recording it once for
+    # every scoped rule would multiply the actual replacement count.
+    for name, rules in rules_by_name.items():
+        r = rules[0]
         summ = plan["summary"].get(name)
         if not summ:
             continue
@@ -352,9 +362,10 @@ def append_accum(plan, accum_path):
             "new": name,
             "kind": "enum-substitution" if r.get("kind") == "enum" else "substitution",
             "value": r["value"],
-            "confidence": r.get("confidence", ""),
-            "evidence": r.get("evidence", ""),
-            "area": r.get("area", ""),
+            "confidence": "; ".join(dict.fromkeys(rule.get("confidence", "") for rule in rules)),
+            "evidence": "\n".join(dict.fromkeys(rule.get("evidence", "") for rule in rules)),
+            "area": ", ".join(dict.fromkeys(rule.get("area", "") for rule in rules)),
+            "rule_count": len(rules),
             "batch": plan["batch"],
             "sites": summ["sites"],
             "classes": summ["classes"],

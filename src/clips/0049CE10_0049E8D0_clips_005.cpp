@@ -1084,7 +1084,7 @@ int  Rules_HostPrintout(int returnValue, double context)
     logical_name = Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdout_0, v3, context);
     if ( !logical_name )
     {
-      Rules_ReportIllegalLogicalName();
+      Rules_ReportIllegalLogicalName((int)(intptr_t)aPrintout);
       Rules_SetEvaluationErrorFlag(1);
       return Lexer_ErrorRecover(1);
     }
@@ -1185,7 +1185,7 @@ signed int * Rules_HostRead(int returnValue, double context)
       logicalName = (char *)(uintptr_t)Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdin, v4, context);
       if ( !logicalName )
       {
-        Rules_ReportIllegalLogicalName();
+        Rules_ReportIllegalLogicalName((int)(intptr_t)aRead);
         Rules_SetEvaluationErrorFlag(1);
         Lexer_ErrorRecover(1);
         goto LABEL_14;
@@ -1328,7 +1328,7 @@ const CHAR * Rules_HostOpen(double context)
     {
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
-      Rules_ReportIllegalLogicalName();
+      Rules_ReportIllegalLogicalName((int)(intptr_t)aOpen);
       return 0;
     }
     if ( ismbdprint_((void *)logicalName) )
@@ -1392,7 +1392,7 @@ signed int  Rules_HostClose(double context)
   logicalName = Rules_GetLogicalNameArg(1, 0, (int)(intptr_t)v2, context);
   if ( !logicalName )
   {
-    Rules_ReportIllegalLogicalName();
+    Rules_ReportIllegalLogicalName((int)(intptr_t)aClose);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;

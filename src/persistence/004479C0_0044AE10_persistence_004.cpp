@@ -150,7 +150,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
      * landed outside the table and the menu stayed on the Polish column.
      * Index the widget table directly instead.
      */
-    for ( mainMenuWidgetOffset = 0; mainMenuWidgetOffset != 371; mainMenuWidgetOffset += 53 )
+    for ( mainMenuWidgetOffset = 0; mainMenuWidgetOffset != 371; mainMenuWidgetOffset += WORLD_MAP_ACTION_WIDGET_RECORD_SIZE )
     {
       *(_DWORD *)(void *)&mainMenuWidgetTable[mainMenuWidgetOffset + 16] += (unsigned __int8)g_LanguageIndex;
       *(_DWORD *)(void *)&mainMenuWidgetTable[mainMenuWidgetOffset + 20] += (unsigned __int8)g_LanguageIndex;
@@ -519,7 +519,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           optionsFirstLabelOffset = (unsigned __int8)g_LanguageIndex + *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset + 0x10];
           *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset + 0x10] = optionsFirstLabelOffset;
           optionsSecondLabelOffset = *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset + 0x14];
-          optionsWidgetOffset += 53;
+          optionsWidgetOffset += WORLD_MAP_ACTION_WIDGET_RECORD_SIZE;
           *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset - 0x21] = (unsigned __int8)g_LanguageIndex + optionsSecondLabelOffset;
         }
         while ( optionsWidgetOffset != 212 );

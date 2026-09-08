@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "old_name": "Surface_SwapDirtyTrackingFlag",
+  "new_name": "Render_SetResourceHandle",
+  "source": "src/render/004046D0_00405D20_render_003.cpp",
+  "compatibility_source": "src/compatibility/decomp_runtime_stubs.cpp",
+  "original_address": "0x00404A40",
+  "expected_body_sha256": "e4d28ec283a2e36d30073238eb7161d5e6ac0aeef3da21deb44debf684f8483b",
+  "expected_compat_body_sha256": "b5570f06ace19fe8998c4a33e8de22aab0b1029fc4eadb8c39734a9a12dc112b"
+}

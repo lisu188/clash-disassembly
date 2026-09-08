@@ -215,7 +215,7 @@ void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char til
         slotUnitType = slotPtr[3];
         if ( slotUnitType == -1 )
           break;
-        slotPtr = (__int16 *)((char *)slotPtr + 31);
+        slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
         ++slotIndex;
         *((_BYTE *)slotPtr - 16) = 100;
       }
@@ -229,7 +229,7 @@ void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char til
         slotUnitType = slotPtrB[3];
         if ( slotUnitType == -1 )
           break;
-        slotPtrB = (__int16 *)((char *)slotPtrB + 31);
+        slotPtrB = (__int16 *)((char *)slotPtrB + UNIT_SLOT_RECORD_BYTES);
         *((_BYTE *)slotPtrB - 16) = 100;
         ++slotIndex;
         *((_BYTE *)slotPtrB - 15) = 0;
@@ -330,14 +330,14 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
   unitStack = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent("temple_unit_getinto_enter", stack_index, tile_x, tile_y, MapTile_GetReligiousSiteCategory(tile_x, tile_y));
   playerData = gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-  if ( *(_DWORD *)(uintptr_t)(playerData + 140063) )
+  if ( *(_DWORD *)(uintptr_t)(playerData + PLAYER_RELIGION_FLAG_TABLE_OFFSET) )
   {
-    if ( *(_DWORD *)(uintptr_t)(playerData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(playerData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       outcomeTable = (_DWORD*)(&g_TempleGiftOutcomeTable_OwnCultHuman);
     else
       outcomeTable = (_DWORD*)(&g_TempleGiftOutcomeTable_OwnCultAI);
   }
-  else if ( *(_DWORD *)(uintptr_t)(playerData + 140051) )
+  else if ( *(_DWORD *)(uintptr_t)(playerData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
   {
     outcomeTable = (_DWORD*)(&g_TempleGiftOutcomeTable_ForeignCultHuman);
   }
@@ -347,16 +347,16 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
   }
   siteCategory = MapTile_GetReligiousSiteCategory(siteX, siteY);
   playerDataOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-  ownCultFlag = *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + 140063);
+  ownCultFlag = *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + PLAYER_RELIGION_FLAG_TABLE_OFFSET);
   if ( ownCultFlag && (siteCategory == 3 || siteCategory == 4)
-    || (LOBYTE(playerDataOffset) = gameData, !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
+    || (LOBYTE(playerDataOffset) = gameData, !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + PLAYER_RELIGION_FLAG_TABLE_OFFSET))
     && (siteCategory == 1 || siteCategory == 2) )
   {
     Debug_Log(ownCultFlag, playerDataOffset, (DWORD)(intptr_t)unitStack, (int)(intptr_t)aTemple_unitg_0);
     sacrilegeTexts[0] = (int)(intptr_t)g_TempleSacrilegeUnitKilledTexts[0];
     sacrilegeTexts[1] = (int)(intptr_t)g_TempleSacrilegeUnitKilledTexts[1];
     sacrilegeTexts[2] = (int)(intptr_t)g_TempleSacrilegeUnitKilledTexts[2];
-    if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
     {
       LOBYTE(playerDataOffset) = 1;
       Temple_ShowOutcomePopup(sacrilegeTexts[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)(intptr_t)unitStack);
@@ -403,7 +403,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
       outcomePtr = Temple_Random(outcomeTable, missionIndex, gameData, (DWORD)(intptr_t)unitStack);
       activeMission = ACTIVE_MISSION_INDEX;
       if ( (activeMission == 2 || activeMission == 6 || activeMission == 12 || activeMission == 16)
-        && *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140051) )
+        && *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       {
         if ( ACTIVE_MISSION_INDEX == 2 && siteX == 95 && siteY == 16
           || ACTIVE_MISSION_INDEX == 12 && siteX == 58 && siteY == 77 )
@@ -418,10 +418,10 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
       }
       Debug_Log(v17, playerDataOffset, (DWORD)(intptr_t)unitStack, (int)(intptr_t)aTemple_unitg_1);
       playerDataOffset2 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-      isHumanPlayer = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + 140051);
+      isHumanPlayer = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET);
       if ( isHumanPlayer )
       {
-        isOwnCult = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + 140063);
+        isOwnCult = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + PLAYER_RELIGION_FLAG_TABLE_OFFSET);
         if ( isOwnCult )
           transitionName = aSw_chs;
         else
@@ -665,7 +665,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
         3,
         (const char*)(intptr_t)((int)(intptr_t)aD_78));
     }
-    slotOffset += 31;
+    slotOffset += UNIT_SLOT_RECORD_BYTES;
     ++slotIndex;
     ++spriteSetIndex;
   }
@@ -740,7 +740,7 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char spriteVariant, DWORD rende
       *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + spriteSetOffset) = (int)(intptr_t)slotSpriteSet;
     }
     spriteSetOffset += 4;
-    slotOffset += 31;
+    slotOffset += UNIT_SLOT_RECORD_BYTES;
   }
   while ( spriteSetOffset != 40 );
   LOBYTE(selectedSlot) = 10;
@@ -768,7 +768,7 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char spriteVariant, DWORD rende
     if ( hoverRow <= 1 && (unsigned int)(intptr_t)selectedSlot <= 4 )
     {
       selectedSlot += 5 * hoverRow;
-      if ( *(__int16 *)(uintptr_t)(31 * (_DWORD)(intptr_t)selectedSlot + g_BuildingUIRecordPtr + 18) != -1 )
+      if ( *(__int16 *)(uintptr_t)(UNIT_SLOT_RECORD_BYTES * (_DWORD)(intptr_t)selectedSlot + g_BuildingUIRecordPtr + 18) != -1 )
       {
         if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
         {

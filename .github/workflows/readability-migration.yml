@@ -1,0 +1,74 @@
+name: Readability migration
+
+on:
+  push:
+    branches:
+      - 'readability/migrate-*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: readability-migration-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Apply hash-pinned readability specs
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          specs=(data/readability_migrations/*.json)
+          if (( ${#specs[@]} == 0 )); then
+            echo 'No readability migration specs found.'
+            exit 0
+          fi
+          for spec in "${specs[@]}"; do
+            python3 tools/apply_readability_migration.py "$spec" --write
+          done
+
+          mapfile -t functions < <(python3 - "${specs[@]}" <<'PY'
+          import json
+          import sys
+          names = set()
+          for path in sys.argv[1:]:
+              payload = json.load(open(path, encoding='utf-8'))
+              for record in payload['functions']:
+                  names.add(record['name'])
+          for name in sorted(names):
+              print(name)
+          PY
+          )
+
+          hash_args=()
+          for function in "${functions[@]}"; do
+            hash_args+=(--only "$function")
+          done
+          python3 tools/update_split_manifest_hashes.py --update "${hash_args[@]}"
+          python3 tools/update_split_manifest_hashes.py
+          python3 tools/audit_split_sources.py
+          python3 tools/gen_subsystem_headers.py --check-tu-includes
+          git diff --check
+
+      - name: Commit generated migration outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Migration is already applied.'
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src data/recovered_sources.json data/readability_migrations
+          git commit -m 'Apply scoped C++ readability migration'
+          git push origin HEAD:${GITHUB_REF_NAME}

@@ -9303,7 +9303,7 @@
     },
     "Map_NormalizeRoadOverlayTileId": {
       "class": "manifest",
-      "decl": "int  Map_NormalizeRoadOverlayTileId(int result);",
+      "decl": "int  Map_NormalizeRoadOverlayTileId(int overlayTileId);",
       "home": "buildings"
     },
     "Map_RebuildCastleSiteAnchorCache": {
@@ -11958,9 +11958,9 @@
       "home": "render"
     },
     "Render_SetResourceHandle": {
-      "class": "legacy-import",
-      "decl": "int  Render_SetResourceHandle(int, int);",
-      "home": "legacy"
+      "class": "manifest",
+      "decl": "extern int Render_SetResourceHandle (int surface, int new_flag);",
+      "home": "render"
     },
     "Render_UnlockBackbuffer": {
       "class": "manifest",
@@ -12054,7 +12054,7 @@
     },
     "RoadBuildMode_RequestExitAfterWidgetPress": {
       "class": "manifest",
-      "decl": "int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2);",
+      "decl": "int  RoadBuildMode_RequestExitAfterWidgetPress(int widget, int a2);",
       "home": "buildings"
     },
     "Road_Build": {
@@ -13364,7 +13364,7 @@
     },
     "Rules_ConstructCodeFileOpen": {
       "class": "manifest",
-      "decl": "int  Rules_ConstructCodeFileOpen(int theFile, const char *fileName, int imageID, const char *fileID, int *fileCount, int arrayVersion, int headerFP, char structureName, const char *structPrefix, int reopenOldFile, const char **codeFile);",
+      "decl": "int  Rules_ConstructCodeFileOpen(int theFile, const char *fileName, int imageID, const char *fileID, int *fileCount, int arrayVersion, int headerFP, const char *structureName, const char *structPrefix, int reopenOldFile, const char **codeFile);",
       "home": "clips"
     },
     "Rules_ConstructHandleVectorDtor": {
@@ -16550,7 +16550,7 @@
     },
     "Rules_OpenConstructCodeFile": {
       "class": "manifest",
-      "decl": "int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD reopenOldFile);",
+      "decl": "int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD allocContext, int reopenOldFile);",
       "home": "clips"
     },
     "Rules_OpenFileErrorMessage": {
@@ -17725,7 +17725,7 @@
     },
     "Rules_ReportIllegalLogicalName": {
       "class": "manifest",
-      "decl": "signed int Rules_ReportIllegalLogicalName(void);",
+      "decl": "signed int Rules_ReportIllegalLogicalName(int functionName);",
       "home": "clips"
     },
     "Rules_ReportInstanceFileProcessError": {
@@ -19357,11 +19357,6 @@
       "class": "manifest",
       "decl": "_DWORD * Surface_SetSrcRect(_DWORD *result, int top, int bottom, int left, int right);",
       "home": "media"
-    },
-    "Surface_SwapDirtyTrackingFlag": {
-      "class": "manifest",
-      "decl": "extern int Surface_SwapDirtyTrackingFlag (int surface, int new_flag);",
-      "home": "render"
     },
     "Surface_Unlock": {
       "class": "manifest",
@@ -22236,6 +22231,12 @@
       "class": "legacy-import",
       "decl": "int __fastcall wctomb_(_DWORD a1, _DWORD a2);",
       "home": "legacy"
+    },
+    "Surface_SwapDirtyTrackingFlag": {
+      "class": "helper",
+      "decl": "extern __attribute__((used, retain)) int Surface_SwapDirtyTrackingFlag(int surface, int new_flag);",
+      "home": "render",
+      "source": "src/render/004046D0_00405D20_render_003.cpp"
     }
   },
   "globals": {

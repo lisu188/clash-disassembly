@@ -187,7 +187,7 @@ int  CSS_StartSampleVoice(int stream, int *formatInfo, int panning, int volume, 
   if ( bestChannel != -1 )
     CSS_CloseChannel(bestChannel, 0);
   channelByteOffset = 52 * bestChannel;
-  bufferBytes = g_CSS_StreamBufferMs * formatInfo[2] / 1000;
+  bufferBytes = g_CSS_StreamBufferMs * formatInfo[2] / CSS_MILLISECONDS_PER_SECOND;
   sampleSize = CSS_GetFormatSampleSize(*formatInfo);
   *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelByteOffset + 20) = ((_DWORD)(uintptr_t)(CSS_FileStream_New(stream, sampleSize * bufferBytes)));
   CSS_Channel_StartFileStream(bestChannel, formatInfo, panning, volume, fadeMs, 4);

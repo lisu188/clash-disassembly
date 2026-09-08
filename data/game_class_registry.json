@@ -23701,7 +23701,7 @@
       "rationale": "Render_BlitSurface is assigned to the SurfaceRenderer behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter."
     },
     {
-      "name": "Surface_SwapDirtyTrackingFlag",
+      "name": "Render_SetResourceHandle",
       "identity_kind": "original",
       "legacy_subsystem": "render",
       "original_source": "src/recovered/render/00401A40_render.inc.c",
@@ -23709,16 +23709,20 @@
       "original_address": "0x00404A40",
       "evidence": [
         "src/render/004046D0_00405D20_render_003.cpp::Surface_SwapDirtyTrackingFlag",
-        "clash95.asm@0x00404A40"
+        "clash95.asm@0x00404A40",
+        "data/function_identity_migrations/render_set_resource_handle_v1.json"
       ],
       "classification": "game-method",
       "confidence": "medium",
       "class_owner": "RenderSurface",
-      "method": "Surface_SwapDirtyTrackingFlag",
+      "method": "Render_SetResourceHandle",
       "logical_subsystem": "render",
       "final_header": "src/render/RenderSurface.hpp",
       "final_source": "src/render/RenderSurface.cpp",
-      "rationale": "Surface_SwapDirtyTrackingFlag is assigned to the RenderSurface behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter."
+      "rationale": "Surface_SwapDirtyTrackingFlag is assigned to the RenderSurface behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter. Upstream identity recovery names the resource-handle operation Render_SetResourceHandle; retain the historical exported name as an explicit forwarding boundary.",
+      "historical_names": [
+        "Surface_SwapDirtyTrackingFlag"
+      ]
     },
     {
       "name": "Render_ReleaseTempSurface",
@@ -71663,6 +71667,16 @@
       "logical_subsystem": "buildings",
       "final_header": "src/buildings/RoadBuildMode.hpp",
       "final_source": "src/buildings/RoadBuildMode.cpp"
+    },
+    {
+      "name": "Surface_SwapDirtyTrackingFlag",
+      "source": "src/render/004046D0_00405D20_render_003.cpp",
+      "classification": "retained-boundary",
+      "rationale": "Preserve the pre-refresh exported ABI name while the single canonical identity at 0x00404A40 uses its corrected upstream name.",
+      "evidence": [
+        "data/function_identity_migrations/render_set_resource_handle_v1.json",
+        "src/render/004046D0_00405D20_render_003.cpp::Surface_SwapDirtyTrackingFlag"
+      ]
     }
   ],
   "class_bindings": [

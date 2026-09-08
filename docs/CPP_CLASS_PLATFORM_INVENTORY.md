@@ -2,6 +2,32 @@
 
 Date: 2026-09-06. Track: Win95 reconstruction. Frontier: the requested class migration's application/SDL stage. This is a read-only architecture and boundary audit; no implementation, build, route, visual or recovery milestone advances.
 
+## Exact inventory materialized, 2026-09-08
+
+`data/support_class_inventory.json` supersedes the preliminary counts below with
+459 exact definitions: 456 translation-unit bodies plus three header bodies.
+Upstream removed the duplicate compatibility `Render_SetResourceHandle` body and
+consolidated it into the recovered `0x00404A40` identity. It belongs only to the
+historical registry. The support partition is therefore 154 planned runtime
+methods and 305 retained utilities/boundaries, including all 39 diagnostic
+candidates explicitly retained as evidence utilities.
+
+Every entry has current and frozen-origin body/signature hashes, owner, rationale,
+state-reference evidence, callback/storage constraints and separate extraction
+and relocation status. All 459 origin definitions were checked against
+`e13abc0266707de6291be39fdea28dca4f3e7e2b`; the six original file hashes and an
+immutable inventory fingerprint are retained. No original addresses are invented.
+`tools/support_class_inventory.py` and the production source audit reject missing,
+duplicate, unclassified or hash-drifted definitions in this explicit scope.
+The validator allows separately registered recovered methods in shared future
+class sources. Thirty focused WSL tests and the production inventory audit pass.
+
+The exact inventory records the observed DirectDraw release lifetime, surface
+unlock receiver-check order and `abs32(INT_MIN)` contracts as unresolved. This
+work does not repair or validate those behaviors. Proposed diagnostic class names
+in the historical report below are now grouping labels for retained utilities.
+The report's original counts and source locations remain as dated evidence.
+
 ## The 4,157-identity registry does not cover the full requested scope
 
 The four production support translation units contain **457 definitions with zero name overlaps** with data/recovered_sources.json. Three additional inline definitions live in the reviewed support headers. The current 4,157-identity registry therefore cannot establish completion of Application/SDL migration, even after all its intended game methods move.

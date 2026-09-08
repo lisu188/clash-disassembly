@@ -211,6 +211,514 @@ lookup fidelity. Names implying localized strings, immutable Road constants or
 animation semantics were rejected. Recover this storage relationship separately
 with original-backed evidence; retain the current campaign/runtime milestones.
 
+### Batch 4: `Map_RebuildRoadOverlayAtTile`
+
+Reviewed `0x423E90` against its original instruction sequence and complete
+27-entry connection table. Replaced four redundant column copies and staged
+decompiler masks with one named mask, preserving separate west, south, east,
+north calls and weights `8/4/2/1`. The existing `MapTileRecord` exposes the
+road/bridge word. The function still loads the table and then `gameData` after
+the probes, writes the low 16 bits of a nonzero sprite (or `0xFFFF` for zero),
+and returns the row base rather than the tile address. Removed obsolete
+undefined-local comments. Confidence is high for this bounded refactor.
+
+Unchanged original rebuild, four directional queries and normalizer run
+together in a native 32-bit adapter at their original addresses. Both PEs have
+identical code/table bytes. The 1,024 cases cover 16 input connection masks at
+eight interior positions, using the retail table and seven uniform replacement
+profiles, including negative and nonzero high-word values. Frozen-before and
+actual-after bodies match original returns and tile words in GCC/Clang O0/O2.
+All remaining arena bytes, all 27 table entries and the game-data pointer stay
+unchanged. Static assembly/source review supplies the call-order proof; there
+is no instrumented call trace. The known `819..861` lookup defect and building
+shortcut are outside this fixture's scope.
+
+Both builds and four public CTests pass; manifest, header/include freshness and
+the existing builder regression pass. All 4157 archive identities and linked
+profiles remain unchanged; scoped warnings stay 28 GCC / 39 Clang. Only this
+function changes in the Debug objects (219 to 181 bytes GCC, 216 to 192 Clang).
+Existing link/header and private-artifact Markdown failures remain separate.
+No new route, visual or campaign milestone is claimed.
+
+Exact commands, source freezes, original binaries, comparisons and independent
+reviews remain under `artifacts/readability/road-functions-20260906/batch-04/`.
+The original probe's first Clang attempt lacked the optional UBSan runtime;
+the retained final run uses trap-mode UBSan in both compilers. No sanitizer
+check is removed except the already documented packed-alignment exclusion.
+
+### Batch 5: four directional Road queries
+
+Reviewed each query against its own original routine and membership tests:
+
+| Function | Original | Refactor |
+| --- | --- | --- |
+| `MapTile_HasNorthRoadConnection` | `0x423BB0` | Typed road/bridge field at `(row-1,column)`; original accepted IDs retained. |
+| `MapTile_HasSouthRoadConnection` | `0x423C50` | Typed road/bridge field at `(row+1,column)`; original accepted IDs retained. |
+| `MapTile_HasWestRoadConnection` | `0x423CF0` | Explicit building shortcut, then typed fallback at `(row,column-1)`. |
+| `MapTile_HasEastRoadConnection` | `0x423E10` | Typed road/bridge field at `(row,column+1)` and explicit existing precedence. |
+
+The west marker address uses the existing `TILE_INDEX(row,column-2)` macro,
+equivalent to the former raw offset. Markers `0x8000..0xFFFE` alone permit a
+building read. Signed type 2/1, unsigned row and unsigned column checks retain
+their order. The original XOR clears equal row values before loading the column
+byte, so direct byte access removes that decompiler artifact. The building match
+returns before forming the fallback tile read. Building types remain numeric;
+no speculative record type or global coordinate-name change is introduced.
+
+The unchanged original queries and normalizer execute with their complete Road
+backing. Per compiler profile, frozen-before and actual-after query sets each
+match 1,056,520 original results; the shared unchanged normalizer matches 65,493.
+This includes road-ID sweeps, asymmetric neighbor masks, every building type and
+coordinate byte, and marker boundaries. The known `819..861` backing defect is
+excluded explicitly: 688 sweep, 43 normalizer and 84 west cases. Their original
+results are retained. Twelve successful building shortcuts run with both terrain
+pages and the legacy lookup page inaccessible, proving neither read occurs.
+The game arena is read-only during calls and the game-data pointer is unchanged.
+All four GCC/Clang O0/O2 profiles pass. Confidence is high for these bounded
+semantics; invalid pointers and arbitrary overflow are not covered.
+
+Both builds and four public CTests pass. All 4157 archive identities and linked
+profiles are preserved. Debug code differences are confined to these four
+functions. Complete affected-compilation warnings decrease from 28 to 26 GCC
+and 39 to 37 Clang, with no category increases. Manifest, headers/includes and
+the existing builder regression pass. Existing ratchet/private-artifact failures
+remain separate; no new runtime or campaign milestone is claimed.
+
+Exact original and before/after commands, hashes, guards and all exclusions are
+retained under `artifacts/readability/road-functions-20260906/batch-05-query-proof/`;
+build, metadata and independent static reviews are under
+`artifacts/readability/road-functions-20260906/batch-05/`. All 53 baseline query
+evidence files are preserved unchanged. Four canonical body hashes change;
+public identities and declarations remain fixed.
+
+### Batch 6: shared Road normalization backing
+
+Revisited `Map_NormalizeRoadOverlayTileId` (`0x423FC0`) to repair the separate
+storage defect recorded in batches 3 and 5. Original instruction `0x42400E`
+loads 43 unsigned words from `0x51423C..0x514290`. Those bytes are already in
+the canonical shared `g_RoadBuildData` region at offset `0x30`; the old locale
+pointer-array expression instead reads outside a separate 208-byte C++ object.
+The corrected branch uses a named table offset/index and `memcpy` into a
+`uint16_t`, retaining unsigned results and the existing live backing.
+
+Only IDs `819..861` call the existing guarded builder/Road initializer. Its
+templates and relocations use static bytes and addresses; no asset load,
+callback, renderer or game-state read occurs. Pointer relocations start beyond
+the lookup slice. Repeated calls preserve live lookup, widget and marker
+mutations, including the lookup's overlap with the approach scan. Other
+normalization branches retain their original expressions. No duplicate table,
+locale interpretation or speculative animation semantics are introduced.
+
+The actual corrected normalizer matches all 65,536 original uint16-domain
+results in GCC 13 and Clang 18 at O0/O2. All 1,057,292 directional-query cases
+now pass without the previous 688 sweep/84 west exclusions. Additional original
+instruction probes cover 2,818,048 live unsigned-word mutations and 8,256
+overlapping DWORD writes per profile. Real-initializer checks cover all 43 cold
+lookup entries, cold nonlookup boundaries and warm-state preservation across
+both complete backing arrays. All 91 preceding query-proof files remain intact.
+Confidence is high for these measured contracts; arbitrary invalid pointers,
+general overflow and broader construction behavior are outside the fixture.
+
+The new asset-free regression executes the canonical normalizer and initializer,
+checks the original full-domain output digest, all 112 pointer relocations,
+43 cold lookups, 344 warm mutations and live sprite-holder indirection. It
+reuses existing data fixtures and publishes only new measurement provenance.
+Run from the repository root in WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_normalization.py -v
+python3 tools/update_split_manifest_hashes.py
+python3 tools/gen_subsystem_headers.py --check
+python3 tools/gen_subsystem_headers.py --check-tu-includes
+```
+
+Both compiler builds and all four public CTests pass. All 4157 recovered
+identities remain. Removing the last false locale reference moves its generated
+declaration to the state-local header and lets the linker discard exactly the
+unused 208-byte pointer array; its canonical storage definition remains.
+Surviving data names, classes, sizes and relative order are preserved. Raw link
+ratchets therefore report 428 GCC / 680 Clang differences, one more than before;
+no baseline is raised. Rebuilt-source warning categories do not increase. The
+fresh default GCC headless suite retains 10 passes, three known failures and
+eight skips, with the same selection/human-turn failure markers.
+
+Both fresh first-Road replays retain the highest validated endpoint: turn 6,
+stack 4 at `(49,50)`, 2 AP, empty path, roads 867/879 and 228 visible tiles.
+All ten raw unit slots, checked state fields, the complete visibility bitmap,
+six Road words and same-turn construction invariants match the fresh original.
+Each run preserves 238 frozen inputs, nine route scripts, 20 engine-authored
+DAT/FAC files and 15 frame checkpoints. The original uses real Load of the
+unchanged turn-6 checkpoint; continuous original turn-1 replay is not claimed.
+
+Fresh 640x480 pairs use viewport `(47,48)`, cursor `(192,176)` and selected
+stack 4. Full unmasked MAD is 11.086158854 GCC / 11.312281901 Clang, with
+285647 / 287265 differing pixels. Bridge placement aligns; missing coordinates,
+displaced badges, absent unit/status panels, lower-text/map corruption and
+fog/water differences remain. Both pairs were inspected. These route runs do
+not establish that IDs `819..861` were reached; the original-instruction fixture
+provides the direct branch proof. No route, visual or campaign milestone advances.
+
+Private exact commands, hashes, initializer review, original measurements and
+all attempts are retained under artifacts/readability/road-functions-20260906/batch-06/.
+
+The repair commit `8df94c4` was then combined with upstream numeric-cleanup merge
+`431e4c5`. The only merge conflict was the history-log prepend; both records
+remain. Independent review verifies all 68 changed source/header/data files
+against the exact expected union. Normalizer, query and initializer bodies
+retain their original-validated hashes. No numeric-cleanup work is discarded.
+
+Both integrated builds and all eight public asset-free gates pass; all 137
+tooling tests pass. Defined symbols, all 4157 recovered identities, section
+layouts and program headers match the repaired route-tested binaries. Every
+code/data byte is identical; only GNU build-id bytes and the ELF section-table
+offset differ. This establishes applicability of the retained fresh runtime
+comparisons to the integrated production code without another route replay.
+Final native coverage passes at 6167/6662 lines (92.57%), all 718 functions and
+zero uncovered functions; the preintegration run was 6169/6662 (92.60%). No
+coverage floor or warning/link/header baseline is raised.
+
+The two-line coverage variation is confined to the unchanged
+`Building_UpdatePlagueState` RNG-dependent outbreak branch: 17/19 versus 19/19
+lines. Its existing fixture explicitly permits that branch not to fire across
+20 calls. The integrated native run retains 1059 passes, zero assertion
+failures and 530 isolated crashes out of 1589; coverage success does not mean
+every native fixture succeeds.
+
+The final coverage work encountered host disk-full and a read-only WSL
+filesystem. Lossless NTFS compression of this batch's BMPs preserved all files,
+and Ubuntu was restarted with explicit user approval. Write/compiler checks
+then passed, coverage ran in an owned Linux-native build and the independent
+runtime audit reverified every frozen input, save and checkpoint hash plus both
+frame metrics. Failed/interrupted attempts remain recorded. Final metadata
+checks pass except the existing 14 header-ratchet differences and the existing
+Markdown reference to an absent private predecessor report. Whitespace checks
+against incoming main pass; the retained incoming CRLF JSON is checked with
+Git's `cr-at-eol` setting, consistent with `.gitattributes`.
+
+Integration commands and raw results are under this batch's build-validation/
+integration/, integration-audit/ and integration-metadata/ directories. The
+parent gate script is artifacts/readability/road-functions-20260906/batch-06/integration-metadata.sh.
+
+### Batch 7: `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+
+The predicate at `0x424120` now reads four named `MapTileRecord` neighbors,
+reduces the loaded values directly and checks the center's named overlay and
+terrain fields. Removed repeated raw reads, register temporaries and a redundant
+result variable. The original north/south/west/east load order and center checks
+remain explicit. Both dimension comparisons now spell out their existing
+unsigned conversion, removing signed-comparison warnings without widening the
+original equality-only border checks.
+
+Original instructions at `0x42422F..0x4242BD` reduce only `877..948` modulo six.
+Raw values `0..5` still qualify through the direction-specific sets; `949` stays
+outside the reduction. The center's empty sentinel belongs to overlay field
+`+2`, independently of its Road field `+4`; terrain remains `603..610`.
+Reusing `Map_NormalizeRoadOverlayTileId`, strengthening the border checks or
+inventing graphical names for the six remainders would alter or overstate the
+recovered contract, so those alternatives remain rejected.
+
+Track: Win95 reconstruction, the reached mission-05 Road helper family.
+Evidence is the original `sub_424120` assembly, matching local PE instruction
+bytes, existing tile layout assertions and its two recovered Road callers.
+No public symbol, ABI, layout, constant, initializer or legacy hash changes.
+The manifest still contains 4157 identities; this is its only changed body hash.
+No behavioral blocker or campaign milestone is claimed by this readability edit.
+
+Unchanged original instructions run directly in a freestanding i386 probe,
+without replacement callees. The frozen before and actual after bodies match
+all 1,677,926 original results on GCC 13 and Clang 18 at O0/O2. This includes
+all uint16 values independently in each neighbor at four positions, all center
+terrain/overlay values with each connecting direction, 38,416 mixed-neighbor
+tuples and all center Road values. Poisoned unrelated fields, nonsquare and
+synthetic uint32 dimensions, protected border pages and a null `gameData` on
+the first short-circuit path also pass. The arena stays read-only during calls
+and the `gameData` value remains unchanged.
+
+Confidence is high within those tested domains and the reviewed original
+control flow. The test does not exhaust every simultaneous field combination
+or establish arbitrary invalid-address/overflow behavior. Original load order
+is separately visible in the assembly. The exact 586 instruction bytes end at
+`0x42436A`; the six following padding bytes are identified separately.
+
+The asset-free regression in `tests/tools/test_bare_bridge_candidate.py` runs
+the actual body against a digest of 600 original-measured results, with field
+isolation, range boundaries, all six remainder classes and nonsquare maps.
+Thirteen separate protected-page guard cases use assembly-backed zero returns;
+the provenance distinguishes them from the measured stream. Those cases cover
+null `gameData`, skipped height reads, unsigned subtraction wraparound and both
+signed integer extremes. All four strict compiler profiles pass with warnings
+as errors and trapping UBSan, excluding only packed-record alignment. Complete
+arena contents and the global pointer remain unchanged. Public tests require
+neither retail assets nor original instruction bytes.
+The private supplement also executes all 13 guard cases against the original,
+with identical zero returns. Four bounded original instruction traces confirm
+the neighbor and center-field read order, including the row-zero short circuit.
+
+Both incremental GCC 13 and Clang 18 builds and all four public asset-free CTest
+gates per compiler pass. The compile commands are unchanged, only the intended
+object changes, and all other 145 compiled objects retain their hashes. In the
+affected TU, the other 35 executable sections retain identical instructions and
+relocations. The predicate shrinks from 829 to 694 bytes under GCC and 780 to 700
+under Clang in the supported Debug builds. All recovered archive identities and
+data names, classes, sizes and relative order remain unchanged. Scoped warnings
+decrease from 26 to 24 GCC and 37 to 35 Clang, exactly the two explicit unsigned
+comparisons; no warning, link or header baseline is raised.
+Raw link checks retain 428 GCC / 680 Clang differences, and the header ratchet
+retains its existing 14 failures. Manifest, split-source, generated metadata,
+header/include freshness and whitespace checks pass.
+The final full tooling suite passes all 139 tests in 16.437 seconds, with both
+new public regression files unchanged throughout the run.
+
+The existing batch-6 first-Road replay and frame comparisons remain the runtime
+baseline. This predicate is outside the frozen 718-function native coverage set;
+no native fixture or shared-state header changes. The bounded original-function
+proof and collateral-object checks validate this refactor without another
+coverage run or route/frame capture. No fresh runtime or visual result is claimed.
+
+Private source freezes, original measurements, scope review, compiler checks
+and exact commands are retained under
+artifacts/readability/road-functions-20260906/batch-07/.
+
+Reproduce from the WSL repository root:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_bare_bridge_candidate.py -v
+python3 tools/update_split_manifest_hashes.py
+python3 tools/audit_split_sources.py
+```
+
+The private original probe is at
+artifacts/readability/road-functions-20260906/batch-07/original-proof/validate_original.py.
+Its case, result and command files record the measured phases and exact commands.
+Build commands and comparisons are in that batch's build-validation directory;
+metadata commands are at
+artifacts/readability/road-functions-20260906/batch-07/run-metadata.sh.
+These private local scripts are absent from clean checkouts.
+
+### Batch 8: `RoadBuildMode_BuildInSelectedDirection`
+
+The callback at `0x4254E0` now reads the existing, pinned
+`WorldMapActionWidgetRecord::default_sprite_index` instead of a raw DWORD at
+an integer widget alias plus 16. The typed pointer and selector read remain
+after the press animation, which pumps events. The current selected unit is
+still read afterward; the callback clears the overlay hook, calls `Road_Build`,
+installs the highlight hook and returns the viewport redraw result in order.
+Removed stale register diagnostics and retained unresolved forwarded arguments.
+
+The original jump table maps sprite selectors `0x1B..0x1E` to the existing
+directions WEST=0, SOUTH=2, EAST=4 and NORTH=6. The typed field is signed, while
+the former raw load was unsigned; all 32-bit patterns have the same four-case
+classification. Unsupported selectors retain the canonical `-1` fallback.
+Original incoming EDX controls that default but is absent from the recovered
+ABI, so original fidelity is not claimed for that path. The comment retains
+this ambiguity without asserting that the path is unreachable.
+
+Track: Win95 reconstruction, the reached Road handler family. Evidence includes
+the original function and jump table, the existing 53-byte widget layout, the
+animation implementation and the installed callback fields. This is the tenth
+individually reviewed Road helper; only its canonical body hash changes.
+All 4157 identities, signatures, layouts and legacy hashes remain unchanged.
+
+The private probe executes the unchanged original callback and four-entry jump
+table against three explicit recording boundaries: animation, Road construction
+and redraw. All 128 valid-selector traces match both the frozen before and
+actual after bodies on GCC 13 and Clang 18 at O0/O2. Another 112 unsupported
+selector cases preserve the frozen C++ behavior in the same four profiles;
+these are deliberately separate from original-fidelity claims.
+The asset-free regression in `tests/tools/test_road_direction_dispatch.py`
+retains those traces as data and checks every named field in all four strict
+compiler profiles, with warnings as errors and trapping UBSan except packed
+alignment. It uses the actual native callee signatures, including the
+animation's `uintptr_t` widget parameter.
+
+Each trace records call order, widget arguments, selected unit, direction,
+forwarded DWORD and eight finite binary64 patterns, hook transitions, final
+state and the redraw return. Animation changes the selector and selected unit;
+construction and redraw also mutate observed state to catch cached values or
+late hook restores. Symbol addresses are compared through explicit hook
+identities and a checked callback low-byte match; raw addresses differ across
+executables. Widget bytes and unrelated test state remain as expected.
+These checks establish the handler's call contract, without proving the three
+instrumented callees' gameplay, animation or rendering behavior. NaNs,
+infinities and arbitrary invalid widget pointers are outside this fixture.
+Confidence is high for the bounded refactor, with the original default path
+and the richer meanings of the forwarded arguments still unresolved.
+
+Both supported incremental builds and all eight public asset-free gates pass.
+Only this handler's executable section changes: GCC remains 203 bytes and Clang
+changes from 220 to 219. The other 145 compiled objects and 35 neighboring
+executable sections retain identical bytes, instructions and relocations.
+Linked data classes, sizes and order remain unchanged. Scoped warnings stay
+24 GCC / 35 Clang, with existing raw link/header ratchet failures retained and
+no baseline changes. No new native coverage, route replay or frame claim is
+made; batch 6 remains the runtime baseline and the turn-7 frontier is unchanged.
+The final full tooling suite passes all 141 tests in 25.543 seconds. Manifest,
+split-source and generated metadata/header/include checks pass; raw link
+differences remain 428 GCC / 680 Clang and the header ratchet retains its 14
+known failures. Final production and new public-test files remain frozen.
+
+Private source freezes, original evidence, callback traces and build commands
+are retained under artifacts/readability/road-functions-20260906/batch-08/.
+The original-proof directory records capture, original measurement, canonical
+comparison and exact command files; build-validation records the incremental
+builds, public gates and tooling suite. Reproduce the focused public test with:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_direction_dispatch.py -v
+```
+
+### Batch 9: Road exit callbacks
+
+Reviewed `RoadBuildMode_RequestExitAfterWidgetPress` (`0x4250F0`) and
+`RoadBuildMode_RequestExit` (`0x425110`) individually. The pressed callback now
+names its widget and animation result, initializes that result directly and
+retains the call, exit-request store and return in their original order. The
+direct callback already expresses its single flag assignment clearly and is
+unchanged. These bring the Road family review to twelve functions.
+
+The declaration database and generated headers now carry the pressed callback's
+`widget` name and the previously reviewed normalizer's `overlayTileId` name.
+Only these two parameter identifiers change; types, signatures and the complete
+remaining declaration payload are unchanged. The normalizer body is unchanged.
+One canonical body hash changes; all 4157 identities and legacy hashes remain.
+
+Track: Win95 reconstruction, the reached Road handler family. Original bytes at
+both entries and animation's EDX save/restore establish that the pressed callback
+writes one after animation and returns its EAX result. This preserves the flag
+write even if animation callbacks change it during the call. The exact reviewed
+source operations and target code bytes, relocations and normalized disassembly
+are identical before/after on GCC 13 and Clang 18 at O0/O2. No new behavioral
+harness is warranted for these local names and direct initialization.
+
+Both supported builds, all eight public asset-free gates and 52 targeted
+declaration/header/tooling tests pass. All 146 objects retain identical
+instructions and relocations; loaded code/data bytes and all defined symbol
+addresses, sizes and classes remain identical. Only debug/source metadata,
+the build ID and ELF section-table offset differ. Warnings do not increase
+across the 140 rebuilt canonical sources; this TU retains 24 GCC / 35 Clang
+warnings. Manifest, split-source and generated metadata/header/include checks
+pass. Raw link differences remain 428 GCC / 680 Clang, and the header ratchet
+retains its 14 known failures without baseline changes.
+
+Confidence is high for this bounded contract. The forwarded `a2` meaning is
+still unresolved: the animation currently ignores it and uses a fixed 20-tick
+deadline, so naming it as a delay would exceed the evidence. No ABI or layout
+changes, or runtime/campaign blocker removal, are claimed. Batch 6 remains the first-Road runtime
+baseline; the turn-7 continuation frontier is unchanged. No new coverage, route
+replay, rendering or visual-fidelity claim is made.
+
+Private original extraction, source freezes, compile commands and declaration
+comparisons are retained under
+artifacts/readability/road-functions-20260906/batch-09/original-proof/.
+Build commands and results are in that batch's build-validation directory;
+static gate commands are in
+artifacts/readability/road-functions-20260906/batch-09/run-metadata.sh.
+The private scripts are absent from clean checkouts. Public generation checks:
+
+```sh
+python3 tools/update_split_manifest_hashes.py
+python3 tools/gen_subsystem_headers.py --check
+python3 tools/gen_subsystem_headers.py --check-tu-includes
+```
+
+### Batch 10: `RoadBuildMode_HighlightBuildableAdjacentTile`
+
+The callback at `0x425120` now has four flat adjacency branches, typed signed
+stack-coordinate reads and explicit eligibility stages. It reuses the existing
+DWORD viewport and stack-address macros, names each stage's result and removes
+the combined assignment/short-circuit expression and stale decompiler comments.
+The bridge AP check still falls through to ordinary movement checks when it
+fails. Every selected-stack/game-state read after a callee remains fresh.
+
+Its return is deliberately not a boolean. Nonadjacent inputs return either
+the original game-state-plus-stack-stride base or the signed selected column.
+Other failures return zero movement cost, the castle query result, insufficient
+AP or surface class 185. Success returns the widget refresh result after setting
+the accumulated target flag. Rejections never clear that flag, and mutations
+made by refresh remain visible after return.
+
+Marker coordinates are still written before eligibility checks. The north X/Y
+fields alias entries 43/44 of the live approach scan. The bounce view also shares
+this backing, so each direction retains the original bounce-read and marker-store
+order. No early screen/bounce reads, independent marker storage, frame clamp or
+new direction convention is introduced. The guarded table initializer remains
+the first operation. Unsigned viewport subtraction/shift and the subsequent
+signed marker expressions preserve their existing types.
+
+Track: Win95 reconstruction, reached mission-05 Road helpers. This is the
+thirteenth individually reviewed function. The original instructions, pinned
+stack/widget layouts and shared Road aliases support these changes; only this
+function's canonical body hash changes. Signatures, layouts, all 4157 identities
+and legacy hashes remain unchanged. Surface class 185 and the castle query's
+mode 2 are retained without assigning richer semantics.
+
+All 291 original-instruction traces match the frozen before and actual after
+bodies under GCC 13 and Clang 18 at O0/O2: 2328 comparisons, each covering the
+full call contract and shared state. The unchanged 938 original instruction
+bytes execute against explicit recording/mutating eligibility, AP, movement,
+castle, surface and refresh boundaries. All seven return categories and twelve
+call sequences are covered, including the eight-call bare-bridge AP fallback.
+The original uses static PE tables; the native fixture executes the actual
+guarded initializer and verifies every relocated pointer identity.
+
+Each 427-word trace retains boundary arguments/order, selected unit/game-state
+changes, accumulated target state, marker/approach words and the complete Road
+and Builder table bytes. Both game arenas must remain unchanged. Cases cover
+the four marker choices, signed coordinate limits, DWORD viewport wrapping,
+live bounce frames including overlapping north 9/10, east 23, south 36 and west
+49, cold/warm initialization and protected viewport pages for nonadjacent exits.
+Only genuine pointer returns are normalized; raw helper returns resembling
+addresses remain integers and have dedicated cases. The complete measured
+497028-byte trace hashes to
+`1d8e6f8a84eb8a9295750490b2d82598f8da63eb8924793216de98d6bf0e56cd`.
+Two south/frame-36 cases use distinct high X bits so that moving the bounce
+read before the X store would change its value by 4660; this makes that access
+order observable in the permanent regression.
+
+Confidence is high within the tested call contract and defined arithmetic
+domain. The probes exclude invalid pointers, out-of-backing frame reads, signed
+coordinate/marker overflow and overflowing move-cost-plus-one arithmetic.
+Instrumented callees do not establish their gameplay or rendering behavior.
+The former body retains its existing logical-parentheses warning in the private
+comparison; the refactored body compiles with strict warnings and trapping UBSan
+apart from the established packed-alignment exception.
+
+Both supported builds and all eight public asset-free gates pass. Only the
+target's executable section changes: GCC 1147 to 1086 bytes and Clang 1137 to
+1084. The other 35 executable sections in the TU and all 145 other compiled
+objects remain identical. Ordinary object data and linked data classes, sizes
+and order remain unchanged, with all 4157 recovered identities and zero library
+crosscheck errors. Scoped warnings fall from 24 to 23 under GCC and 35 to 33
+under Clang as the combined logical expression disappears. Manifest, split-source
+and generated metadata/header/include checks pass. Existing link/header ratchet
+failures remain without baseline changes.
+
+Private candidate review, frozen before/after bodies, original evidence and
+validation commands are retained under
+artifacts/readability/road-functions-20260906/batch-10/.
+The candidate-audit, original-proof, test-audit and build-validation directories
+record their respective evidence and limits. These private scripts are absent
+from clean checkouts. Batch 6 remains the first-Road runtime baseline and normal
+turn-7 refresh/continuation remains the campaign frontier; this refactor adds no
+route, rendering or visual-fidelity claim.
+
+The final full tooling suite passes all 143 tests in 27.007 seconds, including
+the 291-case public regression in four strict compiler profiles. Its provenance
+stores 59 deduplicated table states and reconstructs the exact measured stream;
+every boundary field and table byte is still compared. All 348 production/tooling
+input hashes and final binary bindings remain stable through validation.
+The host drive filled after those checks. In-place NTFS compression preserved
+the build/evidence files, and an already-authorized Ubuntu restart restored
+writable WSL. Post-recovery checks confirm all 348 input hashes, both binaries
+and archives, and all eight private probe/trace pairs remain exact; all eight
+public gates pass again. Recovery commands and integrity results are retained
+under this batch's disk-recovery directory and check-after-recovery scripts.
+The public regression extracts the actual production body:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_adjacent_highlight.py -v
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

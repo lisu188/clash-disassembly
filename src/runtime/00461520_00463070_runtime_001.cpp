@@ -609,11 +609,11 @@ signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int restorePa
         Diagnostics_TraceWorldMapActionEvent("transition_after_backbuffer_fill", g_SelectedUnitIndex, 0, 0, 0);
         Video_EnterGreyscaleTransition((int *)&g_MainRenderDevice, v10, 0, a5);
         Diagnostics_TraceWorldMapActionEvent("transition_after_gray_palette", g_SelectedUnitIndex, 0, 0, 0);
-        v12 = Mem_Alloc(1024, 0, 0, a5);
+        v12 = Mem_Alloc(PALETTE_TABLE_BYTES, 0, 0, a5);
         if ( v12 )
         {
           paletteArrayCtorDescriptor = &g_Runtime_PaletteArrayCtorDescriptor;
-          v12 = _wcpp_4_ctor_array__(v12, 256);
+          v12 = _wcpp_4_ctor_array__(v12, PALETTE_COLOR_COUNT);
         }
         paletteArray = v12;
         Diagnostics_TraceWorldMapActionEvent("transition_after_palette_alloc", g_SelectedUnitIndex, paletteArray, 0, 0);
@@ -764,7 +764,7 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
   int slideANumberArg; // [esp-4h] [ebp-44Ch]
   int slideBNumberArg; // [esp-4h] [ebp-44Ch]
   int slideCNumberArg; // [esp-4h] [ebp-44Ch]
-  unsigned __int8 paletteBuffer[1024]; // [esp+0h] [ebp-448h] BYREF
+  unsigned __int8 paletteBuffer[PALETTE_TABLE_BYTES]; // [esp+0h] [ebp-448h] BYREF
   char filenameBuffer[52]; // [esp+400h] [ebp-48h] BYREF
   int (*savedRenderHook)(int, char, DWORD); // [esp+434h] [ebp-14h]
   int stdHandle; // [esp+438h] [ebp-10h]
@@ -810,7 +810,7 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
   RenderSurface_InvokeSlot56(surfaceB);
   surfaceC = v8;
   RenderSurface_InvokeSlot56((_DWORD *)(uintptr_t)(unsigned int)surfaceC);
-  _wcpp_4_ctor_array__((int)(intptr_t)paletteBuffer, 256);
+  _wcpp_4_ctor_array__((int)(intptr_t)paletteBuffer, PALETTE_COLOR_COUNT);
   if ( missionNumber > 9 )
     slideANumber = missionNumber - 9;
   else
@@ -974,7 +974,7 @@ int  Palette_FindNearestColorIndex(unsigned __int8 red, unsigned __int8 green, u
 
   bestDistance = -1;
   paletteEntry = (char *)(uintptr_t)g_Palette_ActivePalettePtr;
-  entriesLeft = 256;
+  entriesLeft = PALETTE_COLOR_COUNT;
   colorIndex = 0;
   do
   {

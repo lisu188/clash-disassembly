@@ -16,7 +16,7 @@ CLASH95_TEST_VISIBLE void Compat_StringHolderInsertText (_DWORD *holder, int ind
 //----- (00471C60) --------------------------------------------------------
 int  Compat_StringHolderScalarDeletingDtor(int holder, char flags)
 {
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(holder, ((_DWORD)(uintptr_t)(&g_CompatStringHolder_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -24,7 +24,7 @@ int  Compat_StringHolderScalarDeletingDtor(int holder, char flags)
   }
   *(_DWORD *)(uintptr_t)(holder + 4) = ((_DWORD)(uintptr_t)(&g_CompatStringHolder_Vtable));
   Compat_StringHolderFreeText((_DWORD *)(uintptr_t)holder);
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     ((void)(holder), j__nfree_());
   return holder;
 }
@@ -223,7 +223,7 @@ CLASH95_INTERNAL _DWORD *Compat_StringHolderBuildLeafName(_DWORD *holder, const 
 
 CLASH95_INTERNAL int Compat_StringHolderDestroyStack(_DWORD *holder, char flags)
 {
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__((int)(uintptr_t)holder, ((_DWORD)(uintptr_t)(&g_CompatStringHolder_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -231,7 +231,7 @@ CLASH95_INTERNAL int Compat_StringHolderDestroyStack(_DWORD *holder, char flags)
   }
   holder[1] = ((_DWORD)(uintptr_t)(&g_CompatStringHolder_Vtable));
   Compat_StringHolderFreeText(holder);
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     ((void)((int)(uintptr_t)holder), j__nfree_());
   return (int)(uintptr_t)holder;
 }

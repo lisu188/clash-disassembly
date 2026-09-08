@@ -62,7 +62,7 @@ BOOL  MapTile_HasSouthRoadConnection(int row, int column);
 BOOL  MapTile_HasWestRoadConnection(int row, int column);
 BOOL  MapTile_HasEastRoadConnection(int row, int column);
 int  Map_RebuildRoadOverlayAtTile(int row, int column);
-int  Map_NormalizeRoadOverlayTileId(int result);
+int  Map_NormalizeRoadOverlayTileId(int overlayTileId);
 signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int refRow, int refColumn, int column, int row);
 BOOL  MapTile_IsBareBridgeCrossingRoadOverlayCandidate(int row, int column);
 int  RoadBuildMode_HighlightBuildableAdjacentTile(int tileRow, int tileColumn);

@@ -1,5 +1,11 @@
 # UnitStack class-migration blockers
 
+The later whole-family Road audit is recorded separately in
+[ROAD_CONSTRUCTION_CLASS_READINESS.md](ROAD_CONSTRUCTION_CLASS_READINESS.md).
+The original assembly and live 48-word scan admit an unassigned approach-overlay
+path; no fallback or scan restriction was introduced. The established first-Road
+endpoint is not invalidated. The dated unit-stack audit below remains unchanged.
+
 Track: Win95 reconstruction. Frontier: deciding whether the remaining UnitStack
 behavior can move into classes without disguising a behavior repair. This is a
 read-only evidence audit dated 2026-09-06; no production source, test, manifest,

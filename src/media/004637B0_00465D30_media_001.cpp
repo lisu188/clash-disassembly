@@ -6,13 +6,15 @@
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "avi_bitmap_info_view.h"
+#include "avi_decompressor_view.h"
 
 //----- (004637B0) --------------------------------------------------------
 int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD allocContext)
 {
   int instance; // eax
 
-  instance = Mem_Alloc(2236, (int)(intptr_t)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);
+  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *instanceOut = instance;
@@ -41,7 +43,7 @@ int * CAviDecompressor_ConstructAndInitCallbacks(
   int instance; // eax
 
   *selfOut = 0;
-  instance = Mem_Alloc(2236, (int)(intptr_t)&stru_50F60C, 0, (DWORD)(intptr_t)ddSurface);
+  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&stru_50F60C, 0, (DWORD)(intptr_t)ddSurface);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *selfOut = instance;
@@ -78,7 +80,7 @@ int * CAviDecompressor_ConstructAndInitSource(int *selfOut, DWORD allocContext, 
   int instance; // eax
 
   *selfOut = 0;
-  instance = Mem_Alloc(2236, (int)(intptr_t)&stru_50F6A0, 0, allocContext);
+  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&stru_50F6A0, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *selfOut = instance;
@@ -113,13 +115,17 @@ void  CAviDecompressor_Done(_DWORD *playerHandle)
 //----- (00464250) --------------------------------------------------------
 int  CAviDecompressor_Frames(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 43);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .frames();
 }
 
 //----- (00464260) --------------------------------------------------------
 int  CAviDecompressor_Fps(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 35) / *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 31);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .fps();
 }
 
 //----- (00464270) --------------------------------------------------------
@@ -137,104 +143,105 @@ void  CAviDecompressor_Stop(int *playerHandle)
 //----- (00464290) --------------------------------------------------------
 BOOL  CAviDecompressor_IsPlaying(int playerHandle)
 {
-  return *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2191) != 0;
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .isPlaying();
 }
 
 //----- (004642B0) --------------------------------------------------------
 int  CAviDecompressor_Initialized(_DWORD *playerHandle)
 {
-  _DWORD *instance; // eax
-  int result; // eax
-  int v3; // ebx
-  _DWORD *blitState; // eax
-
-  instance = (_DWORD *)(uintptr_t)*playerHandle;
-  if ( *(_DWORD *)((char *)instance + 7) )
-    LOBYTE(result) = *(_DWORD *)((char *)instance + 415) || (v3 = instance[486], blitState = instance + 481, v3) || blitState[4];
-  else
-    LOBYTE(result) = 0;
-  return (unsigned __int8)result;
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle)
+      .initialized();
 }
 
 //----- (004642F0) --------------------------------------------------------
 void  CAviDecompressor_WaitForNextFrame(int *playerHandle)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  if ( *(_BYTE *)(uintptr_t)(instance + 2191) )
-    WaitForSingleObject(*(HANDLE *)(uintptr_t)(instance + 2196), 0x1F4u);
+  const auto view =
+      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle);
+  if (view.isPlaying())
+    WaitForSingleObject((HANDLE)(uintptr_t)view.frameEventHandle(), 0x1F4u);
 }
 
 //----- (00464320) --------------------------------------------------------
 int  CAviDecompressor_Palette(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 1948);
+  return (int)clash95::media::CAviDecompressorView::fromPlayerHandle(
+                   (const void *)(uintptr_t)playerHandle)
+      .paletteHandle();
 }
 
 //----- (00464330) --------------------------------------------------------
 int  CAviDecompressor_Header(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151);
+  return (int)clash95::media::CAviDecompressorView::fromPlayerHandle(
+                   (const void *)(uintptr_t)playerHandle)
+      .bitmapHeaderHandle();
 }
 
 //----- (00464340) --------------------------------------------------------
 int  CAviDecompressor_PixelSize(int *playerHandle)
 {
-  return (*(unsigned __int16 *)(uintptr_t)(CAviDecompressor_GetVideoFormat(*playerHandle) + 14) + 7) >> 3;
+  const auto player =
+      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .bytesPerPixel();
 }
 
 //----- (00464360) --------------------------------------------------------
 int  CAviDecompressor_BPP(int playerHandle)
 {
-  return *(unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 14);
+  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(
+      (const void *)(uintptr_t)playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .bitsPerPixel();
 }
 
 //----- (00464380) --------------------------------------------------------
 int  CAviDecompressor_Width(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 4);
+  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(
+      (const void *)(uintptr_t)playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .width();
 }
 
 //----- (00464390) --------------------------------------------------------
 int  CAviDecompressor_Height(int playerHandle)
 {
-  __int64 biHeight; // rax
-
-  biHeight = *(int *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 8);
-  return (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
+  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(
+      (const void *)(uintptr_t)playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .absoluteHeight();
 }
 
 //----- (004643B0) --------------------------------------------------------
 int  CAviDecompressor_DecodedFrame(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2021);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .decodedFrame();
 }
 
 //----- (004643C0) --------------------------------------------------------
 int  CAviDecompressor_SetBackground(int *playerHandle, _DWORD *bgRect, int ddObject)
 {
-  int result; // eax
-
-  result = *playerHandle;
-  *(_DWORD *)(uintptr_t)(result + 2155) = *bgRect;
-  *(_DWORD *)(uintptr_t)(result + 2159) = bgRect[1];
-  *(_DWORD *)(uintptr_t)(result + 2163) = bgRect[2];
-  *(_DWORD *)(uintptr_t)(result + 2167) = bgRect[3];
-  *(_DWORD *)(uintptr_t)(result + 2151) = ddObject;
-  return result;
+  const int instance = *playerHandle;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setBackground(ddObject, (const std::uint32_t *)bgRect);
+  return instance;
 }
 
 //----- (004643E0) --------------------------------------------------------
 void  CAviDecompressor_InitClipRect(_DWORD *playerHandle, _DWORD *clipRect)
 {
-  _DWORD *clipDest; // edi
-
-  clipDest = (_DWORD *)(uintptr_t)(*playerHandle + 1969);
-  *clipDest++ = *clipRect;
-  *clipDest++ = clipRect[1];
-  *clipDest = clipRect[2];
-  clipDest[1] = clipRect[3];
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setClipRect((const std::uint32_t *)clipRect);
 }
 
 //----- (00464400) --------------------------------------------------------
@@ -418,56 +425,42 @@ void  CAviDecompressor_StretchTo(int *playerHandle, const RECT *destRect)
 //----- (004644C0) --------------------------------------------------------
 void  CAviDecompressor_GetRect(_DWORD *playerHandle, _DWORD *rectOut)
 {
-  _DWORD *srcRect; // esi
-
-  srcRect = (_DWORD *)(uintptr_t)(*playerHandle + 2063);
-  *rectOut = *srcRect++;
-  rectOut[1] = *srcRect++;
-  rectOut[2] = *srcRect;
-  rectOut[3] = srcRect[1];
+  const clash95::media::AviDestinationRect rect =
+      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle)
+          .destinationRect();
+  rectOut[0] = (_DWORD)rect.left;
+  rectOut[1] = (_DWORD)rect.top;
+  rectOut[2] = (_DWORD)rect.right;
+  rectOut[3] = (_DWORD)rect.bottom;
 }
 
 //----- (004644E0) --------------------------------------------------------
 void  CAviDecompressor_InitColorKeys(int *playerHandle, int colorKeyLow, int colorKeyHigh)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  *(_DWORD *)(uintptr_t)(instance + 2171) = 8;
-  *(_DWORD *)(uintptr_t)(instance + 2042) = colorKeyLow;
-  *(_DWORD *)(uintptr_t)(instance + 2046) = colorKeyHigh;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setColorKeys(colorKeyLow, colorKeyHigh);
 }
 
 //----- (00464500) --------------------------------------------------------
 void  CAviDecompressor_InitPos(int *playerHandle, int x, int y)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  *(_DWORD *)(uintptr_t)(instance + 2071) = 0;
-  *(_DWORD *)(uintptr_t)(instance + 2075) = 0;
-  *(_BYTE *)(uintptr_t)(instance + 2062) = 1;
-  *(_DWORD *)(uintptr_t)(instance + 2063) = x;
-  *(_DWORD *)(uintptr_t)(instance + 2067) = y;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setPosition(x, y);
 }
 
 //----- (00464530) --------------------------------------------------------
 void  CAviDecompressor_InitRect(int *playerHandle, _DWORD *rect)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  *(_DWORD *)(uintptr_t)(instance + 2063) = *rect;
-  *(_DWORD *)(uintptr_t)(instance + 2067) = rect[1];
-  *(_DWORD *)(uintptr_t)(instance + 2071) = rect[2];
-  *(_DWORD *)(uintptr_t)(instance + 2075) = rect[3];
-  *(_BYTE *)(uintptr_t)(instance + 2062) = 1;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setDestinationRect((int)rect[0], (int)rect[1], (int)rect[2], (int)rect[3]);
 }
 
 //----- (00464550) --------------------------------------------------------
 void  CAviDecompressor_InitOverlays(int playerHandle, char enabled)
 {
-  *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2050) = enabled != 0;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(
+           (void *)(uintptr_t)playerHandle)
+      .setOverlaysEnabled(enabled != 0);
 }
 
 //----- (00464570) --------------------------------------------------------
@@ -481,7 +474,9 @@ unsigned int  CAviDecompressor_TimeMs(int playerHandle)
 //----- (004645C0) --------------------------------------------------------
 int  CAviDecompressor_SumSleepTime(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2038);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .sumSleepTime();
 }
 
 //----- (004645D0) --------------------------------------------------------
@@ -766,7 +761,9 @@ char * CAviDecompressor_DestroySourceInterface(int self, char dtorFlags)
 //----- (00464CC0) --------------------------------------------------------
 int  CAviDecompressor_GetVideoFormat(int self)
 {
-  return *(_DWORD *)(uintptr_t)(self + 151);
+  return (int)clash95::media::CAviDecompressorView(
+                  (const void *)(uintptr_t)self)
+      .bitmapHeaderHandle();
 }
 
 //----- (00464CD0) --------------------------------------------------------

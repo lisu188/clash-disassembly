@@ -121,11 +121,11 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   defender_dead = a3;
   Debug_Log(a3, a4, (DWORD)(intptr_t)a5, (int)(intptr_t)aAttackanimDD);
   RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Busy);
-  attacker_unit = (__int16 *)(uintptr_t)(g_MapData + 852 + 31 * attacker_index);
+  attacker_unit = (__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * attacker_index);
   if ( defender_index == -1 )
     defender_unit = 0;
   else
-    defender_unit = (unsigned __int16 *)(uintptr_t)(31 * defender_index + g_MapData + 852);
+    defender_unit = (unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * defender_index + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
   if ( !UnitBattle_IsTileInViewport((unsigned __int16)attacker_unit[2], (unsigned __int16)attacker_unit[3])
     || (a5 = defender_unit) != 0 && !UnitBattle_IsTileInViewport(defender_unit[2], defender_unit[3]) )
   {
@@ -159,24 +159,24 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
 
     defender_sprite = (unsigned __int16 *)(uintptr_t)UnitSpriteCache_FindEntryOrLoad(*defender_unit, *((_BYTE *)defender_unit + 2), 0, *((_BYTE *)defender_unit + 3));
     dir_index = 8 * *((unsigned __int8 *)attacker_unit + 3);
-    if ( direction == 7 || direction == 6 || direction == 5 )
+    if ( direction == DIRECTION8_NORTHWEST || direction == DIRECTION8_NORTH || direction == DIRECTION8_NORTHEAST )
     {
       attacker_sprite = (unsigned __int16 *)(uintptr_t)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, dir_index);
       impact_offset_x = -UnitBattle_ScanSpriteFirstOpaqueRunLength(attacker_sprite) - UnitBattle_ScanSpriteMinOpaqueRunLength(defender_sprite);
     }
-    else if ( direction == 1 || direction == 2 || direction == 3 )
+    else if ( direction == DIRECTION8_SOUTHWEST || direction == DIRECTION8_SOUTH || direction == DIRECTION8_SOUTHEAST )
     {
       attacker_sprite = (unsigned __int16 *)(uintptr_t)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, dir_index);
       impact_offset_x = UnitBattle_ScanSpriteMinOpaqueRunLength(attacker_sprite) + UnitBattle_ScanSpriteFirstOpaqueRunLength(defender_sprite);
     }
-    if ( direction == 7 || direction < 2 )
+    if ( direction == DIRECTION8_NORTHWEST || direction < 2 )
     {
       attacker_sprite = (unsigned __int16 *)(uintptr_t)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, dir_index);
       vertical_offset = -UnitBattle_CountLeadingBlankSpriteRows(attacker_sprite) - UnitBattle_CountTrailingBlankSpriteRows(defender_sprite);
     }
     else
     {
-      if ( direction != 5 && direction != 4 && direction != 3 )
+      if ( direction != DIRECTION8_NORTHEAST && direction != DIRECTION8_EAST && direction != DIRECTION8_SOUTHEAST )
         goto LABEL_20;
       attacker_sprite = (unsigned __int16 *)(uintptr_t)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, dir_index);
       vertical_offset = UnitBattle_CountTrailingBlankSpriteRows(attacker_sprite) + UnitBattle_CountLeadingBlankSpriteRows(defender_sprite);
@@ -185,7 +185,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
     goto LABEL_20;
   }
   attacker_sprite_alone = (unsigned __int16 *)(uintptr_t)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, 8 * direction);
-  if ( direction == 6 )
+  if ( direction == DIRECTION8_NORTH )
   {
     impact_offset_x = -UnitBattle_ScanSpriteFirstOpaqueRunLength(attacker_sprite_alone);
   }
@@ -264,7 +264,7 @@ LABEL_22:
     }
     UnitBattle_UpdateIdleAnimatedUnits();
     DD_Pump((int)(intptr_t)g_RenderState, anim_start_time);
-    move_tick_interval_ms = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[88 * *attacker_unit];
+    move_tick_interval_ms = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[UNIT_TYPE_METADATA_STRIDE * *attacker_unit];
     v32 = Time_Now(v31, move_tick_interval_ms);
     if ( v32 - anim_start_time >= (unsigned int)move_tick_interval_ms )
     {
@@ -302,13 +302,13 @@ LABEL_22:
       else
       {
         UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2], (unsigned __int16)attacker_unit[3]);
-        if ( direction == 4 || direction == 5 || direction == 3 )
+        if ( direction == DIRECTION8_EAST || direction == DIRECTION8_NORTHEAST || direction == DIRECTION8_SOUTHEAST )
           UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2], (unsigned __int16)attacker_unit[3] + 1);
-        if ( !direction || direction == 7 || direction == 1 )
+        if ( !direction || direction == DIRECTION8_NORTHWEST || direction == DIRECTION8_SOUTHWEST )
           UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2], (unsigned __int16)attacker_unit[3] - 1);
-        if ( direction == 2 || direction == 3 || direction == 1 )
+        if ( direction == DIRECTION8_SOUTH || direction == DIRECTION8_SOUTHEAST || direction == DIRECTION8_SOUTHWEST )
           UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2] + 1, (unsigned __int16)attacker_unit[3]);
-        if ( direction == 6 || direction == 5 || direction == 7 )
+        if ( direction == DIRECTION8_NORTH || direction == DIRECTION8_NORTHEAST || direction == DIRECTION8_NORTHWEST )
           UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2] - 1, (unsigned __int16)attacker_unit[3]);
         switch ( direction )
         {
@@ -337,8 +337,8 @@ LABEL_22:
       {
         step_dir_x = 1;
       }
-      g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *attacker_unit] * step_dir_x;
-      v23 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *attacker_unit];
+      g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[UNIT_TYPE_METADATA_STRIDE * *attacker_unit] * step_dir_x;
+      v23 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[UNIT_TYPE_METADATA_STRIDE * *attacker_unit];
       if ( impact_offset_y - g_UnitMoveAnimOffsetY <= 0 )
       {
         if ( impact_offset_y == g_UnitMoveAnimOffsetY )
@@ -363,20 +363,20 @@ LABEL_22:
   g_UnitMoveAnimOffsetX = impact_offset_x;
   g_UnitAnimFrameIndex = 0;
   g_UnitMoveAnimOffsetY = impact_offset_y;
-  g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeAttackAnimationFrameCount[88 * *attacker_unit];
+  g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeAttackAnimationFrameCount[UNIT_TYPE_METADATA_STRIDE * *attacker_unit];
   v63 = Time_Now(v62, 0);
-  v64 = 31 * attacker_index;
+  v64 = BATTLE_UNIT_ENTRY_STRIDE * attacker_index;
   v65 = v63;
   while ( g_UnitAnimFrameIndex < g_UnitBattleAnimFrameCount )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     DD_Pump((int)(intptr_t)g_RenderState, v65);
-    attacker_unit_type = *(__int16 *)(uintptr_t)(v64 + g_MapData + 852);
-    v70 = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * attacker_unit_type];
+    attacker_unit_type = *(__int16 *)(uintptr_t)(v64 + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
+    v70 = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[UNIT_TYPE_METADATA_STRIDE * attacker_unit_type];
     v67 = Time_Now(v66, v70);
     if ( v67 - v65 >= (unsigned int)v70 )
     {
-      attacker_unit_type = *(__int16 *)(uintptr_t)(v64 + g_MapData + 852);
+      attacker_unit_type = *(__int16 *)(uintptr_t)(v64 + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
       v70 = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[attacker_unit_type].melee_attack_sound_frame;
       if ( v70 == g_UnitAnimFrameIndex )
         Audio_PlayUnitMeleeAttackSound(attacker_unit_type);
@@ -448,7 +448,7 @@ LABEL_22:
     {
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)(intptr_t)g_RenderState, 0);
-      arrival_tick_interval_ms = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[88 * *attacker_unit];
+      arrival_tick_interval_ms = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[UNIT_TYPE_METADATA_STRIDE * *attacker_unit];
       v87 = Time_Now(v86, arrival_tick_interval_ms);
       if ( v87 - v88 >= arrival_tick_interval_ms )
       {
@@ -465,13 +465,13 @@ LABEL_22:
         else
         {
           UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2], (unsigned __int16)attacker_unit[3]);
-          if ( direction == 4 || direction == 5 || direction == 3 )
+          if ( direction == DIRECTION8_EAST || direction == DIRECTION8_NORTHEAST || direction == DIRECTION8_SOUTHEAST )
             UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2], (unsigned __int16)attacker_unit[3] + 1);
-          if ( !direction || direction == 7 || direction == 1 )
+          if ( !direction || direction == DIRECTION8_NORTHWEST || direction == DIRECTION8_SOUTHWEST )
             UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2], (unsigned __int16)attacker_unit[3] - 1);
-          if ( direction == 2 || direction == 3 || direction == 1 )
+          if ( direction == DIRECTION8_SOUTH || direction == DIRECTION8_SOUTHEAST || direction == DIRECTION8_SOUTHWEST )
             UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2] + 1, (unsigned __int16)attacker_unit[3]);
-          if ( direction == 6 || direction == 5 || direction == 7 )
+          if ( direction == DIRECTION8_NORTH || direction == DIRECTION8_NORTHEAST || direction == DIRECTION8_NORTHWEST )
             UnitBattle_RedrawTile((unsigned __int16)attacker_unit[2] - 1, (unsigned __int16)attacker_unit[3]);
           switch ( direction )
           {
@@ -502,7 +502,7 @@ LABEL_22:
         {
           arrival_step_dir_x = 1;
         }
-        g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *attacker_unit] * arrival_step_dir_x;
+        g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[UNIT_TYPE_METADATA_STRIDE * *attacker_unit] * arrival_step_dir_x;
         if ( -g_UnitMoveAnimOffsetY < 0 || g_UnitMoveAnimOffsetY == 0 )
         {
           if ( g_UnitMoveAnimOffsetY )
@@ -514,7 +514,7 @@ LABEL_22:
         {
           arrival_step_dir_y = 1;
         }
-        v95 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *attacker_unit] * arrival_step_dir_y + g_UnitMoveAnimOffsetY;
+        v95 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[UNIT_TYPE_METADATA_STRIDE * *attacker_unit] * arrival_step_dir_y + g_UnitMoveAnimOffsetY;
         v96 = g_UnitMoveAnimOffsetX * v92;
         g_UnitMoveAnimOffsetY = v95;
         if ( v96 < 0 )
@@ -613,10 +613,10 @@ int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
 
   Debug_Log(a2, a3, a4, (int)(intptr_t)aDeathanimD);
   unit_index_copy = unit_index;
-  unit_record_offset = 31 * unit_index_copy;
-  unit_ptr = (__int16 *)(uintptr_t)(g_MapData + 852 + 31 * unit_index_copy);
+  unit_record_offset = BATTLE_UNIT_ENTRY_STRIDE * unit_index_copy;
+  unit_ptr = (__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * unit_index_copy);
   Audio_PlayUnitDeathSound(*unit_ptr);
-  if ( (g_UnitTypeFlags[22 * *unit_ptr] & 1) != 0 )
+  if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * *unit_ptr] & 1) != 0 )
   {
     *(_BYTE *)(uintptr_t)(40 * (unsigned __int16)unit_ptr[2] + g_MapData + 2 * (unsigned __int16)unit_ptr[3] + 2334) = 48;
     UnitBattle_InitUnitFadeAnimation(unit_index, 255, -4, 255);
@@ -641,24 +641,24 @@ int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
       last_tick = Time_Now(v15, frame_deadline);
       UnitBattle_RedrawUnitNeighborhood(unit_index);
       UnitBattle_RedrawUnitNeighborhood(unit_index);
-      direction = *(unsigned __int8 *)(uintptr_t)(corpse_record_offset + g_MapData + 855);
-      unit_row = *(unsigned __int16 *)(uintptr_t)(corpse_record_offset + g_MapData + 856);
-      unit_col = *(unsigned __int16 *)(uintptr_t)(corpse_record_offset + g_MapData + 858);
-      if ( !*(_BYTE *)(uintptr_t)(corpse_record_offset + g_MapData + 855) || direction == 7 || direction == 1 )
+      direction = *(unsigned __int8 *)(uintptr_t)(corpse_record_offset + g_MapData + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET);
+      unit_row = *(unsigned __int16 *)(uintptr_t)(corpse_record_offset + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET);
+      unit_col = *(unsigned __int16 *)(uintptr_t)(corpse_record_offset + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET);
+      if ( !*(_BYTE *)(uintptr_t)(corpse_record_offset + g_MapData + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET) || direction == DIRECTION8_NORTHWEST || direction == DIRECTION8_SOUTHWEST )
         UnitBattle_RedrawTile(unit_row, unit_col - 1);
-      if ( direction == 1 )
+      if ( direction == DIRECTION8_SOUTHWEST )
         UnitBattle_RedrawTile(unit_row + 1, unit_col - 1);
-      if ( direction == 2 || direction == 1 || direction == 3 )
+      if ( direction == DIRECTION8_SOUTH || direction == DIRECTION8_SOUTHWEST || direction == DIRECTION8_SOUTHEAST )
         UnitBattle_RedrawTile(unit_row + 1, unit_col);
-      if ( direction == 3 )
+      if ( direction == DIRECTION8_SOUTHEAST )
         UnitBattle_RedrawTile(unit_row + 1, unit_col + 1);
-      if ( direction == 4 || direction == 3 || direction == 5 )
+      if ( direction == DIRECTION8_EAST || direction == DIRECTION8_SOUTHEAST || direction == DIRECTION8_NORTHEAST )
         UnitBattle_RedrawTile(unit_row, unit_col + 1);
-      if ( direction == 5 )
+      if ( direction == DIRECTION8_NORTHEAST )
         UnitBattle_RedrawTile(unit_row - 1, unit_col + 1);
-      if ( direction == 6 || direction == 7 || direction == 5 )
+      if ( direction == DIRECTION8_NORTH || direction == DIRECTION8_NORTHWEST || direction == DIRECTION8_NORTHEAST )
         UnitBattle_RedrawTile(unit_row - 1, unit_col);
-      if ( direction == 7 )
+      if ( direction == DIRECTION8_NORTHWEST )
         UnitBattle_RedrawTile(unit_row - 1, unit_col - 1);
       corpse_row_base = 40 * (unsigned __int16)unit_ptr[2] + g_MapData;
       ++*(_BYTE *)(uintptr_t)(corpse_row_base + 2 * (unsigned __int16)unit_ptr[3] + 2334);
@@ -675,34 +675,34 @@ int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         UnitBattle_RedrawUnitNeighborhood(unit_index);
-        fade_direction = *(unsigned __int8 *)(uintptr_t)(fade_record_offset + g_MapData + 855);
-        fade_unit_row = *(unsigned __int16 *)(uintptr_t)(fade_record_offset + g_MapData + 856);
-        fade_unit_col = *(unsigned __int16 *)(uintptr_t)(fade_record_offset + g_MapData + 858);
-        if ( !*(_BYTE *)(uintptr_t)(fade_record_offset + g_MapData + 855) || fade_direction == 7 || fade_direction == 1 )
+        fade_direction = *(unsigned __int8 *)(uintptr_t)(fade_record_offset + g_MapData + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET);
+        fade_unit_row = *(unsigned __int16 *)(uintptr_t)(fade_record_offset + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET);
+        fade_unit_col = *(unsigned __int16 *)(uintptr_t)(fade_record_offset + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET);
+        if ( !*(_BYTE *)(uintptr_t)(fade_record_offset + g_MapData + BATTLE_UNIT_FACING_DIRECTION_TABLE_OFFSET) || fade_direction == DIRECTION8_NORTHWEST || fade_direction == DIRECTION8_SOUTHWEST )
           UnitBattle_RedrawTile(fade_unit_row, fade_unit_col - 1);
-        if ( fade_direction == 1 )
+        if ( fade_direction == DIRECTION8_SOUTHWEST )
           UnitBattle_RedrawTile(fade_unit_row + 1, fade_unit_col - 1);
-        if ( fade_direction == 2 || fade_direction == 1 || fade_direction == 3 )
+        if ( fade_direction == DIRECTION8_SOUTH || fade_direction == DIRECTION8_SOUTHWEST || fade_direction == DIRECTION8_SOUTHEAST )
           UnitBattle_RedrawTile(fade_unit_row + 1, fade_unit_col);
-        if ( fade_direction == 3 )
+        if ( fade_direction == DIRECTION8_SOUTHEAST )
           UnitBattle_RedrawTile(fade_unit_row + 1, fade_unit_col + 1);
-        if ( fade_direction == 4 || fade_direction == 3 || fade_direction == 5 )
+        if ( fade_direction == DIRECTION8_EAST || fade_direction == DIRECTION8_SOUTHEAST || fade_direction == DIRECTION8_NORTHEAST )
           UnitBattle_RedrawTile(fade_unit_row, fade_unit_col + 1);
-        if ( fade_direction == 5 )
+        if ( fade_direction == DIRECTION8_NORTHEAST )
           UnitBattle_RedrawTile(fade_unit_row - 1, fade_unit_col + 1);
-        if ( fade_direction == 6 || fade_direction == 7 || fade_direction == 5 )
+        if ( fade_direction == DIRECTION8_NORTH || fade_direction == DIRECTION8_NORTHWEST || fade_direction == DIRECTION8_NORTHEAST )
           UnitBattle_RedrawTile(fade_unit_row - 1, fade_unit_col);
-        if ( fade_direction == 7 )
+        if ( fade_direction == DIRECTION8_NORTHWEST )
           UnitBattle_RedrawTile(fade_unit_row - 1, fade_unit_col - 1);
         *(_BYTE *)(uintptr_t)(40 * (unsigned __int16)unit_ptr[2] + g_MapData + 2 * (unsigned __int16)unit_ptr[3] + 2335) = -1 - g_UnitFadeAnimCurrentOffset;
       }
       while ( g_UnitFadeAnimCurrentOffset );
     }
   }
-  final_record_offset = 31 * unit_index;
-  *(_WORD *)(uintptr_t)(g_MapData + final_record_offset + 852) = -1;
-  result = *(unsigned __int16 *)(uintptr_t)(g_MapData + final_record_offset + 858);
-  *(_WORD *)(uintptr_t)(40 * *(unsigned __int16 *)(uintptr_t)(g_MapData + final_record_offset + 856) + g_MapData + 2 * result + 1534) = -1;
+  final_record_offset = BATTLE_UNIT_ENTRY_STRIDE * unit_index;
+  *(_WORD *)(uintptr_t)(g_MapData + final_record_offset + BATTLE_UNIT_ENTRIES_OFFSET) = -1;
+  result = *(unsigned __int16 *)(uintptr_t)(g_MapData + final_record_offset + BATTLE_UNIT_GRID_Y_TABLE_OFFSET);
+  *(_WORD *)(uintptr_t)(40 * *(unsigned __int16 *)(uintptr_t)(g_MapData + final_record_offset + BATTLE_UNIT_GRID_X_TABLE_OFFSET) + g_MapData + 2 * result + 1534) = -1;
   return result;
 }
 // 427FC9: variable 'v5' is possibly undefined
@@ -741,13 +741,13 @@ signed int  UnitBattle_Attack(int attacker_index, int defender_index, int charge
 
   Debug_Log(charge_mode, charge_mode, attacker_index, (int)(intptr_t)aUnitbattle_att);
   Diagnostics_TraceWorldMapActionEvent("battle_attack_enter", attacker_index, defender_index, charge_mode, 0);
-  if ( !g_MapData || attacker_index < 0 || attacker_index >= 22 || defender_index < 0 || defender_index >= 22 )
+  if ( !g_MapData || attacker_index < 0 || attacker_index >= BATTLE_UNIT_ENTRY_COUNT || defender_index < 0 || defender_index >= BATTLE_UNIT_ENTRY_COUNT )
   {
     Diagnostics_TraceWorldMapActionEvent("battle_attack_invalid_index", attacker_index, defender_index, charge_mode, 0);
     return 0;
   }
-  attacker_unit = (__int16 *)(uintptr_t)(g_MapData + 852 + 31 * attacker_index);
-  defender_unit = (__int16 *)(uintptr_t)(g_MapData + 852 + 31 * defender_index);
+  attacker_unit = (__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * attacker_index);
+  defender_unit = (__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * defender_index);
   attacker_type = *attacker_unit;
   if ( attacker_type == -1
     || !g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * attacker_type]
@@ -842,10 +842,10 @@ signed int  UnitBattle_Attack(int attacker_index, int defender_index, int charge
     UnitBattle_RefreshSelectedUnitUI();
     *attacker_unit = -1;
     *(_WORD *)(uintptr_t)(g_MapData + 40 * (unsigned __int16)attacker_unit[2] + 2 * (unsigned __int16)attacker_unit[3] + 1534) = -1;
-    if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * owner_index + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * owner_index + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       UnitBattle_SelectNextControllableUnit(0, 0, (char)(intptr_t)defender_unit);
   }
-  *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * owner_index + 140073) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * owner_index + PLAYER_BATTLE_ACTION_TAKEN_FLAG_TABLE_OFFSET) = 1;
   UnitBattle_RedrawVisibleGrid();
   UnitBattle_DrawSelectedUnitPanel(0, 1, attacker_dead, (int)(intptr_t)defender_unit);
   UnitBattle_RefreshSelectedUnitUI();
@@ -879,17 +879,17 @@ BOOL  UnitBattle_IsTileWithinRange(int unit_index, int target_row, int target_co
   int unit_type_offset;
   signed int distance; // eax
 
-  if ( !g_MapData || unit_index < 0 || unit_index >= 22 )
+  if ( !g_MapData || unit_index < 0 || unit_index >= BATTLE_UNIT_ENTRY_COUNT )
     return 0;
-  unit_record = g_MapData + 31 * unit_index + 852;
+  unit_record = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * unit_index + BATTLE_UNIT_ENTRIES_OFFSET;
   if ( *(__int16 *)(uintptr_t)unit_record == -1 )
     return 0;
   distance = Math_CeilSqrt(
-         (*(unsigned __int16 *)(uintptr_t)(31 * unit_index + g_MapData + 852 + 4) - target_row)
-       * (*(unsigned __int16 *)(uintptr_t)(31 * unit_index + g_MapData + 852 + 4) - target_row)
-       + (*(unsigned __int16 *)(uintptr_t)(31 * unit_index + g_MapData + 852 + 6) - target_col)
-       * (*(unsigned __int16 *)(uintptr_t)(31 * unit_index + g_MapData + 852 + 6) - target_col));
-  unit_type_offset = 88 * *(__int16 *)(uintptr_t)unit_record;
+         (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unit_index + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 4) - target_row)
+       * (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unit_index + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 4) - target_row)
+       + (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unit_index + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 6) - target_col)
+       * (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unit_index + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 6) - target_col));
+  unit_type_offset = UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)unit_record;
   return distance <= (unsigned __int8)g_UnitTypeMaxRange[unit_type_offset]
       && distance > (unsigned __int8)g_UnitTypeMinRange[unit_type_offset];
 }
@@ -900,7 +900,7 @@ BOOL  UnitBattle_IsUnitWithinRange(int unit_index, int target_unit_index)
 {
   return UnitBattle_IsTileWithinRange(
            unit_index,
-           *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * target_unit_index + 856),
-           *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * target_unit_index + 858));
+           *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * target_unit_index + BATTLE_UNIT_GRID_X_TABLE_OFFSET),
+           *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * target_unit_index + BATTLE_UNIT_GRID_Y_TABLE_OFFSET));
 }
 // 532048: using guessed type int g_MapData;

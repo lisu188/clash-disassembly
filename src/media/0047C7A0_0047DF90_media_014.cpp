@@ -1273,32 +1273,32 @@ LABEL_5:
   }
   if ( !strcmp_(argString, ((_DWORD)(uintptr_t)(aBreadth))) )
   {
-    newStrategy = 1;
+    newStrategy = CLIPS_STRATEGY_BREADTH;
     goto LABEL_4;
   }
   if ( !strcmp_(v10, ((_DWORD)(uintptr_t)(aLex))) )
   {
-    newStrategy = 2;
+    newStrategy = CLIPS_STRATEGY_LEX;
     goto LABEL_4;
   }
   if ( !strcmp_(v11, ((_DWORD)(uintptr_t)(aMea))) )
   {
-    newStrategy = 3;
+    newStrategy = CLIPS_STRATEGY_MEA;
     goto LABEL_4;
   }
   if ( !strcmp_(v12, ((_DWORD)(uintptr_t)(aComplexity))) )
   {
-    newStrategy = 4;
+    newStrategy = CLIPS_STRATEGY_COMPLEXITY;
     goto LABEL_4;
   }
   if ( !strcmp_(v13, ((_DWORD)(uintptr_t)(aSimplicity))) )
   {
-    newStrategy = 5;
+    newStrategy = CLIPS_STRATEGY_SIMPLICITY;
     goto LABEL_4;
   }
   if ( !strcmp_(v14, ((_DWORD)(uintptr_t)(aRandom_0))) )
   {
-    newStrategy = 6;
+    newStrategy = CLIPS_STRATEGY_RANDOM;
     goto LABEL_4;
   }
   Parser_ReportError(1, (int)(intptr_t)aSymbolWithVa_0);

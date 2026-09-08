@@ -61,7 +61,7 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
     *(_WORD *)(uintptr_t)(functionList + 25) = bsaveIndex;
     functionList = *(_DWORD *)(uintptr_t)(functionList + 27);
   }
-  result = Rules_OpenConstructCodeFile(fileName, 2, 1, 1u);
+  result = Rules_OpenConstructCodeFile(fileName, 2, 1, 1u, 0);
   if ( result )
   {
     Output_WriteFormatted(result, result, result, (int)(intptr_t)asc_507E94, (char)(intptr_t)fileName);
@@ -104,7 +104,7 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
         entryCount = 1;
         if ( fctnPtr )
         {
-          result = Rules_OpenConstructCodeFile(v37, 2, version, i);
+          result = Rules_OpenConstructCodeFile(v37, 2, version, i, 0);
           v14 = result;
           if ( !result )
             return result;
@@ -388,44 +388,26 @@ signed int  Rules_WriteConstructsToCDriverFile(const char *fileName, char a2, DW
 // 54E6E8: using guessed type int dword_54E6E8;
 
 //----- (004A7140) --------------------------------------------------------
-int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD reopenOldFile)
+int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD allocContext, int reopenOldFile)
 {
-  char v4; // si
-  int v5; // ecx
-  char *fileMode; // edx
-  int v7; // eax
-  int v8; // ecx
-  int fp; // ebx
-  int v10; // edx
-  int v11; // ecx
-  CHAR fileNameBuffer[84]; // [esp+0h] [ebp-54h] BYREF
+  CHAR fileNameBuffer[84];
 
-  v4 = (char)(intptr_t)fileName;
   sprintf_(fileNameBuffer, "%s%d_%d.c", fileName, fileID, version);
-  if ( v5 )
-    fileMode = aA_0;
-  else
-    fileMode = aW_2;
-  v7 = IO_FOpen(fileNameBuffer, (unsigned __int8 *)fileMode, v5, reopenOldFile);
-  fp = v7;
-  if ( v7 )
+  char *fileMode = reopenOldFile ? aA_0 : aW_2;
+  int fp = IO_FOpen(fileNameBuffer, (unsigned __int8 *)fileMode, reopenOldFile, allocContext);
+  if ( !fp )
   {
-    if ( !v8 )
-    {
-      Output_WriteFormatted(0, v7, v7, (int)(intptr_t)aIncludeS_h, v4);
-      Output_WriteFormatted(v11, v10, v10, (int)(intptr_t)asc_507D2C, fileNameBuffer[0]);
-    }
-    return fp;
-  }
-  else
-  {
-    Rules_OpenFileErrorMessage(v8, (int)(intptr_t)fileNameBuffer);
+    Rules_OpenFileErrorMessage((int)(intptr_t)aConstructsToC, (int)(intptr_t)fileNameBuffer);
     return 0;
   }
+  if ( !reopenOldFile )
+  {
+    Output_WriteFormatted(0, fp, fp, (int)(intptr_t)aIncludeS_h, (int)(intptr_t)fileName);
+    Output_WriteFormatted(0, fp, fp, (int)(intptr_t)asc_507D2C);
+  }
+  return fp;
 }
-// 4A715D: variable 'v5' is possibly undefined
 // 4A7175: variable 'v8' is possibly undefined
-// 4A718C: variable 'v11' is possibly undefined
 // 4A718C: variable 'v10' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
@@ -487,7 +469,7 @@ signed int  Rules_ExpressionToCode(int theFile, __int16 *theExpression, int a3, 
       Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, g_ClipsConstructCodeEntryIndexInFile, theFile, (int)(intptr_t)aED_DLd, g_ConstructsToCImageId);
     if ( g_Rules_ExprCodeNeedNewFileFlag == 1 )
     {
-      dataFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)g_Rules_ConstructsToCodeBaseName, 3, g_ClipsExpressionCodeFileVersion, reopenOldFile);
+      dataFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)g_Rules_ConstructsToCodeBaseName, 3, g_ClipsExpressionCodeFileVersion, reopenOldFile, 0);
       g_ClipsCodeDataFile = dataFile;
       if ( !dataFile )
         return -1;
@@ -862,8 +844,6 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
   int curFile; // esi
   int v8; // edx
   int codeFileInfo; // ecx
-  int v10; // ecx
-  char v11; // [esp+0h] [ebp-Ch]
 
   curFile = result;
   v8 = maxIndices;
@@ -873,7 +853,7 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
     if ( !canBeReopened )
       return result;
     *canBeReopened = 1;
-    fclose_(codeFile);
+    fclose_(curFile);
     return 0;
   }
   if ( canBeReopened )
@@ -882,29 +862,25 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
   {
     if ( !canBeReopened || !codeFile )
     {
-      Rules_ReportSystemError(codeFile, 3);
+      Rules_ReportSystemError((int)(intptr_t)aConscomp, 3);
       IO_RunRouterExitCallbacks(2);
     }
     if ( !*(_DWORD *)(uintptr_t)codeFileInfo )
       return 0;
-    curFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion);
+    curFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion, 1);
     if ( !curFile )
     {
-      Rules_ReportSystemError(codeFileInfo, 4);
+      Rules_ReportSystemError((int)(intptr_t)aConscomp, 4);
       IO_RunRouterExitCallbacks(2);
     }
   }
-  Output_WriteFormatted(codeFileInfo, v8, curFile, (int)(intptr_t)asc_507DA0, v11);
-  fclose_(v10);
+  Output_WriteFormatted(0, 0, curFile, (int)(intptr_t)asc_507DA0);
+  fclose_(curFile);
   *theCount = 0;
   result = 0;
   ++*arrayVersion;
   return result;
 }
-// 4A7983: variable 'v9' is possibly undefined
-// 4A79C0: variable 'v8' is possibly undefined
-// 4A79C0: variable 'v11' is possibly undefined
-// 4A79CA: variable 'v10' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (004A79F0) --------------------------------------------------------
@@ -916,38 +892,29 @@ int  Rules_ConstructCodeFileOpen(
         int *fileCount,
         int arrayVersion,
         int headerFP,
-        char structureName,
+        const char *structureName,
         const char *structPrefix,
         int reopenOldFile,
         const char **codeFile)
 {
-  const char **codeFileInfo; // ecx
-  const char *curFileName; // edi
-  int curFileID; // edx
-  int curVersion; // eax
-  int result; // eax
-  int v18; // edx
-  int v19; // ecx
-  int v20; // edx
-  int v21; // ecx
-  int v22; // edx
-  int v23; // edx
-  int v24; // [esp-8h] [ebp-68h]
-  char arrayNameBuffer[80]; // [esp+0h] [ebp-60h] BYREF
-  int savedImageID; // [esp+50h] [ebp-10h]
+  unsigned char *codeFileInfo = (unsigned char *)codeFile;
+  const char *curFileName;
+  int curFileID;
+  int curVersion;
+  char arrayNameBuffer[80];
 
-  savedImageID = imageID;
-  codeFileInfo = codeFile;
   if ( reopenOldFile )
   {
     if ( !codeFile )
     {
-      Rules_ReportSystemError(0, 5);
+      Rules_ReportSystemError((int)(intptr_t)aConscomp, 5);
       IO_RunRouterExitCallbacks(2);
     }
-    curFileName = *codeFileInfo;
-    curFileID = (int)(intptr_t)codeFileInfo[1];
-    curVersion = (int)(intptr_t)codeFileInfo[2];
+    _DWORD storedFileName;
+    memcpy(&storedFileName, codeFileInfo, sizeof(storedFileName));
+    curFileName = (const char *)(uintptr_t)storedFileName;
+    memcpy(&curFileID, codeFileInfo + 4, sizeof(curFileID));
+    memcpy(&curVersion, codeFileInfo + 8, sizeof(curVersion));
   }
   else
   {
@@ -956,46 +923,31 @@ int  Rules_ConstructCodeFileOpen(
     curVersion = *fileCount;
     if ( codeFile )
     {
-      codeFile[2] = (const char *)(uintptr_t)curVersion;
-      *codeFile = fileName;
-      codeFile[1] = fileID;
+      _DWORD storedFileName = (_DWORD)(uintptr_t)fileName;
+      memcpy(codeFileInfo + 8, &curVersion, sizeof(curVersion));
+      memcpy(codeFileInfo, &storedFileName, sizeof(storedFileName));
+      memcpy(codeFileInfo + 4, &curFileID, sizeof(curFileID));
     }
   }
   if ( theFile )
   {
-    Output_WriteFormatted((int)(intptr_t)codeFileInfo, curFileID, theFile, (int)(intptr_t)asc_508250, arrayNameBuffer[0]);
+    Output_WriteFormatted(0, 0, theFile, (int)(intptr_t)asc_508250);
     return theFile;
   }
-  else
+  int result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)(intptr_t)fileName, reopenOldFile);
+  if ( !result )
+    return 0;
+  if ( reopenOldFile )
   {
-    result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)(intptr_t)fileName);
-    if ( result )
-    {
-      if ( reopenOldFile )
-      {
-        Output_WriteFormatted(result, result, result, (int)(intptr_t)asc_508250, arrayNameBuffer[0]);
-        return v23;
-      }
-      else
-      {
-        v24 = savedImageID;
-        ++*fileCount;
-        sprintf_(arrayNameBuffer, "%s%d_%d", structPrefix, v24, arrayVersion);
-        Output_WriteFormatted(v19, v18, v19, (int)(intptr_t)aSS_0, structureName);
-        Output_WriteFormatted(v21, v20, headerFP, (int)(intptr_t)aExternSS, structureName);
-        return v22;
-      }
-    }
+    Output_WriteFormatted(0, 0, result, (int)(intptr_t)asc_508250);
+    return result;
   }
+  *fileCount = (int)((unsigned int)*fileCount + 1u);
+  sprintf_(arrayNameBuffer, "%s%d_%d", structPrefix, imageID, arrayVersion);
+  Output_WriteFormatted(0, 0, result, (int)(intptr_t)aSS_0, (int)(intptr_t)structureName, (int)(intptr_t)arrayNameBuffer);
+  Output_WriteFormatted(0, 0, headerFP, (int)(intptr_t)aExternSS, (int)(intptr_t)structureName, (int)(intptr_t)arrayNameBuffer);
   return result;
 }
-// 4A7A2A: variable 'v13' is possibly undefined
-// 4A7A8F: variable 'v19' is possibly undefined
-// 4A7A8F: variable 'v18' is possibly undefined
-// 4A7AA5: variable 'v21' is possibly undefined
-// 4A7AA5: variable 'v20' is possibly undefined
-// 4A7AAD: variable 'v22' is possibly undefined
-// 4A7AFE: variable 'v23' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004A7B10) --------------------------------------------------------

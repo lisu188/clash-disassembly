@@ -461,7 +461,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
       nameBuffer = moduleNameBuf;
       structNames = *(const char ***)(uintptr_t)(g_DefgenericCodeGenItem + 20);
       v24 = moduleReopen;
-      openedModuleFile = Rules_ConstructCodeFileOpen(moduleFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, moduleArrayVersion, headerFPLocal, (char)(intptr_t)aDefgeneric_mod, *structNames, moduleReopen, moduleNameBuf);
+      openedModuleFile = Rules_ConstructCodeFileOpen(moduleFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, moduleArrayVersion, headerFPLocal, aDefgeneric_mod, *structNames, moduleReopen, moduleNameBuf);
       moduleFile = openedModuleFile;
       if ( !openedModuleFile )
         break;
@@ -478,7 +478,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                &version,
                genericArrayVersion,
                headerFPLocal,
-               (char)(intptr_t)aDefgeneric_5,
+               aDefgeneric_5,
                (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 4),
                genericReopen,
                genericNameBuf);
@@ -493,7 +493,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
           nameBuffer = methodNameBuf;
           structNamesForMethod = *(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20);
           v24 = methodReopen;
-          methodFile = Rules_ConstructCodeFileOpen(methodFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, methodArrayVersion, headerFPLocal, (char)(intptr_t)aDefmethod_2, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(structNamesForMethod + 8), methodReopen, methodNameBuf);
+          methodFile = Rules_ConstructCodeFileOpen(methodFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, methodArrayVersion, headerFPLocal, aDefmethod_2, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(structNamesForMethod + 8), methodReopen, methodNameBuf);
           if ( !methodFile )
             goto LABEL_34;
           numMethods = *(_DWORD *)(uintptr_t)(i + 32);
@@ -520,7 +520,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                         &version,
                         restrictionArrayVersion,
                         headerFPLocal,
-                        (char)(intptr_t)aRestriction,
+                        aRestriction,
                         (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(structNamesForRestriction + 12),
                         restrictionReopen,
                         restrictionNameBuf);
@@ -547,7 +547,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                               &version,
                               typeArrayVersion,
                               headerFPLocal,
-                              (char)(intptr_t)aVoid_1,
+                              aVoid_1,
                               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 16),
                               typeReopen,
                               typeNameBuf);

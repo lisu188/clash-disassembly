@@ -10,6 +10,7 @@
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "render_surface_view.h"
 
 //----- (00402E80) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
@@ -760,16 +761,19 @@ _DWORD * Render_CreateSurface(int surface_addr, __int16 width, __int16 height)
   unsigned int pixel_count;
 
   surface = Render_ConstructSurfaceObject(surface_addr, width, height);
-  surface[46] = (_DWORD)(uintptr_t)(g_Surface_RawBuffer8Vtable);
-  pixel_count = (unsigned __int16)*(unsigned __int16 *)surface * (unsigned __int16)*((unsigned __int16 *)surface + 1);
-  surface[1] = (unsigned int)nmalloc_(pixel_count, 4);
-  if ( !surface[1] )
+  clash95::render::RenderSurfaceMutableView surfaceView(surface);
+  surfaceView.setMethodTableHandle(
+      (std::uint32_t)(uintptr_t)g_Surface_RawBuffer8Vtable);
+  pixel_count = (unsigned int)surfaceView.readOnly().width()
+      * (unsigned int)surfaceView.readOnly().height();
+  surfaceView.setPixelBufferHandle((std::uint32_t)nmalloc_(pixel_count, 4));
+  if ( !surfaceView.readOnly().hasPixelBuffer() )
   {
     Debug_Log(0, 0, pixel_count, (int)(intptr_t)aNotEnoughMemor);
     App_RequestQuit((int)(intptr_t)aNotEnoughMem_0);
   }
-  memset((void *)(uintptr_t)(unsigned int)surface[1], 0, pixel_count);
-  if ( !surface[1] )
+  memset((void *)(uintptr_t)surfaceView.readOnly().pixelBufferHandle(), 0, pixel_count);
+  if ( !surfaceView.readOnly().hasPixelBuffer() )
     App_RequestQuit((int)(intptr_t)aNotEnoughFreeM);
   return surface;
 }
@@ -782,7 +786,7 @@ int  Surface_DestructRawBuffer(int surface, char flags)
 {
   int result; // eax
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(surface, (_DWORD)(uintptr_t)(&g_SurfaceRawBuffer_DtorArrayTag));
     j_j__nfree_();
@@ -792,7 +796,7 @@ int  Surface_DestructRawBuffer(int surface, char flags)
   nfree_(*(_DWORD *)(uintptr_t)(surface + 4));
   *(_DWORD *)(uintptr_t)(surface + 4) = 0;
   result = Surface_Destruct(surface + 8) - 8;
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
     j__nfree_();
     return result;
@@ -1088,7 +1092,7 @@ int  Render_DestructScratchSurface(_DWORD *surface, char flags)
   int owned_buffer; // edx
   int result; // eax
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__((_DWORD)(uintptr_t)(surface), (_DWORD)(uintptr_t)(&g_ScratchSurface_DtorArrayTag));
     j_j__nfree_();
@@ -1102,7 +1106,7 @@ int  Render_DestructScratchSurface(_DWORD *surface, char flags)
     j__nfree_();
   }
   result = Surface_Destruct((int)(intptr_t)(surface + 2)) - 8;
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
     j__nfree_();
     return result;
@@ -1353,14 +1357,14 @@ int  Surface_ConstructBackbufferInstance(int surface_addr)
 {
   int palette_array;
 
-  palette_array = (int)(intptr_t)Render_ConstructScratchSurface(surface_addr, 0x280u, 0, 480) + 0xDC;
+  palette_array = (int)(intptr_t)Render_ConstructScratchSurface(surface_addr, 0x280u, 0, SCREEN_HEIGHT) + 0xDC;
   *(_DWORD *)(uintptr_t)(palette_array - 24) = 0;
   *(_DWORD *)(uintptr_t)(palette_array - 20) = 1;
   *(_DWORD *)(uintptr_t)(palette_array - 16) = 1;
   *(_DWORD *)(uintptr_t)(palette_array - 12) = 0;
   *(_DWORD *)(uintptr_t)(palette_array - 8) = 0;
   *(_DWORD *)(uintptr_t)(palette_array - 4) = 0;
-  palette_array = _wcpp_4_ctor_array__(palette_array, 256);
+  palette_array = _wcpp_4_ctor_array__(palette_array, PALETTE_COLOR_COUNT);
   *(_DWORD *)(uintptr_t)(palette_array - 36) = (_DWORD)(uintptr_t)(g_Surface_Vtable);
   return palette_array - 0xDC;
 }

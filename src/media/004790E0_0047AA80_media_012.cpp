@@ -18,7 +18,7 @@ int  File_SourceScalarDtor(_DWORD *a1, char flags)
   int v7; // ecx
   int v8; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(a1)), ((_DWORD)(uintptr_t)(&g_FileSource_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -35,7 +35,7 @@ int  File_SourceScalarDtor(_DWORD *a1, char flags)
       j__nfree_();
     }
     v5 = Compat_StringHolderScalarDeletingDtor(v3 + 12, 0);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     {
       j__nfree_();
       return v8;
@@ -767,13 +767,13 @@ int  Compat_QueryDestruct(int result, char flags)
   int v3; // ecx
   int v4; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(result, ((_DWORD)(uintptr_t)(&g_CompatQuery_DtorArrayDescriptor)));
     j_j__nfree_();
     return v3;
   }
-  else if ( (flags & 2) != 0 )
+  else if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
     j__nfree_();
     return v4;
@@ -791,7 +791,7 @@ int  Compat_QueryCloseAndDestruct(_DWORD *query, char flags)
   int v4; // ecx
   int v5; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(query)), ((_DWORD)(uintptr_t)(&g_CompatQueryCloseAndDestruct_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -800,7 +800,7 @@ int  Compat_QueryCloseAndDestruct(_DWORD *query, char flags)
   else
   {
     result = File_SourceScalarDtor(query, 1);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     {
       j__nfree_();
       return v5;

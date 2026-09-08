@@ -27,15 +27,15 @@ void  Building_AdjustTaxRateByIndex(int building_index, int ebx0, float tax_delt
      read but dropped the register itself, leaving the never-assigned v5 that
      IDA flags at 455791; the write-back then went to a wild address. */
   building_record = BUILDING_RECORD_SIZE * building_index + gameData;
-  new_rate = (double)(*(_BYTE *)(uintptr_t)(building_record + 510110) & 0x3F) + tax_delta;
+  new_rate = (double)(*(_BYTE *)(uintptr_t)(building_record + BUILDING_TAX_RATE_TABLE_OFFSET) & 0x3F) + tax_delta;
   new_rate_float = new_rate;
   if ( new_rate <= g_Building_MaxTaxRate )
   {
     applied_rate = new_rate_float;
     _CHP(ebx0, LODWORD(new_rate_float));
-    tax_byte_upper = *(_BYTE *)(uintptr_t)(building_record + 510110) & 0xC0;
-    *(_BYTE *)(uintptr_t)(building_record + 510110) = tax_byte_upper;
-    *(_BYTE *)(uintptr_t)(building_record + 510110) = (int)applied_rate & 0x3F | tax_byte_upper;
+    tax_byte_upper = *(_BYTE *)(uintptr_t)(building_record + BUILDING_TAX_RATE_TABLE_OFFSET) & 0xC0;
+    *(_BYTE *)(uintptr_t)(building_record + BUILDING_TAX_RATE_TABLE_OFFSET) = tax_byte_upper;
+    *(_BYTE *)(uintptr_t)(building_record + BUILDING_TAX_RATE_TABLE_OFFSET) = (int)applied_rate & 0x3F | tax_byte_upper;
   }
 }
 // 5000C6: using guessed type float flt_5000C6;
@@ -80,7 +80,7 @@ signed int  Building_FindUnitLicenceSlotIndexOrZero(int building_index, unit_typ
 
   result = 0;
   building_offset = BUILDING_RECORD_SIZE * building_index;
-  while ( *(char *)(uintptr_t)(building_offset + gameData + result + 510076) != licence_type )
+  while ( *(char *)(uintptr_t)(building_offset + gameData + result + BUILDING_UNIT_LICENCE_TYPE_IDS_TABLE_OFFSET) != licence_type )
   {
     if ( ++result >= 12 )
       return 0;
@@ -100,7 +100,7 @@ signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int building
   building_offset = BUILDING_RECORD_SIZE * building_index;
   while ( 1 )
   {
-    licence_unit_type = *(char *)(uintptr_t)(building_offset + gameData + result + 510076);
+    licence_unit_type = *(char *)(uintptr_t)(building_offset + gameData + result + BUILDING_UNIT_LICENCE_TYPE_IDS_TABLE_OFFSET);
     if ( licence_unit_type != -1 && licence_unit_type != UNIT_TYPE_PEASANT && licence_unit_type != UNIT_TYPE_BUILDER )
       break;
     if ( ++result >= 12 )
@@ -145,7 +145,7 @@ signed int  Building_UnitsLeaveReadyGarrisonSlots(int building_index, int a2, do
       leave_slot_indices[ready_count++] = slot_index;
     }
     ++slot_index;
-    slot_offset += 31;
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
   }
   while ( slot_index < 10 && ready_count < 5 );
   if ( leave_slot_indices[0] == -1 )
@@ -173,13 +173,13 @@ signed int  Building_HasTrainableIdleGarrisonUnit(int building_index)
     garrison_slot = building_offset + gameData + slot_offset;
     if ( *(__int16 *)(uintptr_t)(garrison_slot + 509692) != -1
       && (*(_BYTE *)(uintptr_t)(garrison_slot + 509704) & 3u) < 2
-      && (*(_BYTE *)(uintptr_t)(building_offset + gameData + slot_index + 510064) & 7) == 0 )
+      && (*(_BYTE *)(uintptr_t)(building_offset + gameData + slot_index + BUILDING_GARRISON_SERVICE_STATE_TABLE_OFFSET) & 7) == 0 )
     {
       break;
     }
     ++slot_index;
-    slot_offset += 31;
-    if ( slot_index >= 12 )
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
+    if ( slot_index >= BUILDING_GARRISON_SLOT_COUNT )
       return 0;
   }
   return 1;
@@ -202,13 +202,13 @@ signed int  Building_HasRepairableIdleGarrisonUnit(int building_index)
     garrison_slot = building_offset + gameData + slot_offset;
     if ( *(__int16 *)(uintptr_t)(garrison_slot + 509692) != -1
       && *(char *)(uintptr_t)(garrison_slot + 509701) < 50
-      && !((unsigned __int8)(4 * *(_BYTE *)(uintptr_t)(building_offset + gameData + slot_index + 510064)) >> 5) )
+      && !((unsigned __int8)(4 * *(_BYTE *)(uintptr_t)(building_offset + gameData + slot_index + BUILDING_GARRISON_SERVICE_STATE_TABLE_OFFSET)) >> 5) )
     {
       break;
     }
     ++slot_index;
-    slot_offset += 31;
-    if ( slot_index >= 12 )
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
+    if ( slot_index >= BUILDING_GARRISON_SLOT_COUNT )
       return 0;
   }
   return 1;
@@ -246,9 +246,9 @@ int  Building_StartTrainingIdleGarrisonUnits(int building_index)
       }
     }
     ++slot_index;
-    slot_offset += 31;
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
   }
-  while ( slot_index < 12 );
+  while ( slot_index < BUILDING_GARRISON_SLOT_COUNT );
   return result;
 }
 // 455B40: variable 'v1' is possibly undefined
@@ -280,9 +280,9 @@ __int16  Building_StartRepairIdleGarrisonUnits(int building_index)
         result = Building_RepairUnit(building_offset + gameData + BUILDING_TABLE_OFFSET, slot_index, slot_unit_type);
     }
     ++slot_index;
-    slot_offset += 31;
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
   }
-  while ( slot_index < 12 );
+  while ( slot_index < BUILDING_GARRISON_SLOT_COUNT );
   return result;
 }
 // 455BB8: variable 'v1' is possibly undefined
@@ -302,9 +302,9 @@ signed int  Building_UnitsLeaveByUnitType(int building_index, unit_type leave_ty
     ++i;
   slot_index = 0;
   slot_offset = 0;
-  while ( *(__int16 *)(uintptr_t)(BUILDING_RECORD_SIZE * building_index + gameData + slot_offset + 509692) != leave_type )
+  while ( *(__int16 *)(uintptr_t)(BUILDING_RECORD_SIZE * building_index + gameData + slot_offset + BUILDING_GARRISON_SLOTS_TABLE_OFFSET) != leave_type )
   {
-    slot_offset += 31;
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
     ++slot_index;
     if ( slot_offset >= 310 )
     {
@@ -426,7 +426,7 @@ BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int building_index, unit_ty
 
   building_record = BUILDING_RECORD_SIZE * building_index + gameData;
   licence_slot_index = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(building_record + 509674);
-  return licence_slot_index != -1 && *(char *)(uintptr_t)(building_record + licence_slot_index + 510076) == licence_type;
+  return licence_slot_index != -1 && *(char *)(uintptr_t)(building_record + licence_slot_index + BUILDING_UNIT_LICENCE_TYPE_IDS_TABLE_OFFSET) == licence_type;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -472,9 +472,9 @@ signed int  Building_HasGarrisonUnitTypeByIndex(int building_index, unit_type so
 
   building_offset = BUILDING_RECORD_SIZE * building_index;
   slot_offset = 0;
-  while ( *(__int16 *)(uintptr_t)(building_offset + gameData + slot_offset + 509692) != sought_type )
+  while ( *(__int16 *)(uintptr_t)(building_offset + gameData + slot_offset + BUILDING_GARRISON_SLOTS_TABLE_OFFSET) != sought_type )
   {
-    slot_offset += 31;
+    slot_offset += UNIT_SLOT_RECORD_BYTES;
     if ( slot_offset >= 310 )
       return 0;
   }
@@ -546,9 +546,9 @@ int  Building_CalcGarrisonFactStrength(int building_index)
 
   buildingOffset = BUILDING_RECORD_SIZE * building_index;
   totalStrength = 0;
-  for ( slotOffset = 0; slotOffset != 372; slotOffset += 31 )
+  for ( slotOffset = 0; slotOffset != BUILDING_GARRISON_SLOTS_BYTES; slotOffset += UNIT_SLOT_RECORD_BYTES )
   {
-    slotPtr = gameData + buildingOffset + 509692 + slotOffset;
+    slotPtr = gameData + buildingOffset + BUILDING_GARRISON_SLOTS_TABLE_OFFSET + slotOffset;
     if ( *(__int16 *)(uintptr_t)slotPtr != -1 )
     {
       meleeStrength = Unit_CalcEffectivenessA((char *)(uintptr_t)slotPtr, 0);
@@ -590,7 +590,7 @@ int  Building_OnGarrisonChange(int building_index, int instance_record, double a
     {
       /* 456181: `call sub_482000; mov [esp+var_20], eax` */
       moc_value[2] = (int)(uintptr_t)Rules_AddIntegerValue(result);
-      return Rules_PutInstanceSlotValue(*(_DWORD *)(uintptr_t)(building_offset + gameData + 510137), (_BYTE*)(aMoc_2), instance_record, moc_value, a3);
+      return Rules_PutInstanceSlotValue(*(_DWORD *)(uintptr_t)(building_offset + gameData + BUILDING_CASTLE_FACT_ID_TABLE_OFFSET), (_BYTE*)(aMoc_2), instance_record, moc_value, a3);
     }
   }
   return result;
@@ -690,7 +690,7 @@ signed int  UnitStack_HasUnitsNeedingHealing(int stack_index)
       break;
     if ( *((char *)unit_slot + 9) <= 50 && (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[slot_unit_type].role >= 3u )
       needs_healing = 1;
-    unit_slot = (__int16 *)((char *)unit_slot + 31);
+    unit_slot = (__int16 *)((char *)unit_slot + UNIT_SLOT_RECORD_BYTES);
   }
   return needs_healing;
 }
@@ -746,7 +746,7 @@ LABEL_9:
   while ( 1 )
   {
     ++building_index;
-    building_cursor += 467;
+    building_cursor += BUILDING_RECORD_SIZE;
     if ( building_index >= 100 )
       return best_building_index != -1;
     if ( building_index >= 0 )
@@ -765,7 +765,7 @@ BOOL  UnitStack_ExecuteHealingPathAndCheckArrival(unsigned int stack_index, char
   int v4; // ecx
 
   UnitStack_ExecuteQueuedPath(stack_index, 1, a2, a3, a4);
-  return *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v4 + 147180) == -1;
+  return *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v4 + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1;
 }
 // 4579DE: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -779,8 +779,8 @@ const void * UnitStack_MoveToBuildingAndCheckArrival(unsigned int stack_index, i
   int queued_target_xy; // [esp+8h] [ebp-18h]
 
   building_x = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_TABLE_OFFSET);
-  building_y = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509675);
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490)
+  building_y = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_TILE_COLUMN_TABLE_OFFSET);
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET)
     || (queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320), (int)abs32(building_x - (unsigned __int8)queued_target_xy) >= 3)
     || (int)abs32(building_y - BYTE1(queued_target_xy)) >= 3
     || __PAIR64__(building_y, building_x) == __PAIR64__(BYTE1(queued_target_xy), (unsigned __int8)queued_target_xy) )
@@ -792,7 +792,7 @@ const void * UnitStack_MoveToBuildingAndCheckArrival(unsigned int stack_index, i
     j__nfree_();
   }
   UnitStack_ExecuteQueuedPath(stack_index, 1, stack_index, building_y, a3);
-  return (const void *)(*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) == -1);
+  return (const void *)(*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1);
 }
 // 457A65: conditional instruction was optimized away because %var_20.4==0
 // 5202E4: using guessed type int gameData;
@@ -835,7 +835,7 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int building_index)
   building_offset = BUILDING_RECORD_SIZE * building_index;
   max_strength = 0;
   building_x = *(unsigned __int8 *)(uintptr_t)(gameData + building_offset + BUILDING_TABLE_OFFSET);
-  building_y = *(unsigned __int8 *)(uintptr_t)(gameData + building_offset + 509675);
+  building_y = *(unsigned __int8 *)(uintptr_t)(gameData + building_offset + BUILDING_TILE_COLUMN_TABLE_OFFSET);
   building_record_offset = building_offset;
   scan_x = building_x - 1;
   scan_y_end = building_y + 2;
@@ -854,7 +854,7 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int building_index)
         && (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(j + gameData + i + TILE_MAP_OFFSET) + 6) <= 0x28 )
       {
         stack_offset = UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(j + gameData + i + TILE_MAP_OFFSET);
-        if ( *(_BYTE *)(uintptr_t)(gameData + stack_offset + 147178) != *(_BYTE *)(uintptr_t)(gameData + building_record_offset + 509676)
+        if ( *(_BYTE *)(uintptr_t)(gameData + stack_offset + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) != *(_BYTE *)(uintptr_t)(gameData + building_record_offset + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET)
           && UnitStack_CalcArmyFactStrength(gameData + UNIT_STACK_TABLE_OFFSET + stack_offset) > max_strength )
         {
           max_strength = UnitStack_CalcArmyFactStrength(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET);
@@ -874,7 +874,7 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int building_index)
 //----- (00457DA0) --------------------------------------------------------
 int  Building_GetPlagueState(int building_index)
 {
-  return *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 510109) & 7;
+  return *(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_PLAGUE_STATE_TABLE_OFFSET) & 7;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -891,7 +891,7 @@ BOOL  Unit_ExecuteQueuedPathAndCheckFinished(unsigned int stack_index, char a2, 
   int v4; // ecx
 
   UnitStack_ExecuteQueuedPath(stack_index, 1, a2, a3, a4);
-  return *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v4 + 147490) == 0;
+  return *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v4 + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) == 0;
 }
 // 457E2E: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -932,7 +932,7 @@ BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int army_index, int dest_tile_y, i
       ++selected_count;
       selected_slot_list[weak_count - 1] = i;
     }
-    unit_slot = (__int16 *)((char *)unit_slot + 31);
+    unit_slot = (__int16 *)((char *)unit_slot + UNIT_SLOT_RECORD_BYTES);
   }
   if ( !selected_count || selected_count == Unit_GetSquadCount((int)(intptr_t)stack_record) )
     return 0;
@@ -1006,7 +1006,7 @@ BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int army_index, unit_type type, int
       ++selected_count;
       selected_slot_list[match_count - 1] = i;
     }
-    unit_slot = (__int16 *)((char *)unit_slot + 31);
+    unit_slot = (__int16 *)((char *)unit_slot + UNIT_SLOT_RECORD_BYTES);
   }
   if ( !selected_count || selected_count == Unit_GetSquadCount((int)(intptr_t)stack_record) )
     return 0;
@@ -1054,7 +1054,7 @@ signed int  UnitStack_HasUnitType(int stack_index, unit_type sought_type)
   int slot_unit_type; // ecx
 
   slot_index = 0;
-  for ( i = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6); ; i = (__int16 *)((char *)i + 31) )
+  for ( i = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6); ; i = (__int16 *)((char *)i + UNIT_SLOT_RECORD_BYTES) )
   {
     slot_unit_type = *i;
     if ( slot_unit_type == -1 )
@@ -1076,7 +1076,7 @@ signed int  UnitStack_HasOnlyUnitType(int stack_index, unit_type sought_type)
   int slot_unit_type; // ecx
 
   slot_index = 0;
-  for ( i = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6); ; i = (__int16 *)((char *)i + 31) )
+  for ( i = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6); ; i = (__int16 *)((char *)i + UNIT_SLOT_RECORD_BYTES) )
   {
     slot_unit_type = *i;
     if ( slot_unit_type == -1 )
@@ -1113,7 +1113,7 @@ signed int  UnitStack_GetHealthPercentAggregate(int stack_index, int aggregate_m
   slot_base = gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6;
   unit_count = 1;
   aggregate_health = *(char *)(uintptr_t)(slot_base + 9);
-  unit_slot = (__int16 *)(uintptr_t)(slot_base + 31);
+  unit_slot = (__int16 *)(uintptr_t)(slot_base + UNIT_SLOT_RECORD_BYTES);
   while ( *unit_slot != -1 )
   {
     if ( aggregate_mode < 0 )
@@ -1136,7 +1136,7 @@ LABEL_11:
     }
 LABEL_6:
     ++unit_count;
-    unit_slot = (__int16 *)((char *)unit_slot + 31);
+    unit_slot = (__int16 *)((char *)unit_slot + UNIT_SLOT_RECORD_BYTES);
     if ( unit_count >= 10 )
       break;
   }
@@ -1196,14 +1196,14 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
   Debug_Log(a1, a3, a4, (int)(intptr_t)aPrzegrupujar_0);
   dx = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_reg + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
   if ( (int)abs32(dx) > 1
-    || (dy = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_reg + 147176) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + 147176),
+    || (dy = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_reg + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
         (int)((HIDWORD(dy) ^ dy) - HIDWORD(dy)) > 1) )
   {
     result = (int)(intptr_t)Unit_MoveTrackNearTile(
                     stack_index,
                     *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET),
                     v6,
-                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + 147176),
+                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
                     dx);
     if ( !result )
       return result;
@@ -1213,14 +1213,14 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
   }
   dx_second = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
   if ( (int)abs32(dx_second) > 1
-    || (dy_second = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + 147176) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + 147176),
+    || (dy_second = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
         (int)((HIDWORD(dy_second) ^ dy_second) - HIDWORD(dy_second)) > 1) )
   {
     result = (int)(intptr_t)Unit_MoveTrackNearTile(
                     other_stack_index,
                     *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
                     v6,
-                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
+                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
                     dx_second);
     if ( !result )
       return result;
@@ -1232,7 +1232,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
   dx_recheck = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(dx_recheck) ^ dx_recheck) - HIDWORD(dx_recheck)) > 1 )
     return 0;
-  dy_recheck = *(__int16 *)(uintptr_t)(gameData + first_stack_offset + 147176) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + 147176);
+  dy_recheck = *(__int16 *)(uintptr_t)(gameData + first_stack_offset + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
   if ( (int)((HIDWORD(dy_recheck) ^ dy_recheck) - HIDWORD(dy_recheck)) > 1 )
     return 0;
   copy_count_first = 0;
@@ -1247,14 +1247,14 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     qmemcpy(copy_dest, first_src_slot, 0x1Cu);
     qmemcpy(copy_dest + 28, first_src_slot + 14, 3u);
     ++copy_count_first;
-    first_src_slot = (__int16 *)((char *)first_src_slot + 31);
-    copy_dest += 31;
+    first_src_slot = (__int16 *)((char *)first_src_slot + UNIT_SLOT_RECORD_BYTES);
+    copy_dest += UNIT_SLOT_RECORD_BYTES;
     ++total_units;
   }
   while ( copy_count_first < 10 );
   second_src_slot = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * other_stack_index + 6);
   copy_count_second = 0;
-  copy_dest_second = &merged_units[31 * total_units];
+  copy_dest_second = &merged_units[UNIT_SLOT_RECORD_BYTES * total_units];
   do
   {
     if ( *second_src_slot == -1 )
@@ -1262,8 +1262,8 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     qmemcpy(copy_dest_second, second_src_slot, 0x1Cu);
     qmemcpy(copy_dest_second + 28, second_src_slot + 14, 3u);
     ++copy_count_second;
-    second_src_slot = (__int16 *)((char *)second_src_slot + 31);
-    copy_dest_second += 31;
+    second_src_slot = (__int16 *)((char *)second_src_slot + UNIT_SLOT_RECORD_BYTES);
+    copy_dest_second += UNIT_SLOT_RECORD_BYTES;
     ++total_units;
   }
   while ( copy_count_second < 10 );
@@ -1271,7 +1271,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
   if ( total_units > 1 )
   {
     sort_pass = 0;
-    sort_pass_offset = 31;
+    sort_pass_offset = UNIT_SLOT_RECORD_BYTES;
     sort_pass_limit = total_units - 1;
     do
     {
@@ -1285,10 +1285,10 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
         compare_base_offset = sort_pass_offset;
         do
         {
-          if ( merged_units[31 * compare_base_index + 9] > merged_units[compare_base_offset + 9] )
+          if ( merged_units[UNIT_SLOT_RECORD_BYTES * compare_base_index + 9] > merged_units[compare_base_offset + 9] )
           {
             sort_done = 0;
-            slot_a_ptr = &merged_units[31 * compare_base_index];
+            slot_a_ptr = &merged_units[UNIT_SLOT_RECORD_BYTES * compare_base_index];
             qmemcpy(swap_buf, slot_a_ptr, sizeof(swap_buf));
             qmemcpy(swap_tail, slot_a_ptr + 28, sizeof(swap_tail));
             slot_b_ptr = &merged_units[compare_base_offset];
@@ -1301,7 +1301,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
         }
         while ( compare_index < total_units );
       }
-      sort_pass_offset += 31;
+      sort_pass_offset += UNIT_SLOT_RECORD_BYTES;
       ++sort_pass;
     }
     while ( sort_pass < sort_pass_limit );
@@ -1314,9 +1314,9 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     {
       if ( (char)merged_units[healthy_scan_offset + 9] >= 8 )
         ++units_kept_first;
-      healthy_scan_offset += 31;
+      healthy_scan_offset += UNIT_SLOT_RECORD_BYTES;
     }
-    while ( healthy_scan_offset < 31 * total_units );
+    while ( healthy_scan_offset < UNIT_SLOT_RECORD_BYTES * total_units );
   }
   if ( units_kept_first > 10 )
     units_kept_first = 10;
@@ -1336,15 +1336,15 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
       qmemcpy(first_dest_slot, writeback_src, 0x1Cu);
       qmemcpy(first_dest_slot + 14, writeback_src + 28, 3u);
     }
-    writeback_src += 31;
+    writeback_src += UNIT_SLOT_RECORD_BYTES;
     ++writeback_index;
-    first_dest_slot = (_WORD *)((char *)first_dest_slot + 31);
+    first_dest_slot = (_WORD *)((char *)first_dest_slot + UNIT_SLOT_RECORD_BYTES);
   }
   while ( writeback_index < 10 );
   units_kept_second = total_units - units_kept_first;
   writeback_index_second = 0;
   second_dest_slot = (_WORD *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6);
-  writeback_src_second = &merged_units[31 * units_kept_first];
+  writeback_src_second = &merged_units[UNIT_SLOT_RECORD_BYTES * units_kept_first];
   do
   {
     if ( writeback_index_second >= units_kept_second )
@@ -1356,9 +1356,9 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
       qmemcpy(second_dest_slot, writeback_src_second, 0x1Cu);
       qmemcpy(second_dest_slot + 14, writeback_src_second + 28, 3u);
     }
-    writeback_src_second += 31;
+    writeback_src_second += UNIT_SLOT_RECORD_BYTES;
     ++writeback_index_second;
-    second_dest_slot = (_WORD *)((char *)second_dest_slot + 31);
+    second_dest_slot = (_WORD *)((char *)second_dest_slot + UNIT_SLOT_RECORD_BYTES);
   }
   while ( writeback_index_second < 10 );
   if ( !units_kept_first )

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "source": "src/media/004637B0_00465D30_media_001.cpp",
+  "includes": [
+    "avi_decompressor_view.h"
+  ],
+  "functions": [
+    {
+      "name": "CAviDecompressor_SetBackground",
+      "expected_body_sha256": "8c32268463b173cd2353a97f706ce30f1ef6a698f8bfc791a288d2b75fc004c2",
+      "replacement_body": "{\n  const int instance = *playerHandle;\n  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)\n      .setBackground(ddObject, (const std::uint32_t *)bgRect);\n  return instance;\n}"
+    },
+    {
+      "name": "CAviDecompressor_InitClipRect",
+      "expected_body_sha256": "1b554cbd92456d4a446795c52360ebc0efb5aff1fe3b9c2946b2d6b164a1503a",
+      "replacement_body": "{\n  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)\n      .setClipRect((const std::uint32_t *)clipRect);\n}"
+    },
+    {
+      "name": "CAviDecompressor_InitColorKeys",
+      "expected_body_sha256": "d16d49f1d14802577d72831de48026925c890432ab3cd6080723c165f1c95801",
+      "replacement_body": "{\n  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)\n      .setColorKeys(colorKeyLow, colorKeyHigh);\n}"
+    }
+  ]
+}

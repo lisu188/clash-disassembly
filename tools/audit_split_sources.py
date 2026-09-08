@@ -16,6 +16,8 @@ from split_source_index import Definition, body_sha256, scan_definitions
 from recovered_implementation import manifest_sources
 from class_source_inventory import SourceInventoryError, resolve_source_inventory
 from class_binding_inventory import validate_binding_sources
+from identity_alias_inventory import validate_alias_sources
+from support_class_inventory import validate_inventory_sources
 from game_class_catalog import validate_registry
 
 
@@ -225,6 +227,12 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
             inventory_errors = validate_registry(registry, manifest, declarations)
             if not inventory_errors:
                 inventory_errors = validate_binding_sources(registry, manifest, declarations, ROOT)
+            if not inventory_errors:
+                inventory_errors = validate_alias_sources(manifest, ROOT, declarations, registry)
+            if not inventory_errors:
+                support = json.loads((ROOT / "data/support_class_inventory.json").read_text(encoding="utf-8"))
+                inventory_errors = validate_inventory_sources(support, ROOT, manifest, declarations)
+                audit.check("inventoried support definitions", len(support.get("definitions", [])))
             audit.errors.extend(inventory_errors)
             audit.check("registered class bindings", len(registry.get("class_bindings", [])))
         except (OSError, ValueError, TypeError, KeyError) as error:

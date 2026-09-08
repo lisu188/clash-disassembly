@@ -252,7 +252,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
   if ( g_ActiveUnitMoveTileIndex == stackIndex )
     moveAnimOffsetY = g_UnitMoveAnimOffsetY;
   if ( *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(tileRow, tileColumn)) <= 0x7FFFu
-    && (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147180)] & 1) != 0 )
+    && (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET)] & 1) != 0 )
   {
     drewOverlaySprite = 1;
     unitTileFgGlyph = tilePtr[1];
@@ -506,8 +506,8 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
   if ( g_ActiveUnitMoveTileIndex == -1 && g_SelectedUnitIndex != -1 )
   {
     unitStackBase = UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET;
-    pathStepCount = *(_DWORD *)(uintptr_t)(unitStackBase + 316);
-    pathBuffer = (_DWORD *)(uintptr_t)(unitStackBase + 316);
+    pathStepCount = *(_DWORD *)(uintptr_t)(unitStackBase + UNIT_STACK_PATH_OFFSET);
+    pathBuffer = (_DWORD *)(uintptr_t)(unitStackBase + UNIT_STACK_PATH_OFFSET);
     if ( pathStepCount )
     {
       if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
@@ -548,7 +548,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
             if ( pathScanIndex <= 0 )
             {
               LOBYTE(originWaypoint) = *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET);
-              BYTE1(originWaypoint) = *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176);
+              BYTE1(originWaypoint) = *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
             }
             else
             {
@@ -896,7 +896,7 @@ void UI_UpdateWorldMapUnitAttentionFlash(void)
   {
     WorldMap_RedrawTileIfVisible(
       *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_WorldMapAttentionFlashUnitIndex + UNIT_STACK_TABLE_OFFSET),
-      *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_WorldMapAttentionFlashUnitIndex + 147176));
+      *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_WorldMapAttentionFlashUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
     if ( (unsigned int)(30 * (Time_Now(v1, v0) - g_WorldMapAttentionFlashStartTick)) >= 0x708 )
     {
       flashUnitIndex = g_WorldMapAttentionFlashUnitIndex;

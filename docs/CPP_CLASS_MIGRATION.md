@@ -1,10 +1,14 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: unit queries, world geometry and unit-turn
-extraction. This migration is in progress. The completed GNU++20 language
+Track: Win95 reconstruction. Frontier: origin integration after unit queries,
+world geometry and unit-turn relocation. Eleven canonical methods now reside in
+four class-named sources; the ordered manifest contains 144 translation units.
+This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 
-The reference is `6f7537268e784c538133b714e3ccb77cf54052e4`. Original packed
+The initial reference is `6f7537268e784c538133b714e3ccb77cf54052e4`; the
+[2026-09-08 origin refresh](CPP_CLASS_ORIGIN_REFRESH.md) records the newer
+integration reference and separate comparisons. Original packed
 records, globals, low32 handles, callback tables, save bytes and explicit
 lifecycles remain authoritative. Classes describe the reconstruction's
 organization, not proven original C++ object layouts. The migration does not
@@ -15,15 +19,19 @@ advance campaign or visual-fidelity claims.
 `data/game_class_registry.json` assigns all 4,157 recovered identities:
 1,849 intended game methods across 116 classes, 22 retained utilities/boundaries
 and 2,286 excluded library implementations. Each procedural disposition has a
-rationale. Four declaration-database helpers are tracked separately without
+rationale. Five declaration-database helpers are tracked separately without
 invented addresses. The five rendering helpers historically filed under `clips`
 are game functions; CLIPS implementations filed under `media` remain procedural.
 Assignment is architectural intent, not proof that a family has migrated.
 
-The separate support audit finds 457 additional definitions outside this
-historical registry, including at least 155 application/SDL behavior candidates.
-Their exact support registry remains to be materialized; the 4,157-identity
-inventory alone cannot establish completion of the entire requested scope.
+The separate support registry now assigns 459 exact definitions outside this
+historical registry: 456 translation-unit bodies and three header bodies, with
+154 planned runtime methods and 305 retained utilities/boundaries. The latter
+include 39 explicitly retained diagnostic utilities. Each entry records current
+and immutable-origin body/signature hashes, ownership, rationale and constraints;
+the source audit rejects missing or unclassified definitions in its six-file
+scope. The 4,157-identity inventory alone cannot establish completion of the
+entire requested scope.
 See [CPP_CLASS_PLATFORM_INVENTORY.md](CPP_CLASS_PLATFORM_INVENTORY.md).
 
 Schema 3 of `data/recovered_sources.json` retains historical identities,

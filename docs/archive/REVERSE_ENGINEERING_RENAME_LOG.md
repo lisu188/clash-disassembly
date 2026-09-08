@@ -1,5 +1,133 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: adjacent-tile highlight callback
+
+Track: Win95 reconstruction. Reviewed `RoadBuildMode_HighlightBuildableAdjacentTile`
+(`0x425120`) individually. Reused signed stack fields and DWORD viewport macros,
+flattened adjacency branches and replaced the combined logical expression with
+named eligibility stages and raw early returns. Marker/bounce order, bridge AP
+fallback, selected-state rereads and the shared success tail remain. Stale
+decompiler diagnostics are removed. One canonical body hash changes; all 4157
+identities, signatures and layouts remain. Both builds and eight public gates
+pass; only the target executable section changes, with one fewer GCC and two
+fewer Clang warnings. No runtime/campaign milestone is promoted.
+All 291 original traces match both bodies in four compiler profiles. Confidence
+is high within the documented call contract and defined arithmetic domain;
+instrumented callees do not prove new gameplay or rendering behavior.
+The final full tooling suite passes all 143 tests with the measured public cases.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-10-roadbuildmode_highlightbuildableadjacenttile).
+
+## 2026-09-06 - Road readability: exit callbacks
+
+Track: Win95 reconstruction. Reviewed `RoadBuildMode_RequestExitAfterWidgetPress`
+(`0x4250F0`) and `RoadBuildMode_RequestExit` (`0x425110`). Named the pressed
+callback's widget and animation result, merging declaration and initialization;
+the direct flag setter remains unchanged. Propagated the widget parameter and
+the previously reviewed normalizer's overlayTileId parameter to declaration
+metadata and generated headers. Original call/store/return order is preserved,
+with identical target code and relocations in four compiler profiles. Confidence:
+high within this bounded contract. No public symbol rename, type/layout change
+or new runtime milestone; the forwarded a2 meaning remains unresolved. All 4157
+identities remain and one canonical body hash changes.
+Both builds, eight public gates and 52 targeted tooling tests pass; linked code
+and data remain identical, with existing ratchet failures retained.
+[Commands and limitations](../HUMAN_READABILITY.md#batch-9-road-exit-callbacks).
+
+## 2026-09-06 - Road readability: selected-direction callback
+
+Track: Win95 reconstruction. Reviewed `RoadBuildMode_BuildInSelectedDirection`
+(`0x4254E0`) individually. Reused the pinned widget sprite field, removed the
+redundant integer alias and retained selector/selected-unit reads after animation.
+The original four-case dispatch and hook/build/redraw ordering are unchanged.
+Original valid-selector traces and separate canonical unsupported-selector traces
+match before/after bodies in four compiler profiles. The original default EDX
+and forwarded-argument meanings remain explicitly unresolved. No public rename,
+layout or behavior change; one canonical hash changes and all 4157 identities
+remain. Both builds and eight public gates pass. Confidence: high within the
+bounded call contract, with no new runtime or campaign milestone.
+[Commands, regression and limitations](../HUMAN_READABILITY.md#batch-8-roadbuildmode_buildinselecteddirection).
+
+## 2026-09-06 - Road readability: bare bridge crossing candidate
+
+Track: Win95 reconstruction. Reviewed `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+(`0x424120`) individually. Reused pinned tile fields, loaded each neighbor once,
+made existing unsigned border conversions explicit and removed register/result
+scaffolding. Preserved the original `877..948` reduction, raw low-value matches,
+directional sets and overlay/terrain checks. No public rename, new layout or
+behavioral blocker removal; one canonical body hash changes and all 4157
+identities remain. Original/before/after comparisons pass 1,677,926 cases per
+body set in each of four compiler profiles. Both builds and eight public gates
+pass; two signed-comparison warnings disappear per compiler. Confidence: high
+within the documented domains, with campaign/runtime milestones unchanged.
+[Commands, regression and limitations](../HUMAN_READABILITY.md#batch-7-maptile_isbarebridgecrossingroadoverlaycandidate).
+
+## 2026-09-06 - Road normalization: original shared backing restored
+
+Track: Win95 reconstruction. Revisited `Map_NormalizeRoadOverlayTileId`
+(`0x423FC0`) after identifying the legacy locale-array overread. Original load
+`0x42400E` selects unsigned words in the existing shared Road region, so the
+corrected branch uses its guarded initializer, a named offset/index and a
+`uint16_t` copy. No duplicate data or speculative locale semantics are added.
+One body hash changes; all 4157 identities and canonical layouts remain.
+All 65,536 tile IDs and all 1,057,292 directional cases match original code per
+compiler profile, with no former lookup exclusions. Public regression covers
+initialization and shared mutations. Both builds and fresh first-Road state/frame
+comparisons pass within the documented limits; no campaign milestone advances.
+Confidence: high for the measured lookup and initialization contracts.
+[Commands, evidence and limits](../HUMAN_READABILITY.md#batch-6-shared-road-normalization-backing).
+
+## 2026-09-06 - F0-F6: Numeric constants across canonical recovered code
+
+Track: Win95 reconstruction, behavior-preserving naming. Reviewed all 140
+canonical TUs and applied 1,988 expression/function-scoped replacements in 62:
+1,815 exact-spelling macro uses and 173 existing-enum uses. Added 90 private
+constants with original instruction plus layout/data-flow evidence, generated
+90 guards, and refreshed 395 current function-body hashes. All 4,157 identities,
+signatures and legacy hashes remain. Confidence is high within the explicitly
+recorded domains; no field, API, save format or campaign state changed.
+
+Small integers and floats now participate in the complete inventory. Numeric
+code tokens decrease from 81,247 to 79,259. Remaining data and evidence queues
+are retained per location; equal-valued wall-sprite/path and compensating-address
+candidates are explicitly rejected. The historical provenance ledger prefix
+remains byte-identical, with 127 aggregate rows added for this batch.
+
+GCC 13 and Clang 18 retain identical normalized object code, linked profiles and
+executable code/data bytes. Both builds and four public gates, 135 tooling tests
+and generator freshness pass. Existing raw link/header differences and native
+isolated crashes are unchanged, with no raised ratchets. Both headless first-Road
+replays reach the accepted turn-6 endpoint; the F6 supplement has identical
+linked code/data to those tested binaries. Mission 05 remains partial, 6/20
+direct routes complete. No behavioral blocker is removed.
+
+Full provenance, rejected/ambiguous candidates, native coverage, exact commands
+and durable evidence locations: [numeric recovery record](../MAGIC_NUMBER_RECOVERY.md)
+and `artifacts/magic-numbers-20260906/`. Historical rules below remain intact.
+
+## 2026-09-06 - Road readability: four directional queries
+
+Track: Win95 reconstruction. Reviewed North (`0x423BB0`), South (`0x423C50`),
+West (`0x423CF0`) and East (`0x423E10`) separately. Reused the pinned tile
+road/bridge field and retained every membership test. West now expresses its
+marker/type/coordinate shortcut directly; removed comma/XOR register artifacts
+without eager Road reads. Building IDs remain numeric, with no new semantic
+record. Four canonical hashes change; public identities and layouts stay fixed.
+Original/frozen-before/actual-after comparisons pass 1,056,520 query cases per
+body set per compiler profile, with explicit legacy-lookup exclusions and guarded
+shortcut reads. Confidence: high within the recorded domain.
+[Evidence, per-function review and limits](../HUMAN_READABILITY.md#batch-5-four-directional-road-queries).
+
+## 2026-09-06 - Road readability: connection-mask rebuild
+
+Track: Win95 reconstruction. Reviewed `Map_RebuildRoadOverlayAtTile` (`0x423E90`)
+individually: one connection mask, original W/S/E/N order, typed road-word write,
+explicit row-base return, and removal of obsolete register-local diagnostics.
+No public name, constant, layout or behavior change; one canonical hash changes.
+Original full-callee probe covers 1,024 input/table cases in four compiler
+profiles, with exact return/write and remaining-memory comparisons. Confidence:
+high for the bounded refactor. Known normalization backing debt remains deferred.
+[Validation and limits](../HUMAN_READABILITY.md#batch-4-map_rebuildroadoverlayattile).
+
 ## 2026-09-06 - Road readability: normalized overlay input
 
 Track: Win95 reconstruction, mission-05 Road helpers. Reviewed

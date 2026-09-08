@@ -430,7 +430,7 @@ int  Compiler_WriteSymbolTableFile(const char *fileName, int version)
       i = (_DWORD *)(uintptr_t)*i;
     ++bucket;
   }
-  while ( bucket != (_DWORD **)(uintptr_t)(symbolTable + 4052) );
+  while ( bucket != (_DWORD **)(uintptr_t)(symbolTable + CLIPS_SYMBOL_TABLE_BYTES) );
   if ( !symbolCount )
     return version;
   for ( j = 1;
@@ -439,12 +439,12 @@ int  Compiler_WriteSymbolTableFile(const char *fileName, int version)
   {
     ;
   }
-  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, 1u);
+  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, 1u, 0);
   if ( !outFile )
     return -1;
   entriesThisFile = 0;
   bucketPtr = (_DWORD *)(uintptr_t)symbolTable;
-  for ( k = 0; k < 1013; ++k )
+  for ( k = 0; k < CLIPS_SYMBOL_BUCKET_COUNT; ++k )
   {
     symbolNode = (_DWORD *)(uintptr_t)*bucketPtr;
     if ( *bucketPtr )
@@ -473,7 +473,7 @@ int  Compiler_WriteSymbolTableFile(const char *fileName, int version)
           entriesThisFile = 0;
           if ( writtenCount < symbolCount )
           {
-            result = Rules_OpenConstructCodeFile(fileName, 1, version, arrayVersion);
+            result = Rules_OpenConstructCodeFile(fileName, 1, version, arrayVersion, 0);
             outFile = result;
             if ( !result )
               return result;
@@ -544,17 +544,17 @@ int  Compiler_WriteBitMapTableFile(const char *fileName, int version)
       i = (_DWORD *)(uintptr_t)*i;
     ++bucket;
   }
-  while ( bucket != (_DWORD **)(uintptr_t)(bitmapTable + 668) );
+  while ( bucket != (_DWORD **)(uintptr_t)(bitmapTable + CLIPS_BITMAP_TABLE_BYTES) );
   if ( !bitmapCount )
     return version;
   for ( j = 1; j <= bitmapCount / g_ClipsCodeMaxIndicesPerArray + 1; ++j )
     Output_WriteFormatted(g_ClipsCodeMaxIndicesPerArray, g_ClipsCodeHeaderFile, g_ClipsCodeHeaderFile, (int)(intptr_t)aExternStructBi, g_ConstructsToCImageId);
-  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, j);
+  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, j, 0);
   if ( !outFile )
     return -1;
   entriesThisFile = 0;
   bucketPtr = (int **)(uintptr_t)bitmapTable;
-  for ( k = 0; k < 167; ++k )
+  for ( k = 0; k < CLIPS_BITMAP_BUCKET_COUNT; ++k )
   {
     for ( m = *bucketPtr; m; m = (int *)(uintptr_t)*m )
     {
@@ -595,7 +595,7 @@ int  Compiler_WriteBitMapTableFile(const char *fileName, int version)
         ++version;
         if ( writtenCount < bitmapCount )
         {
-          result = Rules_OpenConstructCodeFile(fileName, 1, version, 0);
+          result = Rules_OpenConstructCodeFile(fileName, 1, version, 0, 0);
           outFile = result;
           if ( !result )
             return result;
@@ -679,7 +679,7 @@ int  Compiler_WriteBitMapValuesFile(const char *fileName, int version)
     }
     ++bucket;
   }
-  while ( bucket != (int **)(uintptr_t)(bitmapTable + 668) );
+  while ( bucket != (int **)(uintptr_t)(bitmapTable + CLIPS_BITMAP_TABLE_BYTES) );
   if ( !totalWordCount )
     return versionCounter;
   for ( j = 1;
@@ -688,12 +688,12 @@ int  Compiler_WriteBitMapValuesFile(const char *fileName, int version)
   {
     wordBytesBase = HIBYTE(j);
   }
-  outFile = Rules_OpenConstructCodeFile(savedFileName, 1, versionCounter, bitmapTable);
+  outFile = Rules_OpenConstructCodeFile(savedFileName, 1, versionCounter, bitmapTable, 0);
   if ( !outFile )
     return -1;
   bucketPtr = (int **)(uintptr_t)bitmapTable;
   wordsThisFile = 0;
-  for ( k = 0; k < 167; ++k )
+  for ( k = 0; k < CLIPS_BITMAP_BUCKET_COUNT; ++k )
   {
     for ( m = *bucketPtr; m; m = (int *)(uintptr_t)*m )
     {
@@ -750,7 +750,7 @@ int  Compiler_WriteBitMapValuesFile(const char *fileName, int version)
         ++arrayVersion;
         if ( wordsWritten < totalWordCount )
         {
-          result = Rules_OpenConstructCodeFile(savedFileName, 1, versionCounter, nextArrayVersion);
+          result = Rules_OpenConstructCodeFile(savedFileName, 1, versionCounter, nextArrayVersion, 0);
           outFile = result;
           if ( !result )
             return result;
@@ -814,12 +814,12 @@ int  Compiler_WriteFloatTableFile(const char *fileName, int version)
       i = (_DWORD *)(uintptr_t)*i;
     ++bucket;
   }
-  while ( bucket != (_DWORD **)(uintptr_t)(floatTable + 2012) );
+  while ( bucket != (_DWORD **)(uintptr_t)(floatTable + CLIPS_FLOAT_TABLE_BYTES) );
   if ( !floatCount )
     return version;
   for ( j = 1; j <= floatCount / g_ClipsCodeMaxIndicesPerArray + 1; ++j )
     Output_WriteFormatted(g_ClipsCodeMaxIndicesPerArray, floatCount % g_ClipsCodeMaxIndicesPerArray, g_ClipsCodeHeaderFile, (int)(intptr_t)aExternStructFl, g_ConstructsToCImageId);
-  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, 1u);
+  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, 1u, 0);
   if ( !outFile )
     return -1;
   entriesThisFile = 0;
@@ -853,7 +853,7 @@ int  Compiler_WriteFloatTableFile(const char *fileName, int version)
         v8 = ++version;
         if ( writtenCount < floatCount )
         {
-          result = Rules_OpenConstructCodeFile(fileName, 1, version, arrayVersion);
+          result = Rules_OpenConstructCodeFile(fileName, 1, version, arrayVersion, 0);
           outFile = result;
           if ( !result )
             return result;
@@ -868,7 +868,7 @@ int  Compiler_WriteFloatTableFile(const char *fileName, int version)
     v8 = (int)(intptr_t)++bucketPtr;
     ++bucketIndex;
   }
-  while ( bucketIndex < 503 );
+  while ( bucketIndex < CLIPS_FLOAT_BUCKET_COUNT );
   return version;
 }
 // 4D7429: variable 'v7' is possibly undefined
@@ -921,12 +921,12 @@ int  Compiler_WriteIntegerTableFile(const char *fileName, int version)
       i = (_DWORD *)(uintptr_t)*i;
     ++bucket;
   }
-  while ( bucket != (_DWORD **)(uintptr_t)(integerTable + 668) );
+  while ( bucket != (_DWORD **)(uintptr_t)(integerTable + CLIPS_INTEGER_TABLE_BYTES) );
   if ( !integerCount )
     return version;
   for ( j = 1; j <= integerCount / g_ClipsCodeMaxIndicesPerArray + 1; ++j )
     Output_WriteFormatted(g_ClipsCodeMaxIndicesPerArray, integerCount % g_ClipsCodeMaxIndicesPerArray, g_ClipsCodeHeaderFile, (int)(intptr_t)aExternStructIn, g_ConstructsToCImageId);
-  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, 1u);
+  outFile = Rules_OpenConstructCodeFile(fileName, 1, version, 1u, 0);
   if ( !outFile )
     return -1;
   entriesThisFile = 0;
@@ -961,7 +961,7 @@ int  Compiler_WriteIntegerTableFile(const char *fileName, int version)
           entriesThisFile = 0;
           if ( writtenCount < integerCount )
           {
-            result = Rules_OpenConstructCodeFile(fileName, 1, version, arrayVersion);
+            result = Rules_OpenConstructCodeFile(fileName, 1, version, arrayVersion, 0);
             outFile = result;
             if ( !result )
               return result;
@@ -979,7 +979,7 @@ int  Compiler_WriteIntegerTableFile(const char *fileName, int version)
     v8 = (int)(intptr_t)++bucketPtr;
     ++bucketIndex;
   }
-  while ( bucketIndex < 167 );
+  while ( bucketIndex < CLIPS_INTEGER_BUCKET_COUNT );
   return version;
 }
 // 4D7699: variable 'v7' is possibly undefined
@@ -1033,7 +1033,7 @@ signed int  Compiler_WriteConstantsReferenceFile(const char *fileName, DWORD ima
   char v35; // [esp+0h] [ebp-18h]
 
   symbolTable = (int *)(uintptr_t)Rules_GetSymbolTable();
-  result = Rules_OpenConstructCodeFile(fileName, 1, 1, imageID);
+  result = Rules_OpenConstructCodeFile(fileName, 1, 1, imageID, 0);
   symbolFile = result;
   if ( result )
   {
@@ -1047,11 +1047,11 @@ signed int  Compiler_WriteConstantsReferenceFile(const char *fileName, DWORD ima
       symbolIndex = currentSymbolIndex + 1;
       ++symbolTable;
     }
-    while ( symbolIndex < 1013 );
+    while ( symbolIndex < CLIPS_SYMBOL_BUCKET_COUNT );
     Output_WriteFormatted(symbolIndex, 1, symbolFile, (int)(intptr_t)asc_50D204, v32);
     fclose_(0);
     floatTable = (int *)(uintptr_t)Rules_GetFloatTable();
-    result = Rules_OpenConstructCodeFile(fileName, v10, 2, imageID);
+    result = Rules_OpenConstructCodeFile(fileName, v10, 2, imageID, 0);
     floatFile = result;
     if ( result )
     {
@@ -1069,11 +1069,11 @@ signed int  Compiler_WriteConstantsReferenceFile(const char *fileName, DWORD ima
         v15 = floatIndex + 1;
         ++floatTable;
       }
-      while ( v15 < 503 );
+      while ( v15 < CLIPS_FLOAT_BUCKET_COUNT );
       Output_WriteFormatted(v15, 1, floatFile, (int)(intptr_t)asc_50D204, v33);
       fclose_(0);
       integerTable = Rules_GetIntegerTable();
-      result = Rules_OpenConstructCodeFile(fileName, v18, 3, integerTable);
+      result = Rules_OpenConstructCodeFile(fileName, v18, 3, integerTable, 0);
       integerFile = result;
       if ( result )
       {
@@ -1091,11 +1091,11 @@ signed int  Compiler_WriteConstantsReferenceFile(const char *fileName, DWORD ima
           ++integerIndex;
           integerEntry = (int *)(uintptr_t)(v23 + 4);
         }
-        while ( integerIndex < 167 );
+        while ( integerIndex < CLIPS_INTEGER_BUCKET_COUNT );
         Output_WriteFormatted((int)(intptr_t)integerEntry, 1, integerFile, (int)(intptr_t)asc_50D204, v34);
         fclose_(0);
         bitmapTable = (int *)(uintptr_t)Rules_GetBitmapTable();
-        result = Rules_OpenConstructCodeFile(fileName, v25, 4, integerTable);
+        result = Rules_OpenConstructCodeFile(fileName, v25, 4, integerTable, 0);
         bitmapFile = result;
         if ( result )
         {
@@ -1110,7 +1110,7 @@ signed int  Compiler_WriteConstantsReferenceFile(const char *fileName, DWORD ima
             currentBitmapIndex = bitmapIndex + 1;
             ++bitmapTable;
           }
-          while ( currentBitmapIndex < 167 );
+          while ( currentBitmapIndex < CLIPS_BITMAP_BUCKET_COUNT );
           Output_WriteFormatted(currentBitmapIndex, v30, bitmapFile, (int)(intptr_t)asc_50D204, v35);
           fclose_(v31);
           return 1;
@@ -1336,7 +1336,7 @@ int  Compiler_WriteConstraintTableFile(const char *fileName, int fileId, DWORD i
   arrayIndex = 1;
   for ( j = maxIndices; arrayIndex <= numberOfConstraints / j + 1; Output_WriteFormatted(j, numberOfConstraints % j, headerFile, (int)(intptr_t)aExternConstrai, imageId) )
     ++arrayIndex;
-  outputFile = Rules_OpenConstructCodeFile(fileName, savedFileId, 1, imageId);
+  outputFile = Rules_OpenConstructCodeFile(fileName, savedFileId, 1, imageId, 0);
   if ( !outputFile )
     return -1;
   indexInFile = 0;
@@ -1392,7 +1392,7 @@ int  Compiler_WriteConstraintTableFile(const char *fileName, int fileId, DWORD i
         ++arrayVersion;
         if ( numberOfConstraints > constraintsWritten )
         {
-          result = Rules_OpenConstructCodeFile(fileName, 1, newVersion, imageId);
+          result = Rules_OpenConstructCodeFile(fileName, 1, newVersion, imageId, 0);
           outputFile = result;
           if ( !result )
             return result;

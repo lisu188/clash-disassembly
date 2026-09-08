@@ -2871,15 +2871,6 @@ int Noop_RulesRecordScalarDeletingDtor(void)
  * ABIs are reconstructed from asm strongly enough for the authentic boot path.
  */
 
-int Render_SetResourceHandle(int a1, int a2)
-{
-  int previous_handle;
-
-  previous_handle = *(_DWORD *)(uintptr_t)(uint32_t)(a1 + 0xCC);
-  *(_DWORD *)(uintptr_t)(uint32_t)(a1 + 0xCC) = a2;
-  return previous_handle;
-}
-
 int Render_DrawSprite(void)
 {
   return Menu_DrawFrameBackdrop();

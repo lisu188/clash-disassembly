@@ -17,7 +17,6 @@ _BYTE * Str_CompactSkippingZeroBytes(_BYTE *result, _BYTE *src, unsigned int cou
 _DWORD * Render_ConstructSurfaceObject(int surface_addr, __int16 width, __int16 height);
 _DWORD * Render_ConstructScratchSurface(int surface_addr, unsigned __int16 width, DWORD companion_flag, __int16 height);
 int  Surface_ConstructBackbufferInstance(int surface_addr);
-extern int Surface_SwapDirtyTrackingFlag (int surface, int new_flag);
 int * Palette_CrossfadeToTarget(int *result, unsigned __int8 *target_palette, signed int step_count);
 _DWORD * RenderSurface_ConstructNullBlitCursor(_DWORD *result);
 int __thiscall RenderSurface_CloneInternalArray(void *this_);
@@ -32,6 +31,7 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite);
 int  DLXSprite_Save(int sprite, int file_handle);
 char  DLXSprite_RemapPalette(int sprite, const unsigned __int8 *remap_table);
 int Render_RestoreLostSurfaces(void);
+extern __attribute__((used, retain)) int Surface_SwapDirtyTrackingFlag(int surface, int new_flag);
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */

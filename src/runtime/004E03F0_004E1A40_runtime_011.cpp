@@ -820,7 +820,7 @@ int  Compiler_WriteObjectPatternNodesToCode(const char *fileName, char a2, DWORD
   if ( !Rules_GetObjectPatternNetworkRoot() )
     return 1;
   Output_WriteFormatted(v8, v7, headerFile, (int)(intptr_t)aIncludeObjrt_0, a2);
-  result = Rules_OpenConstructCodeFile(fileName, v10, version, fileID);
+  result = Rules_OpenConstructCodeFile(fileName, v10, version, fileID, 0);
   patternFile = result;
   if ( result )
   {
@@ -872,7 +872,7 @@ int  Compiler_WriteObjectPatternNodesToCode(const char *fileName, char a2, DWORD
           ++arrayVersion;
           if ( patternNode )
           {
-            result = Rules_OpenConstructCodeFile(fileName, v33, nextVersion, fileID);
+            result = Rules_OpenConstructCodeFile(fileName, v33, nextVersion, fileID, 0);
             patternFile = result;
             if ( !result )
               return result;
@@ -955,7 +955,7 @@ int  Compiler_WriteReactiveRulesToCode(const char *fileName, int constructFileID
   savedHeaderFile = headerFile;
   if ( !Rules_GetReactiveRuleList() )
     return version;
-  result = Rules_OpenConstructCodeFile(fileName, v7, version, fileID);
+  result = Rules_OpenConstructCodeFile(fileName, v7, version, fileID, 0);
   alphaFile = result;
   if ( result )
   {
@@ -1011,7 +1011,7 @@ int  Compiler_WriteReactiveRulesToCode(const char *fileName, int constructFileID
         arrayVersion += v10;
         if ( alphaNode )
         {
-          result = Rules_OpenConstructCodeFile(fileName, constructFileID, nextVersion, fileID);
+          result = Rules_OpenConstructCodeFile(fileName, constructFileID, nextVersion, fileID, 0);
           alphaFile = result;
           if ( !result )
             return result;

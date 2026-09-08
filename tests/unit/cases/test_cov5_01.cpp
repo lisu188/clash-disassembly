@@ -358,23 +358,23 @@ TEST(cov5_01_exprconstraint, safe_token_tag_primed_shared_slot) {
 TEST(cov5_01_ccfo, a1_nonzero_early_return_hard_ceiling_attempt) {
   static int a5val = 7;
   TOUCH(Rules_ConstructCodeFileOpen(99, "cov5_01", 0, (const char *)(intptr_t)1,
-                                     &a5val, 0, 0, 'x', "cov5_01_a9", 0, 0));
+                                     &a5val, 0, 0, "x", "cov5_01_a9", 0, 0));
 }
 
 TEST(cov5_01_ccfo, a10_nonzero_open_success) {
-  static const char *a11arr[3];
+  static _DWORD a11arr[3];
   static char pathPrefix[512];
 
   snprintf(pathPrefix, sizeof pathPrefix, "/tmp/cov5_01_ccfo_a10_");
-  a11arr[0] = pathPrefix;
-  a11arr[1] = (const char *)(intptr_t)3;
-  a11arr[2] = (const char *)(intptr_t)4;
+  a11arr[0] = (_DWORD)(uintptr_t)(pathPrefix);
+  a11arr[1] = (_DWORD)(uintptr_t)((const char *)(intptr_t)3);
+  a11arr[2] = (_DWORD)(uintptr_t)((const char *)(intptr_t)4);
 
   /* Primes Rules_OpenConstructCodeFile's own decompiler-lost `v8` nonzero,
    * skipping its risky inner Output_WriteFormatted pair so it returns the
    * real file handle cleanly; confirmed crash-free via gdb. */
   cov5_01_stack_prime(1);
-  TOUCH(Rules_ConstructCodeFileOpen(0, 0, 0, 0, 0, 0, 0, 'y', 0, 1, a11arr));
+  TOUCH(Rules_ConstructCodeFileOpen(0, 0, 0, 0, 0, 0, 0, "y", 0, 1, (const char **)a11arr));
 }
 
 TEST(cov5_01_ccfo, a10_zero_open_success) {
@@ -385,7 +385,7 @@ TEST(cov5_01_ccfo, a10_zero_open_success) {
 
   cov5_01_stack_prime(1);
   TOUCH(Rules_ConstructCodeFileOpen(0, pathPrefix, 5, (const char *)(intptr_t)2,
-                                     &a5val, 9, 0, 'z', "cov5_01_a9z", 0, 0));
+                                     &a5val, 9, 0, "z", "cov5_01_a9z", 0, 0));
 }
 
 /* =========================================================================

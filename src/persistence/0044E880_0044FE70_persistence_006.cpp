@@ -182,7 +182,7 @@ int  Prisoner_Behead(int buildingRecord, int prisonerRecord, char slotIndex, DWO
   Debug_Log(buildingRecord, slotIndex, a4, (int)(intptr_t)aPrisoner_behea);
   Prisoner_Kill(v4, slotIndex, a4);
   result = gameData;
-  if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(v5 + 2) + gameData + 140051) )
+  if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(v5 + 2) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
   {
     Win_PlayModeChangeFrameTransition(aZciecie, 1, v5, slotIndex, a4);
     beheadTextTable[0] = (int)(intptr_t)g_PrisonerBeheadingTexts[0];
@@ -241,8 +241,8 @@ int  Prisoner_FindRichestHiddenEnemyCastle(int enemyPlayerIndex, int viewerPlaye
   bestCastleIndex = -1;
   do
   {
-    if ( *(_BYTE *)(uintptr_t)(castleRecordOffset + gameData + 509678) == 2
-      && *(unsigned __int8 *)(uintptr_t)(castleRecordOffset + gameData + 509676) == enemyPlayerIndex
+    if ( *(_BYTE *)(uintptr_t)(castleRecordOffset + gameData + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET) == 2
+      && *(unsigned __int8 *)(uintptr_t)(castleRecordOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == enemyPlayerIndex
       && !Building_IsVisibleToPlayer((unsigned __int8 *)(uintptr_t)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
     {
       castleValue = Building_GetTotalValue(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET);
@@ -253,7 +253,7 @@ int  Prisoner_FindRichestHiddenEnemyCastle(int enemyPlayerIndex, int viewerPlaye
       }
     }
     ++castleIndex;
-    castleRecordOffset += 467;
+    castleRecordOffset += BUILDING_RECORD_SIZE;
   }
   while ( castleIndex < 100 );
   if ( bestCastleIndex == -1 )
@@ -270,12 +270,12 @@ int  Prisoner_FindAnyHiddenEnemyCastle(int enemyPlayerIndex, int viewerPlayerInd
   int castleRecordOffset; // ecx
 
   castleRecordOffset = 0;
-  while ( *(_BYTE *)(uintptr_t)(gameData + castleRecordOffset + 509678) != 2
-       || *(unsigned __int8 *)(uintptr_t)(gameData + castleRecordOffset + 509676) != enemyPlayerIndex
+  while ( *(_BYTE *)(uintptr_t)(gameData + castleRecordOffset + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET) != 2
+       || *(unsigned __int8 *)(uintptr_t)(gameData + castleRecordOffset + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != enemyPlayerIndex
        || Building_IsVisibleToPlayer((unsigned __int8 *)(uintptr_t)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
   {
-    castleRecordOffset += 467;
-    if ( castleRecordOffset >= 46700 )
+    castleRecordOffset += BUILDING_RECORD_SIZE;
+    if ( castleRecordOffset >= BUILDING_TABLE_BYTES )
       return 0;
   }
   return castleRecordOffset + gameData + BUILDING_TABLE_OFFSET;
@@ -296,13 +296,13 @@ LABEL_2:
   {
     stackRecordOffset = UNIT_STACK_STRIDE * stackIndex;
     stackRecordBase = gameData + UNIT_STACK_STRIDE * stackIndex;
-    if ( *(unsigned __int8 *)(uintptr_t)(stackRecordBase + 147178) == enemyPlayerIndex
-      && !Map_IsTileVisibleToPlayer(*(__int16 *)(uintptr_t)(stackRecordBase + 147174), *(__int16 *)(uintptr_t)(stackRecordBase + 147176), viewerPlayerIndex) )
+    if ( *(unsigned __int8 *)(uintptr_t)(stackRecordBase + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == enemyPlayerIndex
+      && !Map_IsTileVisibleToPlayer(*(__int16 *)(uintptr_t)(stackRecordBase + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(stackRecordBase + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET), viewerPlayerIndex) )
     {
       return gameData + UNIT_STACK_TABLE_OFFSET + stackRecordOffset;
     }
   }
-  while ( ++stackIndex < 500 )
+  while ( ++stackIndex < UNIT_STACK_TABLE_COUNT )
   {
     if ( stackIndex >= 0 )
       goto LABEL_2;
@@ -488,7 +488,7 @@ int  Building_CreateSpecialPersonageGarrisonUnit(DWORD buildingRecord, unit_type
   {
     if ( *(__int16 *)(uintptr_t)garrison_slot_ptr == -1 )
       break;
-    garrison_slot_ptr += 31;
+    garrison_slot_ptr += UNIT_SLOT_RECORD_BYTES;
   }
   if ( slot_index == 12 )
   {
@@ -496,7 +496,7 @@ int  Building_CreateSpecialPersonageGarrisonUnit(DWORD buildingRecord, unit_type
     Building_UnitsLeave((unsigned __int8 *)(uintptr_t)buildingRecord, leave_mask, a5);
     slot_index = 0;
   }
-  slot_offset = 31 * slot_index;
+  slot_offset = UNIT_SLOT_RECORD_BYTES * slot_index;
   result = UnitSlot_InitFromType(buildingRecord + 18 + slot_offset, unitType, *(_BYTE *)(uintptr_t)(buildingRecord + 2));
   *(_BYTE *)(uintptr_t)(buildingRecord + 30 + slot_offset) |= 3u;
   return result;
@@ -527,7 +527,7 @@ unsigned int  Prisoner_Pay(int a1, int prisonerSlot, DWORD a3, double a4)
   Building_CreateSpecialPersonageGarrisonUnit(buildingRecord, (unit_type)(unsigned int)(BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(buildingRecord, prisonerSlot))), buildingRecord, prisonerSlot, a4);
   Prisoner_Kill(v8, prisonerSlot, a3);
   result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(v9 + 2);
-  if ( *(_DWORD *)(uintptr_t)(gameData + result + 140051) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + result + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
   {
     defectionTexts[0] = (int)(intptr_t)g_PrisonerBriberyDefectionTexts[0];
     defectionTexts[1] = (int)(intptr_t)g_PrisonerBriberyDefectionTexts[1];
@@ -561,7 +561,7 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
   DWORD buildingNamePtr; // [esp+74h] [ebp-1Ch]
 
   missionIndex = ACTIVE_MISSION_INDEX;
-  if ( missionIndex != 4 && missionIndex != 6 || (result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2), *(_DWORD *)(uintptr_t)(gameData + result + 140051)) )
+  if ( missionIndex != 4 && missionIndex != 6 || (result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2), *(_DWORD *)(uintptr_t)(gameData + result + PLAYER_CONTROLLER_MODE_TABLE_OFFSET)) )
   {
     Debug_Log(a2, a3, buildingRecord, (int)(intptr_t)aPrisoner_newtu);
     buildingNamePtr = buildingRecord + 5;
@@ -581,7 +581,7 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
         {
           prisonerCursor[445] = -1;
           result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2);
-          if ( *(_DWORD *)(uintptr_t)(gameData + result + 140051) )
+          if ( *(_DWORD *)(uintptr_t)(gameData + result + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
           {
             exhaustionTextTable[0] = (int)(intptr_t)g_PrisonerDeathByExhaustionTexts[0];
             exhaustionTextTable[1] = (int)(intptr_t)g_PrisonerDeathByExhaustionTexts[1];
@@ -646,7 +646,7 @@ int  Building_CountPrisoners(int buildingRecord)
 //----- (0044F510) --------------------------------------------------------
 BOOL  BuildingPrisonerActionWidget_HasPrisoner(int widgetRecord)
 {
-  return *(char *)(uintptr_t)(g_CurrentPrisonBuildingRecord + 6 * ((widgetRecord - (int)(intptr_t)&g_PrisonerActionButtonWidgets) / 53 / 3) + 445) != -1;
+  return *(char *)(uintptr_t)(g_CurrentPrisonBuildingRecord + 6 * ((widgetRecord - (int)(intptr_t)&g_PrisonerActionButtonWidgets) / WORLD_MAP_ACTION_WIDGET_RECORD_SIZE / 3) + 445) != -1;
 }
 // 5443FC: using guessed type int dword_5443FC;
 
@@ -671,9 +671,9 @@ char * BuildingPrisonerActionButton_SelectBehead(int widgetRecord)
       buttonIndex = 0;
       do
       {
-        *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * buttonIndex) = 1;
+        *(int *)((char *)&g_PrisonerActionButtonState0 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * buttonIndex) = 1;
         UIWidget_RefreshActionButtonState((int)(intptr_t)widgetCursor, buttonIndex + 1);
-        widgetCursor = (_DWORD *)((char *)widgetCursor + 53);
+        widgetCursor = (_DWORD *)((char *)widgetCursor + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE);
       }
       while ( buttonIndex < 9 );
       *(_DWORD *)(uintptr_t)(widgetRecord + 8) = 2;
@@ -708,9 +708,9 @@ char * BuildingPrisonerActionButton_SelectTorture(int widgetRecord)
       buttonIndex = 0;
       do
       {
-        *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * buttonIndex) = 1;
+        *(int *)((char *)&g_PrisonerActionButtonState0 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * buttonIndex) = 1;
         UIWidget_RefreshActionButtonState((int)(intptr_t)widgetCursor, buttonIndex + 1);
-        widgetCursor = (_DWORD *)((char *)widgetCursor + 53);
+        widgetCursor = (_DWORD *)((char *)widgetCursor + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE);
       }
       while ( buttonIndex < 9 );
       *(_DWORD *)(uintptr_t)(widgetRecord + 8) = 2;
@@ -745,9 +745,9 @@ char * BuildingPrisonerActionButton_SelectBribery(int widgetRecord)
       buttonIndex = 0;
       do
       {
-        *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * buttonIndex) = 1;
+        *(int *)((char *)&g_PrisonerActionButtonState0 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * buttonIndex) = 1;
         UIWidget_RefreshActionButtonState((int)(intptr_t)widgetCursor, buttonIndex + 1);
-        widgetCursor = (_DWORD *)((char *)widgetCursor + 53);
+        widgetCursor = (_DWORD *)((char *)widgetCursor + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE);
       }
       while ( buttonIndex < 9 );
       *(_DWORD *)(uintptr_t)(widgetRecord + 8) = 2;
@@ -943,7 +943,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
 
   g_CurrentPrisonBuildingRecord = buildingRecord;
   for ( i = 0; i != 477; *(char **)((char *)g_PrisonerDeathByExhaustionTexts + i + 3) = (char *)1 )
-    i += 53;
+    i += WORLD_MAP_ACTION_WIDGET_RECORD_SIZE;
   actionWidgetCursor = g_PrisonerActionButtonWidgets;
   for ( j = 0; j < 3; ++j )
   {
@@ -992,7 +992,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   Render_ReleaseSurface(18, a3);
   if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_RUNTIME_STATE_OFFSET) )
   {
-    SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(uintptr_t)(gameData + 140063) == 0) + 13);
+    SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(uintptr_t)(gameData + PLAYER_RELIGION_FLAG_TABLE_OFFSET) == 0) + 13);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       8,
       SpriteForChar,
@@ -1003,7 +1003,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       1,
       0,
       0);
-    UI_DrawTextFmt(j, 88, 214, 30, 3, (const char*)(intptr_t)(gameData + 140028));
+    UI_DrawTextFmt(j, 88, 214, 30, 3, (const char*)(intptr_t)(gameData + PLAYER_DISPLAY_NAME_TABLE_OFFSET));
   }
   if ( *(_DWORD *)(uintptr_t)(gameData + 141447) )
   {
@@ -1104,7 +1104,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       if ( zeroBaseline > currentPopulation && currentPopulation < minPopulation )
         minPopulation = populationBars[barIndex];
     }
-    playerRecordOffset += 1423;
+    playerRecordOffset += PLAYER_DATA_STRIDE;
     ++playerIndex;
     ++barIndex;
   }
@@ -1202,7 +1202,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     }
     ++barRowIndex;
     ++barValueIndex;
-    barPlayerOffset += 1423;
+    barPlayerOffset += PLAYER_DATA_STRIDE;
   }
   while ( barRowIndex != 5 );
   Building_DrawPrisonerRows(populationRange);

@@ -1178,7 +1178,7 @@ int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
   UNIT_SLOT_HEALTH_PERCENT(result) = 100;
   if ( unitType != -1 )
   {
-    if ( (g_UnitTypeFlags[22 * unitType] & 2) != 0 )
+    if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * unitType] & 2) != 0 )
       moraleValue = 6;
     else
       moraleValue = 10;

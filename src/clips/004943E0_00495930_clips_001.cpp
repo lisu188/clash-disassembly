@@ -427,7 +427,7 @@ int *Rules_ClearAtomInUseMarks(void)
   int *result; // eax
 
   symbolBucket = (_DWORD *)(uintptr_t)Rules_GetSymbolTable();
-  symbolTableEnd = symbolBucket + 1013;
+  symbolTableEnd = symbolBucket + CLIPS_SYMBOL_BUCKET_COUNT;
   do
   {
     symbolPtr = (_DWORD *)(uintptr_t)*symbolBucket;
@@ -444,7 +444,7 @@ int *Rules_ClearAtomInUseMarks(void)
   }
   while ( symbolBucket != symbolTableEnd );
   floatBucket = (_DWORD *)(uintptr_t)Rules_GetFloatTable();
-  floatTableEnd = floatBucket + 503;
+  floatTableEnd = floatBucket + CLIPS_FLOAT_BUCKET_COUNT;
   do
   {
     floatPtr = (_DWORD *)(uintptr_t)*floatBucket;
@@ -461,7 +461,7 @@ int *Rules_ClearAtomInUseMarks(void)
   }
   while ( floatBucket != floatTableEnd );
   integerBucket = (_DWORD *)(uintptr_t)Rules_GetIntegerTable();
-  integerTableEnd = integerBucket + 167;
+  integerTableEnd = integerBucket + CLIPS_INTEGER_BUCKET_COUNT;
   do
   {
     integerPtr = (_DWORD *)(uintptr_t)*integerBucket;
@@ -478,7 +478,7 @@ int *Rules_ClearAtomInUseMarks(void)
   }
   while ( integerBucket != integerTableEnd );
   bitmapBucket = (int *)(uintptr_t)Rules_GetBitmapTable();
-  bitmapTableEnd = bitmapBucket + 167;
+  bitmapTableEnd = bitmapBucket + CLIPS_BITMAP_BUCKET_COUNT;
   do
   {
     result = (int *)(uintptr_t)*bitmapBucket;
@@ -526,12 +526,12 @@ const void * Rules_BsaveSymbolTable(int fp)
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(uintptr_t)(symbolTable + 4052) );
+  while ( bucketPtr != (int ***)(uintptr_t)(symbolTable + CLIPS_SYMBOL_TABLE_BYTES) );
   Rules_BsaveWriteBlock(4, fp, &numberOfUsedSymbols);
   Rules_BsaveWriteBlock(4, fp, &size);
   writeBucket = (int ***)(uintptr_t)symbolTable;
-  result = (const void *)(uintptr_t)(symbolTable + 4052);
-  tableEnd = (int ***)(uintptr_t)(symbolTable + 4052);
+  result = (const void *)(uintptr_t)(symbolTable + CLIPS_SYMBOL_TABLE_BYTES);
+  tableEnd = (int ***)(uintptr_t)(symbolTable + CLIPS_SYMBOL_TABLE_BYTES);
   do
   {
     for ( j = *writeBucket; j; j = (int **)*j )
@@ -569,10 +569,10 @@ const void * Rules_BsaveFloatTable(int fp)
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(uintptr_t)(floatTable + 2012) );
+  while ( bucketPtr != (int ***)(uintptr_t)(floatTable + CLIPS_FLOAT_TABLE_BYTES) );
   result = Rules_BsaveWriteBlock(4, fp, numberOfUsedFloats);
   writeBucket = (int **)(uintptr_t)floatTable;
-  tableEnd = (int **)(uintptr_t)(floatTable + 2012);
+  tableEnd = (int **)(uintptr_t)(floatTable + CLIPS_FLOAT_TABLE_BYTES);
   do
   {
     floatPtr = (int **)*writeBucket;
@@ -617,10 +617,10 @@ const void * Rules_BsaveIntegerTable(int fp)
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(uintptr_t)(integerTable + 668) );
+  while ( bucketPtr != (int ***)(uintptr_t)(integerTable + CLIPS_INTEGER_TABLE_BYTES) );
   result = Rules_BsaveWriteBlock(4, fp, numberOfUsedIntegers);
   writeBucket = (int **)(uintptr_t)integerTable;
-  tableEnd = (int **)(uintptr_t)(integerTable + 668);
+  tableEnd = (int **)(uintptr_t)(integerTable + CLIPS_INTEGER_TABLE_BYTES);
   do
   {
     integerPtr = (int **)*writeBucket;
@@ -672,11 +672,11 @@ const void * Rules_BsaveBitmapTable(int fp)
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(uintptr_t)(bitmapTable + 668) );
+  while ( bucketPtr != (int ***)(uintptr_t)(bitmapTable + CLIPS_BITMAP_TABLE_BYTES) );
   Rules_BsaveWriteBlock(4, fp, &numberOfUsedBitMaps);
   writeBucket = (int **)(uintptr_t)bitmapTable;
   result = Rules_BsaveWriteBlock(4, fp, &size);
-  tableEnd = (int **)(uintptr_t)(bitmapTable + 668);
+  tableEnd = (int **)(uintptr_t)(bitmapTable + CLIPS_BITMAP_TABLE_BYTES);
   do
   {
     for ( j = *writeBucket; j; j = (int *)(uintptr_t)*j )

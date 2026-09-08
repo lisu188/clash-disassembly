@@ -17,6 +17,7 @@ import re
 import sys
 
 from class_binding_inventory import validate_binding_metadata, validate_binding_sources
+from identity_alias_inventory import validate_alias_metadata, validate_alias_sources
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -213,6 +214,11 @@ def validate_registry(registry: dict, manifest: dict, declarations: dict | None 
             for name in sorted(set(expected_helpers) - helper_seen):
                 errors.append(f"unclassified support helper {name}")
     errors.extend(validate_binding_metadata(registry, manifest, declarations))
+    if declarations is not None and any(
+        key in item for item in functions + identities
+        for key in ("historical_names", "compatibility_aliases")
+    ):
+        errors.extend(validate_alias_metadata(manifest, declarations, registry))
     return errors
 
 
@@ -240,6 +246,8 @@ def main(argv: list[str] | None = None) -> int:
         errors = validate_registry(registry, manifest, declarations)
         if not errors:
             errors.extend(validate_binding_sources(registry, manifest, declarations, REPO))
+        if not errors:
+            errors.extend(validate_alias_sources(manifest, REPO, declarations, registry))
     except (OSError, ValueError, TypeError, KeyError) as exc:
         print(f"game class catalog: {exc}", file=sys.stderr)
         return 1

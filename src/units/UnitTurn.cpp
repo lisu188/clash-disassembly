@@ -103,7 +103,7 @@ signed int clash95::UnitTurn::Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
   stackIndex = 0;
   for ( i = 0; ; i += UNIT_STACK_STRIDE )
   {
-    if ( *(PackedInt16 *)(uintptr_t)(this->state_field_4_ + i + 147180) == -1 || *(unsigned __int8 *)(uintptr_t)(this->state_field_4_ + i + 147178) != this->state_field_2_ )
+    if ( *(PackedInt16 *)(uintptr_t)(this->state_field_4_ + i + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1 || *(unsigned __int8 *)(uintptr_t)(this->state_field_4_ + i + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) != this->state_field_2_ )
       goto LABEL_16;
     stackPtr = this->state_field_4_ + UNIT_STACK_TABLE_OFFSET + i;
     ::Diagnostics_TraceWorldMapActionEvent(
@@ -111,14 +111,14 @@ signed int clash95::UnitTurn::Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       (int)stackIndex,
       *(PackedInt16 *)(uintptr_t)stackPtr,
       *(PackedInt16 *)(uintptr_t)(stackPtr + 2),
-      *(PackedDword *)(uintptr_t)(stackPtr + 316));
+      *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     ::UnitStack_AdjustFatigueByPredicate((__int16 *)(uintptr_t)stackPtr, -20, ::UnitSlot_CanRecoverFatigue, 0xFFFFFFFF, a4);
     ::Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_recover_fatigue",
       (int)stackIndex,
       *(PackedInt16 *)(uintptr_t)stackPtr,
       *(PackedInt16 *)(uintptr_t)(stackPtr + 2),
-      *(PackedDword *)(uintptr_t)(stackPtr + 316));
+      *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     if ( *(PackedDword *)(uintptr_t)(this->state_field_4_ + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(stackPtr + 4) + 140051) )
     {
       ::UnitStack_AdjustFatigueByPredicate((__int16 *)(uintptr_t)stackPtr, 10, ::UnitSlot_ShouldGainFatigueFromLowActionPoints, 0xFFFFFFFF, a4);
@@ -129,14 +129,14 @@ signed int clash95::UnitTurn::Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       (int)stackIndex,
       *(PackedInt16 *)(uintptr_t)stackPtr,
       *(PackedInt16 *)(uintptr_t)(stackPtr + 2),
-      *(PackedDword *)(uintptr_t)(stackPtr + 316));
+      *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     ::UnitStack_ClearSpentTurnFlag(stackPtr);
     ::Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_clear_spent",
       (int)stackIndex,
       *(PackedInt16 *)(uintptr_t)stackPtr,
       *(PackedInt16 *)(uintptr_t)(stackPtr + 2),
-      *(PackedDword *)(uintptr_t)(stackPtr + 316));
+      *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     slotIndex = 0;
     slotCursor = stackPtr;
     do
@@ -149,11 +149,11 @@ signed int clash95::UnitTurn::Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
         *(PackedWord *)(uintptr_t)(slotCursor + 6) = -1;
         break;
       }
-      slotCursor += 31;
-      actionPoints = ::UnitSlot_CalcActionPointsFromFatigue((__int16 *)(uintptr_t)(stackPtr + 6 + 31 * slotIndex++));
+      slotCursor += UNIT_SLOT_RECORD_BYTES;
+      actionPoints = ::UnitSlot_CalcActionPointsFromFatigue((__int16 *)(uintptr_t)(stackPtr + 6 + UNIT_SLOT_RECORD_BYTES * slotIndex++));
       *(_BYTE *)(uintptr_t)(slotCursor - 17) = actionPoints;
     }
-    while ( slotIndex < 10 );
+    while ( slotIndex < UNIT_STACK_SLOT_COUNT );
     ::Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_ap",
       (int)stackIndex,
@@ -200,34 +200,34 @@ signed int clash95::UnitTurn::Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       buildingRecord = (this->state_field_4_ + 509674 + 467 * (buildingIndex));
       if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4
         && *(PackedInt16 *)(uintptr_t)(buildingRecord + 16) != -1
-        && *(_BYTE *)(uintptr_t)(slotIndex + this->state_field_4_ + 509676) != UNIT_STACK_OWNER_INDEX(stackPtr) )
+        && *(_BYTE *)(uintptr_t)(slotIndex + this->state_field_4_ + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != UNIT_STACK_OWNER_INDEX(stackPtr) )
       {
         break;
       }
     }
-    if ( *(PackedDword *)(uintptr_t)(stackPtr + 316) )
+    if ( *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET) )
     {
       ::Diagnostics_TraceWorldMapActionEvent(
         "unit_new_turn_before_path",
         (int)stackIndex,
         *(PackedInt16 *)(uintptr_t)stackPtr,
         *(PackedInt16 *)(uintptr_t)(stackPtr + 2),
-        *(PackedDword *)(uintptr_t)(stackPtr + 316));
+        *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
       ::UnitStack_ExecuteQueuedPath(stackIndex, 0, slotIndex, 0xFFFFFFFF, a4);
       ::Diagnostics_TraceWorldMapActionEvent(
         "unit_new_turn_after_path",
         (int)stackIndex,
         *(PackedInt16 *)(uintptr_t)stackPtr,
         *(PackedInt16 *)(uintptr_t)(stackPtr + 2),
-        *(PackedDword *)(uintptr_t)(stackPtr + 316));
+        *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
     }
     else
       ::UnitStack_ClearReadyFlags(stackPtr);
 LABEL_16:
-    nextStackOffset = i + 725;
+    nextStackOffset = i + UNIT_STACK_STRIDE;
     slotIndex = stackIndex + 1;
     stackIndex = slotIndex;
-    if ( slotIndex >= 500 )
+    if ( slotIndex >= UNIT_STACK_TABLE_COUNT )
     {
       ::Diagnostics_TraceWorldMapActionEvent("unit_new_turn_done", this->state_field_3_, this->state_field_2_, (*(PackedWord *)(uintptr_t)(this->state_field_4_ + 140022)), (unsigned __int8)a2);
       return ::LogAllUnits(nextStackOffset, slotIndex, 0xFFFFFFFF);

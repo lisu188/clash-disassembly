@@ -21,6 +21,7 @@ class ClassManifestIntegrationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.manifest = json.loads((ROOT / "data/recovered_sources.json").read_text())
         cls.registry = json.loads((ROOT / "data/game_class_registry.json").read_text())
+        cls.declarations = json.loads((ROOT / "data/recovered_decls.json").read_text())
 
     def test_procedural_identity_cannot_claim_a_method(self):
         manifest = copy.deepcopy(self.manifest)
@@ -36,11 +37,13 @@ class ClassManifestIntegrationTests(unittest.TestCase):
         self.assertTrue(any("implementation owner" in error for error in validate_registry(self.registry, manifest)))
 
     def test_disposition_sync_preserves_body_and_adapter_hashes(self):
-        result = synchronize(self.manifest, self.registry)
+        result = synchronize(self.manifest, self.registry, self.declarations)
         for before, after in zip(self.manifest["functions"], result["functions"]):
             self.assertEqual(before["body_sha256"], after["body_sha256"])
             self.assertEqual(before["legacy_body_sha256"], after["legacy_body_sha256"])
             self.assertEqual(before.get("adapter"), after.get("adapter"))
+            self.assertEqual(before.get("historical_names"), after.get("historical_names"))
+            self.assertEqual(before.get("compatibility_aliases"), after.get("compatibility_aliases"))
 
     def test_missing_method_lines_cannot_pass_at_one_hundred_percent(self):
         functions = [{"name": name, "source": "src/units/UnitStack.cpp"}

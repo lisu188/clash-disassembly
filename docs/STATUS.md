@@ -1,6 +1,244 @@
 # Current Status
 
-Last consolidated: 2026-09-06.
+Last consolidated: 2026-09-08.
+
+## Game-System Classes: Origin Integration
+
+Track: Win95 reconstruction; frontier: merge current upstream recovery into the
+requested behavior-class migration. Eleven canonical methods are relocated into
+four class-named sources; all 4,157 identities and the ordered 144-TU inventory
+remain. The upstream resource-handle rename retains its historical ABI through
+an independently hashed forwarding alias. Incoming numeric, Road, CLIPS and
+byte-view work remains alongside the migrated methods. Both production builds,
+strict symbol/storage/initialization comparisons and all eight asset-free gates
+pass. Frozen native and headless runtime comparisons are recorded separately;
+historical ratchet failures remain visible and no baseline is raised.
+The full migration is incomplete. See
+[CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md) for the exact incoming
+commit, tooling first-failure/retry evidence, coverage and current limitations.
+Mission 05 remains partial and completed direct routes remain 6/20.
+
+## Road Build-Mode Timing Register Cleanup
+
+Track: Win95 reconstruction, reached mission-05 Road mode. The marker-animation
+loop in `Builder_StartRoadBuildMode` now calls `Time_Now(0, 0)` at both original
+timestamp sites instead of passing three undefined decompiler temporaries. The
+protected Road procedure performs both calls without setting argument registers,
+and the protected `Time_Now` implementation saves/restores incoming ECX/EDX but
+overwrites them before computing its timestamp, so these values are not inputs.
+Only this function's current manifest hash changes; all 4157 identities and
+frozen baselines remain. Evidence: [ROAD_MODE_TIMING_RECOVERY.md](ROAD_MODE_TIMING_RECOVERY.md).
+No campaign milestone advances; normal turn-7 refresh and Road continuation remain next.
+
+## Illegal Logical-Name Reporter
+
+Track: Win95 reconstruction, reached CLIPS I/O error handling.
+`Rules_ReportIllegalLogicalName` now retains the function-name token supplied in
+original EAX and all six callers pass the exact `printout`, `read`, `open`,
+`close`, `format`, or `readline` identifier. The three undefined output values
+are removed while preserving fresh `werror` reads, message order and final
+return. Seven current body hashes change; all 4157 identities and frozen
+baselines remain. Evidence and limits: [IO_LOGICAL_NAME_RECOVERY.md](IO_LOGICAL_NAME_RECOVERY.md).
+No campaign milestone advances; mission-05 turn refresh and Road continuation
+remain the gameplay target.
+
+## Construct-File Error Reporting
+
+Track: Win95 reconstruction, the error reporters reached by construct-file
+output. `Rules_OpenFileErrorMessage` and `Rules_ReportSystemError` now retain
+the original identifier arguments and route numeric error output correctly,
+without undefined locals. Message order, final output returns and live logical
+name reads remain original-backed. Two current body hashes change; all 4157
+identities and frozen baselines remain. The composed regression includes the
+actual prefix/number helpers, 4,608 scenarios and eight negative mutations.
+Local 64-bit tests pass; original/32-bit execution requires the CI host.
+Evidence and limits:
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md#error-reporting-follow-up-2026-09-07).
+No router, full-filesystem or campaign promotion follows. Normal mission-05
+turn refresh and Road continuation remain the gameplay target.
+
+## Construct-Code Array Open Contract
+
+Track: Win95 reconstruction, bounded construct-compiler output. The array-open
+wrapper at `0x004A79F0` restores full structure-name pointers, the 12-byte
+reopen descriptor, both output arguments and stable stream returns. All 34
+canonical callers transport the original pointer. Fresh-file count increments
+retain original 32-bit wraparound. Existing test identities and all 4157
+recovered identities remain; 22 current body hashes change, no frozen baseline.
+The focused regression covers 2,032 returning cases, two terminating errors,
+nine negative mutations and original caller checks. Local 64-bit profiles pass;
+original/32-bit execution requires CI. Evidence and limits:
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md#array-open-wrapper-follow-up-2026-09-07).
+No complete construct-compiler, filesystem or campaign promotion follows.
+Normal mission-05 turn refresh and Road continuation remain the gameplay target.
+
+## Construct-Code File Close Contract
+
+Track: Win95 reconstruction, bounded construct-compiler output. The close
+wrapper at `0x004A7920` now closes the stream rather than a metadata pointer or
+undefined local. It passes the original `CONSCOMP` error identifier and removes
+an undefined, unused format argument. Signed threshold decisions, append mode,
+callback ordering and unsigned version updates remain unchanged. One current
+manifest body hash changes; all 4157 identities and frozen baselines remain.
+The focused regression covers 2,656 returning cases, four terminating-error
+cases and seven rejected mutations against the actual body and a hash-pinned
+original-listing reassembly. Local 64-bit profiles pass; original/32-bit runs
+require the CI host. Evidence and limits:
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md#close-wrapper-follow-up-2026-09-07).
+No native crash-count, whole-compiler or campaign promotion follows; normal
+mission-05 turn refresh and Road continuation remain the gameplay target.
+
+## Construct-Code File Opener
+
+Track: Win95 reconstruction, bounded construct-compiler file output. The opener
+at `0x004A7140` now preserves the basename printf argument, the opened stream,
+and the original append/fresh-file decision. All 26 callers supply the recovered
+ECX mode separately from the existing EBP I/O context. All 4157 identities and
+frozen validation baselines remain; 15 current function-body hashes change.
+The regression executes a hash-pinned reassembly of the original procedure
+against the actual recovered body with controlled dependency hooks. Local
+64-bit fixtures pass; 32-bit execution requires the CI host. Commands, evidence,
+and remaining pointer/formatter/helper limitations are in
+[CONSTRUCT_CODE_FILE_RECOVERY.md](CONSTRUCT_CODE_FILE_RECOVERY.md).
+No campaign, whole-compiler, native-crash-count or visual milestone is promoted;
+normal mission-05 turn refresh and Road continuation remain the gameplay target.
+
+## Road Adjacent Highlight Readability
+
+Track: Win95 reconstruction, reached mission-05 Road helpers. The adjacent-tile
+highlight callback now uses typed coordinates, flat directional branches and
+explicit bridge/ordinary eligibility stages. It preserves raw failure returns,
+fresh selected-stack reads and marker/bounce ordering in the shared Road data.
+All 291 original traces match before/after bodies in four compiler profiles,
+including every return category and the eight-call bridge fallback sequence.
+Both builds, all eight public gates and 143 tooling tests pass; only its
+executable section changes.
+Warnings decrease by one under GCC and two under Clang. The first-Road runtime
+baseline and normal turn-7 continuation blocker remain unchanged. Evidence,
+commands and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-10-roadbuildmode_highlightbuildableadjacenttile).
+
+## Road Exit Callback Readability
+
+Track: Win95 reconstruction, the reached Road handler family. Reviewed both
+Road exit callbacks. The pressed callback names its widget and animation result with
+direct initialization; the direct flag setter is already readable and remains
+unchanged. Two declaration parameter names now match their reviewed definitions.
+Original assembly confirms call/store/return order, and GCC/Clang O0/O2 target
+code and relocations are identical before/after. Types and ABI are unchanged.
+Both builds, eight public gates and 52 targeted tooling tests pass; all compiled
+instructions, loaded code/data and symbol layouts remain identical. Existing
+link/header ratchet failures remain without baseline changes.
+No runtime or campaign milestone advances; the first-Road baseline and turn-7
+blocker remain. Evidence, commands and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-9-road-exit-callbacks).
+
+## Road Direction Dispatch Readability
+
+Track: Win95 reconstruction, the reached Road handler family.
+`RoadBuildMode_BuildInSelectedDirection` (`0x4254E0`) now uses the existing
+widget record's named sprite field, preserving reads after animation and the
+build/hook/redraw order. All 128 original valid-selector traces and 112 separate
+canonical unsupported-selector traces match the before and after bodies in
+four compiler profiles. The original unsupported-selector ambiguity remains.
+
+Both builds, all eight public asset-free gates and 141 tooling tests pass; only
+this handler's executable section changes. Warnings, all 4157 identities and data layouts
+remain unchanged. The first-Road runtime baseline and turn-7 blocker remain;
+no runtime or campaign milestone advances. Evidence, exact commands, confidence
+and limits: [HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-8-roadbuildmode_buildinselecteddirection).
+
+## Bare Bridge Candidate Readability
+
+Track: Win95 reconstruction, the reached mission-05 Road helper family.
+The ninth individually reviewed helper, `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+(`0x424120`), now uses named tile fields, single neighbor reads and explicit
+border/terrain checks. Its exact `877..948` remainder rules and raw low-value
+acceptance remain unchanged. Two signed-comparison warnings are removed per
+compiler. All 1,677,926 original-instruction cases match both the frozen before
+and actual after bodies across four compiler profiles.
+
+Both builds, all eight public asset-free gates and 139 tooling tests pass; only
+the reviewed function's executable section changes. All 4157 identities and data layouts
+remain. Existing link/header ratchet failures are retained without baseline
+changes. The first-Road runtime baseline and turn-7 continuation blocker remain
+unchanged; no route or visual milestone is promoted. Exact commands, public
+regression, confidence and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-7-maptile_isbarebridgecrossingroadoverlaycandidate).
+
+## Road Normalization and Numeric Cleanup: Combined Validation
+
+Integrated the shared Road lookup repair `8df94c4` with numeric cleanup merge
+`431e4c5`, retaining both histories and every independently reviewed change.
+Both final compiler builds, all eight public asset-free gates and 137 tooling
+tests pass. All 4157 recovered identities, defined symbol addresses/layouts and
+executable code/data match the repaired binaries used by the fresh first-Road
+replays. Only build-id and ELF section-table metadata differ. Rebuilt-source
+warning categories do not increase; raw link/header ratchets remain red without
+baseline changes. Final native coverage passes at 6167/6662 lines (92.57%), all
+718 required functions and zero uncovered functions.
+
+The normalizer now matches every uint16 tile ID, including the former invalid
+locale-array lookup range. Fresh original/GCC/Clang state and frame evidence
+retains the existing turn-6 first-Road endpoint and known HUD/fog differences;
+mission 05 remains partial. A disk-full/WSL interruption was recovered with
+lossless evidence compression and a user-authorized Ubuntu restart. All frozen
+runtime evidence was independently rechecked afterward. Exact commands, merge
+audit, metrics and limitations are in
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-6-shared-road-normalization-backing).
+
+## Numeric Cleanup Integration
+
+Combined numeric cleanup `5e64be0` with main's eight Road readability helpers at
+`bf15255`. Both histories and all other cleanup are preserved; three overlapping
+stride substitutions are superseded by main's typed/named expressions. The
+independent source review checks the combined code and all 4,157 manifest body
+hashes. WSL was unresponsive during integration, so the Linux validation below
+remains evidence for the separate parent batches, with no fresh merged build or
+runtime claim. See [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md#main-integration).
+
+## Recovered Numeric Constants: All Canonical Subsystems Reviewed
+
+Track: Win95 reconstruction, behavior-preserving numeric naming. Replaced 1,988
+numeric occurrences in 62 TUs, adding 90 private constants and reusing existing
+macros/enums. The complete census covers all 140 canonical TUs, including small
+integers and floats; remaining data/arithmetic and evidence deferrals retain
+locations and context. All 4,157 function identities and historical hashes remain.
+
+Both GCC 13 and Clang 18 preserve normalized object code, linked symbol layouts
+and `.text`/`.rodata`/`.data` bytes exactly. Macro expansions retain exact tokens;
+173 reviewed existing-enum substitutions account for the token differences.
+Both builds, four public asset-free gates, 135 tooling tests and generator checks
+pass. Existing link/header ratchet differences and native isolated crashes remain
+unchanged; no baseline is raised. Both headless first-Road replays reach the
+accepted turn-6 endpoint, and the final stack-helper supplement retains identical
+linked code and data to the route-tested binaries.
+
+No campaign or behavioral frontier is advanced: normal turn refresh and Road
+continuation remain next, mission 05 remains partial, and direct-route completion
+stays 6/20. Evidence, before/after counts, confidence, rejected candidates and
+exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
+
+## Road Function Readability Review
+
+Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
+Thirteen functions have been reviewed individually: bridge approach, crossing cost,
+overlay normalization input, connection-mask rebuild, all four directional
+Road queries, the bare bridge candidate, direction-dispatch callback and both
+exit callbacks (the direct flag setter needed no edit).
+The adjacent-tile highlight callback is also reviewed with its shared-state
+ordering and distinct return values preserved.
+Reused pinned tile/widget fields and removed redundant decompiler state.
+The separately identified `819..861` normalization defect is now repaired using
+the original shared Road backing and guarded initialization. All 65,536 tile IDs
+and previously excluded directional queries match original instructions in four
+compiler profiles. Both builds/public gates and fresh first-Road state comparisons
+pass. The known HUD/fog defects remain in fresh original frame pairs. Link/header
+ratchets remain red; removing the false locale reference drops one unused
+208-byte table, with no baseline increase. Runtime/campaign milestones and the
+turn-7 frontier remain unchanged.
+See [HUMAN_READABILITY.md](HUMAN_READABILITY.md#function-review-road-helpers-2026-09-06)
+for per-function evidence, exact commands and validation limits.
 
 ## Game-System Classes: Foundation and Unit Query Pilot
 

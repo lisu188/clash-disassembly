@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "source": "src/render/004046D0_00405D20_render_003.cpp",
+  "includes": [
+    "render_surface_tracking_view.h"
+  ],
+  "functions": [
+    {
+      "name": "Surface_SwapDirtyTrackingFlag",
+      "expected_body_sha256": "28f73b2a1f730915e0a1d1e50d3e7706b6ee34374cffc7dff524f7ecf1584395",
+      "replacement_body": "{\n  clash95::render::RenderSurfaceTrackingMutableView tracking(\n      (void *)(uintptr_t)surface);\n  return (int)tracking.swapResourceHandle((std::uint32_t)new_flag);\n}"
+    },
+    {
+      "name": "Surface_DrawPixAndMarkDirty",
+      "expected_body_sha256": "e1c6740dcc777293c35e2f7135e98e3dd81ec82c7ca1de513a4fb766d938045c",
+      "replacement_body": "{\n  int result; // eax\n\n  result = Surface_DrawPix(surface, y);\n  clash95::render::RenderSurfaceTrackingMutableView(\n      (void *)(uintptr_t)surface)\n      .markDirty();\n  return result;\n}"
+    },
+    {
+      "name": "Surface_GetWriteIncrAndMarkDirty",
+      "expected_body_sha256": "67f4eac0fb979c0e33a2af5b0c41afa203885086551effadfac3aa84ba64247a",
+      "replacement_body": "{\n  clash95::render::RenderSurfaceTrackingMutableView tracking(surface);\n  if ( tracking.readOnly().resourceHandle() )\n    tracking.markDirty();\n  return tracking.readOnly().rowStride();\n}"
+    }
+  ]
+}

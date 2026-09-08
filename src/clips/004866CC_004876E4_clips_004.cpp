@@ -285,7 +285,7 @@ int  Surface_BuildPaletteFromBitmap(int pdd, const CHAR *bitmapName)
   int swapIndex; // eax
   char swapTemp; // dl
   _BYTE v20[4]; // [esp+0h] [ebp-458h]
-  char paletteEntries[1024]; // [esp+4h] [ebp-454h] BYREF
+  char paletteEntries[PALETTE_TABLE_BYTES]; // [esp+4h] [ebp-454h] BYREF
   _DWORD bmpHeader[3]; // [esp+404h] [ebp-54h] BYREF
   unsigned __int16 biBitCount; // [esp+412h] [ebp-46h]
   int biClrUsed; // [esp+424h] [ebp-34h]
@@ -307,7 +307,7 @@ int  Surface_BuildPaletteFromBitmap(int pdd, const CHAR *bitmapName)
     ++colorIndex;
     v20[byteOffset + 3] = 0;
   }
-  while ( colorIndex < 256 );
+  while ( colorIndex < PALETTE_COLOR_COUNT );
   if ( bitmapName && (ResourceA = FindResourceA(0, bitmapName, (LPCSTR)2)) != 0 )
   {
     Resource = LoadResource(0, ResourceA);
@@ -349,7 +349,7 @@ int  Surface_BuildPaletteFromBitmap(int pdd, const CHAR *bitmapName)
     {
       lread(fileHandle, Buffer, 0xEu);
       lread(fileHandle, bmpHeader, 0x28u);
-      lread(fileHandle, paletteEntries, 0x400u);
+      lread(fileHandle, paletteEntries, PALETTE_TABLE_COPY_BYTES);
       lclose(fileHandle);
       if ( bmpHeader[0] == 40 && biBitCount <= 8u )
         fileColorCount = biClrUsed ? biClrUsed : 1 << biBitCount;

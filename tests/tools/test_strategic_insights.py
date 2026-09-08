@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import check_clash_dat_unresolved as inventory
 import generate_clash_recovered_constraints as generator
 from decompile_clash_dat import parse_bsave
+from literal_common import parse_prelude_macros
 from split_source_index import scan_definitions
 
 
@@ -330,9 +331,18 @@ class NativeStrategicDataflowTests(unittest.TestCase):
 int sorted_flag, sort_limit, outer_index, outer_offset, inner_index, compare_index, compare_offset, healthy_scan_offset, keep_count;
 _BYTE *swap_a, *swap_b, swap_buffer[28], swap_tail[3];
 """ + source[start:end] + "\nreturn keep_count;\n}\n"
+        # Extracted production bodies now use recovered constants. Import only
+        # their definitions; keep the independent raw state fixtures unchanged.
+        macros = parse_prelude_macros()
+        constant_defines = "".join("#define " + name + " " + macros[name]["body"] + "\n"
+                                  for name in (
+                                      "BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET",
+                                      "UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET",
+                                      "UNIT_SLOT_RECORD_BYTES",
+                                      "BUILDING_GARRISON_SLOT_COUNT"))
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "strategic.cpp"
-            path.write_text(NATIVE_PRELUDE + evaluate + "\n" + regroup + NATIVE_CHECKS)
+            path.write_text(NATIVE_PRELUDE + constant_defines + evaluate + "\n" + regroup + NATIVE_CHECKS)
             for compiler in compilers:
                 for optimize in ("-O0", "-O2"):
                     for char_mode in ("-fsigned-char", "-funsigned-char"):

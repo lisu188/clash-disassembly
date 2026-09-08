@@ -294,8 +294,8 @@ int  BuildingTransferTargetList_Rebuild(int sourceBuildingRecord, int reserveFir
   do
   {
     building_record = result + gameData + BUILDING_TABLE_OFFSET;
-    if ( *(char *)(uintptr_t)(result + gameData + 509678) != -1
-      && *(_BYTE *)(uintptr_t)(result + gameData + 509678)
+    if ( *(char *)(uintptr_t)(result + gameData + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET) != -1
+      && *(_BYTE *)(uintptr_t)(result + gameData + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET)
       && *(unsigned __int8 *)(uintptr_t)(building_record + 2) == current_player
       && building_record != sourceBuildingRecord
       && !*(_WORD *)(uintptr_t)(building_record + 16)
@@ -463,7 +463,7 @@ int  UnitBattle_ResetAiReachGridForSide(int side)
   do
   {
     result = unitRecordOffset + g_MapData;
-    if ( *(__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 852) != -1 )
+    if ( *(__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET) != -1 )
     {
       result = *(unsigned __int8 *)(uintptr_t)(result + 854);
       if ( result == side )
@@ -487,7 +487,7 @@ int  UnitBattle_ResetAiReachGridForSide(int side)
       }
     }
     reachGridBase += 3204;
-    unitRecordOffset += 31;
+    unitRecordOffset += BATTLE_UNIT_ENTRY_STRIDE;
   }
   while ( reachGridBase != 70488 );
   return result;
@@ -537,7 +537,7 @@ signed int  UnitBattle_RetreatUnit(int unitIndex, int a2, char a3, DWORD a4)
    * The moving unit is the function's own unitIndex argument.
    */
   movingUnitIndex = unitIndex;
-  unitRecord = (__int16 *)(uintptr_t)(31 * movingUnitIndex + g_MapData + 852);
+  unitRecord = (__int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * movingUnitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
   searchRadius = 0;
   originX = (unsigned __int16)unitRecord[2];
   signX = 1;
@@ -576,24 +576,24 @@ signed int  UnitBattle_RetreatUnit(int unitIndex, int a2, char a3, DWORD a4)
               while ( 1 )
               {
                 scanRecordBase = scanUnitOffset + g_MapData;
-                if ( *(__int16 *)(uintptr_t)(scanUnitOffset + g_MapData + 852) != -1 && *(_BYTE *)(uintptr_t)(scanRecordBase + 854) != *((_BYTE *)unitRecord + 2) )
+                if ( *(__int16 *)(uintptr_t)(scanUnitOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET) != -1 && *(_BYTE *)(uintptr_t)(scanRecordBase + 854) != *((_BYTE *)unitRecord + 2) )
                 {
                   v8 = *(unsigned __int16 *)(uintptr_t)(scanRecordBase + 858);
                   if ( UnitBattle_IsTileWithinRange(unitIndex, *(unsigned __int16 *)(uintptr_t)(scanRecordBase + 856), (unsigned __int16)v8) )
                   {
                     unitRecord[2] = originX;
                     unitRecord[3] = originY;
-                    g_UnitBattleScanTileRow = *(unsigned __int16 *)(uintptr_t)(scanUnitOffset + g_MapData + 856);
+                    g_UnitBattleScanTileRow = *(unsigned __int16 *)(uintptr_t)(scanUnitOffset + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET);
                     v8 = candidateY;
-                    g_BattleTargetTileCol = *(unsigned __int16 *)(uintptr_t)(scanUnitOffset + g_MapData + 858);
+                    g_BattleTargetTileCol = *(unsigned __int16 *)(uintptr_t)(scanUnitOffset + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET);
                     movePath = UnitBattle_MoveTrack(unitIndex, candidateX, (int)(intptr_t)unitRecord, candidateY, j);
                     *(_DWORD *)((char *)unitRecord + 23) = (_DWORD)(uintptr_t)(movePath);
                     if ( movePath )
                       break;
                   }
                 }
-                scanUnitOffset += 31;
-                if ( scanUnitOffset >= 682 )
+                scanUnitOffset += BATTLE_UNIT_ENTRY_STRIDE;
+                if ( scanUnitOffset >= BATTLE_UNIT_ENTRIES_BYTES )
                   goto LABEL_14;
               }
               UnitBattle_Move(unitIndex, (int)(intptr_t)unitRecord, candidateY, j);
@@ -640,17 +640,17 @@ BOOL  UnitBattle_IsTileWithinMinRange(int unitIndex, int targetX, int targetY)
   int unit_record;
   signed int distance; // eax
 
-  if ( !g_MapData || unitIndex < 0 || unitIndex >= 22 )
+  if ( !g_MapData || unitIndex < 0 || unitIndex >= BATTLE_UNIT_ENTRY_COUNT )
     return 0;
-  unit_record = g_MapData + 31 * unitIndex + 852;
+  unit_record = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * unitIndex + BATTLE_UNIT_ENTRIES_OFFSET;
   if ( *(__int16 *)(uintptr_t)unit_record == -1 )
     return 0;
   distance = Math_CeilSqrt(
-         (*(unsigned __int16 *)(uintptr_t)(31 * unitIndex + g_MapData + 852 + 4) - targetX)
-       * (*(unsigned __int16 *)(uintptr_t)(31 * unitIndex + g_MapData + 852 + 4) - targetX)
-       + (*(unsigned __int16 *)(uintptr_t)(31 * unitIndex + g_MapData + 852 + 6) - targetY)
-       * (*(unsigned __int16 *)(uintptr_t)(31 * unitIndex + g_MapData + 852 + 6) - targetY));
-  return distance <= (unsigned __int8)g_UnitTypeMinRange_512583[88 * *(__int16 *)(uintptr_t)unit_record];
+         (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 4) - targetX)
+       * (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 4) - targetX)
+       + (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 6) - targetY)
+       * (*(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 6) - targetY));
+  return distance <= (unsigned __int8)g_UnitTypeMinRange_512583[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)unit_record];
 }
 // 532048: using guessed type int g_MapData;
 
@@ -704,8 +704,8 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
    * unit-record stride, so the shooter's record was addressed from garbage.
    */
   movingUnitIndex = attackerIndex;
-  unitRecordOffset = 31 * movingUnitIndex;
-  unitRecord = g_MapData + 852 + 31 * movingUnitIndex;
+  unitRecordOffset = BATTLE_UNIT_ENTRY_STRIDE * movingUnitIndex;
+  unitRecord = g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * movingUnitIndex;
   g_BattleShootingUnitMoveActiveFlag = 1;
   if ( UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
@@ -714,18 +714,18 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
     if ( targetOccupant != -1 )
     {
       targetUnitIndex = *(__int16 *)(uintptr_t)(scanRowBase + 2 * g_BattleTargetTileCol + 1534);
-      targetRecordOffset = 31 * targetOccupant;
+      targetRecordOffset = BATTLE_UNIT_ENTRY_STRIDE * targetOccupant;
       while ( 1 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         shotResult = UnitBattle_Shot(attackerIndex, targetUnitIndex);
-        if ( !shotResult && *(unsigned __int8 *)(uintptr_t)(unitRecordOffset + g_MapData + 860) < 5u )
+        if ( !shotResult && *(unsigned __int8 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) < 5u )
           break;
-        if ( !shotResult && *(unsigned __int8 *)(uintptr_t)(unitRecordOffset + g_MapData + 860) >= 5u )
+        if ( !shotResult && *(unsigned __int8 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) >= 5u )
           return 1;
-        if ( *(__int16 *)(uintptr_t)(g_MapData + unitRecordOffset + 852) == -1 )
+        if ( *(__int16 *)(uintptr_t)(g_MapData + unitRecordOffset + BATTLE_UNIT_ENTRIES_OFFSET) == -1 )
           break;
-        if ( *(__int16 *)(uintptr_t)(targetRecordOffset + g_MapData + 852) == -1 )
+        if ( *(__int16 *)(uintptr_t)(targetRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET) == -1 )
           return 1;
       }
       return 0;
@@ -738,7 +738,7 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
       return result;
   }
   if ( *(char *)(uintptr_t)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) > 0
-    && *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * attackerIndex + 854) == *(_DWORD *)(uintptr_t)(g_MapData + 836) )
+    && *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * attackerIndex + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) == *(_DWORD *)(uintptr_t)(g_MapData + 836) )
   {
     movePath = (int)(intptr_t)(UnitBattle_MoveTrackNearWall(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol, unitRecordOffset));
   }
@@ -804,25 +804,25 @@ LABEL_40:
   *(_DWORD *)(uintptr_t)(unitRecord + 23) = 0;
 LABEL_41:
   if ( *(char *)(uintptr_t)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) <= 0
-    || *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * attackerIndex + 854) != *(_DWORD *)(uintptr_t)(g_MapData + 836)
+    || *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * attackerIndex + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) != *(_DWORD *)(uintptr_t)(g_MapData + 836)
     || (occupantUnitIndex = *(__int16 *)(uintptr_t)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534), occupantUnitIndex != -1)
-    && *(unsigned __int8 *)(uintptr_t)(31 * occupantUnitIndex + g_MapData + 854) != defenderSide )
+    && *(unsigned __int8 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * occupantUnitIndex + g_MapData + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) != defenderSide )
   {
     if ( UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
     {
       shotTargetUnitIndex = *(__int16 *)(uintptr_t)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534);
-      shotShooterRecordOffset = 31 * attackerIndex;
+      shotShooterRecordOffset = BATTLE_UNIT_ENTRY_STRIDE * attackerIndex;
       while ( 1 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         secondShotResult = UnitBattle_Shot(attackerIndex, shotTargetUnitIndex);
-        if ( !secondShotResult && *(unsigned __int8 *)(uintptr_t)(shotShooterRecordOffset + g_MapData + 860) < 5u )
+        if ( !secondShotResult && *(unsigned __int8 *)(uintptr_t)(shotShooterRecordOffset + g_MapData + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) < 5u )
           break;
-        if ( !secondShotResult && *(unsigned __int8 *)(uintptr_t)(shotShooterRecordOffset + g_MapData + 860) >= 5u )
+        if ( !secondShotResult && *(unsigned __int8 *)(uintptr_t)(shotShooterRecordOffset + g_MapData + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) >= 5u )
           return 1;
-        if ( *(__int16 *)(uintptr_t)(g_MapData + shotShooterRecordOffset + 852) == -1 )
+        if ( *(__int16 *)(uintptr_t)(g_MapData + shotShooterRecordOffset + BATTLE_UNIT_ENTRIES_OFFSET) == -1 )
           return 0;
-        if ( *(__int16 *)(uintptr_t)(31 * shotTargetUnitIndex + g_MapData + 852) == -1 )
+        if ( *(__int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * shotTargetUnitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET) == -1 )
           return 1;
       }
     }
@@ -830,17 +830,17 @@ LABEL_41:
   }
   if ( !UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
     return 0;
-  shooterRecordOffset = 31 * attackerIndex;
+  shooterRecordOffset = BATTLE_UNIT_ENTRY_STRIDE * attackerIndex;
   do
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     if ( *(char *)(uintptr_t)(g_BattleTargetTileCol + 20 * g_UnitBattleScanTileRow + g_MapData + 3134) <= 0 )
       return 1;
     wallShotResult = UnitBattle_ShotWall(attackerIndex, g_UnitBattleScanTileRow);
-    if ( !wallShotResult && *(unsigned __int8 *)(uintptr_t)(shooterRecordOffset + g_MapData + 860) < 5u )
+    if ( !wallShotResult && *(unsigned __int8 *)(uintptr_t)(shooterRecordOffset + g_MapData + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) < 5u )
       return 0;
   }
-  while ( wallShotResult || *(unsigned __int8 *)(uintptr_t)(shooterRecordOffset + g_MapData + 860) < 5u );
+  while ( wallShotResult || *(unsigned __int8 *)(uintptr_t)(shooterRecordOffset + g_MapData + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) < 5u );
   return 1;
 }
 // 4370DD/4370FE/437160/4371E9/437200/437283/437343/4373D1/43748A/437545/437552/4375CE:
@@ -887,18 +887,18 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
   int trackStep; // [esp+24h] [ebp-1Ch]
   int *movePath; // [esp+28h] [ebp-18h]
 
-  attackerRecord = (__int16 *)(uintptr_t)(g_MapData + 852 + 31 * attackerIndex);
+  attackerRecord = (__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * attackerIndex);
   savedRow = (unsigned __int16)attackerRecord[2];
   savedCol = (unsigned __int16)attackerRecord[3];
   savedActionPoints = *((_BYTE *)attackerRecord + 8);
   attackerUnitType = *attackerRecord;
-  defenderRecord = (__int16 *)(uintptr_t)(31 * defenderIndex + g_MapData + 852);
+  defenderRecord = (__int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * defenderIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
   if ( attackerUnitType == UNIT_TYPE_RAM )
     return 0;
   result = (int *)UnitBattle_MoveTrackNear(
                     attackerIndex,
-                    31 * defenderIndex + g_MapData + 852,
-                    *(unsigned __int16 *)(uintptr_t)(31 * defenderIndex + g_MapData + 852 + 6),
+                    BATTLE_UNIT_ENTRY_STRIDE * defenderIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET,
+                    *(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * defenderIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + 6),
                     defenderIndex);
   movePath = result;
   if ( result )
@@ -907,7 +907,7 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
     altEffectiveness = Unit_CalcEffectivenessC(defenderRecord);
     if ( altEffectiveness > v9 )
       effectiveness = altEffectiveness;
-    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(g_MapData + 31 * attackerIndex + 852)] )
+    if ( g_UnitTypeMaxRange_512582[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * attackerIndex + BATTLE_UNIT_ENTRIES_OFFSET)] )
     {
       defenderHealth = *((char *)defenderRecord + 9);
       HIWORD(trackStep) = 0;
@@ -996,7 +996,7 @@ LABEL_41:
       }
       else if ( *((unsigned __int8 *)attackerRecord + 8) < 5u )
       {
-        defenderHealth = *(char *)(uintptr_t)(31 * defenderIndex + g_MapData + 861);
+        defenderHealth = *(char *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * defenderIndex + g_MapData + BATTLE_UNIT_HEALTH_PERCENT_TABLE_OFFSET);
         UnitBattle_CalcMeleeExchange(attackerIndex, defenderIndex, &defenderHealthOut, (_DWORD*)(&attackerHealthOut), 0);
         j__nfree_();
         return (int *)(uintptr_t)(effectiveness * (defenderHealth - defenderHealthOut) / 100);
@@ -1093,28 +1093,28 @@ int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int unitIndex, int side, int a
 
   bestScore = 0;
   scanOffset = 0;
-  unitRecordOffset = 31 * unitIndex;
+  unitRecordOffset = BATTLE_UNIT_ENTRY_STRIDE * unitIndex;
   do
   {
-    v3 = *(__int16 *)(uintptr_t)(g_MapData + scanOffset + 852);
-    if ( v3 != -1 && *(unsigned __int8 *)(uintptr_t)(g_MapData + scanOffset + 854) == side && g_UnitTypeRuntimeCoreMetadata[v3].role == 4 )
+    v3 = *(__int16 *)(uintptr_t)(g_MapData + scanOffset + BATTLE_UNIT_ENTRIES_OFFSET);
+    if ( v3 != -1 && *(unsigned __int8 *)(uintptr_t)(g_MapData + scanOffset + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) == side && g_UnitTypeRuntimeCoreMetadata[v3].role == 4 )
     {
-      Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + 852), 0);
-      v4 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 852));
+      Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET), 0);
+      v4 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET));
       if ( v5 <= v4 )
-        v6 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 852));
+        v6 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET));
       else
-        v6 = Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + 852), 0);
+        v6 = Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET), 0);
       effectiveness = v6;
-      targetCol = *(unsigned __int16 *)(uintptr_t)(scanOffset + g_MapData + 858);
-      targetRow = *(unsigned __int16 *)(uintptr_t)(scanOffset + g_MapData + 856);
+      targetCol = *(unsigned __int16 *)(uintptr_t)(scanOffset + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET);
+      targetRow = *(unsigned __int16 *)(uintptr_t)(scanOffset + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET);
       Debug_Log(scanOffset, targetCol, a3, (int)(intptr_t)aOddzial_w_zasi);
-      unitRecordPtr = unitRecordOffset + g_MapData + 852;
+      unitRecordPtr = unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET;
       a3 = (unsigned __int16)targetCol;
       if ( UnitBattle_IsTileWithinRange(unitIndex, v9, (unsigned __int16)targetCol)
-        && (*(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + 864) & 3)
+        && (*(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET) & 3)
          + 1
-         - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + 864)) >> 5) > 0 )
+         - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET)) >> 5) > 0 )
       {
         scoreDelta = 0;
 LABEL_10:
@@ -1124,7 +1124,7 @@ LABEL_10:
       v20 = targetRow;
       if ( *(char *)(uintptr_t)(g_MapData + 20 * targetRow + targetCol + 3134) <= 0
         || (v20 = g_MapData + 40 * targetRow, *(__int16 *)(uintptr_t)(v20 + 2 * targetCol + 1534) != -1)
-        && ((v21 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v21 + 852)] & 1) != 0)
+        && ((v21 = BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData, (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * *(__int16 *)(uintptr_t)(v21 + BATTLE_UNIT_ENTRIES_OFFSET)] & 1) != 0)
          || (*(_BYTE *)(uintptr_t)(v21 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v21 + 864)) >> 5) > 0) )
       {
         v22 = (int *)UnitBattle_MoveTrackNear(unitIndex, v20, targetCol, (unsigned __int16)targetCol);
@@ -1136,8 +1136,8 @@ LABEL_10:
       movePath = v22;
       if ( !v22 )
       {
-        v24 = 31 * unitIndex + g_MapData;
-        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v24 + 852)] )
+        v24 = BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData;
+        if ( g_UnitTypeMaxRange_512582[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(v24 + BATTLE_UNIT_ENTRIES_OFFSET)] )
         {
           if ( (*(_BYTE *)(uintptr_t)(v24 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v24 + 864)) >> 5) > 0 )
             movePath = UnitBattle_MoveTrackForce(unitIndex, targetCol, (unsigned __int16)targetCol);
@@ -1153,8 +1153,8 @@ LABEL_10:
         j__nfree_();
         goto LABEL_10;
       }
-      v25 = g_MapData + 31 * unitIndex;
-      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v25 + 852)]
+      v25 = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * unitIndex;
+      if ( g_UnitTypeMaxRange_512582[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(v25 + BATTLE_UNIT_ENTRIES_OFFSET)]
         && (*(_BYTE *)(uintptr_t)(v25 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v25 + 864)) >> 5) > 0 )
       {
         savedRow = BATTLE_UNIT_GRID_X(unitRecordPtr);
@@ -1223,22 +1223,22 @@ LABEL_54:
 LABEL_11:
       if ( effectiveness * (scoreDelta / 5) <= bestScore )
         goto LABEL_19;
-      Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + 852), 0);
-      v11 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 852));
+      Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET), 0);
+      v11 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET));
       if ( v12 <= v11 )
-        v13 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 852));
+        v13 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET));
       else
-        v13 = Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + 852), 0);
+        v13 = Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET), 0);
       effectiveness2 = v13;
-      LOWORD(v15) = *(_WORD *)(uintptr_t)(scanOffset + g_MapData + 858);
+      LOWORD(v15) = *(_WORD *)(uintptr_t)(scanOffset + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET);
       targetCol2 = (unsigned __int16)v15;
       Debug_Log(v14, v15, a3, (int)(intptr_t)aOddzial_w_zasi);
-      unitRecordPtr2 = g_MapData + 852 + unitRecordOffset;
+      unitRecordPtr2 = g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + unitRecordOffset;
       a3 = v17;
       if ( UnitBattle_IsTileWithinRange(unitIndex, v17, (unsigned __int16)v15)
-        && (*(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + 864) & 3)
+        && (*(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET) & 3)
          + 1
-         - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + 864)) >> 5) > 0 )
+         - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET)) >> 5) > 0 )
       {
         scoreDelta2 = 0;
 LABEL_17:
@@ -1256,7 +1256,7 @@ LABEL_18:
       {
         v32 = g_MapData + 40 * a3;
         if ( *(__int16 *)(uintptr_t)(v32 + 2 * (unsigned __int16)v15 + 1534) == -1
-          || (v33 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v33 + 852)] & 1) == 0)
+          || (v33 = BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData, (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * *(__int16 *)(uintptr_t)(v33 + BATTLE_UNIT_ENTRIES_OFFSET)] & 1) == 0)
           && (*(_BYTE *)(uintptr_t)(v33 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v33 + 864)) >> 5) <= 0 )
         {
           v34 = UnitBattle_MoveTrackNearWall(unitIndex, a3, (unsigned __int16)v15, a3);
@@ -1269,8 +1269,8 @@ LABEL_61:
       movePath2 = v34;
       if ( !v34 )
       {
-        v36 = 31 * unitIndex + g_MapData;
-        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v36 + 852)] )
+        v36 = BATTLE_UNIT_ENTRY_STRIDE * unitIndex + g_MapData;
+        if ( g_UnitTypeMaxRange_512582[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(v36 + BATTLE_UNIT_ENTRIES_OFFSET)] )
         {
           if ( (*(_BYTE *)(uintptr_t)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v36 + 864)) >> 5) > 0 )
             movePath2 = UnitBattle_MoveTrackForce(unitIndex, (unsigned __int16)v15, a3);
@@ -1286,8 +1286,8 @@ LABEL_61:
         j__nfree_();
         goto LABEL_17;
       }
-      v37 = g_MapData + 31 * unitIndex;
-      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v37 + 852)]
+      v37 = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * unitIndex;
+      if ( g_UnitTypeMaxRange_512582[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(v37 + BATTLE_UNIT_ENTRIES_OFFSET)]
         && (*(_BYTE *)(uintptr_t)(v37 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v37 + 864)) >> 5) > 0 )
       {
         savedRow2 = BATTLE_UNIT_GRID_X(unitRecordPtr2);
@@ -1353,9 +1353,9 @@ LABEL_89:
       goto LABEL_83;
     }
 LABEL_19:
-    scanOffset += 31;
+    scanOffset += BATTLE_UNIT_ENTRY_STRIDE;
   }
-  while ( scanOffset != 682 );
+  while ( scanOffset != BATTLE_UNIT_ENTRIES_BYTES );
   return bestScore;
 }
 // 437B33: variable 'v5' is possibly undefined

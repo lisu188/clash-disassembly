@@ -20,8 +20,9 @@ Current baseline:
 
 - the 3,031-symbol `sub_XXXXXX` rename campaign is complete;
 - all 17 `JUMPOUT` control-flow scars are recovered;
-- the recovered implementation is split-only: 4,157 functions in 140 GNU++20
-  translation units across 12 subsystem object libraries;
+- the recovered implementation is split-only: 4,157 identities across 12
+  subsystem object libraries; the ordered source manifest currently contains
+  144 GNU++20 translation units, including four canonical class sources;
 - `clash95_bootstrap` builds and enters the authentic SDL-backed runtime;
 - menu, direct campaign, save-format, multiplayer-map, and route probes exist;
 - all recovered multiplayer map IDs `0..10` have direct-load visual/liveness

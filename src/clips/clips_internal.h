@@ -486,7 +486,7 @@ char  Rules_FormatParseFlag(int formatString, int *formatIndex, _DWORD *longFlag
 signed int  Rules_FormatConvertArg(const char *formatSpec, int argIndex, int longFlag, unsigned int conversionChar, double context);
 signed int * Rules_HostReadline(int returnValue, unsigned int a2, double context);
 char * Rules_ReadLineWithEscaping(int logicalName, int *currentPosition, unsigned int *maximumSize, unsigned int a4);
-signed int Rules_ReportIllegalLogicalName(void);
+signed int Rules_ReportIllegalLogicalName(int functionName);
 int  Rules_HostEq(int returnValue, double context);
 int  Rules_HostNeq(double context);
 BOOL  Rules_HostStringp(double context);

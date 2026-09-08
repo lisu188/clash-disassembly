@@ -700,7 +700,7 @@ LABEL_6:
              &v12,
              v14,
              v19,
-             (char)(intptr_t)aStructFactpatt,
+             aStructFactpatt,
              **(const char ***)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20),
              0,
              0);

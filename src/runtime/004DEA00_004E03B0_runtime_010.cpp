@@ -1358,7 +1358,7 @@ int  Compiler_WriteDefinstancesToCode(const char *fileName, const char *pathName
              &fileNameBuffer,
              moduleArrayVersion,
              savedImageID,
-             (char)(intptr_t)aDefinstances_m,
+             aDefinstances_m,
              **(const char ***)(uintptr_t)(g_DefinstancesCodeGenItem + 20),
              0,
              0);
@@ -1391,7 +1391,7 @@ LABEL_6:
               &fileNameBuffer,
               definstancesArrayVersion,
               savedImageID,
-              (char)(intptr_t)aDefinstances_3,
+              aDefinstances_3,
               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefinstancesCodeGenItem + 20) + 4),
               0,
               0);

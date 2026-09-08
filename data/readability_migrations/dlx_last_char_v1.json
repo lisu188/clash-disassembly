@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "source": "src/render/00405DB0_00407D20_render_004.cpp",
+  "includes": [
+    "dlx_sprite_set_view.h"
+  ],
+  "functions": [
+    {
+      "name": "DLXSpriteSet_GetLastCharIndex",
+      "expected_body_sha256": "18dd64e0d0e284587243509956572e40344f8b3d4dd54338c814bf0cda2c9cc2",
+      "replacement_body": "{\n  const clash95::render::DLXSpriteSetView spriteSet(\n      (const void *)(uintptr_t)sprite_set);\n  return (int)spriteSet.legacyLastCharResult((std::uint32_t)sprite_set);\n}"
+    }
+  ]
+}

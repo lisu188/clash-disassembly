@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "source": "src/media/004637B0_00465D30_media_001.cpp",
+  "includes": [
+    "avi_decompressor_view.h"
+  ],
+  "functions": [
+    {
+      "name": "CAviDecompressor_Initialized",
+      "expected_body_sha256": "4fda40de4b3c34eebe47718f215a8c6086a5b6e6c25691d1388a0a608a6d7521",
+      "replacement_body": "{\n  return clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle)\n      .initialized();\n}"
+    },
+    {
+      "name": "CAviDecompressor_WaitForNextFrame",
+      "expected_body_sha256": "3f428238126a056e9b82759b1f5cfe9af35b2af36caf03f54f9c219b57b55c07",
+      "replacement_body": "{\n  const auto view =\n      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle);\n  if (view.isPlaying())\n    WaitForSingleObject((HANDLE)(uintptr_t)view.frameEventHandle(), 0x1F4u);\n}"
+    }
+  ]
+}

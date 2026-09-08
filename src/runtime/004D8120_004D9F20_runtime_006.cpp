@@ -133,7 +133,7 @@ signed int  Compiler_WriteModuleTableFile(const char *fileName, const char *path
   fileVersion = 2;
   Output_WriteFormatted(0, 0, headerFile, (int)(intptr_t)aIncludeModulde, 0);
   portItemCount = 0;
-  result = Rules_OpenConstructCodeFile(fileNameLocal, (int)(intptr_t)pathNameLocal, 1, 0);
+  result = Rules_OpenConstructCodeFile(fileNameLocal, (int)(intptr_t)pathNameLocal, 1, 0, 0);
   moduleFile = result;
   if ( result )
   {
@@ -157,7 +157,7 @@ signed int  Compiler_WriteModuleTableFile(const char *fileName, const char *path
                 &fileVersion,
                 arrayVersion,
                 headerFP,
-                (char)(intptr_t)aStructDefmod_0,
+                aStructDefmod_0,
                 (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20) + 4),
                 0,
                 0);
@@ -345,7 +345,7 @@ signed int  Compiler_WritePortItemTableFile(
              fileVersion,
              arrayVersion,
              headerFPLocal,
-             (char)(intptr_t)aStructPortitem,
+             aStructPortitem,
              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20) + 8),
              0,
              0);

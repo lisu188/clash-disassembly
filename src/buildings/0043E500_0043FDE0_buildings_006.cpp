@@ -194,7 +194,7 @@ BOOL  Building_BuyUnitLicence(int building, unit_type unitType, int a3, DWORD ga
   {
     nationData = gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(building + 2);
     licenceCost = (unsigned __int16)g_UnitTypeRuntimeCoreMetadata[unitType].production_licence_cost;
-    if ( !*(_DWORD *)(uintptr_t)(nationData + 140051) && *(int *)(uintptr_t)(nationData + 140055) >= 2 )
+    if ( !*(_DWORD *)(uintptr_t)(nationData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) && *(int *)(uintptr_t)(nationData + 140055) >= 2 )
       licenceCost = (int)(75 * licenceCost) / 100;
     if ( licenceCost > *(_DWORD *)(uintptr_t)(building + 438) )
       return 0;
@@ -256,7 +256,7 @@ int  Building_SetUnitProduction(int building, char licenceSlot, DWORD gameContex
   BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = slotIndex;
   result = PLAYER_DATA_STRIDE * buildingPtr[2];
   BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeRuntimeCoreMetadata[(int)(signed __int8)buildingPtr[slotIndex + 402]].production_time;
-  if ( !*(_DWORD *)(uintptr_t)(result + gameData + 140051)
+  if ( !*(_DWORD *)(uintptr_t)(result + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET)
     && *(int *)(uintptr_t)(result + gameData + 140055) >= 1
     && (char)BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) > 1 )
   {
@@ -285,11 +285,11 @@ _BYTE * Building_TrainUnit(int building, char garrisonSlot, DWORD gameContext)
   slotIndex = (unsigned __int8)garrisonSlot;
   buildingBase = building;
   Debug_Log(building, garrisonSlot, gameContext, (int)(intptr_t)aBuildingTrainUnit);
-  result = (_BYTE *)(uintptr_t)(*(_BYTE *)(uintptr_t)(buildingBase + 31 * slotIndex + 30) & 3);
+  result = (_BYTE *)(uintptr_t)(*(_BYTE *)(uintptr_t)(buildingBase + UNIT_SLOT_RECORD_BYTES * slotIndex + 30) & 3);
   if ( result != (_BYTE *)3 )
   {
     result = (_BYTE *)(uintptr_t)(buildingBase + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
-    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingBase + 2) + gameData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingBase + 2) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       trainingTurns = (*(_BYTE *)(uintptr_t)(buildingBase + 4) == 2) + 1;
     else
       trainingTurns = (*(_BYTE *)(uintptr_t)(buildingBase + 4) == 2) + 4;
@@ -317,7 +317,7 @@ __int16  Building_RepairUnit(int building, int slotIndex, DWORD gameContext)
   unsigned __int8 repairTurns; // al
 
   Debug_Log(building, slotIndex, gameContext, (int)(intptr_t)aBuildingRepairUnit);
-  currentHealth = *(signed __int8 *)(uintptr_t)(building + 31 * slotIndex + 27);
+  currentHealth = *(signed __int8 *)(uintptr_t)(building + UNIT_SLOT_RECORD_BYTES * slotIndex + 27);
   if ( currentHealth != 100 )
   {
     repairTimer = (unsigned __int8 *)(uintptr_t)(building + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
@@ -340,13 +340,13 @@ int  Building_CountGarrison(int building)
   int garrisonEnd; // ebx
   int count; // edx
 
-  garrisonEnd = building + 372;
+  garrisonEnd = building + BUILDING_GARRISON_SLOTS_BYTES;
   count = 0;
   do
   {
     if ( *(__int16 *)(uintptr_t)(building + 18) != -1 )
       ++count;
-    building += 31;
+    building += UNIT_SLOT_RECORD_BYTES;
   }
   while ( building != garrisonEnd );
   return count;
@@ -359,7 +359,7 @@ int  Building_CountSpecialPersonageGarrisonEntries(int building)
   int count; // ecx
   int unitType; // edx
 
-  garrisonEnd = building + 372;
+  garrisonEnd = building + BUILDING_GARRISON_SLOTS_BYTES;
   count = 0;
   do
   {
@@ -369,7 +369,7 @@ int  Building_CountSpecialPersonageGarrisonEntries(int building)
       if ( unitType != -1 )
         break;
 LABEL_5:
-      building += 31;
+      building += UNIT_SLOT_RECORD_BYTES;
       if ( building == garrisonEnd )
         return count;
     }
@@ -378,7 +378,7 @@ LABEL_5:
       ++count;
       goto LABEL_5;
     }
-    building += 31;
+    building += UNIT_SLOT_RECORD_BYTES;
   }
   while ( building != garrisonEnd );
   return count;
@@ -399,7 +399,7 @@ int  Building_CountNonCombatGarrisonEntries(int building)
 
   slotPtr = building;
   count = 0;
-  garrisonEnd = building + 372;
+  garrisonEnd = building + BUILDING_GARRISON_SLOTS_BYTES;
   do
   {
     while ( 1 )
@@ -408,7 +408,7 @@ int  Building_CountNonCombatGarrisonEntries(int building)
       if ( unitType != -1 )
         break;
 LABEL_5:
-      slotPtr += 31;
+      slotPtr += UNIT_SLOT_RECORD_BYTES;
       if ( slotPtr == garrisonEnd )
         return count;
     }
@@ -420,7 +420,7 @@ LABEL_5:
       ++count;
       goto LABEL_5;
     }
-    slotPtr += 31;
+    slotPtr += UNIT_SLOT_RECORD_BYTES;
   }
   while ( slotPtr != garrisonEnd );
   return count;
@@ -439,8 +439,8 @@ signed int  Building_HasSpecialPersonageGarrisonEntries(int building)
     if ( unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || unitType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       break;
     ++slotIndex;
-    building += 31;
-    if ( slotIndex >= 12 )
+    building += UNIT_SLOT_RECORD_BYTES;
+    if ( slotIndex >= BUILDING_GARRISON_SLOT_COUNT )
       return 0;
   }
   return 1;
@@ -465,13 +465,13 @@ int  Building_CompactGarrison(unsigned __int8 *building, unsigned __int8 *a2, do
     if ( *((__int16 *)slotPtr + 9) == -1 )
     {
       readIndex = writeIndex;
-      movePtr = &building[31 * writeIndex];
-      for ( j = &building[31 * writeIndex + 31]; readIndex < 11; destPtr[2] = srcPtr[2] )
+      movePtr = &building[UNIT_SLOT_RECORD_BYTES * writeIndex];
+      for ( j = &building[UNIT_SLOT_RECORD_BYTES * writeIndex + UNIT_SLOT_RECORD_BYTES]; readIndex < 11; destPtr[2] = srcPtr[2] )
       {
         destPtr = movePtr + 18;
-        movePtr += 31;
+        movePtr += UNIT_SLOT_RECORD_BYTES;
         srcPtr = j + 18;
-        j += 31;
+        j += UNIT_SLOT_RECORD_BYTES;
         ++readIndex;
         qmemcpy(destPtr, srcPtr, 0x1Cu);
         srcPtr += 28;
@@ -483,9 +483,9 @@ int  Building_CompactGarrison(unsigned __int8 *building, unsigned __int8 *a2, do
     }
     else
     {
-      a2 = slotPtr + 31;
+      a2 = slotPtr + UNIT_SLOT_RECORD_BYTES;
       ++writeIndex;
-      slotPtr += 31;
+      slotPtr += UNIT_SLOT_RECORD_BYTES;
     }
   }
   return Building_OnGarrisonChange(
@@ -509,7 +509,7 @@ BOOL  Building_IsUnitLicenceEligible(char *building, unit_type unitType)
   buildingType = building[4];
   if ( !buildingType )
     return 0;
-  v5 = 88 * unitType;
+  v5 = UNIT_TYPE_METADATA_STRIDE * unitType;
   requiredTechLevel = buildingType == 2
      ? g_UnitTypeRuntimeCoreMetadata[v5 / UNIT_TYPE_METADATA_STRIDE].production_required_tech_level_mode_2
      : g_UnitTypeRuntimeCoreMetadata[v5 / UNIT_TYPE_METADATA_STRIDE].production_required_tech_level_other_modes;
@@ -546,11 +546,11 @@ int  Building_AdjustAllGarrisonMoraleByDelta(int building, int moraleDelta)
 
   slot = building + 18;
   result = 0;
-  for ( slot_index = 0; slot_index < 12; ++slot_index )
+  for ( slot_index = 0; slot_index < BUILDING_GARRISON_SLOT_COUNT; ++slot_index )
   {
     if ( *(__int16 *)(uintptr_t)slot != -1 )
       result = UnitSlot_AdjustMoraleByPredicate(slot, moraleDelta, UnitSlot_PredicateAlways);
-    slot += 31;
+    slot += UNIT_SLOT_RECORD_BYTES;
   }
   return result;
 }
@@ -572,19 +572,19 @@ int  Building_CycleAllGarrisonOrdersOnce(int building)
   {
     while ( 1 )
     {
-      result = 31 * slotIndex;
+      result = UNIT_SLOT_RECORD_BYTES * slotIndex;
       if ( *(__int16 *)(uintptr_t)(slotPtr + 18) != -1 )
         break;
       ++slotIndex;
-      slotPtr += 31;
-      if ( slotIndex >= 12 )
+      slotPtr += UNIT_SLOT_RECORD_BYTES;
+      if ( slotIndex >= BUILDING_GARRISON_SLOT_COUNT )
         return result;
     }
     result = UnitSlot_CycleOrderState(garrisonBase + result);
     slotIndex = v5 + 1;
-    slotPtr = v6 + 31;
+    slotPtr = v6 + UNIT_SLOT_RECORD_BYTES;
   }
-  while ( slotIndex < 12 );
+  while ( slotIndex < BUILDING_GARRISON_SLOT_COUNT );
   return result;
 }
 // 43EE41: variable 'v5' is possibly undefined
@@ -821,8 +821,8 @@ int  AI_TickNationPostTurn(int playerIndex)
   buildingOffset = 0;
   do
   {
-    buildingState = *(char *)(uintptr_t)(buildingOffset + gameData + 509678);
-    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
+    buildingState = *(char *)(uintptr_t)(buildingOffset + gameData + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET);
+    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == playerIndex && buildingIndex >= 0 )
     {
       buildingRecord = buildingOffset + gameData + BUILDING_TABLE_OFFSET;
       if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4 && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1 )
@@ -832,18 +832,18 @@ int  AI_TickNationPostTurn(int playerIndex)
       }
     }
     ++buildingIndex;
-    buildingOffset += 467;
+    buildingOffset += BUILDING_RECORD_SIZE;
   }
   while ( buildingIndex < 100 );
-  for ( i = 0; i != 362500; i += 725 )
+  for ( i = 0; i != UNIT_STACK_TABLE_BYTES; i += UNIT_STACK_STRIDE )
   {
-    if ( *(unsigned __int8 *)(uintptr_t)(i + gameData + 147178) == playerIndex && *(__int16 *)(uintptr_t)(i + gameData + 147180) != -1 )
+    if ( *(unsigned __int8 *)(uintptr_t)(i + gameData + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == playerIndex && *(__int16 *)(uintptr_t)(i + gameData + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) != -1 )
     {
-      for ( j = 0; j != 310; j += 31 )
+      for ( j = 0; j != UNIT_STACK_SLOTS_BYTES; j += UNIT_SLOT_RECORD_BYTES )
       {
-        cargoType = *(__int16 *)(uintptr_t)(i + gameData + j + 147180);
+        cargoType = *(__int16 *)(uintptr_t)(i + gameData + j + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET);
         if ( cargoType == UNIT_TYPE_GOLD_CARGO || cargoType == UNIT_TYPE_PEASANT_CARGO )
-          totalValue += *(char *)(uintptr_t)(i + gameData + j + 147189);
+          totalValue += *(char *)(uintptr_t)(i + gameData + j + UNIT_STACK_SLOT_CURRENT_HEALTH_PERCENT_TABLE_OFFSET);
       }
     }
   }
@@ -868,15 +868,15 @@ int  Player_CalcAvailableStrongholdFunds(int playerIndex)
   buildingOffset = 0;
   do
   {
-    buildingState = *(char *)(uintptr_t)(gameData + buildingOffset + 509678);
-    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
+    buildingState = *(char *)(uintptr_t)(gameData + buildingOffset + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET);
+    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == playerIndex && buildingIndex >= 0 )
     {
       buildingRecord = buildingOffset + gameData + BUILDING_TABLE_OFFSET;
       if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4 && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1 )
-        totalFunds += *(_DWORD *)(uintptr_t)(buildingOffset + gameData + 510112);
+        totalFunds += *(_DWORD *)(uintptr_t)(buildingOffset + gameData + BUILDING_STORED_MONEY_TABLE_OFFSET);
     }
     ++buildingIndex;
-    buildingOffset += 467;
+    buildingOffset += BUILDING_RECORD_SIZE;
   }
   while ( buildingIndex < 100 );
   return totalFunds;
@@ -899,12 +899,12 @@ int  Player_SpendStrongholdFundsEvenly(int playerIndex, signed int remaining)
   do
   {
     strongholdCount = 0;
-    for ( i = 0; i != 46700; i += 467 )
+    for ( i = 0; i != BUILDING_TABLE_BYTES; i += BUILDING_RECORD_SIZE )
     {
-      buildingState = *(char *)(uintptr_t)(gameData + i + 509678);
+      buildingState = *(char *)(uintptr_t)(gameData + i + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET);
       if ( (buildingState == 2 || buildingState == 1)
-        && *(unsigned __int8 *)(uintptr_t)(i + gameData + 509676) == playerIndex
-        && *(_DWORD *)(uintptr_t)(i + gameData + 510112) )
+        && *(unsigned __int8 *)(uintptr_t)(i + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == playerIndex
+        && *(_DWORD *)(uintptr_t)(i + gameData + BUILDING_STORED_MONEY_TABLE_OFFSET) )
       {
         ++strongholdCount;
       }
@@ -918,11 +918,11 @@ int  Player_SpendStrongholdFundsEvenly(int playerIndex, signed int remaining)
     buildingOffset = 0;
     do
     {
-      result = *(char *)(uintptr_t)(buildingOffset + gameData + 509678);
+      result = *(char *)(uintptr_t)(buildingOffset + gameData + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET);
       if ( result == 2 || result == 1 )
       {
         result = buildingOffset + gameData;
-        if ( playerIndex == *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + 509676) )
+        if ( playerIndex == *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) )
         {
           availableFunds = *(_DWORD *)(uintptr_t)(result + 510112);
           if ( availableFunds )
@@ -941,9 +941,9 @@ int  Player_SpendStrongholdFundsEvenly(int playerIndex, signed int remaining)
           }
         }
       }
-      buildingOffset += 467;
+      buildingOffset += BUILDING_RECORD_SIZE;
     }
-    while ( buildingOffset < 46700 && strongholdCount );
+    while ( buildingOffset < BUILDING_TABLE_BYTES && strongholdCount );
   }
   while ( remaining );
   return result;
@@ -1230,7 +1230,7 @@ int * Temple_GenerateApproachTrack(int stackIndex, int tileX, int a3, int tileY)
   Debug_Log(stackIndex, tileX, tileY, (int)(intptr_t)aUnit_movetra_2);
   saved_site_word = *(_WORD *)(uintptr_t)(gameData + tile_record_offset + 2);
   *(_WORD *)(uintptr_t)(gameData + tile_record_offset + 2) = -1;
-  current_y = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + 147176);
+  current_y = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     Diagnostics_TraceWorldMapActionEvent("temple_track_request", stackIndex, tileX, tileY, saved_site_word);
   result = Unit_MoveTrack(
@@ -1277,7 +1277,7 @@ __int16 * Temple_SpawnGiftUnitGroup(int tileX, int tileY, double gameTime)
     for ( i = 0; i != 4; ++i )
     {
       UnitSlot_InitFromType((int)(intptr_t)scriptedSlotPtr, g_TempleGiftUnitPool_ScriptedRam[i], v3);
-      scriptedSlotPtr = (_WORD *)((char *)scriptedSlotPtr + 31);
+      scriptedSlotPtr = (_WORD *)((char *)scriptedSlotPtr + UNIT_SLOT_RECORD_BYTES);
     }
     giftUnitCount = 4;
   }
@@ -1304,12 +1304,12 @@ __int16 * Temple_SpawnGiftUnitGroup(int tileX, int tileY, double gameTime)
         }
         UnitSlot_InitFromType((int)(intptr_t)randomSlotPtr, unitType, ownerFaction);
         ++spawnedCount;
-        randomSlotPtr = (_WORD *)((char *)randomSlotPtr + 31);
+        randomSlotPtr = (_WORD *)((char *)randomSlotPtr + UNIT_SLOT_RECORD_BYTES);
       }
       while ( spawnedCount < giftUnitCount );
     }
   }
-  *(_WORD *)((char *)unitStack + 31 * giftUnitCount) = -1;
+  *(_WORD *)((char *)unitStack + UNIT_SLOT_RECORD_BYTES * giftUnitCount) = -1;
   result = (__int16 *)(uintptr_t)Unit_CreateNearbyUnitGroup(siteX, siteY, (unsigned __int8 *)unitStack, gameTime);
   if ( result )
     return (__int16 *)(uintptr_t)UI_StartWorldMapUnitAttentionFlash(
@@ -1346,16 +1346,16 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int goldAmount, int originX, cha
   spawnX = originX;
   spawnY = originY;
   cargoSlotCount = 0;
-  fullCargoByteLimit = 31 * (goldAmount / 100);
+  fullCargoByteLimit = UNIT_SLOT_RECORD_BYTES * (goldAmount / 100);
   for ( i = 0; i <= fullCargoByteLimit; UnitSlot_InitFromType((int)(intptr_t)cargoStack + i, UNIT_TYPE_GOLD_CARGO, ownerFaction) )
     ++cargoSlotCount;
   goldTotal = goldAmountCopy;
   *(_WORD *)((char *)cargoStack + i) = -1;
   lastSlotIndex = cargoSlotCount - 1;
   partialGold = 100 * (goldTotal % 100) / 100;
-  v14[31 * lastSlotIndex] = partialGold;
+  v14[UNIT_SLOT_RECORD_BYTES * lastSlotIndex] = partialGold;
   if ( !partialGold )
-    *(_WORD *)((char *)cargoStack + 31 * lastSlotIndex) = -1;
+    *(_WORD *)((char *)cargoStack + UNIT_SLOT_RECORD_BYTES * lastSlotIndex) = -1;
   result = (__int16 *)(uintptr_t)Unit_CreateNearbyUnitGroup(spawnX, spawnY, (unsigned __int8 *)cargoStack, gameTime);
   if ( result )
     return (__int16 *)(uintptr_t)UI_StartWorldMapUnitAttentionFlash(
