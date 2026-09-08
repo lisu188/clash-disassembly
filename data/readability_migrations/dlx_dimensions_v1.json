@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "source": "src/render/00405DB0_00407D20_render_004.cpp",
+  "includes": [
+    "dlx_sprite_set_view.h",
+    "dlx_sprite_view.h"
+  ],
+  "functions": [
+    {
+      "name": "DLX_GetSpriteWidth",
+      "expected_body_sha256": "fe608ba38b358466d5e20ff8be70c72d5523a12dd628c4b2f09d67890d991f5e",
+      "replacement_body": "{\n  const clash95::render::DLXSpriteSetView spriteSet(\n      (const void *)(uintptr_t)sprite_set);\n  const clash95::render::DLXSpriteView sprite(\n      (const void *)(uintptr_t)spriteSet.entryHandle(char_index));\n  return (__int16)sprite.width();\n}"
+    },
+    {
+      "name": "DLX_GetSpriteHeight",
+      "expected_body_sha256": "916d290a059c2977124bc5cb9e846d1b69f8348d25518585b5d739df4a70c0ae",
+      "replacement_body": "{\n  const clash95::render::DLXSpriteSetView spriteSet(\n      (const void *)(uintptr_t)sprite_set);\n  const clash95::render::DLXSpriteView sprite(\n      (const void *)(uintptr_t)spriteSet.entryHandle(char_index));\n  return (__int16)sprite.height();\n}"
+    }
+  ]
+}
