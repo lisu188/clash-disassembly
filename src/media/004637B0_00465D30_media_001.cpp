@@ -7,6 +7,7 @@
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "avi_bitmap_info_view.h"
 #include "avi_decompressor_view.h"
 
 //----- (004637B0) --------------------------------------------------------
@@ -183,28 +184,41 @@ int  CAviDecompressor_Header(int playerHandle)
 //----- (00464340) --------------------------------------------------------
 int  CAviDecompressor_PixelSize(int *playerHandle)
 {
-  return (*(unsigned __int16 *)(uintptr_t)(CAviDecompressor_GetVideoFormat(*playerHandle) + 14) + 7) >> 3;
+  const auto player =
+      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .bytesPerPixel();
 }
 
 //----- (00464360) --------------------------------------------------------
 int  CAviDecompressor_BPP(int playerHandle)
 {
-  return *(unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 14);
+  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(
+      (const void *)(uintptr_t)playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .bitsPerPixel();
 }
 
 //----- (00464380) --------------------------------------------------------
 int  CAviDecompressor_Width(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 4);
+  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(
+      (const void *)(uintptr_t)playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .width();
 }
 
 //----- (00464390) --------------------------------------------------------
 int  CAviDecompressor_Height(int playerHandle)
 {
-  __int64 biHeight; // rax
-
-  biHeight = *(int *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 8);
-  return (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
+  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(
+      (const void *)(uintptr_t)playerHandle);
+  return clash95::media::AviBitmapInfoHeaderView::fromHandle(
+             player.bitmapHeaderHandle())
+      .absoluteHeight();
 }
 
 //----- (004643B0) --------------------------------------------------------
@@ -762,7 +776,9 @@ char * CAviDecompressor_DestroySourceInterface(int self, char dtorFlags)
 //----- (00464CC0) --------------------------------------------------------
 int  CAviDecompressor_GetVideoFormat(int self)
 {
-  return *(_DWORD *)(uintptr_t)(self + 151);
+  return (int)clash95::media::CAviDecompressorView(
+                  (const void *)(uintptr_t)self)
+      .bitmapHeaderHandle();
 }
 
 //----- (00464CD0) --------------------------------------------------------
