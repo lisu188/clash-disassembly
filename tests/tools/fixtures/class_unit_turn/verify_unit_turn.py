@@ -27,6 +27,20 @@ def main():
  binding=bindings[0]
  declarations=json.loads((root/'data/recovered_decls.json').read_text())
  parts=['#include "units/units_internal.h"','#include "buildings/buildings_internal.h"','#include "units/units_state.h"','#include "units/units_shared_state.h"','#include "strategic/strategic_api.h"','#include "units/UnitTurn.hpp"','#include "units/UnitStack.hpp"','#include "recovered_structs.h"','#include <sys/mman.h>','#include <vector>','#include <array>','#include <string>','#include <limits.h>']
+ # GameRandom remains an instrumented external boundary in this UnitTurn gate.
+ # Its own gate compiles both actual methods, the actual factory and ABI adapters.
+ random_bindings=[x for x in registry.get('class_bindings',[]) if x['class_owner']=='GameRandom']
+ if random_bindings:
+  assert len(random_bindings)==1
+  random_binding=random_bindings[0]
+  parts.extend(['#include "core/GameRandom.hpp"','#define UNIT_TURN_CLASS_RANDOM_BOUNDARY 1'])
+  parts.extend(declarations['globals'][name]['decl'] for name in random_binding['referenced_globals'])
+  random_text=(root/random_binding['source']).read_text()
+  random_defs=scan_definitions(random_text,{random_binding['qualified_name']})
+  assert len(random_defs)==1
+  random_definition=random_defs[0]
+  assert body_sha256(random_text,random_definition)==random_binding['body_sha256']
+  parts.append(random_text[random_definition.start:random_definition.end])
  # The production factory retains exact declarations at its original anchor;
  # generated consumer headers can legitimately stop exposing these globals.
  parts.extend(declarations['globals'][name]['decl'] for name in binding['referenced_globals'])
@@ -62,6 +76,9 @@ def main():
  d=definitions[0]; assert body_sha256(text,d)==binding['body_sha256']; parts.append(text[d.start:d.end]); inputs[str(path)]=sha(path)
  for path in [root/'data/recovered_sources.json',root/'data/game_class_registry.json',root/'data/recovered_decls.json',root/'src/units/UnitTurn.hpp',root/'src/units/UnitStack.hpp',HERE/'harness.cpp',HERE/'references/provenance.json']:
   inputs[str(path)]=sha(path)
+ if random_bindings:
+  for path in [root/random_binding['source'],root/'src/core/GameRandom.hpp']:
+   inputs[str(path)]=sha(path)
  (output/'production-reference.inc').write_text('\n\n'.join(parts)+'\n')
  shutil.copy2(HERE/'harness.cpp',output/'harness.cpp')
  results=[]

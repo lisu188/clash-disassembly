@@ -1,0 +1,26 @@
+{
+  "reference_commit": "79d700c86e253180b1bb81c0a2833b48ae5fe1ba",
+  "functions": [
+    {
+      "name": "initRandomSeed",
+      "original_address": "0x00415DD0",
+      "fixture": "initRandomSeed.cpp",
+      "file_sha256": "e37ed0c3a7398698d8b542a7f0505d02a24ebb3549cf1e34bd854e028dda9b8e",
+      "body_sha256": "08286e807206fdfd0add87ec49105a0d9d28c1b9454db17ceb37ef459abc4c26"
+    },
+    {
+      "name": "Rng_RandRange",
+      "original_address": "0x00415DF0",
+      "fixture": "Rng_RandRange.cpp",
+      "file_sha256": "16635dcc4867d7131c668b77a0f49da15afa1e9bb20ad8d4fc1cccf198dcd32b",
+      "body_sha256": "28ea29d3f46173c6612037b7c3e74498aa9322addf4539f84687dec2efb5d1cb"
+    }
+  ],
+  "caller": {
+    "name": "Unit_UpdatePerTurn",
+    "qualified_name": "clash95::UnitTurn::Unit_UpdatePerTurn",
+    "fixture": "Unit_UpdatePerTurn.cpp",
+    "file_sha256": "6dc52cf992aa5f67ea7fc7ea078948558f39cbadad18b80a8215f70280a7eab8",
+    "body_sha256": "88ce19ce2d1e038f2bb85b980527f854a4a9ef3288e388b16fe0ebbb29938145"
+  }
+}

@@ -6,6 +6,7 @@
 #include "units_shared_state.h"
 #include "../buildings/buildings_api.h"
 #include "../strategic/strategic_api.h"
+#include "../core/GameRandom.hpp"
 #include "../units/UnitStack.hpp"
 #include "../units/UnitTurn.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
@@ -65,7 +66,7 @@ int clash95::UnitTurn::Unit_UpdatePerTurn(int buildingPtr, int a2)
   slotWalker = buildingPtr;
   do
   {
-    result = ::Rng_RandRange(damageLower, damageUpper);
+    result = clash95::GameRandom::borrow().Rng_RandRange(damageLower, damageUpper);
     rolledDamage = result;
     if ( result < 0 )
     {

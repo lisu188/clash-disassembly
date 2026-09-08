@@ -91,6 +91,17 @@ unsigned int Before_Rng_RandRange(int, int); }
                 self.assertEqual(resolved.body_sha256, expected)
                 source = (ROOT / resolved.target.source).read_text()
                 units[name + "-" + role + ".cpp"] = common + source[resolved.definition.start:resolved.definition.end]
+        if classed:
+            registry = json.loads((ROOT / "data/game_class_registry.json").read_text())
+            bindings = [b for b in registry["class_bindings"] if b["class_owner"] == "GameRandom"]
+            self.assertEqual(len(bindings), 1)
+            binding = bindings[0]
+            source = (ROOT / binding["source"]).read_text()
+            definitions = scan_definitions(source, {binding["qualified_name"]})
+            self.assertEqual(len(definitions), 1)
+            definition = definitions[0]
+            self.assertEqual(body_sha256(source, definition), binding["body_sha256"])
+            units["GameRandom-borrow.cpp"] = common + source[definition.start:definition.end]
         harness.append((FIXTURE / "harness.cpp").read_text())
         units["harness.cpp"] = "\n".join(harness)
         with tempfile.TemporaryDirectory(prefix="clash95-game-random-") as temporary:

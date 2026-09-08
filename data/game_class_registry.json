@@ -71692,6 +71692,16 @@
         "gameData"
       ],
       "body_sha256": "3c6ebbe2a10f5920a9cd2fef132235b40bfe19bdc7492e8a8b344f789256b0ad"
+    },
+    {
+      "class_owner": "GameRandom",
+      "qualified_name": "clash95::GameRandom::borrow",
+      "source": "src/units/00414390_00416750_units_004.cpp",
+      "referenced_globals": [
+        "aRandom_initSee",
+        "g_RngState"
+      ],
+      "body_sha256": "01b3d2a42b0b408eef3ce0ffdfb72a9f0d3a398c11d8e486aca66a9a6d317ebb"
     }
   ]
 }

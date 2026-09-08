@@ -143,6 +143,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC1ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
         }
       ],
       "archive_text": [
@@ -285,6 +320,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC1ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
         }
       ]
     },
@@ -401,6 +471,34 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
         }
       ],
       "archive_text": [
@@ -515,6 +613,34 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
         }
       ]
     }

@@ -39,7 +39,7 @@ void one_rng(uint32_t initial, int minimum, int maximum, int first_tick, int sec
     {2, initial, 0, 0, 0, 0}, {2, intermediate, 0, 0, 1, 0}
   };
 #ifdef GAME_RANDOM_CLASS
-  const clash95::GameRandom random(g_RngState, aRandom_initSee);
+  const clash95::GameRandom random(aRandom_initSee, g_RngState);
 #endif
   for (int mode=1; mode<=last_mode; ++mode) {
     fill_state(initial); events.clear(); tick_index=0; ticks={first_tick,second_tick};
@@ -72,7 +72,7 @@ void initializations() {
       for (int first : {-128, -1, 0, 1, 127}) {
         for (uint32_t second : {0u, 1u, 0x80000000u, UINT32_MAX}) {
 #ifdef GAME_RANDOM_CLASS
-          const clash95::GameRandom random(g_RngState, aRandom_initSee);
+          const clash95::GameRandom random(aRandom_initSee, g_RngState);
 #endif
           for (int mode=-1; mode<=last_mode; ++mode) {
             if (mode == 0) continue;
@@ -119,7 +119,7 @@ void original_controls() {
 }
 void sequences() {
 #ifdef GAME_RANDOM_CLASS
-  const clash95::GameRandom random(g_RngState, aRandom_initSee);
+  const clash95::GameRandom random(aRandom_initSee, g_RngState);
 #endif
   for (int mode=1; mode<=last_mode; ++mode) {
     fill_state(0x9381b20du);

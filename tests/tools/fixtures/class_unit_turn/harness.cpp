@@ -127,6 +127,16 @@ unsigned int Rng_RandRange(int lo,int hi) {
   int answer=values[(rng_mode+rng_pos)%12]; event("rng",lo,hi,answer,rng_pos); ++rng_pos; return (unsigned int)answer;
 }
 
+#ifdef UNIT_TURN_CLASS_RANDOM_BOUNDARY
+int g_RngState = 0;
+char aRandom_initSee[29] = "Random_Init(): seed = 0x%08x";
+// Preserve this fixture's arbitrary RNG boundary values, including values outside
+// the requested interval. The GameRandom gate separately compiles its real body.
+unsigned int clash95::GameRandom::Rng_RandRange(int lo, int hi) const {
+  return ::Rng_RandRange(lo, hi);
+}
+#endif
+
 namespace fixture {
 void building_input(int seed,int countdown) {
   for(int i=0;i<1024;i++) arena[i]=(unsigned char)(i*37+seed*53);

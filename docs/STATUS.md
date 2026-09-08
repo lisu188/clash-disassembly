@@ -2,6 +2,18 @@
 
 Last consolidated: 2026-09-08.
 
+## GameRandom Class Extraction
+
+Track: Win95 reconstruction, requested behavior-class migration. The two repaired
+RNG routines are canonical `GameRandom` methods with a registered borrowing
+factory and retained ABI adapters. `UnitTurn` calls the RNG method directly.
+All three focused differential families, both production builds, exact
+symbol/storage/initialization checks and eight asset-free gates pass. Thirteen
+identities now have methods; the two RNG bodies remain in their original TU
+pending the separate relocation stage. All 4,157 identities and frozen ratchets
+remain; full migration and campaign completion are not claimed. See
+[GAME_RANDOM_CLASSES.md](GAME_RANDOM_CLASSES.md).
+
 ## GameRandom Recovery Before Class Extraction
 
 Track: Win95 reconstruction, requested behavior-class migration. The RNG seed

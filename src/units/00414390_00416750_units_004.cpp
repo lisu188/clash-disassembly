@@ -10,6 +10,7 @@
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../core/GameRandom.hpp"
 #include "../units/QueuedPath.hpp"
 #include "../world/WorldGeometry.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
@@ -1042,24 +1043,36 @@ int  Math_SinDegreesQ16(signed int degrees)
 // 513434: using guessed type int dword_513434[363];
 
 //----- (00415DD0) --------------------------------------------------------
+__attribute__((used, retain))
 void  initRandomSeed(char a1, DWORD a2)
 {
-  g_RngState = time_();
-  Debug_Log(0, a1, a2, (int)(intptr_t)aRandom_initSee);
+  return clash95::GameRandom::borrow().initRandomSeed(a1, a2);
+}
+
+void  clash95::GameRandom::initRandomSeed(char a1, DWORD a2) const
+{
+  this->state_ = ::time_();
+  ::Debug_Log(0, a1, a2, (int)(intptr_t)this->format_);
 }
 // 415DE2: variable 'v2' is possibly undefined
 // 47627F: using guessed type int time_(void);
 // 525578: using guessed type int dword_525578;
 
 //----- (00415DF0) --------------------------------------------------------
+__attribute__((used, retain))
 unsigned int  Rng_RandRange(int minValue, int maxValue)
+{
+  return clash95::GameRandom::borrow().Rng_RandRange(minValue, maxValue);
+}
+
+unsigned int  clash95::GameRandom::Rng_RandRange(int minValue, int maxValue) const
 {
   unsigned int range;
   unsigned int seed;
 
-  g_RngState ^= Time_Now(0, 0) + 0x34523471u;
-  seed = (unsigned int)g_RngState + 0x83356532u * (unsigned int)Time_Now(0, 0);
-  g_RngState = (int)seed;
+  this->state_ ^= ::Time_Now(0, 0) + 0x34523471u;
+  seed = (unsigned int)this->state_ + 0x83356532u * (unsigned int)::Time_Now(0, 0);
+  this->state_ = (int)seed;
   range = (unsigned int)((__int64)maxValue + 1 - minValue);
   if ( !range )
     return (unsigned int)minValue;
@@ -1405,3 +1418,9 @@ int  WorldMap_DrawUnitAttentionFlashGlow(int screenX, int screenY, unsigned int 
   return result;
 }
 // 5202C8: using guessed type int dword_5202C8;
+
+// Non-owning bindings remain at the original compatibility anchor.
+clash95::GameRandom clash95::GameRandom::borrow() noexcept
+{
+  return GameRandom(::aRandom_initSee, ::g_RngState);
+}

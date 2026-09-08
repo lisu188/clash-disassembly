@@ -1553,7 +1553,7 @@
       "original_line": 878,
       "source": "src/units/UnitTurn.cpp",
       "linkage": "external",
-      "body_sha256": "88ce19ce2d1e038f2bb85b980527f854a4a9ef3288e388b16fe0ebbb29938145",
+      "body_sha256": "a24042d649523d4c0c42fb3fd06910d49d9d95e7d5350183c8c4a459ff7b311c",
       "original_address_range": {
         "start": "0x0041E730",
         "end_exclusive": "0x0041E7B0"
@@ -90239,7 +90239,7 @@
       "original_line": 5397,
       "source": "src/units/00414390_00416750_units_004.cpp",
       "linkage": "external",
-      "body_sha256": "08286e807206fdfd0add87ec49105a0d9d28c1b9454db17ceb37ef459abc4c26",
+      "body_sha256": "dffd8a1d4d3cd9980739b97d03f7c1c170af00fcb0ae689e00e1e8a810ae5ef5",
       "original_address_range": {
         "start": "0x00415DD0",
         "end_exclusive": "0x00415DF0"
@@ -90249,12 +90249,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "f67e5bc7e13e73003d4a2037de8836467d86e7b5d83db5c9743031929721a422",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "initRandomSeed"
+        "kind": "method",
+        "qualified_name": "clash95::GameRandom::initRandomSeed",
+        "header": "src/core/GameRandom.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "initRandomSeed is assigned to the GameRandom behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::GameRandom"
+      "class_owner": "clash95::GameRandom",
+      "adapter": {
+        "source": "src/units/00414390_00416750_units_004.cpp",
+        "body_sha256": "8faf2d542b9843c395ecf6cf204ea2997f714ad3c6569be1281d2ebc05ce0ed1"
+      }
     },
     {
       "name": "Rng_RandRange",
@@ -90263,7 +90268,7 @@
       "original_line": 5409,
       "source": "src/units/00414390_00416750_units_004.cpp",
       "linkage": "external",
-      "body_sha256": "28ea29d3f46173c6612037b7c3e74498aa9322addf4539f84687dec2efb5d1cb",
+      "body_sha256": "d7be664b82284838c1614b2027962c4ae3a611b98634ecb157c0211c01e08835",
       "original_address_range": {
         "start": "0x00415DF0",
         "end_exclusive": "0x00415E40"
@@ -90273,12 +90278,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "11792c715527e93e4bbe96988f7e70c28d5edcd8d392c2398ab2d61d296b8ab2",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Rng_RandRange"
+        "kind": "method",
+        "qualified_name": "clash95::GameRandom::Rng_RandRange",
+        "header": "src/core/GameRandom.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Rng_RandRange is assigned to the GameRandom behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::GameRandom"
+      "class_owner": "clash95::GameRandom",
+      "adapter": {
+        "source": "src/units/00414390_00416750_units_004.cpp",
+        "body_sha256": "9d875517e0f5d5a6f33ddb079daf358ba736dba2bf213bb3e39b6fcca5616533"
+      }
     },
     {
       "name": "Math_CeilSqrt",
