@@ -1,5 +1,26 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-08 - Road readability: queued-path fallback caller
+
+Track: Win95 reconstruction. Reviewed `Rules_BuildRoadOrStepTowardQueuedPath`
+(`0x454AE0`) individually. Reused typed path/waypoint fields and replaced
+duplicated diagonal branches and gotos with one attempt loop. Original ECX
+initialization and callee preservation recover the input stack index, removing
+an undefined local. Owner/bridge short-circuiting, carried direction/context,
+fresh owner coordinates and final count-only clearing remain.
+Named waypoint-address arithmetic preserves original 32-bit wrap, including
+backed raw-count aliases that an initial typed-array candidate excluded.
+All 255 original traces match in four compiler profiles; nine defined empty
+before cases also match. Nonempty-before behavior is explicitly undefined.
+Both builds and eight public gates pass, with one fewer warning per compiler
+and roughly half the target code. Clang's local switch data shrinks within the
+target; shared data and neighbors remain exact. The final revised suite passes
+all 261 tooling tests and 14 compiled negative controls are rejected.
+One canonical body hash changes; all 4157 identities, legacy hashes and layouts
+remain. Confidence is high in
+the documented caller/storage domain. No campaign or visual milestone changes.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-14-rules_buildroadorsteptowardqueuedpath).
+
 ## 2026-09-08 - Road readability: single-tile movement
 
 Track: Win95 reconstruction. Reviewed `UnitStack_MoveOneTileInDirection`

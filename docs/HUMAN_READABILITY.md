@@ -1000,6 +1000,128 @@ from the repository root in Linux/WSL:
 python3 -m unittest discover -s tests/tools -p test_one_tile_movement.py -v
 ```
 
+### Batch 14: Rules_BuildRoadOrStepTowardQueuedPath
+
+Track: Win95 reconstruction, Road and queued-path orchestration. Reviewed
+`Rules_BuildRoadOrStepTowardQueuedPath` (`0x454AE0`) as the seventeenth
+Road-family function. Typed stack fields, named waypoint decoding and deltas
+replace repeated raw expressions. Four diagonal cases select horizontal and
+vertical attempts, and one shared loop expresses the original Road-then-move
+or movement-only policy.
+This removes duplicated switches, register aliases and cross-branch gotos.
+
+The original initializes ECX from the input stack index at entry. Each of its
+five callees preserves that register on normal return, proving the index used
+for every query/action and final clear. The refactor uses the input directly,
+replacing the undefined cur_stack_index local. This is an original-backed
+repair; only empty-path inputs have a defined unchanged-before reference.
+
+An empty path still returns 1 without callbacks or writes. Nonempty paths read
+the final waypoint, obtain a direction, then reload coordinates for the owner
+query. The bridge query remains conditional on a nonzero owner result. The
+chosen policy and direction stay fixed across action callbacks, while the final
+path-count clear reloads gameData and retains the original input index. Every
+nonempty route returns 0, even after successful movement; only the four-byte
+count is cleared and all waypoint data remains.
+
+Each diagonal tries its horizontal component before its vertical fallback.
+Road-first attempts call Road, then move only on zero; any nonzero action
+result stops further attempts. Road receives the chosen step direction and
+the separate low byte of the original Facing result, together with unchanged
+opaque a2 and finite a3. Other raw directions retain the original default
+dispatch without a new clamp or mask. The real Facing helper returns 0..7;
+scripted values outside that range describe only a conditional caller contract.
+
+All 255 original-measured scenarios match the actual refactored body under GCC
+13 and Clang 18 at O0/O2: 1020 comparisons and 1275 call boundaries per profile.
+The probe executes 573 unchanged original instruction bytes and the two original
+switch tables, totaling 56 bytes, against five recording/mutating callee entries.
+There are 241 empty-path or Direction8 cases and 14 separately labeled cases
+with scripted raw Facing values outside 0..7. The latter do not establish that
+the real Facing or movement callees support those values.
+All nine empty-path cases also match the unchanged before body in four compiler
+profiles. The 246 nonempty cases are excluded from before equivalence because
+they read the undefined index; no initialized substitute is used as an oracle.
+Twenty-one of those same cases also overflow the old signed count arithmetic.
+
+Cases cover every count 0..100, 24 backed raw-count cases, coordinate and
+waypoint widths, cost-byte independence, owner/bridge short-circuiting, each
+possible stopping point,
+truthy non-Boolean results and live changes at every callback. Both recorders
+compare the final two game arenas byte for byte against their post-last-call
+state plus exactly the four-byte count clear. Empty cases require byte equality
+with the initial arenas. Arguments and 42 mutable state fields are recorded as
+raw 32-bit words; eight queued-path observations and the final arena summaries
+use 32-bit fingerprints. The public fixture stores SHA-256 digests of measured
+traces. These are separate checks rather than universal byte-equivalence claims.
+
+Fourteen compiled negative controls reject the wrong carried index, cached owner
+coordinates or cleanup backing, reversed fallback order, broken bridge
+short-circuiting, first-waypoint selection, signed target-byte interpretation,
+wrong Road byte forwarding, whole-path erasure, wrong return and treating only
+1 as truthy. The expanded controls also reject a capacity clamp, unwrapped
+address arithmetic and restoring typed-array indexing. No compilation failure
+is counted as a behavioral rejection.
+
+The waypoint address preserves the original 32-bit scaled-address wrap, using
+a named byte offset and a four-byte copy into a local PathWaypoint. An initial
+typed-array candidate passed conventional counts but lost readable raw aliases:
+original count `0x40000001` reads waypoint 0, while `0x40000000` reads the count
+word itself. Fresh original counterprobes confirmed both before publication.
+The revised address calculation also retains backed reads for counts 101/102
+and `0xFFFFFFFF`, without inventing a capacity clamp. Their game/save-state
+reachability is not established. Initial evidence remains preserved and is
+superseded by the expanded proof; the first 231 case traces remain exact.
+
+Decoded waypoint coordinates are unsigned bytes and stack coordinates are
+signed16, so their deltas fit signed32. The source record and resolved four-byte
+address must have valid backing. Invalid indexes, unrepresentable source-record
+addresses and asynchronous mutation remain outside this recovery. No public
+name, signature, layout, global, helper or
+source table changes; only the target's canonical body hash changes and all 4157
+recovered identities remain.
+Confidence is high within this documented caller/storage domain. Scripted
+callees do not establish pathfinding, Road construction, movement or rendering;
+NaNs, infinities and altered floating-point environments remain outside the
+finite-bit forwarding checks.
+
+Both supported builds and all eight public asset-free gates pass. Only this
+function's executable section changes: GCC 1227 to 641 bytes, Clang 1021 to
+621. The 61 neighboring executable sections and 145 other objects remain exact.
+Scoped warnings fall from 39 to 38 under GCC and 40 to 39 under Clang, removing
+the undefined-index diagnostic. Library crosschecks report zero errors; all
+linked symbol classes, sizes and order remain unchanged.
+
+Clang also replaces the target's two native compiler switch tables with one,
+shrinking its local dispatch data from 112 to 56 bytes. Every relocation in
+both versions points inside this function. The initial blanket allocated-data
+comparison correctly flagged this difference and remains preserved; the scoped
+audit accepts only this proven local dispatch change. All other allocated
+object data is identical. Linked checks preserve named data classes, sizes and
+order; the final local dispatch table is checked against its target-relative
+object relocations. Original executable/table proof bytes are unchanged. Manifest,
+split-source and generated metadata/header/include checks pass. Raw link
+differences remain 428 GCC / 680 Clang and the header ratchet retains its 14
+existing failures without reseeding any baseline.
+
+Private source/original freezes, register-preservation evidence, switch-table
+decoding, candidate review and exact commands are retained under
+artifacts/readability/road-functions-20260906/batch-14/.
+Its candidate-audit, test-plan, original-proof, test-audit, scope-audit, metadata
+and build-validation directories record their respective evidence and limits;
+their raw-count-revision subdirectories contain the final expanded comparisons.
+The final revised full tooling suite passes all 261 tests in 90.397 seconds.
+All 399 production/tooling inputs, the public regression/provenance and both
+binaries and archives remain frozen through that run and final verification.
+Private scripts are absent from clean checkouts. The separate first-Road runtime
+milestone and normal turn-7 refresh/continuation frontier remain unchanged.
+This caller recovery adds no campaign or visual-fidelity claim. Reproduce the
+public regression from the repository root in Linux/WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_path_fallback.py -v
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

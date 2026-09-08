@@ -729,118 +729,67 @@ signed int  Rules_IsQueuedPathTargetBridgeCrossing(int stack_index)
 //----- (00454AE0) --------------------------------------------------------
 signed int  Rules_BuildRoadOrStepTowardQueuedPath(int stack_index, DWORD a2, double a3)
 {
-  int stack_offset; // esi
-  int stack_record; // eax
-  int path_length; // ebx
-  int path_base; // eax
-  int next_waypoint_xy; // ebx
-  signed int direction; // edi
-  int cur_stack_index; // ecx
-  int move_stack_index; // eax
-  int step_direction; // edx
-  signed int move_result; // eax
-  int fallback_direction; // edx
-
-  stack_offset = UNIT_STACK_STRIDE * stack_index;
-  stack_record = UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET;
-  path_length = *(_DWORD *)(uintptr_t)(stack_record + UNIT_STACK_PATH_OFFSET);
-  path_base = stack_record + UNIT_STACK_PATH_OFFSET;
-  if ( !path_length )
+  const UnitStackRecord *sourceStack = UNIT_STACK_RECORD(stack_index);
+  const int waypointCount = sourceStack->queued_path.waypoint_count;
+  if ( !waypointCount )
     return 1;
-  next_waypoint_xy = *(_DWORD *)(uintptr_t)(path_base + 4 * (path_length - 1) + 4);
-  direction = Facing_DirectionFromDelta8(
-         (unsigned __int8)next_waypoint_xy - *(__int16 *)(uintptr_t)(gameData + stack_offset + UNIT_STACK_TABLE_OFFSET),
-         BYTE1(next_waypoint_xy) - *(__int16 *)(uintptr_t)(gameData + stack_offset + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
-  if ( Map_TileHasOwner(*(__int16 *)(uintptr_t)(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(stack_offset + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET))
-    && !Rules_IsQueuedPathTargetBridgeCrossing(cur_stack_index) )
+
+  // Original scaled addressing wraps to 32 bits, including raw count aliases.
+  const uint32_t waypointByteOffset = static_cast<uint32_t>(waypointCount) * sizeof(PathWaypoint);
+  const uint32_t waypointAddress = static_cast<uint32_t>((uintptr_t)&sourceStack->queued_path)
+      + waypointByteOffset;
+  PathWaypoint nextWaypoint;
+  qmemcpy(&nextWaypoint, (const void *)(uintptr_t)waypointAddress, sizeof(nextWaypoint));
+  const int columnDelta = nextWaypoint.tile_column - sourceStack->tile_column;
+  const int rowDelta = nextWaypoint.tile_row - sourceStack->tile_row;
+  const int direction = Facing_DirectionFromDelta8(rowDelta, columnDelta);
+
+  const UnitStackRecord *ownerStack = UNIT_STACK_RECORD(stack_index);
+  const int ownerColumn = ownerStack->tile_column;
+  const int ownerRow = ownerStack->tile_row;
+  const bool movementOnly = Map_TileHasOwner(ownerRow, ownerColumn)
+      && !Rules_IsQueuedPathTargetBridgeCrossing(stack_index);
+
+  int primaryDirection = direction;
+  int fallbackDirection = direction;
+  int directionCount = 1;
+  switch ( direction )
   {
-    switch ( direction )
-    {
-      case DIRECTION8_SOUTHWEST:
-        move_result = UnitStack_MoveOneTileInDirection(cur_stack_index, DIRECTION8_WEST, a3);
-        goto LABEL_10;
-      case DIRECTION8_SOUTHEAST:
-        move_result = UnitStack_MoveOneTileInDirection(cur_stack_index, DIRECTION8_EAST, a3);
-LABEL_10:
-        if ( move_result )
-          goto LABEL_13;
-        fallback_direction = DIRECTION8_SOUTH;
-        break;
-      case DIRECTION8_NORTHEAST:
-        if ( UnitStack_MoveOneTileInDirection(cur_stack_index, DIRECTION8_EAST, a3) )
-          goto LABEL_13;
-        fallback_direction = DIRECTION8_NORTH;
-        break;
-      case DIRECTION8_NORTHWEST:
-        if ( UnitStack_MoveOneTileInDirection(cur_stack_index, DIRECTION8_WEST, a3) )
-          goto LABEL_13;
-        fallback_direction = DIRECTION8_NORTH;
-        break;
-      default:
-        fallback_direction = direction;
-        break;
-    }
-LABEL_12:
-    UnitStack_MoveOneTileInDirection(cur_stack_index, fallback_direction, a3);
+    case DIRECTION8_SOUTHWEST:
+      primaryDirection = DIRECTION8_WEST;
+      fallbackDirection = DIRECTION8_SOUTH;
+      directionCount = 2;
+      break;
+    case DIRECTION8_SOUTHEAST:
+      primaryDirection = DIRECTION8_EAST;
+      fallbackDirection = DIRECTION8_SOUTH;
+      directionCount = 2;
+      break;
+    case DIRECTION8_NORTHEAST:
+      primaryDirection = DIRECTION8_EAST;
+      fallbackDirection = DIRECTION8_NORTH;
+      directionCount = 2;
+      break;
+    case DIRECTION8_NORTHWEST:
+      primaryDirection = DIRECTION8_WEST;
+      fallbackDirection = DIRECTION8_NORTH;
+      directionCount = 2;
+      break;
   }
-  else
+
+  // Original ECX retains the input stack index across every callee.
+  for ( int attempt = 0; attempt < directionCount; ++attempt )
   {
-    switch ( direction )
-    {
-      case DIRECTION8_SOUTHWEST:
-        if ( !Road_Build(cur_stack_index, DIRECTION8_WEST, direction, a2, a3) )
-        {
-          move_stack_index = cur_stack_index;
-          step_direction = DIRECTION8_WEST;
-          goto LABEL_8;
-        }
-        break;
-      case DIRECTION8_SOUTHEAST:
-        if ( !Road_Build(cur_stack_index, DIRECTION8_EAST, direction, a2, a3) )
-        {
-          step_direction = DIRECTION8_EAST;
-          move_stack_index = cur_stack_index;
-LABEL_8:
-          if ( !UnitStack_MoveOneTileInDirection(move_stack_index, step_direction, a3) )
-          {
-            move_result = Road_Build(cur_stack_index, DIRECTION8_SOUTH, direction, a2, a3);
-            goto LABEL_10;
-          }
-        }
-        break;
-      case DIRECTION8_NORTHEAST:
-        if ( !Road_Build(cur_stack_index, DIRECTION8_EAST, direction, a2, a3)
-          && !UnitStack_MoveOneTileInDirection(cur_stack_index, DIRECTION8_EAST, a3)
-          && !Road_Build(cur_stack_index, DIRECTION8_NORTH, direction, a2, a3) )
-        {
-          fallback_direction = DIRECTION8_NORTH;
-          goto LABEL_12;
-        }
-        break;
-      case DIRECTION8_NORTHWEST:
-        if ( !Road_Build(cur_stack_index, DIRECTION8_WEST, direction, a2, a3)
-          && !UnitStack_MoveOneTileInDirection(cur_stack_index, DIRECTION8_WEST, a3)
-          && !Road_Build(cur_stack_index, DIRECTION8_NORTH, direction, a2, a3) )
-        {
-          fallback_direction = DIRECTION8_NORTH;
-          goto LABEL_12;
-        }
-        break;
-      default:
-        if ( !Road_Build(cur_stack_index, direction, direction, a2, a3) )
-        {
-          fallback_direction = direction;
-          goto LABEL_12;
-        }
-        break;
-    }
+    const int stepDirection = attempt == 0 ? primaryDirection : fallbackDirection;
+    if ( !movementOnly && Road_Build(stack_index, stepDirection, direction, a2, a3) )
+      break;
+    if ( UnitStack_MoveOneTileInDirection(stack_index, stepDirection, a3) )
+      break;
   }
-LABEL_13:
-  *(_DWORD *)(uintptr_t)(UNIT_STACK_STRIDE * cur_stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
+
+  UNIT_STACK_RECORD(stack_index)->queued_path.waypoint_count = 0;
   return 0;
 }
-// 454B74: variable 'v10' is possibly undefined
-// 5202E4: using guessed type int gameData;
 
 //----- (00454D20) --------------------------------------------------------
 int  Rules_BuildTrapNearTile(DWORD target_x, int target_y, DWORD stack_index, double a4)
