@@ -209,12 +209,11 @@ public:
     store<std::uint8_t>(CAviDecompressorView::kPositionModeOffset, 1);
   }
 
-  void setClipRect(std::int32_t left, std::int32_t top,
-                   std::int32_t right, std::int32_t bottom) noexcept {
-    store<std::int32_t>(CAviDecompressorView::kClipLeftOffset, left);
-    store<std::int32_t>(CAviDecompressorView::kClipTopOffset, top);
-    store<std::int32_t>(CAviDecompressorView::kClipRightOffset, right);
-    store<std::int32_t>(CAviDecompressorView::kClipBottomOffset, bottom);
+  void setClipRect(const std::uint32_t *rect) noexcept {
+    store<std::uint32_t>(CAviDecompressorView::kClipLeftOffset, rect[0]);
+    store<std::uint32_t>(CAviDecompressorView::kClipTopOffset, rect[1]);
+    store<std::uint32_t>(CAviDecompressorView::kClipRightOffset, rect[2]);
+    store<std::uint32_t>(CAviDecompressorView::kClipBottomOffset, rect[3]);
   }
 
   void setColorKeys(std::int32_t low, std::int32_t high) noexcept {
@@ -224,12 +223,11 @@ public:
   }
 
   void setBackground(std::int32_t objectHandle,
-                     std::int32_t left, std::int32_t top,
-                     std::int32_t right, std::int32_t bottom) noexcept {
-    store<std::int32_t>(CAviDecompressorView::kBackgroundLeftOffset, left);
-    store<std::int32_t>(CAviDecompressorView::kBackgroundTopOffset, top);
-    store<std::int32_t>(CAviDecompressorView::kBackgroundRightOffset, right);
-    store<std::int32_t>(CAviDecompressorView::kBackgroundBottomOffset, bottom);
+                     const std::uint32_t *rect) noexcept {
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundLeftOffset, rect[0]);
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundTopOffset, rect[1]);
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundRightOffset, rect[2]);
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundBottomOffset, rect[3]);
     store<std::int32_t>(CAviDecompressorView::kBackgroundObjectHandleOffset,
                         objectHandle);
   }
