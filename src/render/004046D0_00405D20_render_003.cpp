@@ -13,6 +13,7 @@
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "render_surface_view.h"
 
 //----- (004046D0) --------------------------------------------------------
 int  Render_SetPixelFormat(int render_device, int a2, int bits_per_pixel, DWORD context)
@@ -932,13 +933,17 @@ int Surface_GetWriteIncrZero(void)
 //----- (00405660) --------------------------------------------------------
 int  Surface_GetReadIncrFromStride(int surface)
 {
-  return *(_DWORD *)(uintptr_t)(surface + 188);
+  return clash95::render::RenderSurfaceWithStrideView(
+             (const void *)(uintptr_t)surface)
+      .rowStride();
 }
 
 //----- (00405670) --------------------------------------------------------
 int  Surface_GetWriteIncrFromStride(int surface)
 {
-  return *(_DWORD *)(uintptr_t)(surface + 188);
+  return clash95::render::RenderSurfaceWithStrideView(
+             (const void *)(uintptr_t)surface)
+      .rowStride();
 }
 
 //----- (00405680) --------------------------------------------------------
