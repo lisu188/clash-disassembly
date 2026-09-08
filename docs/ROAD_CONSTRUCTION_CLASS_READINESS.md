@@ -56,6 +56,14 @@ uses mapped overlay 567 and is not invalidated by these probes. Origin
 `1b8b4b8e25558a5b0494c2889f11a1368b65eeef` preserves all ten body hashes; its
 separate Road modal-loop changes do not resolve this contract.
 
+The later `55872f9` Road-body readability/AP-arithmetic recovery changes its body
+hash and source locations; the locations above refer to the frozen `1b8b4b8`
+version. The revised body explicitly retains the uninitialized local for other
+true predicate results. Its independent original probes likewise observe stack
+dependence for unsupported mapping values. See
+[the upstream recovery](HUMAN_READABILITY.md#batch-12-road_build). The class
+readiness blocker remains; no zero fallback or narrowed scan was introduced.
+
 Before this family advances, establish either an authentic-state invariant that
 excludes these combinations or evidence for the original fallback stack value.
 Do not initialize the local, clear live markers, narrow the scan or move lazy

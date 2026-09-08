@@ -824,6 +824,98 @@ python3 -m unittest discover -s tests/tools -p test_road_build_mode.py -v
 python3 -m unittest discover -s tests/tools -p test_road_mode_timing.py -v
 ```
 
+### Batch 12: Road_Build
+
+Track: Win95 reconstruction, reached mission-05 Road construction and movement.
+Reviewed `Road_Build` (`0x424400`) as the fifteenth Road-family function. Four
+explicit direction cases now select the target coordinates and origin road ID,
+then enter a shared construction phase. This removes cross-case gotos and the
+deeply nested movement tail. Named locals and existing packed stack/tile fields
+replace register aliases and raw position/overlay reads. The twelve known
+bridge-approach mappings are expressed directly, with their unresolved fallback
+documented at the declaration. No signature, helper, layout or global changes.
+
+All four connection queries still run before invalid-direction rejection.
+Initial coordinates remain snapshots taken after logging; subsequent callbacks
+retain their separate game-state and stack reloads. Both provisional bridge
+conditions remain sequential. Saved overlay zero still suppresses restoration,
+and the target's turn DWORD is never rolled back. Target rebuild/restoration,
+the four otherwise-unused connection calls and changes surviving a null path
+are preserved. The movement tail copies exactly 404 bytes before the legacy
+free boundary, then executes the path, spends one construction AP and refreshes
+the panel. Opaque forwarded arguments and the existing path-address width remain.
+
+The required AP calculation now adds in unsigned 32 bits and then interprets the
+result as signed. This recovers the original wrapping INC followed by signed
+comparison, including `INT_MAX` move cost. It is an original-backed arithmetic
+repair, not a claim of equivalence for the old signed-overflow cases.
+
+All 494 original-measured scenarios match the actual refactored body under GCC
+13 and Clang 18 at O0/O2: 1976 after comparisons and 8591 boundaries per profile.
+The frozen before body matches all 492 scenarios with defined old arithmetic in
+each profile; two `INT_MAX` cases are excluded from before-equivalence claims.
+The probe executes 2748 unchanged original instruction bytes and the original
+direction jump table against seventeen explicit recording/mutating callee
+boundaries. Cases cover direction/truth combinations, invalid directions,
+known approach mappings, bare and sequential crossings, failure gates, overlay
+restoration, timestamp persistence, live state changes and null/nonnull paths.
+
+Eight compiled negative controls reject signed AP overflow, the wrong rollback
+sentinel, mutually exclusive bridge checks, a short path copy, a cached copy
+destination, premature invalid-direction rejection, reloading the carried
+execution column and removing the otherwise-unused target connection calls.
+
+At the free boundary, the native probe compares both game arenas byte for byte
+against their state after the path return plus exactly the intended 404-byte
+copy. Other whole-region and queued-path observations use 32-bit memory
+fingerprints; they are not literal byte-by-byte comparisons. The public fixture
+stores SHA-256 digests of the complete measured case traces. Log and free
+boundaries explicitly distinguish original register/stack observations from
+the current native compatibility interfaces. Full carried-register observations
+do not establish richer callee argument semantics or allocator recovery.
+
+An unresolved original domain remains: a true approach predicate can reach an
+overlay outside the twelve mapping assignments. The original then reads an
+uninitialized stack slot, and current C++ also lacks a defined fallback. Two
+original-only runs with the same scripted input and different incoming stack
+values produce road words 4951 and 9320, confirming conditional stack dependence.
+They do not establish retail reachability and are excluded from the accepted
+native cases. The public fixture permits only the retained uninitialized
+diagnostic naming this local; it does not initialize it to manufacture a clean
+result.
+Confidence is high within the documented mapping, valid backing and arithmetic
+domains. Overlapping path buffers, invalid addresses, NaNs, infinities and
+altered floating-point environments remain outside the proof. Callee gameplay,
+the inert free stub and this unresolved mapping still require separate recovery.
+
+Both supported builds and all eight public asset-free gates pass. Only this
+function's executable section changes: GCC 2877 to 3209 bytes, Clang 3260 to
+3166. The other 35 executable sections, ordinary allocated data and 145 other
+objects remain exact. Linked data classes, sizes and order and all 4157 recovered
+identities remain; library crosschecks report zero errors. Scoped warnings stay
+23 under GCC and fall from 33 to 26 under Clang. One canonical body hash changes;
+legacy hashes and frozen baselines remain. Manifest, split-source and generated
+metadata/header/include checks pass. Raw link differences remain 428/680 and
+the header ratchet retains its 14 existing failures.
+
+The final full tooling suite passes all 257 tests in 82.104 seconds. The actual
+production source, manifest, public regression/provenance and both binaries and
+archives remain frozen through validation.
+
+Private source/original freezes, boundary contracts, candidate review, measured
+traces, counterexamples and exact commands are retained under
+artifacts/readability/road-functions-20260906/batch-12/.
+The candidate-audit, original-proof, test-audit, scope-audit, metadata and
+build-validation directories record their respective evidence and limits;
+private scripts are absent from clean checkouts. The existing first-Road
+runtime milestone and normal turn-7 refresh/continuation frontier remain
+unchanged. No new route, rendering or visual-fidelity claim follows. Reproduce
+the public regression from the repository root in Linux/WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_build.py -v
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

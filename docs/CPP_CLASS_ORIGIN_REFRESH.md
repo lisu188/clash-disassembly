@@ -125,6 +125,17 @@ builds, snapshots and verified archives are under `origin-latest-reference/`.
 The native and runtime observations above remain tied to the preceding frozen
 integration. They do not substitute for a final regression of subsequent code.
 
+Main advanced again to `55872f91cbddee6cc3012dc750e5bf7ee187fe6d` before the
+fast-forward attempt; that attempt changed nothing. Its single canonical
+`Road_Build` recovery, original-instruction fixture and documentation are now
+integrated. The 494-scenario public recovery regression passes in all four
+compiler/optimization profiles. Both combined incremental production builds,
+all eight asset-free gates and the strict comparisons against the retained
+`1b8b4b8` reference pass. The known incoming Road algorithm change is separately
+recorded by its manifest hash and upstream recovery evidence; no text-symbol,
+storage or initialization allowance was added. Commands/results use the
+`main-road-build` prefix under `refresh/`.
+
 ### Fresh first-Road comparison for the preceding integration
 
 Both copied production binaries complete the authentic seven-leg approach and
