@@ -455,33 +455,23 @@ void  CAviDecompressor_InitColorKeys(int *playerHandle, int colorKeyLow, int col
 //----- (00464500) --------------------------------------------------------
 void  CAviDecompressor_InitPos(int *playerHandle, int x, int y)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  *(_DWORD *)(uintptr_t)(instance + 2071) = 0;
-  *(_DWORD *)(uintptr_t)(instance + 2075) = 0;
-  *(_BYTE *)(uintptr_t)(instance + 2062) = 1;
-  *(_DWORD *)(uintptr_t)(instance + 2063) = x;
-  *(_DWORD *)(uintptr_t)(instance + 2067) = y;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setPosition(x, y);
 }
 
 //----- (00464530) --------------------------------------------------------
 void  CAviDecompressor_InitRect(int *playerHandle, _DWORD *rect)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  *(_DWORD *)(uintptr_t)(instance + 2063) = *rect;
-  *(_DWORD *)(uintptr_t)(instance + 2067) = rect[1];
-  *(_DWORD *)(uintptr_t)(instance + 2071) = rect[2];
-  *(_DWORD *)(uintptr_t)(instance + 2075) = rect[3];
-  *(_BYTE *)(uintptr_t)(instance + 2062) = 1;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setDestinationRect((int)rect[0], (int)rect[1], (int)rect[2], (int)rect[3]);
 }
 
 //----- (00464550) --------------------------------------------------------
 void  CAviDecompressor_InitOverlays(int playerHandle, char enabled)
 {
-  *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2050) = enabled != 0;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(
+           (void *)(uintptr_t)playerHandle)
+      .setOverlaysEnabled(enabled != 0);
 }
 
 //----- (00464570) --------------------------------------------------------
