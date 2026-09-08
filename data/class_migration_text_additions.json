@@ -163,16 +163,16 @@
         {
           "name": "_ZN7clash959UnitStackC1El",
           "class": "W",
-          "count": 2,
+          "count": 3,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial address-only borrowing constructor; one additional COMDAT definition in the relocated UnitTurn TU supports its direct UnitStack readiness call. Linked count is unchanged."
         },
         {
           "name": "_ZN7clash959UnitStackC2El",
           "class": "W",
-          "count": 2,
+          "count": 3,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial address-only borrowing constructor; one additional COMDAT definition in the relocated UnitTurn TU supports its direct UnitStack readiness call. Linked count is unchanged."
         },
         {
           "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
@@ -414,9 +414,9 @@
         {
           "name": "_ZN7clash959UnitStackC2El",
           "class": "W",
-          "count": 2,
+          "count": 3,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial address-only borrowing constructor; one additional COMDAT definition in the relocated UnitTurn TU supports its direct UnitStack readiness call. Linked count is unchanged."
         },
         {
           "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",

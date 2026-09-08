@@ -205,3 +205,25 @@ Original identities, named storage, data order and initialization profiles
 remain unchanged. Exact extraction commands, per-profile logs and comparisons
 are `artifacts/cpp-classes/20260906/pilot/*unit-turn-extraction-boundary*`;
 focused results and preserved initial failures are in the sibling `unit-turn/`.
+
+## Integrated relocation
+
+All three unchanged method bodies now live in `src/units/UnitTurn.cpp`, appended
+to the existing units source group. The ordered inventory contains 144 sources;
+all 4,157 historical identities remain. Adapters and the borrowing factory stay
+in their original translation units. The archive gains one additional weak
+UnitStack borrowing-constructor definition per compiler variant because the
+direct readiness call moved to a new TU; linked constructor counts do not
+change. The exact additions are enumerated, with no storage/init allowance.
+
+The relocated differential passes all four profiles. The first recovery repeat
+detected generated source changing while it ran and correctly rejected that
+attempt; after generation finished, the stable repeat passes all four profiles.
+Fresh clean GCC/Clang builds preserve warning totals 6,618/6,628. Both reviewed
+surface comparisons and all eight asset-free gates pass. Commands and results
+are `pilot/*unit-turn-relocation-resumed*`,
+`pilot/*unit-turn-relocation-reviewed*`, and
+`unit-turn/relocation-{differential,recovery-resumed}.log` under the same evidence
+root. Validation resumed on 2026-09-08. These are pre-origin-refresh migration
+results; the incoming origin integration and full native/runtime matrix have
+their own gates.

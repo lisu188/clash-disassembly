@@ -2,7 +2,7 @@
   "schema_version": 3,
   "language": "GNU C++20",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.cpp",
-  "source_file_count": 143,
+  "source_file_count": 144,
   "function_count": 4157,
   "functions": [
     {
@@ -1522,7 +1522,7 @@
       "original_address": "0x0041E6D0",
       "original_source": "src/recovered/buildings/0041D030_buildings.inc.c",
       "original_line": 848,
-      "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
+      "source": "src/units/UnitTurn.cpp",
       "linkage": "external",
       "body_sha256": "1dc77b6afa51a4678d70c9f6bb92a45b766f1a626088b6cbc29cf1139a8b4d34",
       "original_address_range": {
@@ -1551,7 +1551,7 @@
       "original_address": "0x0041E730",
       "original_source": "src/recovered/buildings/0041D030_buildings.inc.c",
       "original_line": 878,
-      "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
+      "source": "src/units/UnitTurn.cpp",
       "linkage": "external",
       "body_sha256": "88ce19ce2d1e038f2bb85b980527f854a4a9ef3288e388b16fe0ebbb29938145",
       "original_address_range": {
@@ -88425,7 +88425,7 @@
       "original_address": "0x004118E0",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 1603,
-      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "source": "src/units/UnitTurn.cpp",
       "linkage": "external",
       "body_sha256": "d8c36d5dd375e5df2ee5d00d729b749c9173f2bd41ad2b3a8c080d86744e02cb",
       "original_address_range": {
@@ -97716,7 +97716,8 @@
         "src/units/004191F0_0041A690_units_006.cpp",
         "src/units/0041A960_0041C8B0_units_007.cpp",
         "src/units/QueuedPath.cpp",
-        "src/units/UnitStack.cpp"
+        "src/units/UnitStack.cpp",
+        "src/units/UnitTurn.cpp"
       ]
     },
     {
