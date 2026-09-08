@@ -65,7 +65,9 @@ public:
   }
 
   void copySerializedHeaderFrom(const void *source) noexcept {
-    std::memcpy(bytes_, source, DLXSpriteView::kSerializedHeaderSize);
+    const std::byte *sourceBytes = static_cast<const std::byte *>(source);
+    std::memcpy(bytes_, sourceBytes, 8);
+    std::memcpy(bytes_ + 8, sourceBytes + 8, 2);
   }
 
   void clearPayloadHandle() noexcept {
