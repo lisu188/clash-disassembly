@@ -799,6 +799,18 @@ The final full tooling suite passes all 255 tests in 78.136 seconds, with the
 production inputs, public fixture files and both binaries/archives frozen and
 unchanged through validation.
 
+After publishing Road commit `3cbbcb4`, integrated concurrent DLX work from
+`18b6ace` with both histories retained. The separate integration builds and all
+eight public gates pass. Only the incoming render object changes; the Road
+object and all 144 other objects remain exact. Linked data and all recovered
+identities remain unchanged, with zero crosscheck errors. The scoped audit
+against that incoming main still finds only the Road function's current body
+hash changed. Integration commands and bindings are retained in this batch's
+integration-18b6ace and build-validation/integration-18b6ace directories.
+The integrated full tooling suite passes all 255 tests in 113.784 seconds,
+including the final provenance clarification. Metadata checks retain the same
+14 header-ratchet failures and 428/680 raw link differences.
+
 Private source freezes, original bytes, arithmetic audit, comparison streams,
 negative controls and exact commands are retained under
 artifacts/readability/road-functions-20260906/batch-11/.
