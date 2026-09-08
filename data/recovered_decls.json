@@ -11958,9 +11958,9 @@
       "home": "render"
     },
     "Render_SetResourceHandle": {
-      "class": "legacy-import",
-      "decl": "int  Render_SetResourceHandle(int, int);",
-      "home": "legacy"
+      "class": "manifest",
+      "decl": "extern int Render_SetResourceHandle (int surface, int new_flag);",
+      "home": "render"
     },
     "Render_UnlockBackbuffer": {
       "class": "manifest",
@@ -19357,11 +19357,6 @@
       "class": "manifest",
       "decl": "_DWORD * Surface_SetSrcRect(_DWORD *result, int top, int bottom, int left, int right);",
       "home": "media"
-    },
-    "Surface_SwapDirtyTrackingFlag": {
-      "class": "manifest",
-      "decl": "extern int Surface_SwapDirtyTrackingFlag (int surface, int new_flag);",
-      "home": "render"
     },
     "Surface_Unlock": {
       "class": "manifest",
