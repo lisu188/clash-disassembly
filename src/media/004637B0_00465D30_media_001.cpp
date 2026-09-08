@@ -432,13 +432,13 @@ void  CAviDecompressor_StretchTo(int *playerHandle, const RECT *destRect)
 //----- (004644C0) --------------------------------------------------------
 void  CAviDecompressor_GetRect(_DWORD *playerHandle, _DWORD *rectOut)
 {
-  _DWORD *srcRect; // esi
-
-  srcRect = (_DWORD *)(uintptr_t)(*playerHandle + 2063);
-  *rectOut = *srcRect++;
-  rectOut[1] = *srcRect++;
-  rectOut[2] = *srcRect;
-  rectOut[3] = srcRect[1];
+  const clash95::media::AviDestinationRect rect =
+      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle)
+          .destinationRect();
+  rectOut[0] = (_DWORD)rect.left;
+  rectOut[1] = (_DWORD)rect.top;
+  rectOut[2] = (_DWORD)rect.right;
+  rectOut[3] = (_DWORD)rect.bottom;
 }
 
 //----- (004644E0) --------------------------------------------------------
