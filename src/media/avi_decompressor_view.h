@@ -7,6 +7,13 @@
 
 namespace clash95::media {
 
+struct AviDestinationRect final {
+  std::int32_t left;
+  std::int32_t top;
+  std::int32_t right;
+  std::int32_t bottom;
+};
+
 class CAviDecompressorView final {
 public:
   static constexpr std::size_t kObjectSize = 2236;
@@ -112,6 +119,23 @@ public:
     return load<std::int32_t>(kDestinationBottomOffset);
   }
 
+  AviDestinationRect destinationRect() const noexcept {
+    return {
+        destinationLeft(),
+        destinationTop(),
+        destinationRight(),
+        destinationBottom(),
+    };
+  }
+
+  void copyDestinationRect(std::int32_t *rectOut) const noexcept {
+    const AviDestinationRect rect = destinationRect();
+    rectOut[0] = rect.left;
+    rectOut[1] = rect.top;
+    rectOut[2] = rect.right;
+    rectOut[3] = rect.bottom;
+  }
+
   std::uint32_t frameEventHandle() const noexcept {
     return load<std::uint32_t>(kFrameEventHandleOffset);
   }
@@ -182,6 +206,7 @@ private:
   std::byte *bytes_;
 };
 
+static_assert(sizeof(AviDestinationRect) == 16);
 static_assert(CAviDecompressorView::kDestroyVtableOffset + sizeof(std::uint32_t)
               == CAviDecompressorView::kObjectSize);
 
