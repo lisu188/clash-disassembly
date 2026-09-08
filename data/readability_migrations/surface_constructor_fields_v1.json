@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "source": "src/render/00401A40_00402BB0_render_001.cpp",
+  "includes": [
+    "render_surface_view.h"
+  ],
+  "functions": [
+    {
+      "name": "Render_ConstructSurfaceObject",
+      "expected_body_sha256": "f401eff065fe4d257ee1953d78a693054fb97cc3f8f875af955af92d60ea72b5",
+      "replacement_body": "{\n  _DWORD *surface_body; // eax\n  _DWORD *surface; // eax\n\n  surface_body = (_DWORD *)(uintptr_t)(surface_addr + 8);\n  {\n    clash95::render::RenderSurfaceMutableView initial(\n        (void *)(uintptr_t)surface_addr);\n    initial.clearPixelBufferHandle();\n    initial.setDimensions((std::uint16_t)width, (std::uint16_t)height);\n  }\n  surface = Surface_Construct(surface_body);\n  clash95::render::RenderSurfaceMutableView(surface - 2)\n      .setMethodTableHandle((std::uint32_t)(uintptr_t)g_Surface_BaseVtable);\n  return surface - 2;\n}"
+    }
+  ]
+}

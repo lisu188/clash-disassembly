@@ -13,6 +13,7 @@
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "render_surface_view.h"
 
 //----- (00401A40) --------------------------------------------------------
 __int16 Render_LoadResourceBackbuffer(void)
@@ -227,11 +228,15 @@ _DWORD * Render_ConstructSurfaceObject(int surface_addr, __int16 width, __int16 
   _DWORD *surface; // eax
 
   surface_body = (_DWORD *)(uintptr_t)(surface_addr + 8);
-  *(surface_body - 1) = 0;
-  *((_WORD *)surface_body - 4) = width;
-  *((_WORD *)surface_body - 3) = height;
+  {
+    clash95::render::RenderSurfaceMutableView initial(
+        (void *)(uintptr_t)surface_addr);
+    initial.clearPixelBufferHandle();
+    initial.setDimensions((std::uint16_t)width, (std::uint16_t)height);
+  }
   surface = Surface_Construct(surface_body);
-  surface[44] = (_DWORD)(uintptr_t)(g_Surface_BaseVtable);
+  clash95::render::RenderSurfaceMutableView(surface - 2)
+      .setMethodTableHandle((std::uint32_t)(uintptr_t)g_Surface_BaseVtable);
   return surface - 2;
 }
 // 50EDD4: using guessed type int (*off_50EDD4[5])();
