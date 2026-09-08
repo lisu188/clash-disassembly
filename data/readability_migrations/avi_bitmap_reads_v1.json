@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "source": "src/media/004637B0_00465D30_media_001.cpp",
+  "includes": [
+    "avi_decompressor_view.h",
+    "avi_bitmap_info_view.h"
+  ],
+  "functions": [
+    {
+      "name": "CAviDecompressor_PixelSize",
+      "expected_body_sha256": "514ec2814ba3f3b09ef36b38b8989c45ebd6399f51cac81ce6e468b2d919b3b5",
+      "replacement_body": "{\n  const auto player =\n      clash95::media::CAviDecompressorView::fromPlayerHandle(playerHandle);\n  return clash95::media::AviBitmapInfoHeaderView::fromHandle(\n             player.bitmapHeaderHandle())\n      .bytesPerPixel();\n}"
+    },
+    {
+      "name": "CAviDecompressor_BPP",
+      "expected_body_sha256": "3e6ce2b15701a04d4112ad2c7ba93f7cbc6a9578a81d2b68afd4fa66326fe62c",
+      "replacement_body": "{\n  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(\n      (const void *)(uintptr_t)playerHandle);\n  return clash95::media::AviBitmapInfoHeaderView::fromHandle(\n             player.bitmapHeaderHandle())\n      .bitsPerPixel();\n}"
+    },
+    {
+      "name": "CAviDecompressor_Width",
+      "expected_body_sha256": "421011d8fd9c4e7d03bd089b7bbe7bf211d450b0f06de703e38c9507db66d18e",
+      "replacement_body": "{\n  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(\n      (const void *)(uintptr_t)playerHandle);\n  return clash95::media::AviBitmapInfoHeaderView::fromHandle(\n             player.bitmapHeaderHandle())\n      .width();\n}"
+    },
+    {
+      "name": "CAviDecompressor_Height",
+      "expected_body_sha256": "74d1f1965877b3fde9a42893d9d602dce8eb188aa2d54f70201fe393757f80bf",
+      "replacement_body": "{\n  const auto player = clash95::media::CAviDecompressorView::fromPlayerHandle(\n      (const void *)(uintptr_t)playerHandle);\n  return clash95::media::AviBitmapInfoHeaderView::fromHandle(\n             player.bitmapHeaderHandle())\n      .absoluteHeight();\n}"
+    },
+    {
+      "name": "CAviDecompressor_GetVideoFormat",
+      "expected_body_sha256": "c142556dd2b5fe2ee916c4bdaf9861d7670d6cd48de221886e325ff9fc101519",
+      "replacement_body": "{\n  return (int)clash95::media::CAviDecompressorView(\n                  (const void *)(uintptr_t)self)\n      .bitmapHeaderHandle();\n}"
+    }
+  ]
+}
