@@ -13,6 +13,7 @@
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "render_surface_tracking_view.h"
 #include "render_surface_view.h"
 
 //----- (004046D0) --------------------------------------------------------
@@ -324,11 +325,9 @@ _DWORD * Render_BlitSurface(_DWORD *result, int force_flag, char a3, DWORD a4)
 //----- (00404A40) --------------------------------------------------------
 int  Surface_SwapDirtyTrackingFlag(int surface, int new_flag)
 {
-  int old_flag; // edx
-
-  old_flag = *(_DWORD *)(uintptr_t)(surface + 204);
-  *(_DWORD *)(uintptr_t)(surface + 204) = new_flag;
-  return old_flag;
+  clash95::render::RenderSurfaceTrackingMutableView tracking(
+      (void *)(uintptr_t)surface);
+  return (int)tracking.swapResourceHandle((std::uint32_t)new_flag);
 }
 
 //----- (00404A60) --------------------------------------------------------
@@ -417,7 +416,9 @@ int  Surface_DrawPixAndMarkDirty(int surface, int y)
   int result; // eax
 
   result = Surface_DrawPix(surface, y);
-  *(_DWORD *)(uintptr_t)(surface + 200) = 1;
+  clash95::render::RenderSurfaceTrackingMutableView(
+      (void *)(uintptr_t)surface)
+      .markDirty();
   return result;
 }
 
@@ -949,9 +950,10 @@ int  Surface_GetWriteIncrFromStride(int surface)
 //----- (00405680) --------------------------------------------------------
 int  Surface_GetWriteIncrAndMarkDirty(_DWORD *surface)
 {
-  if ( surface[51] )
-    surface[50] = 1;
-  return surface[47];
+  clash95::render::RenderSurfaceTrackingMutableView tracking(surface);
+  if ( tracking.readOnly().resourceHandle() )
+    tracking.markDirty();
+  return tracking.readOnly().rowStride();
 }
 
 //----- (004056B0) --------------------------------------------------------
