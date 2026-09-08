@@ -15,7 +15,7 @@ int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD allocContext)
 {
   int instance; // eax
 
-  instance = Mem_Alloc(2236, (int)(intptr_t)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);
+  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *instanceOut = instance;
@@ -44,7 +44,7 @@ int * CAviDecompressor_ConstructAndInitCallbacks(
   int instance; // eax
 
   *selfOut = 0;
-  instance = Mem_Alloc(2236, (int)(intptr_t)&stru_50F60C, 0, (DWORD)(intptr_t)ddSurface);
+  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&stru_50F60C, 0, (DWORD)(intptr_t)ddSurface);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *selfOut = instance;
@@ -81,7 +81,7 @@ int * CAviDecompressor_ConstructAndInitSource(int *selfOut, DWORD allocContext, 
   int instance; // eax
 
   *selfOut = 0;
-  instance = Mem_Alloc(2236, (int)(intptr_t)&stru_50F6A0, 0, allocContext);
+  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&stru_50F6A0, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *selfOut = instance;
