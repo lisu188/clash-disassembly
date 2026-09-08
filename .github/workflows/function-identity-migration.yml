@@ -1,0 +1,51 @@
+name: Function identity migration
+
+on:
+  push:
+    branches:
+      - 'readability/identity-*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - name: Apply guarded identity specs
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          specs=(data/function_identity_migrations/*.json)
+          if (( ${#specs[@]} == 0 )); then
+            echo 'No function identity migration specs found.'
+            exit 0
+          fi
+          for spec in "${specs[@]}"; do
+            python3 tools/apply_function_identity_migration.py "$spec" --write
+          done
+          python3 tools/gen_subsystem_headers.py --write --write-tu-includes all
+          python3 tools/update_split_manifest_hashes.py
+          python3 tools/audit_split_sources.py
+          python3 tools/gen_subsystem_headers.py --check
+          python3 tools/gen_subsystem_headers.py --check-tu-includes
+          git diff --check
+      - name: Commit generated identity outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Identity migration is already applied.'
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src data/recovered_sources.json data/recovered_decls.json data/subsystem_api.json data/function_identity_migrations
+          git commit -m 'Apply recovered function identity migration'
+          git push origin HEAD:${GITHUB_REF_NAME}
