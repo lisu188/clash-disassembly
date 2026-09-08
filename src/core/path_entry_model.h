@@ -1,17 +1,14 @@
 #ifndef CLASH95_CORE_PATH_ENTRY_MODEL_H
 #define CLASH95_CORE_PATH_ENTRY_MODEL_H
 
+#include "../media/string_holder_view.h"
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
 
 namespace clash95::core {
 
-class CompatStringHolderLayout final {
-public:
-  std::uint32_t text_handle;
-  std::uint32_t vtable_handle;
-};
+using CompatStringHolderLayout = clash95::media::StringHolderStorage;
 
 class PathEntryLayout final {
 public:
