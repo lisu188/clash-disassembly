@@ -232,27 +232,17 @@ int  CAviDecompressor_DecodedFrame(int playerHandle)
 //----- (004643C0) --------------------------------------------------------
 int  CAviDecompressor_SetBackground(int *playerHandle, _DWORD *bgRect, int ddObject)
 {
-  int result; // eax
-
-  result = *playerHandle;
-  *(_DWORD *)(uintptr_t)(result + 2155) = *bgRect;
-  *(_DWORD *)(uintptr_t)(result + 2159) = bgRect[1];
-  *(_DWORD *)(uintptr_t)(result + 2163) = bgRect[2];
-  *(_DWORD *)(uintptr_t)(result + 2167) = bgRect[3];
-  *(_DWORD *)(uintptr_t)(result + 2151) = ddObject;
-  return result;
+  const int instance = *playerHandle;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setBackground(ddObject, (const std::uint32_t *)bgRect);
+  return instance;
 }
 
 //----- (004643E0) --------------------------------------------------------
 void  CAviDecompressor_InitClipRect(_DWORD *playerHandle, _DWORD *clipRect)
 {
-  _DWORD *clipDest; // edi
-
-  clipDest = (_DWORD *)(uintptr_t)(*playerHandle + 1969);
-  *clipDest++ = *clipRect;
-  *clipDest++ = clipRect[1];
-  *clipDest = clipRect[2];
-  clipDest[1] = clipRect[3];
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setClipRect((const std::uint32_t *)clipRect);
 }
 
 //----- (00464400) --------------------------------------------------------
@@ -448,12 +438,8 @@ void  CAviDecompressor_GetRect(_DWORD *playerHandle, _DWORD *rectOut)
 //----- (004644E0) --------------------------------------------------------
 void  CAviDecompressor_InitColorKeys(int *playerHandle, int colorKeyLow, int colorKeyHigh)
 {
-  int instance; // eax
-
-  instance = *playerHandle;
-  *(_DWORD *)(uintptr_t)(instance + 2171) = 8;
-  *(_DWORD *)(uintptr_t)(instance + 2042) = colorKeyLow;
-  *(_DWORD *)(uintptr_t)(instance + 2046) = colorKeyHigh;
+  clash95::media::CAviDecompressorMutableView::fromPlayerHandle(playerHandle)
+      .setColorKeys(colorKeyLow, colorKeyHigh);
 }
 
 //----- (00464500) --------------------------------------------------------
