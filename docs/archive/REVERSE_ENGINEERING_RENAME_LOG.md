@@ -1,5 +1,23 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-08 - Road readability: construction and movement
+
+Track: Win95 reconstruction. Reviewed `Road_Build` (`0x424400`) individually.
+Replaced register aliases with named state and existing packed fields; separated
+four direction choices from the shared construction/movement tail and flattened
+the known bridge mapping. Preserved provisional writes, zero-sensitive rollback,
+turn stamps, callback reloads and the 404-byte path-copy/free/execute/AP/panel
+order. Required AP now uses original wrapping addition and signed comparison.
+The original unmapped approach stack slot remains explicitly unresolved.
+All 494 accepted original traces match the actual body in four compiler profiles;
+492 defined-before traces also match, with two signed-overflow cases excluded.
+Both builds, eight public gates and all 257 tooling tests pass; eight compiled
+negative controls are rejected. Only target code changes, with seven fewer
+Clang warnings. One canonical body hash changes; all 4157 identities,
+legacy hashes and layouts remain. Confidence is high in the documented domain;
+no campaign or visual milestone is promoted.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-12-road_build).
+
 ## 2026-09-08 - Road readability: modal loop and cursor arithmetic
 
 Track: Win95 reconstruction. Reviewed `Builder_StartRoadBuildMode` (`0x425540`)

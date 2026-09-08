@@ -3004,7 +3004,7 @@
       "original_line": 6023,
       "source": "src/buildings/00422B50_004254E0_buildings_005.cpp",
       "linkage": "external",
-      "body_sha256": "0c5bee144a1949d5b2d7e00c3652a618957d58dd79b16e94b73edf4c7aab0b75",
+      "body_sha256": "3f5ccafeaa9c5acf9583697b4efeff63e3a7e1306f184cc5c5cf71174de106d5",
       "original_address_range": {
         "start": "0x00424400",
         "end_exclusive": "0x00424EC0"

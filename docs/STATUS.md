@@ -2,6 +2,23 @@
 
 Last consolidated: 2026-09-08.
 
+## Road Construction Readability
+
+Track: Win95 reconstruction, reached mission-05 Road construction/movement.
+`Road_Build`, the fifteenth individually reviewed Road-family function, now
+separates direction selection from shared construction and movement. Typed
+coordinates/overlays and named locals replace register aliases and cross-case
+gotos. Zero-sensitive restoration, persistent turn stamps, fresh state reads and
+the 404-byte path-copy sequence remain; AP addition now matches original wrap.
+All 494 original-measured scenarios match the actual body in four compiler
+profiles. Both builds, eight public gates and all 257 tooling tests pass, with
+only the target code changed and seven fewer Clang warnings. Unknown original
+bridge-mapping inputs remain explicitly unresolved. Identities, layouts and
+frozen baselines remain.
+The first-Road runtime baseline and turn-7 continuation frontier are unchanged.
+Evidence, commands, validation and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-12-road_build).
+
 ## Road Modal Loop Readability And Cursor Arithmetic
 
 Track: Win95 reconstruction, reached mission-05 Road mode. The fourteenth
