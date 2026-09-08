@@ -6,7 +6,7 @@
   ],
   "functions": [
     {
-      "name": "Surface_SwapDirtyTrackingFlag",
+      "name": "Render_SetResourceHandle",
       "expected_body_sha256": "28f73b2a1f730915e0a1d1e50d3e7706b6ee34374cffc7dff524f7ecf1584395",
       "replacement_body": "{\n  clash95::render::RenderSurfaceTrackingMutableView tracking(\n      (void *)(uintptr_t)surface);\n  return (int)tracking.swapResourceHandle((std::uint32_t)new_flag);\n}"
     },

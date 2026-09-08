@@ -31,3 +31,14 @@ Exactly one current manifest body hash changes. All 4,157 function identities, h
 The focused regression pins the original `Time_Now` implementation, checks the two bare original Road calls, rejects any retained undefined timing locals and verifies the source still preserves the original threshold/store/frame order. Repository split-source and generated-header checks must pass before publication; normal PR CI remains the compiler/link/coverage gate.
 
 This is not retail runtime proof and does not advance mission 05. The active campaign frontier remains normal turn-7 refresh followed by Road continuation west through `(48,50)`, `(47,50)`, `(46,50)`, `(45,50)`.
+
+## Whole-loop follow-up: 2026-09-08
+
+The subsequent [Road readability batch 11](HUMAN_READABILITY.md#batch-11-builder_startroadbuildmode)
+retains this repair and makes the timestamp subtraction explicitly unsigned to
+match original 32-bit wrap. Its original-measured whole-loop regression covers
+the strict threshold, separately sampled stored time, frame update and fresh
+neighbor redraws. The three original clock/register tests remain; only the
+fourth assertion tied to the former local name and expression spelling is
+replaced by the behavioral regression. The original evidence above remains the
+basis for the ignored-argument decision.

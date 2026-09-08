@@ -100,6 +100,50 @@ evidence is retained without attributing it to this eleven-method build.
 
 ## Commands and durable evidence
 
+### Latest remote follow-up
+
+The initial integration was committed as `6f8f678`. A fresh fetch then confirmed
+`1b8b4b8e25558a5b0494c2889f11a1368b65eeef` as the remote tip. Its four changed
+canonical bodies (the Road modal loop and three DLX operations), view helpers,
+fixtures and documentation are retained. The only merge conflict joined both
+status entries. All eleven class bodies and historical alias metadata survive;
+the canonical hash and complete source/support audits pass without regeneration.
+
+A separately frozen 783-file exact-origin reference and both combined clean
+builds pass all eight asset-free gates. Warnings are 6,581 GCC and 6,590 Clang.
+Both strict migration comparisons pass against that exact reference using
+`data/class_migration_latest_origin_text_additions.json`; the permitted migration
+text inventory is unchanged. The incoming weak sprite-view helpers belong to
+upstream and are not added to migration allowances. No named storage,
+initialization or identity changes are permitted. The nine focused Road modal,
+timing and readability-runner tests pass. Historical raw link/header ratchets
+remain unchanged.
+
+Exact commands and source hashes are in `refresh/latest-build.py`,
+`refresh/latest-build-source.json` and `refresh/latest-comparison.py`; reference
+builds, snapshots and verified archives are under `origin-latest-reference/`.
+The native and runtime observations above remain tied to the preceding frozen
+integration. They do not substitute for a final regression of subsequent code.
+
+### Fresh first-Road comparison for the preceding integration
+
+Both copied production binaries complete the authentic seven-leg approach and
+Building → Road action. A fresh headless original session uses real Load of the
+unchanged engine-authored turn-6 checkpoint. Both reconstructions and the original
+reach turn 6, tile `(49,50)`, AP 2, empty path, roads 867/879 and 228 visible tiles.
+Before and after the action, all 310 raw slot bytes, all 1,300 visibility bytes
+and all six checked Road words match. The source snapshot's 847 files and both
+258-file runtime archives were reverified after capture.
+
+Whole-stack differences remain at offsets 721–724 before the action and
+328, 332, 416, 516, 616, 716, 721–724 after it. Full game-image differences versus
+the fresh original are 682/692 bytes (GCC before/after) and 691/696 (Clang).
+Unmasked 640×480 frames differ at 288,419 pixels with mean absolute RGB-channel
+delta 14.5185373/255 for GCC, and 288,002 pixels with delta 14.4788281 for Clang.
+These are gameplay-checkpoint comparisons; no visual or whole-memory equivalence
+is established. Exact image paths, markers, commands and every byte difference
+are retained under `refreshed-runtime/`.
+
 From the migration worktree root in WSL:
 
 ```sh

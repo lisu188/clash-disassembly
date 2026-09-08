@@ -104,7 +104,9 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
 //----- (00405EC0) --------------------------------------------------------
 int  DLX_GetSpriteForChar(int sprite_set, int char_index)
 {
-  return *(_DWORD *)(uintptr_t)(sprite_set + 4 * char_index);
+  const clash95::render::DLXSpriteSetView spriteSet(
+      (const void *)(uintptr_t)sprite_set);
+  return (int)spriteSet.entryHandleSigned((std::ptrdiff_t)char_index);
 }
 
 //----- (00405ED0) --------------------------------------------------------
@@ -214,8 +216,9 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
   int payload_size;
   unsigned int payload_handle;
   char path[256]; // [esp+0h] [ebp-11Ch] BYREF
+  clash95::render::DLXSpriteMutableView spriteView((void *)(uintptr_t)sprite);
 
-  *(_DWORD *)(uintptr_t)(sprite + 10) = 0;
+  spriteView.clearPayloadHandle();
   strcpy(path, aGfx_3);
   strcat(path, file_name);
   query_handle = FileSystem_ResolveReadPath(path, 1);
@@ -227,13 +230,15 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
     entry_end_offset = g_DlxDirectoryEntryEndOffsets[entry_index];
   else
     entry_end_offset = IO_QueryVTableStreamSize(query_handle);
-  *(_DWORD *)(uintptr_t)(sprite + 14) = entry_end_offset - entry_offset;
+  spriteView.setSerializedSize((std::uint32_t)(entry_end_offset - entry_offset));
   Compat_QuerySeek(query_handle, entry_offset);
-  Compat_QueryRead(query_handle, (void *)(uintptr_t)(unsigned int)sprite, 10);
-  payload_size = *(_DWORD *)(uintptr_t)(sprite + 14) - 10;
+  Compat_QueryRead(query_handle, spriteView.data(),
+                   clash95::render::DLXSpriteView::kSerializedHeaderSize);
+  payload_size = (int)spriteView.readOnly().serializedSize()
+      - (int)clash95::render::DLXSpriteView::kSerializedHeaderSize;
   payload_handle = (unsigned int)nmalloc_(payload_size, 4);
-  *(_DWORD *)(uintptr_t)(sprite + 10) = payload_handle;
-  if ( !*(_DWORD *)(uintptr_t)(sprite + 10) )
+  spriteView.setPayloadHandle(payload_handle);
+  if ( !spriteView.readOnly().payloadHandle() )
   {
     Debug_Log(0, 10, payload_size, (int)(intptr_t)aNotEnoughMem_7);
     App_RequestQuit((int)(intptr_t)aNotEnoughMem_8);
@@ -249,11 +254,11 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
 //----- (00406260) --------------------------------------------------------
 int  DLXSprite_ConstructFromBuffer(int result, int source_buffer, int data_size)
 {
-  *(_DWORD *)(uintptr_t)(result + 18) = 0;
-  *(_DWORD *)(uintptr_t)(result + 14) = data_size;
-  qmemcpy((void *)(uintptr_t)result, (const void *)(uintptr_t)source_buffer, 8u);
-  qmemcpy((void *)(uintptr_t)(result + 8), (const void *)(uintptr_t)(source_buffer + 8), 2u);
-  *(_DWORD *)(uintptr_t)(result + 10) = source_buffer + 10;
+  clash95::render::DLXSpriteMutableView sprite((void *)(uintptr_t)result);
+  sprite.setOwnsPayload(false);
+  sprite.setSerializedSize((std::uint32_t)data_size);
+  sprite.copySerializedHeaderFrom((const void *)(uintptr_t)source_buffer);
+  sprite.setPayloadHandle((std::uint32_t)(source_buffer + 10));
   return result;
 }
 

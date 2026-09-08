@@ -1,5 +1,22 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-08 - Road readability: modal loop and cursor arithmetic
+
+Track: Win95 reconstruction. Reviewed `Builder_StartRoadBuildMode` (`0x425540`)
+individually. Named the carried frame-call argument and cursor deltas, reused
+typed stack/widget fields, flattened marker selection and unified cleanup.
+Original unsigned timer subtraction, masked shifts and signed cursor division
+replace arithmetic scars; this repairs an existing negative-cursor mismatch as
+well as undefined edge cases. The upstream explicit clock arguments remain.
+All 429 original-measured cases match the actual body in four compiler profiles;
+six compiled negative controls are rejected. Confidence is high within the
+documented scalar arithmetic and scripted call contract. Both builds and eight
+public gates and all 255 tooling tests pass, with one fewer warning under each
+compiler and only the target executable section changed. One canonical hash changes; all 4157
+identities, legacy hashes, signatures and layouts remain. No global helper,
+campaign or visual milestone is promoted.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-11-builder_startroadbuildmode).
+
 ## 2026-09-06 - Road readability: adjacent-tile highlight callback
 
 Track: Win95 reconstruction. Reviewed `RoadBuildMode_HighlightBuildableAdjacentTile`
