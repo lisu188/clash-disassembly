@@ -1,5 +1,22 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-08 - Road readability: single-tile movement
+
+Track: Win95 reconstruction. Reviewed `UnitStack_MoveOneTileInDirection`
+(`0x424EC0`) individually. Named source/target coordinates, reused packed stack
+fields and flattened the null-path exit. Preserved fresh destination lookup,
+404-byte copy, free/execute/panel order and opaque forwarding. Original EDX=1
+and the real free wrapper's register preservation recover the animation input;
+unsigned coordinate addition recovers original wrap. All 230 original traces
+match in four compiler profiles; 89 defined-before traces also match, with
+undefined success and signed-overflow domains excluded explicitly.
+Both builds, eight public gates and all 259 tooling tests pass, with ten negative
+controls rejected, only target code changed and one fewer warning under each
+compiler. One canonical body hash changes; all 4157
+identities, legacy hashes and layouts remain. Confidence is high within the
+documented call/storage domain. No campaign or visual milestone is promoted.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-13-unitstack_moveonetileindirection).
+
 ## 2026-09-08 - Road readability: construction and movement
 
 Track: Win95 reconstruction. Reviewed `Road_Build` (`0x424400`) individually.

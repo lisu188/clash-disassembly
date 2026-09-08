@@ -2,6 +2,23 @@
 
 Last consolidated: 2026-09-08.
 
+## Single-Tile Movement Readability And Animation Argument
+
+Track: Win95 reconstruction, reached Road/queued-movement fallback family.
+`UnitStack_MoveOneTileInDirection`, the sixteenth individually reviewed
+Road-family function, now uses named coordinates, packed fields and an early
+null return. The successful path retains the fresh destination and exact
+404-byte copy. Original instructions and the real free wrapper prove animation
+argument 1, replacing an undefined local; coordinate addition now matches
+original wrap. All 230 original-measured scenarios match in four compiler
+profiles, including the 89 defined-before cases. Both builds and all eight
+public gates pass, with only target code changed and one fewer warning per
+compiler. All 259 tooling tests pass. Identities, layouts and frozen baselines
+remain.
+The first-Road runtime baseline and turn-7 continuation frontier are unchanged.
+Evidence, commands, validation and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-13-unitstack_moveonetileindirection).
+
 ## Road Construction Readability
 
 Track: Win95 reconstruction, reached mission-05 Road construction/movement.

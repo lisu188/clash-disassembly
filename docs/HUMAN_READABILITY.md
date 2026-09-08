@@ -916,6 +916,90 @@ the public regression from the repository root in Linux/WSL:
 python3 -m unittest discover -s tests/tools -p test_road_build.py -v
 ```
 
+### Batch 13: UnitStack_MoveOneTileInDirection
+
+Track: Win95 reconstruction, reached Road and queued-movement fallback family.
+Reviewed `UnitStack_MoveOneTileInDirection` (`0x424EC0`) as the sixteenth
+Road-family function. Existing packed stack fields and named source/target
+coordinates replace register aliases and raw reads. A null path returns early;
+the successful path clearly copies, frees, executes and refreshes the panel.
+The copy reloads gameData after path generation and retains the caller's stack
+index, captured source column and opaque forwarded arguments.
+
+The original sets EDX to 1 before copying the path. Its real free thunk and
+free body preserve EDX through their normal return, proving the animation
+argument at the subsequent execution call. Passing 1 removes the undefined
+decompiler local. This requests animation; the executor can still disable it
+under its own visibility rules. Target-coordinate additions now use unsigned
+32-bit arithmetic followed by signed interpretation, matching the original ADD
+instructions when live neighbor deltas overflow signed arithmetic.
+
+All 230 original-measured scenarios match the actual refactored body under GCC
+13 and Clang 18 at O0/O2: 920 comparisons and 629 call boundaries per profile.
+The probe executes 162 unchanged original instruction bytes against four
+explicit recording/mutating boundaries. The 89 defined null-path scenarios also
+match the unchanged before body in all four profiles. Before equivalence excludes
+133 nonnull paths with the undefined animation local and eight additional null
+paths with signed coordinate overflow. Original/after is the acceptance reference
+for those repairs; no initialized substitute for the old body is used.
+
+Cases cover all 32 backed doubled-index table accesses, signed coordinates and
+char conversion, distinct and wrapping live deltas, finite binary64 forwarding,
+null/nonnull paths and state mutations at each call. At the free boundary both
+probes check both game arenas byte for byte against the post-path state plus
+exactly the intended 404-byte copy. Other whole-region and queued-path
+observations use 32-bit fingerprints; the public fixture stores SHA-256 digests
+of complete measured traces. These are distinct forms of evidence.
+
+Ten compiled negative controls reject lost selection, incorrect animation,
+cached destination, short copy, reloaded source column, wrong table stride,
+wrong unit-index forwarding, wrong success return and signed addition on each
+coordinate axis. The overflow controls run under the same UBSan checks as the
+actual body; alignment checks are disabled for the recovered packed layout.
+
+The original neighbor windows overlap by one DWORD; their 64 physical words
+match the two current native initializers. The fixture explicitly projects
+those words into both separate native arrays and checks every native cell.
+This establishes the helper's accesses for indexes 0..31, not global array
+aliasing. No clamp, mask, new direction policy or storage change is introduced.
+Original free-register checks are separate from the native no-argument inert
+free seam; allocator behavior is not recovered by the recorder.
+
+Confidence is high within valid positive signed-low32, nonoverlapping backing
+and finite binary64 inputs. Invalid indexes/addresses, unrelated address
+overflow, NaNs, infinities and altered floating-point environments are outside
+the proof. Instrumented callees do not establish their gameplay or rendered
+output. No signature, public name, layout, global or table changes; only this
+canonical manifest body hash changes and all 4157 identities remain.
+
+Both supported builds and all eight public asset-free gates pass. Only this
+function's executable section changes: GCC 286 to 303 bytes, Clang 263 to 281.
+The other 35 executable sections, ordinary allocated data and 145 other objects
+remain exact. Linked data classes, sizes and order remain unchanged; library
+crosschecks report zero errors. Scoped warnings fall from 23 to 22 under GCC
+and 26 to 25 under Clang, removing this function's undefined-argument diagnostic.
+Manifest, split-source and generated metadata/header/include checks pass.
+Existing raw link differences remain 428 GCC / 680 Clang and the header ratchet
+retains its 14 failures. Frozen baselines and legacy hashes remain unchanged.
+
+The final full tooling suite passes all 259 tests in 146.455 seconds. The
+production inputs, public regression/provenance and both binaries and archives
+remain frozen through validation.
+
+Private source/original freezes, original free-register evidence, measured
+traces, before-domain classification and exact commands are retained under
+artifacts/readability/road-functions-20260906/batch-13/.
+Its candidate-audit, original-proof, test-audit, scope-audit, metadata and
+build-validation directories record their respective evidence and limits;
+private scripts are absent from clean checkouts. The separate first-Road
+runtime milestone and normal turn-7 refresh/continuation frontier are unchanged.
+No new route or visual-fidelity claim follows. Reproduce the public regression
+from the repository root in Linux/WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_one_tile_movement.py -v
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.
