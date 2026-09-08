@@ -7,6 +7,7 @@
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "avi_decompressor_view.h"
 
 //----- (004637B0) --------------------------------------------------------
 int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD allocContext)
@@ -114,13 +115,17 @@ void  CAviDecompressor_Done(_DWORD *playerHandle)
 //----- (00464250) --------------------------------------------------------
 int  CAviDecompressor_Frames(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 43);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .frames();
 }
 
 //----- (00464260) --------------------------------------------------------
 int  CAviDecompressor_Fps(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 35) / *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 31);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .fps();
 }
 
 //----- (00464270) --------------------------------------------------------
@@ -138,7 +143,9 @@ void  CAviDecompressor_Stop(int *playerHandle)
 //----- (00464290) --------------------------------------------------------
 BOOL  CAviDecompressor_IsPlaying(int playerHandle)
 {
-  return *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2191) != 0;
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .isPlaying();
 }
 
 //----- (004642B0) --------------------------------------------------------
@@ -170,13 +177,17 @@ void  CAviDecompressor_WaitForNextFrame(int *playerHandle)
 //----- (00464320) --------------------------------------------------------
 int  CAviDecompressor_Palette(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 1948);
+  return (int)clash95::media::CAviDecompressorView::fromPlayerHandle(
+                   (const void *)(uintptr_t)playerHandle)
+      .paletteHandle();
 }
 
 //----- (00464330) --------------------------------------------------------
 int  CAviDecompressor_Header(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151);
+  return (int)clash95::media::CAviDecompressorView::fromPlayerHandle(
+                   (const void *)(uintptr_t)playerHandle)
+      .bitmapHeaderHandle();
 }
 
 //----- (00464340) --------------------------------------------------------
@@ -209,7 +220,9 @@ int  CAviDecompressor_Height(int playerHandle)
 //----- (004643B0) --------------------------------------------------------
 int  CAviDecompressor_DecodedFrame(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2021);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .decodedFrame();
 }
 
 //----- (004643C0) --------------------------------------------------------
@@ -482,7 +495,9 @@ unsigned int  CAviDecompressor_TimeMs(int playerHandle)
 //----- (004645C0) --------------------------------------------------------
 int  CAviDecompressor_SumSleepTime(int playerHandle)
 {
-  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2038);
+  return clash95::media::CAviDecompressorView::fromPlayerHandle(
+           (const void *)(uintptr_t)playerHandle)
+      .sumSleepTime();
 }
 
 //----- (004645D0) --------------------------------------------------------
