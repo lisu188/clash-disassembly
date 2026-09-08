@@ -10,6 +10,7 @@
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "render_surface_view.h"
 
 //----- (00402E80) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
@@ -760,16 +761,19 @@ _DWORD * Render_CreateSurface(int surface_addr, __int16 width, __int16 height)
   unsigned int pixel_count;
 
   surface = Render_ConstructSurfaceObject(surface_addr, width, height);
-  surface[46] = (_DWORD)(uintptr_t)(g_Surface_RawBuffer8Vtable);
-  pixel_count = (unsigned __int16)*(unsigned __int16 *)surface * (unsigned __int16)*((unsigned __int16 *)surface + 1);
-  surface[1] = (unsigned int)nmalloc_(pixel_count, 4);
-  if ( !surface[1] )
+  clash95::render::RenderSurfaceMutableView surfaceView(surface);
+  surfaceView.setMethodTableHandle(
+      (std::uint32_t)(uintptr_t)g_Surface_RawBuffer8Vtable);
+  pixel_count = (unsigned int)surfaceView.readOnly().width()
+      * (unsigned int)surfaceView.readOnly().height();
+  surfaceView.setPixelBufferHandle((std::uint32_t)nmalloc_(pixel_count, 4));
+  if ( !surfaceView.readOnly().hasPixelBuffer() )
   {
     Debug_Log(0, 0, pixel_count, (int)(intptr_t)aNotEnoughMemor);
     App_RequestQuit((int)(intptr_t)aNotEnoughMem_0);
   }
-  memset((void *)(uintptr_t)(unsigned int)surface[1], 0, pixel_count);
-  if ( !surface[1] )
+  memset((void *)(uintptr_t)surfaceView.readOnly().pixelBufferHandle(), 0, pixel_count);
+  if ( !surfaceView.readOnly().hasPixelBuffer() )
     App_RequestQuit((int)(intptr_t)aNotEnoughFreeM);
   return surface;
 }

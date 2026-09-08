@@ -20752,7 +20752,7 @@
       "original_line": 1729,
       "source": "src/render/00402E80_00404660_render_002.cpp",
       "linkage": "external",
-      "body_sha256": "2682cd468d12105cc4030046251ad8d7b7260ef4dda88e5aad8f1e196c9c29d2",
+      "body_sha256": "863eef9168595e287f5135e2b6a88af07dc97b28bf76aa05ce8fa8a7b01e5b4e",
       "original_address_range": {
         "start": "0x00403D70",
         "end_exclusive": "0x00403E50"
