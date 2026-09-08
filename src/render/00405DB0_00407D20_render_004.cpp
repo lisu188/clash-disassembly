@@ -104,7 +104,9 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
 //----- (00405EC0) --------------------------------------------------------
 int  DLX_GetSpriteForChar(int sprite_set, int char_index)
 {
-  return *(_DWORD *)(uintptr_t)(sprite_set + 4 * char_index);
+  const clash95::render::DLXSpriteSetView spriteSet(
+      (const void *)(uintptr_t)sprite_set);
+  return (int)spriteSet.entryHandleSigned((std::ptrdiff_t)char_index);
 }
 
 //----- (00405ED0) --------------------------------------------------------
@@ -249,11 +251,11 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
 //----- (00406260) --------------------------------------------------------
 int  DLXSprite_ConstructFromBuffer(int result, int source_buffer, int data_size)
 {
-  *(_DWORD *)(uintptr_t)(result + 18) = 0;
-  *(_DWORD *)(uintptr_t)(result + 14) = data_size;
-  qmemcpy((void *)(uintptr_t)result, (const void *)(uintptr_t)source_buffer, 8u);
-  qmemcpy((void *)(uintptr_t)(result + 8), (const void *)(uintptr_t)(source_buffer + 8), 2u);
-  *(_DWORD *)(uintptr_t)(result + 10) = source_buffer + 10;
+  clash95::render::DLXSpriteMutableView sprite((void *)(uintptr_t)result);
+  sprite.setOwnsPayload(false);
+  sprite.setSerializedSize((std::uint32_t)data_size);
+  sprite.copySerializedHeaderFrom((const void *)(uintptr_t)source_buffer);
+  sprite.setPayloadHandle((std::uint32_t)(source_buffer + 10));
   return result;
 }
 
