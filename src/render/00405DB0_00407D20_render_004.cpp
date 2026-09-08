@@ -14,6 +14,8 @@
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "dlx_sprite_view.h"
+#include "dlx_sprite_set_view.h"
 
 //----- (00405DB0) --------------------------------------------------------
 int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
@@ -115,13 +117,21 @@ int  DLXSpriteSet_GetLastCharIndex(int sprite_set)
 //----- (00405EE0) --------------------------------------------------------
 __int16  DLX_GetSpriteWidth(int sprite_set, unsigned __int16 char_index)
 {
-  return *(_WORD *)(uintptr_t)(DLX_GetSpriteForChar(sprite_set, char_index) + 2);
+  const clash95::render::DLXSpriteSetView spriteSet(
+      (const void *)(uintptr_t)sprite_set);
+  const clash95::render::DLXSpriteView sprite(
+      (const void *)(uintptr_t)spriteSet.entryHandle(char_index));
+  return (__int16)sprite.width();
 }
 
 //----- (00405EF0) --------------------------------------------------------
 __int16  DLX_GetSpriteHeight(int sprite_set, unsigned __int16 char_index)
 {
-  return *(_WORD *)(uintptr_t)DLX_GetSpriteForChar(sprite_set, char_index);
+  const clash95::render::DLXSpriteSetView spriteSet(
+      (const void *)(uintptr_t)sprite_set);
+  const clash95::render::DLXSpriteView sprite(
+      (const void *)(uintptr_t)spriteSet.entryHandle(char_index));
+  return (__int16)sprite.height();
 }
 
 //----- (00405F00) --------------------------------------------------------

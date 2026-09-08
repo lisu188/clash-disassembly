@@ -22282,7 +22282,7 @@
       "original_line": 3835,
       "source": "src/render/00405DB0_00407D20_render_004.cpp",
       "linkage": "external",
-      "body_sha256": "fe608ba38b358466d5e20ff8be70c72d5523a12dd628c4b2f09d67890d991f5e",
+      "body_sha256": "4f4345161a2fc1ad38049648d10ef46766a0141380b77d61a958f099ebd63f37",
       "original_address_range": {
         "start": "0x00405EE0",
         "end_exclusive": "0x00405EF0"
@@ -22299,7 +22299,7 @@
       "original_line": 3841,
       "source": "src/render/00405DB0_00407D20_render_004.cpp",
       "linkage": "external",
-      "body_sha256": "916d290a059c2977124bc5cb9e846d1b69f8348d25518585b5d739df4a70c0ae",
+      "body_sha256": "e2c5394fd328ede9493b08a302cd9f708c6544922151fe11ba616e64a9df4385",
       "original_address_range": {
         "start": "0x00405EF0",
         "end_exclusive": "0x00405F00"
