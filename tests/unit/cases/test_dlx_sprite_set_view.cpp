@@ -25,6 +25,18 @@ TEST(cpp_class_models, dlx_sprite_set_view) {
   CHECK_EQ(view.vtableHandle(), 0x5000u);
 }
 
+TEST(cpp_class_models, dlx_sprite_set_signed_entry_index) {
+  using clash95::render::DLXSpriteSetView;
+
+  std::array<std::uint32_t, 4> storage{
+      0x11111111u, 0x22222222u, 0x33333333u, 0x44444444u};
+  const DLXSpriteSetView view(storage.data() + 2);
+
+  CHECK_EQ(view.entryHandleSigned(-1), 0x22222222u);
+  CHECK_EQ(view.entryHandleSigned(0), 0x33333333u);
+  CHECK_EQ(view.entryHandleSigned(1), 0x44444444u);
+}
+
 TEST(cpp_class_models, dlx_last_char_preserves_original_low16_read) {
   using clash95::render::DLXSpriteSetView;
 
