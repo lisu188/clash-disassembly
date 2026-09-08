@@ -37,11 +37,6 @@ public:
     return textHandle() != 0;
   }
 
-  const char *text() const noexcept {
-    return reinterpret_cast<const char *>(
-        static_cast<std::uintptr_t>(textHandle()));
-  }
-
   const void *data() const noexcept {
     return bytes_;
   }
