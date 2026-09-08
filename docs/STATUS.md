@@ -2,6 +2,18 @@
 
 Last consolidated: 2026-09-08.
 
+## GameRandom Recovery Before Class Extraction
+
+Track: Win95 reconstruction, requested behavior-class migration. The RNG seed
+initializer now passes a defined zero for a proven unused logging context, and
+range results use unsigned addition matching the original DIV/LEA wrap. The two
+clock reads, state updates and existing zero-range compatibility behavior remain.
+Actual production bodies pass 68,932 scenarios and 4,096 sequence steps in each
+GCC/Clang O0/O2 profile; reverted repairs fail the intended checks. Both production
+builds, exact storage/initialization/symbol comparisons and eight asset-free gates
+pass. This is a separate behavior-repair batch; no new class method or campaign
+milestone is claimed. See [GAME_RANDOM_RECOVERY.md](GAME_RANDOM_RECOVERY.md).
+
 ## Game-System Classes: Origin Integration
 
 Track: Win95 reconstruction; frontier: merge current upstream recovery into the

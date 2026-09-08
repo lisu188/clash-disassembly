@@ -1044,10 +1044,8 @@ int  Math_SinDegreesQ16(signed int degrees)
 //----- (00415DD0) --------------------------------------------------------
 void  initRandomSeed(char a1, DWORD a2)
 {
-  int v2; // ecx
-
   g_RngState = time_();
-  Debug_Log(v2, a1, a2, (int)(intptr_t)aRandom_initSee);
+  Debug_Log(0, a1, a2, (int)(intptr_t)aRandom_initSee);
 }
 // 415DE2: variable 'v2' is possibly undefined
 // 47627F: using guessed type int time_(void);
@@ -1058,7 +1056,6 @@ unsigned int  Rng_RandRange(int minValue, int maxValue)
 {
   unsigned int range;
   unsigned int seed;
-  int result;
 
   g_RngState ^= Time_Now(0, 0) + 0x34523471u;
   seed = (unsigned int)g_RngState + 0x83356532u * (unsigned int)Time_Now(0, 0);
@@ -1066,8 +1063,7 @@ unsigned int  Rng_RandRange(int minValue, int maxValue)
   range = (unsigned int)((__int64)maxValue + 1 - minValue);
   if ( !range )
     return (unsigned int)minValue;
-  result = (int)(seed % range) + minValue;
-  return (unsigned int)result;
+  return seed % range + (unsigned int)minValue;
 }
 // 525578: using guessed type int dword_525578;
 
