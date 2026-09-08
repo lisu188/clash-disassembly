@@ -1,9 +1,8 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: GameRandom extraction after origin
-integration. Thirteen identities have canonical methods: eleven reside in four
-class-named sources and two remain at their original anchors for extraction
-validation. The ordered manifest contains 144 translation units.
+Track: Win95 reconstruction. Frontier: GameRandom relocation after origin
+integration. Thirteen identities have canonical methods in five class-named
+sources. The ordered manifest contains 145 translation units.
 This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 
@@ -18,7 +17,8 @@ advance campaign or visual-fidelity claims.
 The two GameRandom methods and the direct UnitTurn caller pass focused
 before/after comparisons, both production builds, exact symbol/storage and
 initialization checks, and all eight asset-free gates. The RNG behavioral repairs
-were committed separately before extraction. See
+were committed separately before extraction; relocation passes the same gates.
+See
 [GAME_RANDOM_CLASSES.md](GAME_RANDOM_CLASSES.md) for evidence and limits.
 
 ## Inventory and implementation rules

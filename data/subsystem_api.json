@@ -22,11 +22,13 @@
   "clips->media": 96,
   "clips->runtime": 77,
   "clips->state": 3,
+  "core->buildings": 1,
   "core->media": 5,
   "core->persistence": 1,
   "core->render": 1,
   "core->runtime": 1,
   "core->strategic": 1,
+  "core->units": 1,
   "media->buildings": 1,
   "media->clips": 178,
   "media->core": 3,
@@ -11812,6 +11814,23 @@
     "g_CompatStringHolder_Vtable",
     "g_PathEntryArray_Vtable",
     "g_PathEntry_Vtable"
+   ],
+   "visible": [
+    "a1",
+    "a2",
+    "g_CompatStringHolder_Vtable",
+    "g_MainRenderDevice",
+    "g_PathEntryArray_Vtable",
+    "g_PathEntry_Vtable",
+    "g_RenderState",
+    "g_WorldMapBackgroundSpriteSet",
+    "gameData"
+   ]
+  },
+  "src/core/GameRandom.cpp": {
+   "referenced": [
+    "a1",
+    "a2"
    ],
    "visible": [
     "a1",

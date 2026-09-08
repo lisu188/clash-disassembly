@@ -1,4 +1,4 @@
-# GameRandom class extraction
+# GameRandom class extraction and relocation
 
 Track: Win95 reconstruction, requested behavior-class migration. The separately
 committed GameRandom recovery at 79d700c86e253180b1bb81c0a2833b48ae5fe1ba is the
@@ -120,3 +120,32 @@ its narrowly scoped warning treatment leaves the production body unchanged.
 An initial source layout was rejected by the canonical definition-order audit;
 placing each extracted method beside its adapter restored the manifest order.
 Preserve the evidence before deleting temporary working data.
+
+## Relocation
+
+After the independently validated extraction, both canonical methods move
+unchanged into src/core/GameRandom.cpp with src/core/GameRandom.hpp. Adapter and
+factory text stays at its original units004 anchor. Canonical and adapter body
+hashes are identical across the move; only the two canonical source paths change.
+The explicit source inventory appends one core source, raising the count to 145
+without reordering existing sources. Generated dependencies add core->buildings
+and core->units, one edge each, for the existing clock/log boundaries; API symbol
+counts remain unchanged. No historical header-ratchet baseline is raised.
+
+All three focused gates and source/include/inventory checks pass again after
+relocation. Named storage and initialization remain identical. One raw compiler
+constant-pool difference is explicit: GCC O2 adds an unnamed eight-byte
+.rodata.cst8 section in the units004 adapter object, with alignment 8, ELF flags
+0x12 and one R_X86_64_64 relocation at offset zero targeting g_RngState with addend
+zero. It materializes the borrowed state pointer when the relocated method can
+no longer be inlined into the adapter. It is not an original named game object;
+no generic data change is waived and no claim that all raw sections are identical
+is made. Disassembly and the exact section/relocation metadata are retained.
+No optimization pragma or noinline attribute was added to conceal this artifact.
+
+Coordinator relocation gates also pass: both production builds, strict
+linked/archive symbol and named storage/initialization checks, eight asset-free
+gates and all three focused test families. Exact commands and binary/archive
+hashes are in `artifacts/cpp-classes/20260908/game-random/*game-random-relocation*`.
+The extraction commit is `498f793`; no full native, coverage, campaign or visual
+claim is inferred from these incremental integration checks.

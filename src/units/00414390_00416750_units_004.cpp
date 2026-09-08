@@ -1048,12 +1048,6 @@ void  initRandomSeed(char a1, DWORD a2)
 {
   return clash95::GameRandom::borrow().initRandomSeed(a1, a2);
 }
-
-void  clash95::GameRandom::initRandomSeed(char a1, DWORD a2) const
-{
-  this->state_ = ::time_();
-  ::Debug_Log(0, a1, a2, (int)(intptr_t)this->format_);
-}
 // 415DE2: variable 'v2' is possibly undefined
 // 47627F: using guessed type int time_(void);
 // 525578: using guessed type int dword_525578;
@@ -1063,20 +1057,6 @@ __attribute__((used, retain))
 unsigned int  Rng_RandRange(int minValue, int maxValue)
 {
   return clash95::GameRandom::borrow().Rng_RandRange(minValue, maxValue);
-}
-
-unsigned int  clash95::GameRandom::Rng_RandRange(int minValue, int maxValue) const
-{
-  unsigned int range;
-  unsigned int seed;
-
-  this->state_ ^= ::Time_Now(0, 0) + 0x34523471u;
-  seed = (unsigned int)this->state_ + 0x83356532u * (unsigned int)::Time_Now(0, 0);
-  this->state_ = (int)seed;
-  range = (unsigned int)((__int64)maxValue + 1 - minValue);
-  if ( !range )
-    return (unsigned int)minValue;
-  return seed % range + (unsigned int)minValue;
 }
 // 525578: using guessed type int dword_525578;
 
