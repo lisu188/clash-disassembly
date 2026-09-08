@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "source": "src/media/004637B0_00465D30_media_001.cpp",
+  "includes": [
+    "avi_decompressor_view.h"
+  ],
+  "functions": [
+    {
+      "name": "CAviDecompressor_ConstructEmpty",
+      "expected_body_sha256": "9f9ee99ebf1a4b764c78b0738cfdbd071320fa096a68383d11d5d0ff55033c9f",
+      "replacement_body": "{\n  int instance; // eax\n\n  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);\n  if ( instance )\n    instance = CAviDecompressor_InitCommon(instance);\n  *instanceOut = instance;\n  return instanceOut;\n}"
+    },
+    {
+      "name": "CAviDecompressor_ConstructAndInitCallbacks",
+      "expected_body_sha256": "f046ffd2b632a327fa72d54ce292920d61063d6e0a442a64d1736bb675370642",
+      "replacement_body": "{\n  int instance; // eax\n\n  *selfOut = 0;\n  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&stru_50F60C, 0, (DWORD)(intptr_t)ddSurface);\n  if ( instance )\n    instance = CAviDecompressor_InitCommon(instance);\n  *selfOut = instance;\n  if ( instance )\n    CAviDecompressor_Init(selfOut, ddSurface, fileName, openFlags);\n  return selfOut;\n}"
+    },
+    {
+      "name": "CAviDecompressor_ConstructAndInitSource",
+      "expected_body_sha256": "7f65090089ddbd0a2f54ee53423704a804a7c5c88f1a26f4696f8eea1b1e2421",
+      "replacement_body": "{\n  int instance; // eax\n\n  *selfOut = 0;\n  instance = Mem_Alloc((int)clash95::media::CAviDecompressorView::kObjectSize, (int)(intptr_t)&stru_50F6A0, 0, allocContext);\n  if ( instance )\n    instance = CAviDecompressor_InitCommon(instance);\n  *selfOut = instance;\n  if ( instance )\n    CAviDecompressor_InitSource(openFlags, fileName);\n  return selfOut;\n}"
+    }
+  ]
+}
