@@ -22,18 +22,30 @@ public:
   static constexpr std::size_t kFrameCountOffset = 43;
   static constexpr std::size_t kPrimaryReadyOffset = 7;
   static constexpr std::size_t kSecondaryReadyOffset = 415;
+  static constexpr std::size_t kBitmapHeaderHandleOffset = 151;
   static constexpr std::size_t kBlitReadyOffset = 1940;
   static constexpr std::size_t kSurfaceReadyOffset = 1944;
   static constexpr std::size_t kPaletteHandleOffset = 1948;
-  static constexpr std::size_t kBitmapHeaderHandleOffset = 151;
+  static constexpr std::size_t kClipLeftOffset = 1969;
+  static constexpr std::size_t kClipTopOffset = 1973;
+  static constexpr std::size_t kClipRightOffset = 1977;
+  static constexpr std::size_t kClipBottomOffset = 1981;
   static constexpr std::size_t kDecodedFrameOffset = 2021;
   static constexpr std::size_t kSumSleepTimeOffset = 2038;
+  static constexpr std::size_t kColorKeyLowOffset = 2042;
+  static constexpr std::size_t kColorKeyHighOffset = 2046;
   static constexpr std::size_t kOverlaysEnabledOffset = 2050;
   static constexpr std::size_t kPositionModeOffset = 2062;
   static constexpr std::size_t kDestinationLeftOffset = 2063;
   static constexpr std::size_t kDestinationTopOffset = 2067;
   static constexpr std::size_t kDestinationRightOffset = 2071;
   static constexpr std::size_t kDestinationBottomOffset = 2075;
+  static constexpr std::size_t kBackgroundObjectHandleOffset = 2151;
+  static constexpr std::size_t kBackgroundLeftOffset = 2155;
+  static constexpr std::size_t kBackgroundTopOffset = 2159;
+  static constexpr std::size_t kBackgroundRightOffset = 2163;
+  static constexpr std::size_t kBackgroundBottomOffset = 2167;
+  static constexpr std::size_t kColorKeyModeOffset = 2171;
   static constexpr std::size_t kPlayingOffset = 2191;
   static constexpr std::size_t kFrameEventHandleOffset = 2196;
   static constexpr std::size_t kDestroyVtableOffset = 2232;
@@ -195,6 +207,29 @@ public:
     store<std::int32_t>(CAviDecompressorView::kDestinationRightOffset, right);
     store<std::int32_t>(CAviDecompressorView::kDestinationBottomOffset, bottom);
     store<std::uint8_t>(CAviDecompressorView::kPositionModeOffset, 1);
+  }
+
+  void setClipRect(const std::uint32_t *rect) noexcept {
+    store<std::uint32_t>(CAviDecompressorView::kClipLeftOffset, rect[0]);
+    store<std::uint32_t>(CAviDecompressorView::kClipTopOffset, rect[1]);
+    store<std::uint32_t>(CAviDecompressorView::kClipRightOffset, rect[2]);
+    store<std::uint32_t>(CAviDecompressorView::kClipBottomOffset, rect[3]);
+  }
+
+  void setColorKeys(std::int32_t low, std::int32_t high) noexcept {
+    store<std::int32_t>(CAviDecompressorView::kColorKeyModeOffset, 8);
+    store<std::int32_t>(CAviDecompressorView::kColorKeyLowOffset, low);
+    store<std::int32_t>(CAviDecompressorView::kColorKeyHighOffset, high);
+  }
+
+  void setBackground(std::int32_t objectHandle,
+                     const std::uint32_t *rect) noexcept {
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundLeftOffset, rect[0]);
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundTopOffset, rect[1]);
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundRightOffset, rect[2]);
+    store<std::uint32_t>(CAviDecompressorView::kBackgroundBottomOffset, rect[3]);
+    store<std::int32_t>(CAviDecompressorView::kBackgroundObjectHandleOffset,
+                        objectHandle);
   }
 
 private:
