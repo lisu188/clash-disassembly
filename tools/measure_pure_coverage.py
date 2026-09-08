@@ -108,6 +108,10 @@ def main() -> int:
             )
             stream.write("\n")
     failures = []
+    missing_executable = [name for name, _, size in per_fn if size == 0]
+    if missing_executable:
+        failures.append("frozen implementations have no executable lines: "
+                        + ", ".join(missing_executable))
     if args.minimum is not None and percentage + 1e-12 < args.minimum:
         failures.append(
             f"coverage {percentage:.2f}% is below required {args.minimum:.2f}%"

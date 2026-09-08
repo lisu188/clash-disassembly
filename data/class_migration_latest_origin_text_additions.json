@@ -1,0 +1,550 @@
+{
+  "schema_version": 1,
+  "reference_commit": "1b8b4b8e25558a5b0494c2889f11a1368b65eeef",
+  "profiles": {
+    "gcc": {
+      "linked_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC1EPjRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
+        },
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC1El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC1ERA363_Ki",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC1ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "Surface_SwapDirtyTrackingFlag",
+          "class": "T",
+          "count": 1,
+          "kind": "adapter",
+          "reason": "Retained historical exported name forwards to the single corrected Render_SetResourceHandle identity introduced upstream."
+        }
+      ],
+      "archive_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC1EPjRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
+        },
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC1El",
+          "class": "W",
+          "count": 3,
+          "kind": "accessor",
+          "reason": "Trivial address-only borrowing constructor; one additional COMDAT definition in the relocated UnitTurn TU supports its direct UnitStack readiness call. Linked count is unchanged."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 3,
+          "kind": "accessor",
+          "reason": "Trivial address-only borrowing constructor; one additional COMDAT definition in the relocated UnitTurn TU supports its direct UnitStack readiness call. Linked count is unchanged."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC1ERA363_Ki",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC1ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "Surface_SwapDirtyTrackingFlag",
+          "class": "T",
+          "count": 1,
+          "kind": "adapter",
+          "reason": "Retained historical exported name forwards to the single corrected Render_SetResourceHandle identity introduced upstream."
+        }
+      ]
+    },
+    "clang": {
+      "linked_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "Surface_SwapDirtyTrackingFlag",
+          "class": "T",
+          "count": 1,
+          "kind": "adapter",
+          "reason": "Retained historical exported name forwards to the single corrected Render_SetResourceHandle identity introduced upstream."
+        }
+      ],
+      "archive_text": [
+        {
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
+        },
+        {
+          "name": "_ZN7clash959UnitStackC2El",
+          "class": "W",
+          "count": 3,
+          "kind": "accessor",
+          "reason": "Trivial address-only borrowing constructor; one additional COMDAT definition in the relocated UnitTurn TU supports its direct UnitStack readiness call. Linked count is unchanged."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath23QueuedPath_StartsAtTileEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack20UnitStack_HasBuilderEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_HasReadyUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack35UnitStack_GetMinCurrentActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "Surface_SwapDirtyTrackingFlag",
+          "class": "T",
+          "count": 1,
+          "kind": "adapter",
+          "reason": "Retained historical exported name forwards to the single corrected Render_SetResourceHandle identity introduced upstream."
+        }
+      ]
+    }
+  }
+}

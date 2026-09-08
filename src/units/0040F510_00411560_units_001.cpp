@@ -11,6 +11,8 @@
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitStack.hpp"
+#include "../world/WorldGeometry.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0040F510) --------------------------------------------------------
@@ -233,21 +235,10 @@ signed int  UnitStack_UpdateVision(int stackIndex)
 }
 
 //----- (0040F9F0) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  UnitStack_HasReadyUnits(int stackPtr)
 {
-  UnitStackRecord *stack;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
-    if ( slot->unit_type_id == -1 )
-      return 0;
-    if ( (slot->state_flags & UNIT_SLOT_FLAG_READY) != 0 )
-      return 1;
-  }
-  return 0;
+  return clash95::UnitStack((intptr_t)stackPtr).UnitStack_HasReadyUnits();
 }
 
 //----- (0040FA20) --------------------------------------------------------
@@ -285,46 +276,10 @@ __int16 * UnitStack_SetReadyFlags(int stackPtr)
 }
 
 //----- (0040FA80) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Facing_DirectionFromDelta8(int deltaRow, int deltaColumn)
 {
-  if ( deltaRow <= 0 )
-  {
-    if ( deltaRow < 0 )
-    {
-      if ( deltaColumn < 0 )
-      {
-        return DIRECTION8_NORTHWEST;
-      }
-      else if ( deltaColumn )
-      {
-        return DIRECTION8_NORTHEAST;
-      }
-      else
-      {
-        return DIRECTION8_NORTH;
-      }
-    }
-    else if ( deltaColumn < 0 )
-    {
-      return DIRECTION8_WEST;
-    }
-    else
-    {
-      return DIRECTION8_EAST;
-    }
-  }
-  else if ( deltaColumn < 0 )
-  {
-    return DIRECTION8_SOUTHWEST;
-  }
-  else if ( deltaColumn )
-  {
-    return DIRECTION8_SOUTHEAST;
-  }
-  else
-  {
-    return DIRECTION8_SOUTH;
-  }
+  return clash95::WorldGeometry(g_MathSinTableQ16).Facing_DirectionFromDelta8(deltaRow, deltaColumn);
 }
 
 //----- (0040FAD0) --------------------------------------------------------
@@ -482,26 +437,10 @@ LABEL_4:
 // 5202F0: using guessed type int dword_5202F0;
 
 //----- (00410010) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  UnitStack_GetMinCurrentActionPoints(intptr_t stackPtr)
 {
-  __int16 *slotPtr; // eax
-  int slotIndex; // edx
-  int minActionPoints; // ebx
-
-  slotPtr = (__int16 *)(stackPtr + 37);
-  slotIndex = 1;
-  minActionPoints = *((unsigned __int8 *)slotPtr - 23);
-  do
-  {
-    if ( *slotPtr == -1 )
-      break;
-    if ( minActionPoints > *((unsigned __int8 *)slotPtr + 8) )
-      minActionPoints = *((unsigned __int8 *)slotPtr + 8);
-    ++slotIndex;
-    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
-  }
-  while ( slotIndex < UNIT_STACK_SLOT_COUNT );
-  return minActionPoints;
+  return clash95::UnitStack(stackPtr).UnitStack_GetMinCurrentActionPoints();
 }
 
 //----- (004100B0) --------------------------------------------------------

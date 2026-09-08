@@ -20,6 +20,22 @@ results and retained original/canonical differences:
 No campaign milestone advances; normal mission-05 turn-7 refresh and Road
 continuation remain the gameplay target.
 
+## Game-System Classes: Origin Integration
+
+Track: Win95 reconstruction; frontier: merge current upstream recovery into the
+requested behavior-class migration. Eleven canonical methods are relocated into
+four class-named sources; all 4,157 identities and the ordered 144-TU inventory
+remain. The upstream resource-handle rename retains its historical ABI through
+an independently hashed forwarding alias. Incoming numeric, Road, CLIPS and
+byte-view work remains alongside the migrated methods. Both production builds,
+strict symbol/storage/initialization comparisons and all eight asset-free gates
+pass. Frozen native and headless runtime comparisons are recorded separately;
+historical ratchet failures remain visible and no baseline is raised.
+The full migration is incomplete. See
+[CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md) for the exact incoming
+commit, tooling first-failure/retry evidence, coverage and current limitations.
+Mission 05 remains partial and completed direct routes remain 6/20.
+
 ## Road Construction Readability
 
 Track: Win95 reconstruction, reached mission-05 Road construction/movement.
@@ -275,6 +291,45 @@ ratchets remain red; removing the false locale reference drops one unused
 turn-7 frontier remain unchanged.
 See [HUMAN_READABILITY.md](HUMAN_READABILITY.md#function-review-road-helpers-2026-09-06)
 for per-function evidence, exact commands and validation limits.
+
+## Game-System Classes: Foundation and Unit Query Pilot
+
+Track: Win95 reconstruction; frontier: the requested behavior-preserving class
+migration. The inventory explicitly assigns all 4,157 identities, including
+1,849 intended game methods across 116 classes. Five unit/path query bodies
+have been extracted into borrowing classes and relocated to class-named files;
+their original ABI adapters remain. The source inventory is now 142 files.
+`QueuedPath` is complete at 2/2 methods; `UnitStack` remains partial at three
+validated queries. The footprint query additionally checks live state rebinding
+and packed alignment on 26,880 cases per compiler/optimization profile. Both
+its extraction and relocation pass production builds, storage comparisons and
+all eight asset-free gates. This work is in progress, separate from the
+completed GNU++20 language cutover.
+
+The four-method differential gate passes GCC 13 and Clang 18 at both optimization
+levels. Extracted production builds preserve legacy identities, named storage,
+data order and initialization profiles. GCC native outcomes match the frozen
+reference exactly at 1,059 passes, zero assertion failures and 530 crashes.
+Coverage is 6,168/6,663 (92.57%), retaining all 718 required identities.
+
+The later complete-QueuedPath run retains all 718 identities at 6,170/6,663
+(92.60%). Clang matches its frozen native outcomes exactly: 1,059 passes,
+one existing assertion and 529 crashes. GCC has 1,060 passes, zero assertions
+and 529 crashes; only an unchanged excluded CRT fixture changes from crash to
+pass, without a claimed recovery. Full per-case results are retained. Current
+raw link differences are 432/684: historical 427/679 plus the five explicitly
+reviewed method symbols. Header differences remain 14; no ratchet is reseeded.
+
+Both relocated compiler builds now pass storage/symbol comparisons and all
+eight asset-free gates. Both compilers also pass first-Road and ordinary-water
+rejection probes; all raw unit slots and visibility bytes match the bounded
+original references. The final expanded tooling/native matrix remains pending.
+A WSL restart recovered disk I/O; production validation now
+uses persistent scratch paths. The first relocated comparison caught an
+accidental source-order change; restoring source order passes both repeats.
+No campaign or visual milestone advances. Detailed
+scope, failure records, baseline differences and remaining stages are in
+[CPP_CLASS_MIGRATION.md](CPP_CLASS_MIGRATION.md).
 
 ## Main Integration: GNU++20 Recovery and Strategic AI
 

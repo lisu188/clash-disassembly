@@ -14,6 +14,9 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from recovered_implementation import ImplementationError, implementation_name, manifest_targets
+from split_source_index import scan_definitions
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "data" / "recovered_sources.json"
@@ -32,6 +35,10 @@ def load_json(path: Path) -> dict:
 
 def load_manifest(path: Path = MANIFEST) -> tuple[dict, dict[str, dict]]:
     document = load_json(path)
+    try:
+        manifest_targets(document)
+    except ImplementationError as error:
+        raise CoverageMetadataError(str(error)) from error
     by_name: dict[str, dict] = {}
     duplicates: list[str] = []
     for function in document.get("functions", []):
@@ -78,6 +85,8 @@ def enrich_pure_set(pure: dict, manifest_by_name: dict[str, dict]) -> dict:
         }
         if frozen_name != name:
             item["legacy_name"] = frozen_name
+        if "implementation" in recovered:
+            item["implementation"] = dict(recovered["implementation"])
         functions.append(item)
     if missing:
         raise CoverageMetadataError(
@@ -164,69 +173,27 @@ def _mask_non_code(text: str) -> str:
 
 
 def _function_line_range_in_text(
-    source: Path, name: str, masked: str
+    source: Path, name: str, text: str, definitions=None
 ) -> tuple[int, int]:
-    # Definitions are emitted at file scope.  Requiring text before the name
-    # prevents ordinary calls from becoming candidates while supporting GNU89
-    # K&R definitions retained during the mechanical split.
-    pattern = re.compile(
-        rf"(?m)^[A-Za-z_][^;{{}}\n]*\b{re.escape(name)}\s*\("
-    )
-    candidates = []
-    for match in pattern.finditer(masked):
-        open_paren = masked.find("(", match.start(), match.end())
-        paren_depth = 0
-        close_paren = None
-        for offset in range(open_paren, len(masked)):
-            if masked[offset] == "(":
-                paren_depth += 1
-            elif masked[offset] == ")":
-                paren_depth -= 1
-                if paren_depth == 0:
-                    close_paren = offset
-                    break
-        if close_paren is None:
-            continue
-        # A declaration ends immediately after its balanced parameter list.
-        # K&R definitions instead place parameter declarations before `{`.
-        if masked[close_paren + 1 :].lstrip().startswith(";"):
-            continue
-        brace = masked.find("{", match.end())
-        if brace < 0:
-            continue
-        # A second file-scope candidate before the brace means this was a
-        # prototype. K&R parameter declarations may contain semicolons, so a
-        # semicolon alone is not a valid rejection signal.
-        next_candidate = pattern.search(masked, match.end(), brace)
-        if next_candidate:
-            continue
-        depth = 0
-        end = None
-        for offset in range(brace, len(masked)):
-            ch = masked[offset]
-            if ch == "{":
-                depth += 1
-            elif ch == "}":
-                depth -= 1
-                if depth == 0:
-                    end = offset + 1
-                    break
-        if end is not None:
-            start_line = masked.count("\n", 0, match.start()) + 1
-            end_line = masked.count("\n", 0, end) + 2
-            candidates.append((start_line, end_line))
-    if len(candidates) != 1:
+    if definitions is None:
+        definitions = scan_definitions(text, {name})
+    if len(definitions) != 1:
+        try:
+            display_source = source.relative_to(ROOT)
+        except ValueError:
+            display_source = source
         raise CoverageMetadataError(
-            f"expected one definition of {name} in {source.relative_to(ROOT)}, "
-            f"found {len(candidates)}"
+            f"expected one definition of {name} in {display_source}, "
+            f"found {len(definitions)}"
         )
-    return candidates[0]
+    definition = definitions[0]
+    return definition.line, text.count("\n", 0, definition.end) + 2
 
 
 def function_line_range(source: Path, name: str) -> tuple[int, int]:
     """Return the 1-based, end-exclusive body range for *name* in *source*."""
     text = source.read_text(encoding="utf-8", errors="replace")
-    return _function_line_range_in_text(source, name, _mask_non_code(text))
+    return _function_line_range_in_text(source, name, text)
 
 
 def source_ranges(
@@ -241,12 +208,21 @@ def source_ranges(
         source = ROOT / Path(rel)
         if not source.is_file():
             raise CoverageMetadataError(f"coverage source does not exist: {rel}")
-        masked = _mask_non_code(
-            source.read_text(encoding="utf-8", errors="replace")
-        )
+        text = source.read_text(encoding="utf-8", errors="replace")
+        try:
+            resolved_names = {
+                function["name"]: implementation_name(function) if source_key == "source" else function["name"]
+                for function in source_functions
+            }
+        except ImplementationError as error:
+            raise CoverageMetadataError(str(error)) from error
+        by_name = {}
+        for definition in scan_definitions(text, set(resolved_names.values())):
+            by_name.setdefault(definition.name, []).append(definition)
         for function in source_functions:
+            name = resolved_names[function["name"]]
             start, end = _function_line_range_in_text(
-                source, function["name"], masked
+                source, name, text, by_name.get(name, [])
             )
             ranges[function["name"]] = (rel, start, end)
     return ranges

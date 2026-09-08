@@ -410,7 +410,6 @@
    "Map_NeighborDY",
    "a1",
    "a10",
-   "a11",
    "a12",
    "a2",
    "aMap_pal_1",
@@ -739,8 +738,6 @@
   "render": [
    "a1",
    "a10",
-   "a11",
-   "a12",
    "a2",
    "aGfx",
    "aIOCouldnTOpenF",
@@ -771,9 +768,7 @@
   "runtime": [
    "IsTable",
    "a1",
-   "a10",
    "a11",
-   "a12",
    "a2",
    "aCompilations",
    "dwTlsIndex",
@@ -1218,7 +1213,7 @@
     "Audio_PlayUnitMoveOrderSound"
    ],
    "internal_function_count": 194,
-   "state_globals": 471
+   "state_globals": 472
   },
   "clips": {
    "api_functions": [
@@ -2035,7 +2030,7 @@
     "WorldMap_TickPaletteFlashEffect",
     "WorldMap_HandleScrollKeysAndIdle"
    ],
-   "internal_function_count": 23,
+   "internal_function_count": 24,
    "state_globals": 85
   },
   "runtime": {
@@ -2372,7 +2367,7 @@
     "Unit_AttackBuilding"
    ],
    "internal_function_count": 64,
-   "state_globals": 127
+   "state_globals": 126
   },
   "world": {
    "api_functions": [
@@ -2736,6 +2731,7 @@
     "g_CurrentPlayerIndex",
     "g_MainRenderDevice",
     "g_RenderHook",
+    "g_SelectedUnitIndex",
     "g_UnitTypeRuntimeCoreMetadata",
     "gameData"
    ],
@@ -2745,7 +2741,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -2846,7 +2841,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -2943,7 +2937,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3066,7 +3059,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3174,7 +3166,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3287,7 +3278,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3396,7 +3386,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3478,9 +3467,6 @@
   },
   "src/buildings/00428880_0042A890_buildings_008.cpp": {
    "referenced": [
-    "a10",
-    "a11",
-    "a12",
     "a2",
     "g_ActionButtonSpriteSet",
     "g_ActiveUiSpriteSet",
@@ -3520,7 +3506,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3624,7 +3609,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3721,7 +3705,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3833,7 +3816,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -3936,7 +3918,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -4029,7 +4010,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -4124,7 +4104,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -4226,7 +4205,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -4318,7 +4296,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -4422,7 +4399,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -4513,7 +4489,6 @@
     "Map_NeighborDY",
     "a1",
     "a10",
-    "a11",
     "a12",
     "a2",
     "aMap_pal_1",
@@ -5587,7 +5562,6 @@
   },
   "src/clips/0048BD50_0048D520_clips_007.cpp": {
    "referenced": [
-    "a1",
     "a2",
     "g_ClipsCurrentEvaluationDepth",
     "g_ClipsEphemeralItemBytes",
@@ -6016,7 +5990,6 @@
   "src/clips/00490530_00491530_clips_010.cpp": {
    "referenced": [
     "IsTable",
-    "a2",
     "g_ClipsCommandEvalInProgress",
     "g_ClipsMemFreeListTemp",
     "g_ClipsMemoryTable",
@@ -6439,7 +6412,6 @@
   "src/clips/004943E0_00495930_clips_001.cpp": {
    "referenced": [
     "a1",
-    "a2",
     "g_BinaryItemListHead",
     "g_ClipsBloadBitmapPointerTable",
     "g_ClipsBloadSymbolPointerArray",
@@ -8705,7 +8677,6 @@
   },
   "src/clips/004ACB00_004AE690_clips_001.cpp": {
    "referenced": [
-    "a1",
     "a2",
     "g_ClipsBloadSymbolPointerArray",
     "g_ClipsCurrentExpression",
@@ -11676,7 +11647,6 @@
   },
   "src/clips/004CEC60_004CFFC0_clips_005.cpp": {
    "referenced": [
-    "a1",
     "a2",
     "g_ClipsConstructCompilerData",
     "g_ClipsCurrentEvaluationDepth",
@@ -11856,91 +11826,11 @@
    ]
   },
   "src/media/004637B0_00465D30_media_001.cpp": {
-   "referenced": [
-    "a10",
-    "a11",
-    "a12"
-   ],
-   "visible": [
-    "IsTable",
-    "a1",
-    "a10",
-    "a11",
-    "a12",
-    "a2",
-    "aActivations",
-    "aArgacces",
-    "aClass",
-    "aCompilations",
-    "aExpectedAtLeas",
-    "aFacts_0",
-    "aFunction",
-    "aFunctionParser",
-    "aInitSlots",
-    "g_BinaryItemListHead",
-    "g_CRT_FileHandleLockAcquireHook",
-    "g_CRT_FileHandleLockReleaseHook",
-    "g_CRT_StaticLock1AcquireHook",
-    "g_CRT_StaticLock1ReleaseHook",
-    "g_CRT_StdoutStream",
-    "g_CRT_TlsIndexDestroyHook",
-    "g_ClipsCommandEvalInProgress",
-    "g_ClipsCurrentEvaluationDepth",
-    "g_ClipsCurrentExpression",
-    "g_ClipsDeleteMessageSymbol",
-    "g_ClipsEphemeralItemBytes",
-    "g_ClipsEphemeralItemCount",
-    "g_ClipsEvaluationError",
-    "g_ClipsFalseSymbol",
-    "g_ClipsHaltExecution",
-    "g_ClipsHaltExecutionFlag",
-    "g_ClipsMemFreeListTemp",
-    "g_ClipsMemPoolReturnBucketIndex",
-    "g_ClipsMemoryTable",
-    "g_ClipsPrimitiveTypeClassMap",
-    "g_Clips_CurrentPartialMatch",
-    "g_Clips_InstanceListHead",
-    "g_CompatStringHolder_Vtable",
-    "g_CrtThreadDataMgmtDisabledFlag",
-    "g_CursorCoordShift",
-    "g_DefruleConstructClass",
-    "g_FileSystemMountOpenMode",
-    "g_IO_LogicalNameTable_WDialog",
-    "g_IO_LogicalNameTable_WError",
-    "g_IO_LogicalNameTable_WTrace",
-    "g_IO_LogicalName_WDisplay",
-    "g_Instance_PurgeInProgress",
-    "g_Module_ChangeGeneration",
-    "g_PathEntryArray_Vtable",
-    "g_PathEntry_Vtable",
-    "g_Print_AddressesToStringsFlag",
-    "g_Print_InstanceAddressesToNamesFlag",
-    "g_Print_PreserveEscapedCharactersFlag",
-    "g_RenderState",
-    "g_Rules_ActiveInstanceCount",
-    "g_Rules_BloadFileHeaderID",
-    "g_Rules_BloadFunctionPtrTable",
-    "g_Rules_BsaveVersionID",
-    "g_Rules_ClearInProgressFlag",
-    "g_Rules_CurrentLogicalJoin",
-    "g_Rules_CurrentlyExecutingRule",
-    "g_Rules_DummyFactPtr",
-    "g_Rules_EntityTimeTagCounter",
-    "g_Rules_FactPatternEntityRecord",
-    "g_Rules_GlobalRHSBinds",
-    "g_Rules_JoinOperationInProgress",
-    "g_Rules_ObjectPatternVTable",
-    "g_Rules_ResetInProgressFlag",
-    "g_Rules_WatchActivationsFlag",
-    "g_Rules_WatchFactsFlag",
-    "g_SelectedUnitIndex",
-    "hThread"
-   ]
+   "referenced": [],
+   "visible": []
   },
   "src/media/00465DD0_00466C60_media_002.cpp": {
    "referenced": [
-    "a10",
-    "a11",
     "a12"
    ],
    "visible": [
@@ -12021,9 +11911,6 @@
   },
   "src/media/004674A0_00469590_media_003.cpp": {
    "referenced": [
-    "a10",
-    "a11",
-    "a12",
     "a2"
    ],
    "visible": [
@@ -12104,7 +11991,6 @@
   },
   "src/media/00469680_0046B200_media_004.cpp": {
    "referenced": [
-    "a1",
     "a10",
     "a11",
     "a12"
@@ -13756,8 +13642,6 @@
    "visible": [
     "a1",
     "a10",
-    "a11",
-    "a12",
     "a2",
     "aGfx",
     "aIOCouldnTOpenF",
@@ -13788,9 +13672,6 @@
   },
   "src/render/00402E80_00404660_render_002.cpp": {
    "referenced": [
-    "a10",
-    "a11",
-    "a12",
     "g_MainRenderDevice",
     "g_Render_BackgroundColorIndex",
     "g_TextSprite_StyleFlag"
@@ -13798,8 +13679,6 @@
    "visible": [
     "a1",
     "a10",
-    "a11",
-    "a12",
     "a2",
     "aGfx",
     "aIOCouldnTOpenF",
@@ -13830,7 +13709,6 @@
   },
   "src/render/004046D0_00405D20_render_003.cpp": {
    "referenced": [
-    "a1",
     "a10",
     "a2",
     "aGfx",
@@ -13845,8 +13723,6 @@
    "visible": [
     "a1",
     "a10",
-    "a11",
-    "a12",
     "a2",
     "aGfx",
     "aIOCouldnTOpenF",
@@ -13901,8 +13777,6 @@
    "visible": [
     "a1",
     "a10",
-    "a11",
-    "a12",
     "a2",
     "aGfx",
     "aIOCouldnTOpenF",
@@ -13960,9 +13834,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14072,9 +13944,7 @@
   },
   "src/runtime/004D0560_004D1B00_runtime_001.cpp": {
    "referenced": [
-    "a10",
     "a11",
-    "a12",
     "a2",
     "g_CLIPS_DefclassModuleItemIndex",
     "g_ClipsConstructCompilerData",
@@ -14090,9 +13960,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14216,9 +14084,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14336,9 +14202,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14453,9 +14317,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14576,9 +14438,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14707,9 +14567,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14828,9 +14686,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -14941,9 +14797,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -15061,9 +14915,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -15191,9 +15043,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -15310,9 +15160,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -15435,9 +15283,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -15567,9 +15413,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -15693,9 +15537,7 @@
    "visible": [
     "IsTable",
     "a1",
-    "a10",
     "a11",
-    "a12",
     "a2",
     "aCompilations",
     "dwTlsIndex",
@@ -16188,9 +16030,7 @@
     "Map_NeighborDY",
     "a1",
     "a2",
-    "g_CurrentPlayerIndex",
     "g_LanguageIndex",
-    "g_SelectedUnitIndex",
     "g_UnitTypeRuntimeCoreMetadata",
     "gameData"
    ],
@@ -16631,6 +16471,75 @@
     "gameData"
    ]
   },
+  "src/units/QueuedPath.cpp": {
+   "referenced": [],
+   "visible": []
+  },
+  "src/units/UnitStack.cpp": {
+   "referenced": [],
+   "visible": []
+  },
+  "src/units/UnitTurn.cpp": {
+   "referenced": [
+    "a1",
+    "a2"
+   ],
+   "visible": [
+    "BuildingGarrisonDialogActions",
+    "Map_NeighborDX",
+    "Map_NeighborDY",
+    "a1",
+    "a2",
+    "g_ActiveCursorDescriptor",
+    "g_ActiveCursorDescriptorPtr",
+    "g_ActiveDialogAnimationTickHook",
+    "g_ActiveTextSpriteSlot",
+    "g_ActiveUiSpriteSet",
+    "g_ActiveUnitAnimSpriteSet",
+    "g_ActiveUnitMoveTileIndex",
+    "g_ActiveWidgetSpriteTableIndex",
+    "g_BuildingNewOverrideActive",
+    "g_BuildingNewOverrideColumn",
+    "g_BuildingNewOverrideRow",
+    "g_BuildingTypeMaxHitPoints",
+    "g_CurrentPlayerIndex",
+    "g_CursorCoordShift",
+    "g_CursorDesc_Busy",
+    "g_CursorDesc_Default",
+    "g_CursorOverlayPresented",
+    "g_FlagSpriteSet",
+    "g_FogOverlaySpriteSet",
+    "g_LanguageIndex",
+    "g_MainRenderDevice",
+    "g_MapPalettePtr",
+    "g_MarksSpriteSet",
+    "g_MovePathStepSpriteSet",
+    "g_PrimaryRenderSurface",
+    "g_QueenMarriageProposalWidgetTableBase",
+    "g_RenderDevice",
+    "g_RenderHook",
+    "g_RenderState",
+    "g_Render_AnimatedFrameTable",
+    "g_Render_BackgroundColorIndex",
+    "g_SavedCursorDescriptor",
+    "g_SelectedUnitIndex",
+    "g_TreeSpriteSet",
+    "g_UnitAnimFrameIndex",
+    "g_UnitBattleActionWidgetTable",
+    "g_UnitMoveAnimOffsetX",
+    "g_UnitMoveAnimOffsetY",
+    "g_UnitStackSelectionModeActive",
+    "g_UnitTypeRuntimeCoreMetadata",
+    "g_UnitTypeRuntimePointers",
+    "g_WallKindDefenseFactor",
+    "g_WhirlSpriteSet",
+    "g_WorldMapActionButtonWidgetTable",
+    "g_WorldMapBackgroundSpriteSet",
+    "g_WorldMapTileOverlayDrawHook",
+    "g_WorldMapViewportScrolledFlag",
+    "gameData"
+   ]
+  },
   "src/world/00408030_0040A0A0_world_001.cpp": {
    "referenced": [
     "a1",
@@ -16944,6 +16853,10 @@
     "g_WorldMap_KeyboardInputDisabled",
     "gameData"
    ]
+  },
+  "src/world/WorldGeometry.cpp": {
+   "referenced": [],
+   "visible": []
   }
  }
 }

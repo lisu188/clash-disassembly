@@ -42,6 +42,8 @@ from global_inventory import (  # noqa: E402
     recovered_source_files,
 )
 from split_source_index import body_sha256, scan_definitions  # noqa: E402
+from pathlib import Path
+from recovered_implementation import index_manifest_definitions, manifest_sources  # noqa: E402
 
 PRELUDE_REL = "src/recovered_types.h"
 MANIFEST_REL = "tools/constants_manifest.json"
@@ -110,37 +112,20 @@ def refresh_source_manifest_body_hashes(relative_files):
         return 0
     document = load_source_manifest()
     records = document["functions"]
-    by_source = {}
-    for record in records:
-        by_source.setdefault(record["source"], []).append(record)
-    unknown = sorted(touched - set(by_source))
-    # The state owner contains no indexed recovered function bodies.
-    unknown = [path for path in unknown if path != document.get("state_owner")]
+    unknown = sorted(touched - set(manifest_sources(document)))
     if unknown:
         raise ValueError("touched files are absent from source manifest: %s"
                          % ", ".join(unknown))
 
+    indexed = index_manifest_definitions(document, Path(REPO), touched)
+    by_identity = {record["name"]: record for record in records}
     updated = 0
-    for relative in sorted(touched & set(by_source)):
-        path = os.path.join(REPO, relative)
-        with open(path, errors="replace") as stream:
-            text = stream.read()
-        source_records = by_source[relative]
-        wanted = {record["name"] for record in source_records}
-        definitions = scan_definitions(text, wanted)
-        indexed = {definition.name: definition for definition in definitions}
-        if set(indexed) != wanted or len(definitions) != len(wanted):
-            missing = sorted(wanted - set(indexed))
-            extra = sorted(set(indexed) - wanted)
-            raise ValueError(
-                "%s no longer matches manifest identities (missing=%r extra=%r)"
-                % (relative, missing, extra)
-            )
-        for record in source_records:
-            digest = body_sha256(text, indexed[record["name"]])
-            if record.get("body_sha256") != digest:
-                record["body_sha256"] = digest
-                updated += 1
+    for (identity, role), resolved in indexed.items():
+        record = by_identity[identity]
+        destination = record if role == "canonical" else record["adapter"]
+        if destination.get("body_sha256") != resolved.body_sha256:
+            destination["body_sha256"] = resolved.body_sha256
+            updated += 1
 
     manifest_path = os.path.join(REPO, SOURCE_MANIFEST_REL)
     temporary = manifest_path + ".tmp"
