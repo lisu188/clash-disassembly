@@ -13,8 +13,11 @@ clang++-18. The runtime and native test targets are C++ only. On Ubuntu 24.04/WS
 ```sh
 sudo apt-get update
 sudo apt-get install -y cmake ninja-build pkg-config python3 \
-  g++-13 clang-18 libsdl2-dev libx11-dev
+  g++-13 clang-18 libclang-rt-18-dev libsdl2-dev libx11-dev
 ```
+
+The Clang runtime package supplies the sanitizer libraries used by native tooling
+regressions.
 
 The current WSL environment has CMake 3.28.3, GCC 13.3.0, Clang 18.1.3,
 Ninja 1.11.1, SDL2 2.30.0, X11 1.8.7, and Python 3.12.3.

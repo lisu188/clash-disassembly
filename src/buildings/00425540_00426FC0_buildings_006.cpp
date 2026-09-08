@@ -17,143 +17,123 @@
 //----- (00425540) --------------------------------------------------------
 signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
 {
-  signed int result; // eax
-  int v4; // ebx
-  int v6; // ecx
-  int unitStackRecordBase; // esi
-  int tileDeltaY; // eax
-  int *selectedDirectionMarker; // edx
-
   WorldMap_EnsureBuilderWidgetTables();
-  result = Map_GetTileSurfaceClassOrUnexplored(
-             *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
-             *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
-  if ( result != 185 )
+  const int surfaceClass = Map_GetTileSurfaceClassOrUnexplored(
+      UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_row,
+      UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_column);
+  if ( surfaceClass == 185 )
+    return surfaceClass;
+
+  // This carried value feeds both frame calls. Animation replaces it with the
+  // frame index; cursor handling replaces it with the hovered row delta.
+  int frameUpdateArgument = 0;
+  g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_ActionBusy;
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_ActionBusy);
+  g_WorldMapTileOverlayDrawHook = (int (__fastcall *)(_DWORD, _DWORD))RoadBuildMode_HighlightBuildableAdjacentTile;
+  g_RoadBuildModeExitRequested = 0;
+  g_RoadBuildModeControlWidgetState = 2;
+  WorldMap_RedrawViewport(1);
+  Diagnostics_TraceWorldMapActionEvent("road_mode_enter", g_SelectedUnitIndex, g_RoadBuildModeControlWidgetState, g_RoadBuildModeHasBuildTarget, 0);
+
+  while ( !g_RoadBuildModeExitRequested )
   {
-    v4 = 0;
-    g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_ActionBusy;
-    RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_ActionBusy);
-    g_WorldMapTileOverlayDrawHook = (int (__fastcall *)(_DWORD, _DWORD))RoadBuildMode_HighlightBuildableAdjacentTile;
-    g_RoadBuildModeExitRequested = 0;
-    g_RoadBuildModeControlWidgetState = 2;
-    WorldMap_RedrawViewport(1);
-    Diagnostics_TraceWorldMapActionEvent("road_mode_enter", g_SelectedUnitIndex, g_RoadBuildModeControlWidgetState, g_RoadBuildModeHasBuildTarget, 0);
-    if ( !g_RoadBuildModeExitRequested )
+    DD_Pump((int)(intptr_t)g_RenderState, frameUpdateArgument);
+    WorldMap_HandleScrollKeysAndIdle(a1);
+    WorldMap_RedrawFrame(frameUpdateArgument);
+
+    // The original clock ignores its arguments. SUB/CMP use unsigned 32-bit
+    // wrap here, and the second sample must remain a separate clock call.
+    const uint32_t animationSample = static_cast<uint32_t>(Time_Now(0, 0));
+    if ( animationSample - ROAD_BUILD_MARKER_ANIMATION_INTERVAL_TICKS
+         > static_cast<uint32_t>(g_RoadBuildModeLastAnimationTick) )
     {
-      while ( 1 )
-      {
-        DD_Pump((int)(intptr_t)g_RenderState, v4);
-        WorldMap_HandleScrollKeysAndIdle(a1);
-        WorldMap_RedrawFrame(v4);
-        if ( Time_Now(0, 0) - ROAD_BUILD_MARKER_ANIMATION_INTERVAL_TICKS > (unsigned int)g_RoadBuildModeLastAnimationTick )
-        {
-          g_RoadBuildModeLastAnimationTick = Time_Now(0, 0);
-          v4 = ((_BYTE)g_RoadBuildModeAnimationFrameIndex + 1) & ROAD_BUILD_MARKER_ANIMATION_FRAME_MASK;
-          g_RoadBuildModeAnimationFrameIndex = v4;
-          WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) - 1,
-            *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
-          WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET),
-            *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - 1);
-          WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) + 1,
-            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
-          WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
-            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) + 1);
-        }
-        if ( !UIWidgetTable_PollHoverAndActions(g_RoadBuildModeControlWidgets, a1) )
-        {
-          RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
-          if ( UI_TrySelectFriendlyStackUnderCursor() )
-          {
-            Render_Begin((int)(intptr_t)g_RenderState, 0);
-            goto LABEL_13;
-          }
-        }
-        if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
-        {
-          LOBYTE(v6) = g_CursorCoordShift;
-          unitStackRecordBase = UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData;
-          v4 = (((g_MouseCursorRawX >> g_CursorCoordShift)
-               - 32
-               - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
-                + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-             + *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET)
-             - *(__int16 *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TABLE_OFFSET);
-          tileDeltaY = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET)
-              + (((g_MouseCursorRawY >> g_CursorCoordShift)
-                - 16
-                - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
-                 + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-              - *(__int16 *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
-          selectedDirectionMarker = 0;
-          if ( v4 || tileDeltaY != -1 )
-          {
-            if ( v4 != 1 || tileDeltaY )
-            {
-              if ( v4 || tileDeltaY != 1 )
-              {
-                if ( v4 == -1 && !tileDeltaY )
-                  selectedDirectionMarker = &g_RoadBuildModeWestMarkerX;
-              }
-              else
-              {
-                selectedDirectionMarker = &g_RoadBuildModeSouthMarkerX;
-              }
-            }
-            else
-            {
-              selectedDirectionMarker = &g_RoadBuildModeEastMarkerX;
-            }
-          }
-          else
-          {
-            selectedDirectionMarker = &g_RoadBuildModeNorthMarkerX;
-          }
-          if ( selectedDirectionMarker )
-          {
-            selectedDirectionMarker[2] = 2;
-            RoadBuildMode_BuildInSelectedDirection((int)(intptr_t)selectedDirectionMarker, a1, a2);
-            g_RoadBuildModeHasBuildTarget = 0;
-            WorldMap_RedrawViewport(1);
-            if ( !g_RoadBuildModeHasBuildTarget )
-              break;
-          }
-        }
-        if ( g_RoadBuildModeExitRequested )
-          goto LABEL_13;
-      }
-      g_RoadBuildModeExitRequested = 1;
+      g_RoadBuildModeLastAnimationTick = Time_Now(0, 0);
+      frameUpdateArgument = (static_cast<uint8_t>(g_RoadBuildModeAnimationFrameIndex) + 1)
+          & ROAD_BUILD_MARKER_ANIMATION_FRAME_MASK;
+      g_RoadBuildModeAnimationFrameIndex = frameUpdateArgument;
+
+      // Each redraw may change the selected stack or game-state base.
+      WorldMap_RedrawTileIfVisible(
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_row - 1,
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_column);
+      WorldMap_RedrawTileIfVisible(
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_row,
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_column - 1);
+      WorldMap_RedrawTileIfVisible(
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_row + 1,
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_column);
+      WorldMap_RedrawTileIfVisible(
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_row,
+          UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_column + 1);
     }
-LABEL_13:
-    g_WorldMapTileOverlayDrawHook = 0;
-    g_RoadBuildModeControlWidgetState = 1;
-    UIWidget_RefreshActionButtonState((int)(intptr_t)g_RoadBuildModeControlWidgets, 1);
-    result = WorldMap_RedrawViewport(1);
-    g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+
+    if ( !UIWidgetTable_PollHoverAndActions(g_RoadBuildModeControlWidgets, a1) )
+    {
+      RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
+      if ( UI_TrySelectFriendlyStackUnderCursor() )
+      {
+        Render_Begin((int)(intptr_t)g_RenderState, 0);
+        break;
+      }
+    }
+
+    if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
+    {
+      const int32_t rawCursorX = g_MouseCursorRawX;
+      const unsigned int cursorShift = static_cast<uint8_t>(g_CursorCoordShift) & 31u;
+      // Match x86 SAR and wrapping origin subtraction. Its sign compensation
+      // then divides the signed pixel offset by 64, truncating toward zero.
+      const int32_t cursorRowOffset = static_cast<int32_t>(
+          static_cast<uint32_t>(rawCursorX >> cursorShift) - 32u) / 64;
+      const int32_t rawCursorY = g_MouseCursorRawY;
+      const int gameState = gameData;
+      const uint32_t viewLeft = *(_DWORD *)(uintptr_t)(gameState + MAP_VIEW_LEFT_OFFSET);
+      const int32_t cursorColumnOffset = static_cast<int32_t>(
+          static_cast<uint32_t>(rawCursorY >> cursorShift) - 16u) / 64;
+      const int selectedIndex = g_SelectedUnitIndex;
+      const uint32_t viewTop = *(_DWORD *)(uintptr_t)(gameState + MAP_VIEW_TOP_OFFSET);
+      const UnitStackRecord *selectedStack = (const UnitStackRecord *)(uintptr_t)(
+          gameState + UNIT_STACK_STRIDE * selectedIndex + UNIT_STACK_TABLE_OFFSET);
+      const int tileRowDelta = static_cast<int32_t>(viewLeft
+          + static_cast<uint32_t>(cursorRowOffset)
+          - static_cast<uint32_t>(selectedStack->tile_row));
+      frameUpdateArgument = tileRowDelta;
+      const int tileColumnDelta = static_cast<int32_t>(viewTop
+          + static_cast<uint32_t>(cursorColumnOffset)
+          - static_cast<uint32_t>(selectedStack->tile_column));
+
+      WorldMapActionWidgetRecord *selectedMarker = nullptr;
+      if ( tileRowDelta == 0 && tileColumnDelta == -1 )
+        selectedMarker = (WorldMapActionWidgetRecord *)&g_RoadBuildModeNorthMarkerX;
+      else if ( tileRowDelta == 1 && tileColumnDelta == 0 )
+        selectedMarker = (WorldMapActionWidgetRecord *)&g_RoadBuildModeEastMarkerX;
+      else if ( tileRowDelta == 0 && tileColumnDelta == 1 )
+        selectedMarker = (WorldMapActionWidgetRecord *)&g_RoadBuildModeSouthMarkerX;
+      else if ( tileRowDelta == -1 && tileColumnDelta == 0 )
+        selectedMarker = (WorldMapActionWidgetRecord *)&g_RoadBuildModeWestMarkerX;
+
+      if ( selectedMarker )
+      {
+        selectedMarker->widget_flags = 2;
+        RoadBuildMode_BuildInSelectedDirection((int)(intptr_t)selectedMarker, a1, a2);
+        g_RoadBuildModeHasBuildTarget = 0;
+        WorldMap_RedrawViewport(1);
+        if ( !g_RoadBuildModeHasBuildTarget )
+        {
+          g_RoadBuildModeExitRequested = 1;
+          break;
+        }
+      }
+    }
   }
-  return result;
+
+  g_WorldMapTileOverlayDrawHook = 0;
+  g_RoadBuildModeControlWidgetState = 1;
+  UIWidget_RefreshActionButtonState((int)(intptr_t)g_RoadBuildModeControlWidgets, 1);
+  const int redrawResult = WorldMap_RedrawViewport(1);
+  g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+  return redrawResult;
 }
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 5142B8: using guessed type int dword_5142B8;
-// 5142ED: using guessed type int dword_5142ED;
-// 514322: using guessed type int dword_514322;
-// 514357: using guessed type int dword_514357;
-// 51438C: using guessed type _DWORD g_RoadBuildModeControlWidgets[2];
-// 514394: using guessed type int dword_514394;
-// 5202E4: using guessed type int gameData;
-// 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
-// 527C28: using guessed type int g_RoadBuildModeLastAnimationTick;
-// 527C30: using guessed type int g_RoadBuildModeExitRequested;
-// 527C34: using guessed type int dword_527C34;
-// 527C38: using guessed type int g_RoadBuildModeAnimationFrameIndex;
-// 544CD8: using guessed type _DWORD g_RenderState[9];
-// 544CFC: using guessed type int dword_544CFC;
-// 544D00: using guessed type int dword_544D00;
-// 54512C: using guessed type char byte_54512C;
-// 545150: using guessed type int dword_545150;
 
 //----- (00425850) --------------------------------------------------------
 int UnitBattle_InitPathingTables(void)

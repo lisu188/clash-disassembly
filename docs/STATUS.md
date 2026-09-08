@@ -1,6 +1,23 @@
 # Current Status
 
-Last consolidated: 2026-09-07.
+Last consolidated: 2026-09-08.
+
+## Road Modal Loop Readability And Cursor Arithmetic
+
+Track: Win95 reconstruction, reached mission-05 Road mode. The fourteenth
+individually reviewed Road-family function, `Builder_StartRoadBuildMode`, now
+uses named carried state, typed coordinates/flags, flat directions and shared
+cleanup. Original-backed unsigned timer arithmetic and masked signed cursor
+division also repair a negative-coordinate mismatch and undefined arithmetic
+edges. The upstream ignored-clock-argument repair is retained.
+All 429 original-measured cases match the actual body in four compiler profiles,
+including 6760 callback boundaries. Both builds and eight public gates pass;
+all 255 tooling tests pass. Only the target executable section changes and each
+compiler has one fewer warning. Identities, layouts and frozen ratchet baselines
+remain.
+The first-Road runtime baseline and normal turn-7 continuation blocker remain
+unchanged. Evidence, commands, original/native boundary limits and validation:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-11-builder_startroadbuildmode).
 
 ## Road Build-Mode Timing Register Cleanup
 

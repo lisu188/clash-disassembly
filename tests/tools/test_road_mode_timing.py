@@ -71,14 +71,10 @@ class RoadModeTimingRecoveryTests(unittest.TestCase):
         self.assertNotIn("// 4255E9: variable 'v8' is possibly undefined", source)
         self.assertNotIn("// 4255FF: variable 'v9' is possibly undefined", source)
 
-    def test_timing_order_and_threshold_are_unchanged(self):
-        body = function(SOURCE.read_text(), 'Builder_StartRoadBuildMode')
-        first = body.index('Time_Now(0, 0) - ROAD_BUILD_MARKER_ANIMATION_INTERVAL_TICKS')
-        store = body.index('g_RoadBuildModeLastAnimationTick = Time_Now(0, 0);')
-        frame = body.index('g_RoadBuildModeAnimationFrameIndex = v4;')
-        self.assertLess(first, store)
-        self.assertLess(store, frame)
-        self.assertIn('> (unsigned int)g_RoadBuildModeLastAnimationTick', body)
+    # test_road_build_mode executes the actual loop against original-measured
+    # call/state traces, including both clock samples, unsigned wrap, timestamp
+    # reload after the first clock callback, and subsequent animation writes.
+    # Its six negative controls supersede the former exact-v4-expression check.
 
 
 if __name__ == '__main__':

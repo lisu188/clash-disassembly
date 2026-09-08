@@ -3140,7 +3140,7 @@
       "original_line": 6614,
       "source": "src/buildings/00425540_00426FC0_buildings_006.cpp",
       "linkage": "external",
-      "body_sha256": "34ddcb37705d5fa6df9ab2cdc0b4ca361b2be69443e120e743565190c7afaf7e",
+      "body_sha256": "a1ffee88e28981af9fc308d8dafc8307bec5c8d1649a862984072b5b75052cd0",
       "original_address_range": {
         "start": "0x00425540",
         "end_exclusive": "0x00425850"
