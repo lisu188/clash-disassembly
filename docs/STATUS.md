@@ -2,6 +2,18 @@
 
 Last consolidated: 2026-09-08.
 
+## UnitStack Register Recovery Before Class Extraction
+
+Track: Win95 reconstruction, requested behavior-class migration. Military
+strength now forwards the preserved stack address with original low32 wrapping;
+peasant-cargo normalization retains its threshold and uses defined values for
+two proven-unused sync contexts. Signed quantities and packed access match the
+reviewed original instructions. All 5,001 original-measured cases pass in eight
+compiler profiles; both production builds, strict storage/symbol/initialization
+checks and eight asset-free gates pass. Compaction and player-total recovery
+remain separate debt, with no campaign promotion. The class count stays 13.
+See [UNIT_STACK_REGISTER_RECOVERY.md](UNIT_STACK_REGISTER_RECOVERY.md).
+
 ## GameRandom Class Extraction And Relocation
 
 Track: Win95 reconstruction, requested behavior-class migration. The two repaired

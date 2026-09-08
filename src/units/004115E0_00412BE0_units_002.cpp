@@ -598,25 +598,24 @@ signed int  UnitStack_HasPeasantCargo(int stackPtr)
 //----- (004121D0) --------------------------------------------------------
 signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double a3)
 {
-  __int16 *slotPtr; // ecx
+  typedef __int16 SlotTypeWord __attribute__((aligned(1), may_alias));
+  SlotTypeWord *slotPtr; // ecx
   int totalPeasantQuantity; // esi
   int peasantSlotCount; // edx
   int i; // ebx
   int slotType; // eax
-  __int16 *v8; // edx
+  int consolidationThreshold;
   int j; // ecx
-  __int16 *clearCursor; // ecx
+  SlotTypeWord *clearCursor; // ecx
   int clearIndex; // eax
-  __int16 *clearSlotPtr; // ebx
+  SlotTypeWord *clearSlotPtr; // ebx
   signed int squadCount; // edi
-  int v14 CLASH95_UNUSED; // edx
   int fullCargoUnits; // eax
-  __int64 v16 CLASH95_UNUSED; // rtt
   int addedIndex; // ebx
   int v18; // ebp
   char minActionPoints; // [esp+4h] [ebp-18h]
 
-  slotPtr = stackPtr + 3;
+  slotPtr = (SlotTypeWord *)((char *)stackPtr + 6);
   totalPeasantQuantity = 0;
   peasantSlotCount = 0;
   for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
@@ -627,25 +626,27 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
     if ( slotType == UNIT_TYPE_PEASANT_CARGO )
     {
       ++peasantSlotCount;
-      totalPeasantQuantity += *((char *)slotPtr + 9);
+      totalPeasantQuantity += *((int8_t *)slotPtr + 9);
     }
-    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
+    slotPtr = (SlotTypeWord *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
   }
+  // 0x412201 preserves this EDX threshold across the AP query.
+  consolidationThreshold = (peasantSlotCount - 1) * 100;
   minActionPoints = UnitStack_GetMinCurrentActionPoints((intptr_t)stackPtr);
-  if ( (int)(intptr_t)v8 > totalPeasantQuantity )
+  if ( consolidationThreshold > totalPeasantQuantity )
   {
-    clearCursor = stackPtr;
+    clearCursor = (SlotTypeWord *)stackPtr;
     clearIndex = 0;
-    clearSlotPtr = stackPtr + 3;
+    clearSlotPtr = (SlotTypeWord *)((char *)stackPtr + 6);
     do
     {
       if ( *clearSlotPtr == -1 )
         break;
       if ( clearCursor[3] == UNIT_TYPE_PEASANT_CARGO )
         clearCursor[3] = -1;
-      clearCursor = (__int16 *)((char *)clearCursor + UNIT_SLOT_RECORD_BYTES);
+      clearCursor = (SlotTypeWord *)((char *)clearCursor + UNIT_SLOT_RECORD_BYTES);
       ++clearIndex;
-      clearSlotPtr = (__int16 *)((char *)clearSlotPtr + UNIT_SLOT_RECORD_BYTES);
+      clearSlotPtr = (SlotTypeWord *)((char *)clearSlotPtr + UNIT_SLOT_RECORD_BYTES);
     }
     while ( clearIndex < UNIT_STACK_SLOT_COUNT );
     Unit_CompactSquad(stackPtr, (int)(intptr_t)clearCursor, a3);
@@ -658,7 +659,7 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
       if ( addedIndex >= fullCargoUnits )
         break;
       j += UNIT_SLOT_RECORD_BYTES;
-      *(_WORD *)(uintptr_t)(j - 25) = UNIT_TYPE_PEASANT_CARGO;
+      *(SlotTypeWord *)(uintptr_t)(j - 25) = UNIT_TYPE_PEASANT_CARGO;
       *(_BYTE *)(uintptr_t)(j - 16) = 100;
       *(_BYTE *)(uintptr_t)(j - 15) = 0;
       *(_BYTE *)(uintptr_t)(j - 14) = 10;
@@ -666,19 +667,16 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
     }
     LOBYTE(i) = 100;
     *(_BYTE *)(uintptr_t)(j + 14) = minActionPoints;
-    *(_WORD *)(uintptr_t)(j + 6) = UNIT_TYPE_PEASANT_CARGO;
+    *(SlotTypeWord *)(uintptr_t)(j + 6) = UNIT_TYPE_PEASANT_CARGO;
     *(_BYTE *)(uintptr_t)(j + 15) = totalPeasantQuantity % 100;
-    v8 = stackPtr;
     *(_BYTE *)(uintptr_t)(j + 16) = 0;
     a2 = (DWORD)(intptr_t)stackPtr + UNIT_SLOT_RECORD_BYTES * v18 + UNIT_SLOT_RECORD_BYTES;
     *(_BYTE *)(uintptr_t)(j + 17) = 10;
-    *(_WORD *)(uintptr_t)(a2 + 6) = -1;
+    *(SlotTypeWord *)(uintptr_t)(a2 + 6) = -1;
   }
-  return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)v8, j, i, a2, a3);
+  // The reviewed ensure/retract path ignores these incoming EDX/ECX slots.
+  return Rules_SyncArmyFactStrength(stackPtr, 0, 0, i, a2, a3);
 }
-// 412213: variable 'v8' is possibly undefined
-// 41224F: variable 'v14' is possibly undefined
-// 4122E3: variable 'j' is possibly undefined
 
 //----- (00412300) --------------------------------------------------------
 __int16 * UnitStack_CaptureDefeatedStack(
@@ -1302,9 +1300,8 @@ int  UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck(char *slotArray,
 int  UnitStack_CalcMilitaryStrength(int stackPtr)
 {
   signed int squadCount; // eax
-  int v2; // edx
 
   squadCount = Unit_GetSquadCount(stackPtr);
-  return UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck((char *)(uintptr_t)(v2 + 6), squadCount, 0);
+  // 0x412BE3 retains the input in EDX; the LEA at 0x412BEA wraps at 32 bits.
+  return UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck((char *)(uintptr_t)((uint32_t)stackPtr + 6u), squadCount, 0);
 }
-// 412BEA: variable 'v2' is possibly undefined

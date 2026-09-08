@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "measurement": "Unchanged original PE instructions in a 32-bit Unicorn engine with the declared callback seams.",
+  "measurement_date": "2026-09-08",
+  "original_executable_sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae",
+  "functions": [
+    {
+      "name": "UnitStack_NormalizePeasantCargo",
+      "address": "0x4121d0",
+      "end_exclusive": "0x4122f1",
+      "bytes": 289,
+      "sha256": "8d4e1a6dbe6f8b56f3b8e92d4944dc9794e5b03b1079c4f0da4da1338fdadd7f"
+    },
+    {
+      "name": "UnitStack_CalcMilitaryStrength",
+      "address": "0x412be0",
+      "end_exclusive": "0x412bfc",
+      "bytes": 28,
+      "sha256": "a86143b51ce2db1797062b8aa598249a0593cb8125fa55b5b80cbba646b2494b"
+    }
+  ],
+  "cases_by_family": {
+    "military_strength": 297,
+    "peasant_cargo": 4704
+  },
+  "measured_streams": {
+    "case_count": 5001,
+    "input_bytes": 4160832,
+    "input_sha256": "02fe501da035d6701ce0c27ff39a676b28c96183d5216ef4d29fdd2f10fc3064",
+    "output_bytes": 4680936,
+    "output_sha256": "61c7793dd195dcb3f5b761daff138ea31225ff8101b7ef9467f8ce6d0dce6d2a"
+  },
+  "input_encoding": "Per case: eight little-endian uint32 header words, then 800 raw payload bytes. Cases remain in generator order.",
+  "output_encoding": "Per case: return uint32 and event-count uint32, then four zero-padded events of eight little-endian uint32 words each, then the complete 800-byte payload. Event fields are kind, three live arguments, whole-payload FNV-1a, carried-double low/high words and zero padding.",
+  "measurement_independence": "The input digest hashes bytes supplied to the x86 emulator. The output digest hashes its actual returned register, observed boundary trace, and live memory bytes before the model comparison. Neither measured digest is computed from contract_output.",
+  "seams": [
+    "UnitStack_GetMinCurrentActionPoints: observed stack, supplied AP",
+    "Unit_CompactSquad: observed cleared bytes/context, no-op callback",
+    "Unit_GetSquadCount: observed stack, supplied count",
+    "UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck: observed exact slot pointer/count/zero bonus, supplied return",
+    "Rules_SyncArmyFactStrength: observed full bytes and live context; two independently proven inert register slots excluded from semantic argument comparison"
+  ],
+  "limitations": [
+    "Original ST0 carried context is not interpreted by the target instructions or changed by the callbacks; double-bit preservation is asserted by the C++ fixtures.",
+    "Callbacks intentionally isolate the two target bodies; current and original compaction/fact implementations are not equated."
+  ],
+  "update_rule": "Changing either digest requires new original-instruction evidence. Candidate and negative-control source overrides never rewrite these pins."
+}
