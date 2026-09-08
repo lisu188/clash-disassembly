@@ -22265,7 +22265,7 @@
       "original_line": 3828,
       "source": "src/render/00405DB0_00407D20_render_004.cpp",
       "linkage": "external",
-      "body_sha256": "18dd64e0d0e284587243509956572e40344f8b3d4dd54338c814bf0cda2c9cc2",
+      "body_sha256": "378fc63163f6c8fb4d8c162a44a40f339834890b8424562e193e4603abcc400e",
       "original_address_range": {
         "start": "0x00405ED0",
         "end_exclusive": "0x00405EE0"

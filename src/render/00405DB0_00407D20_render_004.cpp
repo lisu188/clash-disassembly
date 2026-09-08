@@ -110,8 +110,9 @@ int  DLX_GetSpriteForChar(int sprite_set, int char_index)
 //----- (00405ED0) --------------------------------------------------------
 int  DLXSpriteSet_GetLastCharIndex(int sprite_set)
 {
-  LOWORD(sprite_set) = *(_WORD *)(uintptr_t)(sprite_set + DLX_SPRITE_SET_ENTRY_COUNT_BYTE_OFFSET);
-  return sprite_set - 1;
+  const clash95::render::DLXSpriteSetView spriteSet(
+      (const void *)(uintptr_t)sprite_set);
+  return (int)spriteSet.legacyLastCharResult((std::uint32_t)sprite_set);
 }
 
 //----- (00405EE0) --------------------------------------------------------
