@@ -1194,6 +1194,42 @@ public regression from the repository root in Linux/WSL:
 python3 -m unittest discover -s tests/tools -p test_queued_path_bridge_query.py -v
 ```
 
+### Batch 15 integration with DLX and class recovery
+
+Merged the published DLX/class checkpoint `b2f3764` with the bridge-query commit
+`3ee98b4` at `70ed898`. The two documentation conflicts retain both histories.
+Relative to incoming main, only the seven reviewed bridge-query files differ;
+all other manifest records and schema fields remain identical. The schema-3
+manifest retains 4157 historical identities, 144 ordered source files, 11
+canonical class methods and the existing adapters/aliases.
+
+Both clean combined builds and all eight explicit public CTests pass. Full
+warning totals are 6579 GCC / 6581 Clang, exactly matching incoming categories.
+Strict comparisons against the final incoming snapshots pass without additional
+allowances: linked identities, named storage, data order and initialization
+remain. In strategic002, only the query's code/instructions/relocations differ;
+the 61 neighboring executable sections and ordinary allocated data remain exact,
+including the Clang Road caller's 56-byte table and seven relocations. Unwind
+and nonallocated debug metadata are excluded from that object comparison.
+
+Manifest, split-source, coverage/save metadata, generators and class inventories
+pass. The stricter incoming header limits remain, with their 22 existing
+failures, and raw link differences remain 441 GCC / 693 Clang with zero library
+crosscheck errors. No baseline is raised. The original bridge-query proof and
+public regression bindings remain exact through integration.
+
+All 518 combined tooling tests pass in 183.528 seconds with no skips. All 736
+production/tooling inputs, both executables/archives, all 150 objects per
+compiler and both compile-command files remain unchanged through that run.
+
+Exact commands, source/reference freezes, scope checks and preserved comparison
+reports are under
+artifacts/readability/road-functions-20260906/batch-15/integration-validation/
+and the sibling integration-scope directory. These private scripts are absent
+from clean checkouts. Incoming first-Road replay/frame evidence remains tied to
+its recorded `8e7b694` source checkpoint; this combined build adds no runtime,
+visual-fidelity or campaign milestone claim.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

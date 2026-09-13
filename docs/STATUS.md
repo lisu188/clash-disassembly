@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-13.
 
+## Bridge Query Integration With Class Recovery
+
+Track: Win95 reconstruction, integrate the completed Road readability batch.
+Published DLX/class checkpoint `b2f3764` and bridge-query commit `3ee98b4` are
+merged at `70ed898`. Both clean builds, all eight public gates and all 518
+tooling tests pass. Strict incoming comparisons require no new allowances;
+neighboring strategic code/data and the Road switch table remain exact.
+All 736 source/tooling inputs and both compiler outputs stay frozen through
+validation. The schema-3 manifest retains 4157 identities, 144 source files,
+11 methods and existing adapters/aliases. Incoming warning totals, stricter
+header limits and historical raw-link failures remain unchanged.
+The first-Road replay evidence retains its incoming checkpoint attribution;
+this integration adds no route or visual-fidelity claim.
+[Evidence, commands and limits](HUMAN_READABILITY.md#batch-15-integration-with-dlx-and-class-recovery).
+
 ## Queued-Path Bridge Query Readability
 
 Track: Win95 reconstruction, Road/queued-path query orchestration.

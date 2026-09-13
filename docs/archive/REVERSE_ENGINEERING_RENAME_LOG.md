@@ -1,5 +1,19 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Bridge-query and class integration
+
+Track: Win95 reconstruction. Integrated published DLX/class checkpoint
+`b2f3764` with bridge-query recovery `3ee98b4` at `70ed898`, retaining both
+documentation histories and every other schema-3 identity/method/alias record.
+Both clean builds, eight public gates and all 518 tooling tests pass, with
+strict incoming surface comparisons requiring no new allowances. Neighboring
+strategic code/data, the Road switch table, warning counts and stricter incoming
+ratchet limits remain. All 736 inputs and both compiler outputs remain frozen
+through final validation. No additional function is renamed or counted as
+reviewed. Runtime/frame evidence retains its incoming checkpoint attribution;
+no campaign or visual milestone advances.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-15-integration-with-dlx-and-class-recovery).
+
 ## 2026-09-13 - Road readability: queued-path bridge query
 
 Track: Win95 reconstruction. Reviewed `Rules_IsQueuedPathTargetBridgeCrossing`
