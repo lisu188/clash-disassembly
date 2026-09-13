@@ -171,6 +171,7 @@ set(CLASH95_SPLIT_UNITS_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/units/QueuedPath.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/units/UnitStack.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/units/UnitTurn.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/units/UnitSlot.cpp
 )
 
 set(CLASH95_SPLIT_WORLD_SOURCES

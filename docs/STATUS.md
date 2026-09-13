@@ -2,15 +2,15 @@
 
 Last consolidated: 2026-09-13.
 
-## UnitSlot Class Extraction
+## UnitSlot Class Extraction And Relocation
 
 Four fatigue/order identities now have canonical `UnitSlot` methods and retained
 ordinary callback adapters. Every compiler/optimization profile passes 1,048,576
 byte scenarios; both builds, strict storage/symbol/initialization comparisons and
 eight asset-free gates pass after an unchanged-body source-order correction.
-Seventeen methods are implemented; the four new methods remain in the original
-TU for the independently committed extraction stage. The inventory remains 145
-TUs. See [UNIT_SLOT_CLASS_MIGRATION.md](UNIT_SLOT_CLASS_MIGRATION.md).
+The separately validated relocation moves the exact four definitions into
+`UnitSlot.cpp`. Seventeen methods are now in six class-named sources; the ordered
+inventory has 146 TUs. See [UNIT_SLOT_CLASS_MIGRATION.md](UNIT_SLOT_CLASS_MIGRATION.md).
 
 Published main `b2f3764` is integrated into the class branch. The unsigned DLX
 gate, both builds, current-main strict comparisons and eight asset-free gates

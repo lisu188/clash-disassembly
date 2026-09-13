@@ -158,13 +158,6 @@ BOOL  UnitSlot_ShouldGainFatigueFromLowActionPoints(int slotPtr)
   return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_ShouldGainFatigueFromLowActionPoints();
 }
 
-BOOL clash95::UnitSlot::UnitSlot_ShouldGainFatigueFromLowActionPoints() const
-{
-  int slotPtr = (int)address_;
-  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
-  return slot->current_action_points <= 3u && (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
-}
-
 //----- (004118C0) --------------------------------------------------------
 __attribute__((used, retain))
 BOOL  UnitSlot_CanRecoverFatigue(int slotPtr)
@@ -172,25 +165,11 @@ BOOL  UnitSlot_CanRecoverFatigue(int slotPtr)
   return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_CanRecoverFatigue();
 }
 
-BOOL clash95::UnitSlot::UnitSlot_CanRecoverFatigue() const
-{
-  int slotPtr = (int)address_;
-  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
-  return (slot->state_flags & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
-}
-
 //----- (004118D0) --------------------------------------------------------
 __attribute__((used, retain))
 BOOL  UnitSlot_HasSevereFatigue(int slotPtr)
 {
   return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_HasSevereFatigue();
-}
-
-BOOL clash95::UnitSlot::UnitSlot_HasSevereFatigue() const
-{
-  int slotPtr = (int)address_;
-  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
-  return (int8_t)slot->fatigue >= 80;
 }
 
 //----- (004118E0) --------------------------------------------------------
@@ -1112,32 +1091,6 @@ __attribute__((used, retain))
 int  UnitSlot_CycleOrderState(int result)
 {
   return clash95::UnitSlot((intptr_t)result).UnitSlot_CycleOrderState();
-}
-
-int clash95::UnitSlot::UnitSlot_CycleOrderState() const
-{
-  int result = (int)address_;
-  UnitSlotRecord *slot;
-  char nextOrderState;
-  char clearedFlags;
-  char updatedFlags;
-
-  slot = (UnitSlotRecord *)(uintptr_t)result;
-  nextOrderState = ((slot->stance_bits >> 2) + 1) & 3;
-  clearedFlags = slot->stance_bits & 0xF3;
-  slot->stance_bits = clearedFlags;
-  updatedFlags = (4 * nextOrderState) | clearedFlags;
-  slot->stance_bits = updatedFlags;
-  if ( (unsigned __int8)((unsigned __int8)(16 * updatedFlags) >> 6) > 2u )
-  {
-    slot->stance_bits = updatedFlags & 0xF3;
-    if ( (clearedFlags & 3u) < 3 )
-    {
-      slot->stance_bits = updatedFlags & 0xF0;
-      slot->stance_bits = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
-    }
-  }
-  return result;
 }
 
 //----- (004129E0) --------------------------------------------------------
