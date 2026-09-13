@@ -2,6 +2,31 @@
 
 Last consolidated: 2026-09-13.
 
+## Bootstrap Storage Label And State-Name Scanner
+
+Track: Win95 reconstruction, inherited CI repair. The private bootstrap command-
+line buffer retains its historical assembler name. A reached scanner defect is
+also repaired so assembler labels preserve the existing direct-state evidence;
+the support inventory and recovered manifest remain byte-identical. Four new
+regression tests bring the tooling suite to 526, all passing. Both builds and
+eight public CTests pass with 740 inputs and compiler artifacts frozen.
+Independent ELF comparison preserves storage addresses, runtime code/data and
+relocations under the one exact name correspondence. Raw link differences fall
+441 to 439 GCC and 693 to 691 Clang; every other row and all 22 header failures
+remain. Strict comparison's one intentional name difference remains recorded;
+no baseline or policy is weakened. The original failed scanner-audit attempts
+are retained. Road-function count, runtime and campaign frontiers do not advance.
+[Proof, commands and limits](HUMAN_READABILITY.md#bootstrap-command-line-symbol-and-state-scanner).
+
+## Published CI At 4033aa8
+
+The Temple commit's remote builds, eight public CTests, 522 tooling tests and
+separate coverage gate pass. Complete warning totals drop by two per compiler.
+Overall CI still fails the same header and linked-symbol gates: 22 header rows,
+441 GCC / 693 Clang link differences, zero library crosscheck errors. No
+unexpected regression is found, and no baseline or check was weakened.
+[Run, measurements and scope](HUMAN_READABILITY.md#published-ci-observation-after-batch-17).
+
 ## Temple March Readability And Preserved Stack Offset
 
 Track: Win95 reconstruction, upstream Road/queued-path orchestration.

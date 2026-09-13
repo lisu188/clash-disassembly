@@ -1447,6 +1447,95 @@ regression uses tracked source and provenance without retail assets:
 python3 -m unittest discover -s tests/tools -p test_temple_march.py -v
 ```
 
+### Published CI observation after batch 17
+
+The [4033aa8 CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34746704424)
+completes with the same three inherited failures as 6126b40: header coupling and
+both linked-symbol ratchets. Both builds, all eight public CTests, unit-runner
+policy checks and all 522 tooling tests pass; the tooling run takes 160.771
+seconds. Complete compiler logs show warning totals fall from 6579 to 6577 for
+GCC and 6581 to 6579 for Clang, with no increased warning category.
+
+All 15 emitted header rows match; exact published metadata confirms all 22
+header failures remain. All 80 emitted link rows per compiler and aggregate
+441 GCC / 693 Clang differences match, with zero crosscheck errors. Downloaded
+diagnostic logs agree with the workflow output. Unprinted remote link rows
+remain uninspected. The separate coverage gate remains 6163/6652 lines (92.65%)
+across its selected 718 functions: 585 fully covered, 133 partial, none uncovered.
+This passing coverage job does not make overall CI green or cover all identities.
+
+Full run/job metadata, logs, diagnostic artifacts, exact published inputs and
+comparisons are retained under
+artifacts/readability/road-functions-20260906/batch-17/ci-final-observation/.
+No unexpected regression is found in this observation.
+
+### Bootstrap command-line symbol and state scanner
+
+Track: Win95 reconstruction, repair an inherited linked-symbol regression.
+The private 1024-byte bootstrap command-line buffer now explicitly retains its
+historical host-build assembler name, `g_boot_command_line`. The C++ name,
+static linkage, type, array bound, declaration order and all consumers remain.
+This name comes from the frozen host-build contract; it is not a newly recovered
+retail Win95 public symbol. The existing GNU assembler-label style avoids adding
+a broad recovered-ABI include to the bootstrap.
+
+The first two builds compiled and linked the annotation, then failed their
+embedded split audit: `declared_state_names` no longer recognized the buffer
+when an assembler label followed its declarator. The existing inventory correctly
+recorded its three bootstrap consumers. The scanner now removes explicit GNU
+string-label clauses from its lexical declaration view after masking function
+bodies. It preserves the original declaration matcher, ignores labels inside
+comments/literals, and retains the C++ state name. Macro/expression labels and
+arbitrary C++ declaration parsing remain outside this lexical scanner's scope.
+
+Four new regression methods cover 18 scalar/array label cases across `asm`,
+`__asm` and `__asm__`, function/prototype/local exclusions, direct-state drift,
+and local-static constraints. The unchanged scanner fails the real inventory,
+the direct-state fixture and all 18 supported-label cases. All 34 targeted tests
+pass with the applied repair; every existing test body remains unchanged.
+The actual state-name set gains only the missing buffer and the three inventory
+errors disappear. Both the support inventory and recovered manifest remain
+byte-identical. No identity, class mapping or Road-function count is changed.
+
+Both final incremental builds pass, with no bootstrap diagnostics. Their native
+objects and binaries are exactly those retained from the first attempts; only
+the corrected embedded audit needed to rerun. Raw link differences fall from
+441 to 439 GCC and 693 to 691 Clang, removing exactly the two missing/new buffer
+name rows in each complete local comparison, with zero crosscheck errors.
+The untouched strict checker reports the one expected `linked_data_ordered`
+change at the same sequence position; all other fields compare exactly. This
+raw failure remains recorded, and no data allowance or baseline update is used.
+
+Independent ELF comparison confirms the buffer remains one local 1024-byte BSS
+object at the same address and alignment in each profile, at ordered-data slot
+1015. Literal runtime code/data, unwind/GOT/initializer bytes and all runtime
+relocation tuples match under the single exact buffer/section name correspondence.
+All other symbol tuples retain their sequence, and 26 corruption controls reject
+changes to storage, code, relocations and ordering. Both build-ID descriptors
+change while their note layout remains. Nonallocated symbol/string metadata
+changes; Clang also changes DWARF/debug-string metadata, recorded separately.
+The other 149 objects, complete recovered archive, its 147-member order and
+compile commands remain exact. The first-Road runtime endpoint and campaign
+frontier are unchanged; no new game process or visual milestone is claimed.
+
+All eight public CTests and all 526 tooling tests pass; the full tooling run
+takes 139.034 seconds without skips. All 740 production/tooling inputs and four
+workflow files, both compiler output sets and 150 objects per compiler remain
+frozen through final validation. Metadata and freshness checks pass apart from
+the same complete 22 inherited header failures. The remaining raw link failures
+are still visible; this repair does not make overall CI green.
+
+The initial failed build/metadata attempts, revised freeze, parser regression
+proof and exact commands are retained under
+artifacts/readability/ci-bootstrap-command-line-20260913/.
+The candidate-audit and state-name-parser-audit directories retain their original
+planning states and actual follow-up proofs; build-validation, metadata-02 and
+scope-audit-02 contain the integrated checks. Public regression reproduction:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_support_class_inventory.py -v
+```
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

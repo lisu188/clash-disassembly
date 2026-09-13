@@ -243,10 +243,18 @@ def declared_state_names(texts: dict[str, str], declarations: dict | None = None
     """Find direct global spellings, keeping local-static objects in constraints."""
     names = set(declarations.get("globals", {})) if isinstance(declarations, dict) else set()
     pattern = re.compile(r"(?m)^(?:static\s+|extern\s+)?(?:[A-Za-z_]\w*[ \t*]+)+([A-Za-z_]\w*)\s*(?:\[[^\n;]*\])?\s*[=;]")
+    assembler_label = re.compile(
+        r'\b(?:asm|__asm|__asm__)\s*\(\s*(?:"(?:[^"\\\r\n]|\\[^\r\n])*"\s*)+\)')
     for text in texts.values():
         code = list(mask_c(text))
         for definition in scan_definitions(text, None):
             code[definition.start:definition.end] = " " * (definition.end - definition.start)
+        # An explicit GNU assembler label changes symbol spelling, not the
+        # declared state name. Match real string labels before masking them;
+        # comments, literals and function bodies cannot introduce declarations.
+        for label in assembler_label.finditer(text):
+            if code[label.start()] == text[label.start()]:
+                code[label.start():label.end()] = " " * (label.end() - label.start())
         names.update(match[1] for match in pattern.finditer("".join(code)))
     return names
 

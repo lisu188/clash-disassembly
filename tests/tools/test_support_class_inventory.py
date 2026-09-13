@@ -313,6 +313,58 @@ class SupportInventoryTest(unittest.TestCase):
         self.assertTrue({"one", "two"} <= globals_, globals_)
         self.assertNotIn("label", globals_)
 
+    def test_assembler_labels_preserve_scalar_and_array_state_names(self):
+        for spelling in ("asm", "__asm", "__asm__"):
+            for declaration, name in (
+                    ('static char command_line[1024] @ASM@("linked_buffer");', "command_line"),
+                    ('int count @ASM@("linked_count") = 7;', "count"),
+                    ('extern unsigned long flags @ASM@("linked_flags");', "flags"),
+                    ('static int matrix[2][3] @ASM@("linked_" "matrix");', "matrix"),
+                    ('static int escaped @ASM@("linked\\\"name");', "escaped"),
+                    ('static int multiline @ASM@\n(\n"linked_name"\n);', "multiline")):
+                with self.subTest(spelling=spelling, name=name):
+                    source = declaration.replace("@ASM@", spelling)
+                    self.assertEqual(declared_state_names({OLD: source}), {name})
+
+    def test_assembler_label_scan_excludes_prototypes_locals_and_nonliteral_clauses(self):
+        source = r'''
+static int plain;
+static const char *message = "int string_state __asm__(\"string_label\");";
+int function(void) __asm__("function_label");
+extern int other_function(int value) asm("other_label");
+int third_function() __asm("third_label");
+int expression_label __asm__(get_label());
+int macro_label __asm__(LABEL);
+int character_label __asm__('x');
+int missing_label __asm__();
+// static int comment_state asm("comment_label");
+/*
+static int block_comment_state __asm__("block_label");
+*/
+int Probe_Function() {
+static int local_state __asm__("local_label");
+return local_state;
+}
+'''
+        self.assertEqual(declared_state_names({OLD: source}, {"globals": {"seeded": {}}}),
+                         {"plain", "message", "seeded"})
+
+    def test_assembler_label_preserves_recorded_direct_state_evidence(self):
+        self.declarations = {"globals": {}}
+        self.write(OLD, 'static int shared_state __asm__("linked_state");\n' + BODY)
+        self.assertEqual(self.sources(), [])
+        self.runtime["direct_state_references"] = []
+        self.assert_error(self.sources(), "direct state reference evidence differs")
+
+    def test_local_static_assembler_label_still_requires_storage_constraint(self):
+        body = BODY.replace("return shared_state",
+                            'static int lazy __asm__("local_storage"); return lazy + shared_state')
+        self.update_body(self.runtime, body)
+        self.assertNotIn("lazy", declared_state_names({OLD: body}))
+        self.assert_error(self.sources(), "local-static storage constraint is missing")
+        self.runtime["constraints"].append("preserve-local-static-storage")
+        self.assertEqual(self.sources(), [])
+
     def test_missing_reason_or_unknown_constraints_metadata_is_rejected(self):
         for key, value, error in (("rationale", "too short", "concrete disposition rationale"),
                                   ("boundary_roles", ["inferred-from-folder"], "unknown boundary role"),

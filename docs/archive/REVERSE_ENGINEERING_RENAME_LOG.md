@@ -1,5 +1,22 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Bootstrap label and support-state scanner
+
+Track: Win95 reconstruction, inherited CI repair. Restored the private bootstrap
+buffer's historical assembler name without changing its C++ name or storage.
+The reached support-state scanner now recognizes explicit GNU string labels;
+four new tests preserve direct-state evidence and local-static constraints.
+Both inventories remain byte-identical. Both builds, eight public CTests and
+526 tooling tests pass with 740 inputs and compiler outputs frozen. Independent
+ELF proof preserves storage, runtime bytes, symbol/relocation correspondence
+and archive contents; all 26 corruption controls reject. Raw link failures drop
+441 to 439 GCC and 693 to 691 Clang, removing exactly two name rows per compiler.
+The sole intentional strict-name difference and all 22 inherited header failures
+remain explicit. Initial scanner-audit failures are retained; no baseline is
+raised. Confidence is high for these two supported compiler outputs. No recovered
+identity, Road-function count, runtime route or visual milestone advances.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#bootstrap-command-line-symbol-and-state-scanner).
+
 ## 2026-09-13 - Road readability: Temple march
 
 Track: Win95 reconstruction. Reviewed the canonical `Rules_MarchToTemple`
@@ -20,6 +37,12 @@ linked comparisons pass without allowances; neighboring code/data and 149 other
 objects remain exact. The inherited header/raw-link failures remain unresolved.
 No route or visual milestone is promoted.
 [Evidence, commands and limits](../HUMAN_READABILITY.md#batch-17-rules_marchtotemple).
+
+Subsequent remote observation at 4033aa8 confirms both builds, eight public
+CTests, 522 tooling tests and the selected 718-function coverage gate pass.
+Warning totals decrease by two per compiler. Overall CI retains the same three
+header/link failures as 6126b40, with no unexpected regression found.
+[Remote measurements and limits](../HUMAN_READABILITY.md#published-ci-observation-after-batch-17).
 
 ## 2026-09-13 - Road readability: movement commit
 
