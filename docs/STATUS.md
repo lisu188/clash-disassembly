@@ -2,14 +2,15 @@
 
 Last consolidated: 2026-09-13.
 
-## UnitSlot Action-Point Class Extraction
+## UnitSlot Action-Point Class Extraction And Relocation
 
 The two AP queries now use canonical UnitSlot methods and retained adapters;
 UnitTurn calls the method directly. The immutable metadata table remains in
 its original storage owner behind one narrow accessor. Actual-source AP and
 composed-turn comparisons, both production builds, strict surface checks and
-eight asset-free gates pass. The current stage has 21 methods, including two
-awaiting separate relocation. See [UNIT_SLOT_AP_CLASSES.md](UNIT_SLOT_AP_CLASSES.md).
+eight asset-free gates pass. Separate unchanged-body relocation passes the same
+checks. There are now 21 methods in six class-named files and 146 recovered TUs.
+See [UNIT_SLOT_AP_CLASSES.md](UNIT_SLOT_AP_CLASSES.md).
 The preceding 19-method checkpoint passes all 523 tooling tests and eleven
 metadata checks; the unchanged header and raw link ratchets still fail as
 enumerated in [CPP_CLASS_RESUMED_VALIDATION.md](CPP_CLASS_RESUMED_VALIDATION.md).

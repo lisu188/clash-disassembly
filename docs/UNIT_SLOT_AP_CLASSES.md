@@ -80,3 +80,17 @@ strict current-main surface comparisons and all eight asset-free gates. There
 are now **21 canonical methods**, with the two AP methods still in their
 original TU at this extraction stage. Six class-named files and the 146-TU
 inventory remain. No historical numerical ratchet is raised.
+
+## Relocation
+
+After extraction commit `e8f7a3b`, the same two canonical bodies move into
+`src/units/UnitSlot.cpp`, before its four earlier methods in historical identity
+order. Both canonical and adapter hashes stay unchanged. The old TU keeps the
+adapters and the state TU keeps the table/accessor. Generated includes and the
+GetBase coverage source location follow the canonical definitions.
+
+Both actual-source tests, both production builds, strict surface comparisons
+and all eight asset-free gates pass again for this separate stage. All **21
+methods are now in six class-named sources**, with 146 recovered TUs and the
+same 4,157 identities. The AP relocation evidence uses the
+`unit-slot-ap-relocation` log prefix in the integration directory above.

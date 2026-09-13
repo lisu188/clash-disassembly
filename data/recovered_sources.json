@@ -87639,7 +87639,7 @@
       "original_address": "0x0040FDB0",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 357,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitSlot.cpp",
       "linkage": "external",
       "body_sha256": "d52c985af41e60b8206916fef97ae0b7286acb374b397ef4cbc7fc8c2e7dbbee",
       "original_address_range": {
@@ -87668,7 +87668,7 @@
       "original_address": "0x0040FE60",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 380,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitSlot.cpp",
       "linkage": "external",
       "body_sha256": "c42c8ae077e320abd47e5c0e87d2fa7eceb6517e6b089e4aeea3e55df8beb834",
       "original_address_range": {

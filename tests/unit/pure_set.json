@@ -581,7 +581,7 @@
    "original_address": "0x0040FE60",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 380,
-   "source": "src/units/0040F510_00411560_units_001.cpp",
+   "source": "src/units/UnitSlot.cpp",
    "implementation": {
     "kind": "method",
     "qualified_name": "clash95::UnitSlot::UnitSlot_GetBaseActionPoints",
