@@ -219,6 +219,13 @@ archives remain. Their causes are unresolved; neither is a passing Clang route.
 These runs predate the incoming DLX merge and subsequent unit classes.
 Evidence is `artifacts/cpp-classes/20260913/runtime-before-units/`.
 
+The sealed fresh native reference at `be837d1` records all 1,614 cases for both
+compilers in default and strict modes. GCC coverage passes at 6,161/6,652 lines
+with zero uncovered functions; Clang has eight zero-covered procedural CLIPS
+functions despite 6,799/7,341 lines. Its gate fails and native crashes remain.
+The full inventory, format-reader handling, initial incomplete attempt and
+profiler I/O errors are recorded in [CPP_CLASS_NATIVE_BASELINE.md](CPP_CLASS_NATIVE_BASELINE.md).
+
 The migration branch now incorporates origin `e387a35` after the validated
 `c65e476` class/recovery checkpoint. The two incoming identities are
 `UnitStack_MoveOneTileInDirection` and
