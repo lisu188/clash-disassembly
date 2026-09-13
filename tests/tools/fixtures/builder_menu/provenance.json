@@ -1,0 +1,394 @@
+{
+  "schema_version": 1,
+  "function": "WorldMap_HandleBuilderActionMenu",
+  "baseline_head": "438272e31100e4597645afdc02e1d4c3e9bb2947",
+  "source": "src/world/0040A0E0_0040B020_world_002.cpp",
+  "before_body_sha256": "0b13dd012c7faf7bf0f732d0b13f210fba294509bf4fb7a03786d1ae70f25508",
+  "before_body_token_sha256": "01258e81bb1020c7e6649fd29e8b34cdf4f4f35cf514d0754d3f1545f6418d31",
+  "cases": 62,
+  "events": 743,
+  "input_sha256": "c834399726b8b5e252f0f870b3ee1876c8554f10d3c1663c0431be01bece738f",
+  "output_sha256": "2216468bbf0719c94e7096cdc3de8810bba70dff3f6f96f2cbcf483d239edb7c",
+  "case_names": [
+    "unselected-g0-r00000000",
+    "unselected-g0-rffffffff",
+    "unselected-g0-r87654321",
+    "no-builder-g0-lang0",
+    "no-builder-g0-lang1",
+    "no-builder-g0-lang2",
+    "friendly-exit-g0",
+    "empty-poll-flipping-exit-g0",
+    "unselected-g1-r00000000",
+    "unselected-g1-rffffffff",
+    "unselected-g1-r87654321",
+    "no-builder-g1-lang0",
+    "no-builder-g1-lang1",
+    "no-builder-g1-lang2",
+    "friendly-exit-g1",
+    "empty-poll-flipping-exit-g1",
+    "unselected-g-7-r00000000",
+    "unselected-g-7-rffffffff",
+    "unselected-g-7-r87654321",
+    "no-builder-g-7-lang0",
+    "no-builder-g-7-lang1",
+    "no-builder-g-7-lang2",
+    "friendly-exit-g-7",
+    "empty-poll-flipping-exit-g-7",
+    "dispatch-00000000-poll00000000",
+    "dispatch-00000000-poll80000000",
+    "dispatch-00000001-poll00000000",
+    "dispatch-00000001-poll80000000",
+    "dispatch-00000002-poll00000000",
+    "dispatch-00000002-poll80000000",
+    "dispatch-00000006-poll00000000",
+    "dispatch-00000006-poll80000000",
+    "dispatch-80000000-poll00000000",
+    "dispatch-80000000-poll80000000",
+    "dispatch-fffffffe-poll00000000",
+    "dispatch-fffffffe-poll80000000",
+    "sentinel-skips-post-flip",
+    "action-0-flip-continues",
+    "action-1-flip-continues",
+    "action-2-flip-continues",
+    "action-3-flip-continues",
+    "action-4-flip-continues",
+    "action-5-flip-continues",
+    "action-3-predicate-reject",
+    "action-4-predicate-reject",
+    "construction-3-return00000000",
+    "construction-3-return00000001",
+    "construction-3-return00000002",
+    "construction-3-returnffffffff",
+    "construction-4-return00000000",
+    "construction-4-return00000001",
+    "construction-4-return00000002",
+    "construction-4-returnffffffff",
+    "construction-5-return00000000",
+    "construction-5-return00000001",
+    "construction-5-return00000002",
+    "construction-5-returnffffffff",
+    "wrapped-address-action-3",
+    "wrapped-address-action-4",
+    "fresh-action-action-callback",
+    "fresh-action-flipping",
+    "cleanup-fresh-state-raw-return"
+  ],
+  "case_trace_sha256": [
+    "d2d8e414bf4fa893c38635cab1bb9453f3380ca2c1818e802ed4c6ccea578398",
+    "d9317fe4e1b22c16d336940b1ceaec3290e087c135d62a6d17a4e962bb1a8db5",
+    "3ef69f1e73d7403aca7836e71275a9c059697cc6874353666e12751143234a09",
+    "daa16e886fe8d77481970af7dd9d2f65af26fc1054e6a13c5c6013f96fd5746c",
+    "ead007811d9e6171550ce8477e8406d45c0bbbb0ed09729d06fc0783402e4d51",
+    "48dd55c8658012a09b20726543275ea93212301caefdc6620d18eed3bc52e122",
+    "cc09784d93cf1c1354f8c431440751f010a14313d9324f18263096d096c6ba82",
+    "6ee6f342f8baf3424ac45e64e7bc6f56f0d7f00151ace3f1cab0156f6293366d",
+    "d2d8e414bf4fa893c38635cab1bb9453f3380ca2c1818e802ed4c6ccea578398",
+    "d9317fe4e1b22c16d336940b1ceaec3290e087c135d62a6d17a4e962bb1a8db5",
+    "3ef69f1e73d7403aca7836e71275a9c059697cc6874353666e12751143234a09",
+    "daa16e886fe8d77481970af7dd9d2f65af26fc1054e6a13c5c6013f96fd5746c",
+    "ead007811d9e6171550ce8477e8406d45c0bbbb0ed09729d06fc0783402e4d51",
+    "48dd55c8658012a09b20726543275ea93212301caefdc6620d18eed3bc52e122",
+    "cc09784d93cf1c1354f8c431440751f010a14313d9324f18263096d096c6ba82",
+    "6ee6f342f8baf3424ac45e64e7bc6f56f0d7f00151ace3f1cab0156f6293366d",
+    "d2d8e414bf4fa893c38635cab1bb9453f3380ca2c1818e802ed4c6ccea578398",
+    "d9317fe4e1b22c16d336940b1ceaec3290e087c135d62a6d17a4e962bb1a8db5",
+    "3ef69f1e73d7403aca7836e71275a9c059697cc6874353666e12751143234a09",
+    "daa16e886fe8d77481970af7dd9d2f65af26fc1054e6a13c5c6013f96fd5746c",
+    "ead007811d9e6171550ce8477e8406d45c0bbbb0ed09729d06fc0783402e4d51",
+    "48dd55c8658012a09b20726543275ea93212301caefdc6620d18eed3bc52e122",
+    "cc09784d93cf1c1354f8c431440751f010a14313d9324f18263096d096c6ba82",
+    "6ee6f342f8baf3424ac45e64e7bc6f56f0d7f00151ace3f1cab0156f6293366d",
+    "1046be149f1d3abe4d47f3de6165796cacb4e8b8be03992b27f941601a5f5df3",
+    "0bf11b0b550c373706b744ed8a3d3b4467cec91f2c7e41da8544710309d8afb3",
+    "ea589884d41cac66572a143b39370410b158fdf03d606a0e0a57fca828c071f0",
+    "c0f4ad39eea9915088b3463818300b1c52fa27235b708409648ca176afab6da4",
+    "d4b7249a9efea43a900f5ccaaee63a156ed40d6e41048a029db58ad260d4d3d9",
+    "b087b108999f362f3d51c6fdb8991783660805e9c4ed90dfb2efc3def59986c8",
+    "4028955aef1578f6cd3c5d95610d0344e9a9374378d71c09d860bf5aaf2bb21e",
+    "e2b558878de3f7e9040f5701d82e203fdb7845e1424347814d2f6616a75d61ab",
+    "834b3fea2c1431e0a613c5e9a8d463e354b8e048705e5ca48fab8df62be84824",
+    "549786b21a435d921b1556c7c94f5b90652d41a492aa035e5e249b30f486de9d",
+    "55afbbf45e28ae80a2887d6b14d3396adb7b0a3ab2cfaac1c306964ee419e627",
+    "a1ee3d2775c492bb10b47dadb22d27f7e2467ca185e78de2b50ee07aa57559d9",
+    "45a1a91db1c2cc622da3d8e92441874fae45af3f4d8f788bc991f7ec6515522f",
+    "479dd4421a469d20381864f3ada3751bb747476b0fc9593220268243342e1923",
+    "797f43f46e489cf9583072cf331d986b1beb20dde3eb0e2db113436a7d2d34c7",
+    "c200912406303a5a81b6c02df8ad9973b88635d6b9d70e2e1892161e6e0ee819",
+    "372e415130b7738bdeaa050d89ecfd4361ccf59d234605569f5bac26910dd3d7",
+    "4ce36f5a330af38dd6136f31aca2d50d670f4a08465481d18631e187c8992020",
+    "d0612c5db490a9bc77efa3e1c54af967d8b5ea90d44fbd4de4081070667d6558",
+    "d4377add3b386569eb9b19c0fae5c5eb2b94c3e0eb4ba7939d2948998f4041d2",
+    "f64366dc12fcefb78d07502021dd069c94932acb1f85648962e797129f994770",
+    "fd3690a8348f2ec161bb3eae8cdd0d9959e6ad26f61a7598426449f2e957f52f",
+    "8b6b5c5a112ccf0f743fb7a9cf54ece61516d90d4fdfefd4e9d0019be90aa50c",
+    "fd3690a8348f2ec161bb3eae8cdd0d9959e6ad26f61a7598426449f2e957f52f",
+    "fd3690a8348f2ec161bb3eae8cdd0d9959e6ad26f61a7598426449f2e957f52f",
+    "acee24eaf892b40c593d3ee0ebe0fa831c0ff26d4df491f3c1349a88f41c98de",
+    "595a23a702ac67cdeccbd28282ea64a3a81fc376c1fd855615e806c3406b835b",
+    "acee24eaf892b40c593d3ee0ebe0fa831c0ff26d4df491f3c1349a88f41c98de",
+    "acee24eaf892b40c593d3ee0ebe0fa831c0ff26d4df491f3c1349a88f41c98de",
+    "04b629bddfcc3fdab04cf0a2e90a68e61032b905bffd7e9ee6467c9e5f9e0baa",
+    "b6e5b07ba028f42798455f8b3a3b5b3535841c5c3e0e85ec5e218b445800e291",
+    "04b629bddfcc3fdab04cf0a2e90a68e61032b905bffd7e9ee6467c9e5f9e0baa",
+    "04b629bddfcc3fdab04cf0a2e90a68e61032b905bffd7e9ee6467c9e5f9e0baa",
+    "b2bf110e1858bcde0d9278d3a20280b74086c8141ab6b454a7d41f04c52e6eff",
+    "2ec620113fe15a80f7958dc97598ce2552659f2328afe1c434b896be7cdb4327",
+    "c038027464c8338275fa380fb19d6ec93a4fb1f1dd2f5f0d982c4ef63019ce0c",
+    "479dd4421a469d20381864f3ada3751bb747476b0fc9593220268243342e1923",
+    "32cd45d94eecbb1fe5f2af7e4fffd21c527d0385b0f2fd4b32286282ba3d0777"
+  ],
+  "calls": [
+    "animation",
+    "has_builder",
+    "init_draw",
+    "viewport",
+    "pump",
+    "frame",
+    "select_stack",
+    "poll",
+    "flipping",
+    "road",
+    "dig",
+    "trap",
+    "min_ap",
+    "cargo",
+    "building_new",
+    "minimap",
+    "sound",
+    "button_sound",
+    "info",
+    "begin",
+    "sync",
+    "status",
+    "refresh"
+  ],
+  "state_fields": [
+    "arena",
+    "selected",
+    "action",
+    "primary",
+    "device",
+    "language",
+    "arena0_stack0_row",
+    "arena0_stack0_column",
+    "arena0_stack1_row",
+    "arena0_stack1_column",
+    "arena0_stack2_row",
+    "arena0_stack2_column",
+    "arena0_stack3_row",
+    "arena0_stack3_column",
+    "arena1_stack0_row",
+    "arena1_stack0_column",
+    "arena1_stack1_row",
+    "arena1_stack1_column",
+    "arena1_stack2_row",
+    "arena1_stack2_column",
+    "arena1_stack3_row",
+    "arena1_stack3_column"
+  ],
+  "arguments": {
+    "animation": [
+      "widget raw",
+      "delay"
+    ],
+    "has_builder": [
+      "selected raw"
+    ],
+    "init_draw": [
+      "table identity: builder=1/main=2"
+    ],
+    "viewport": [
+      "present"
+    ],
+    "pump": [
+      "render identity=1",
+      "carried frame DWORD",
+      "BL",
+      "EDX=0"
+    ],
+    "frame": [
+      "carried frame DWORD"
+    ],
+    "select_stack": [],
+    "poll": [
+      "builder identity=1",
+      "context"
+    ],
+    "flipping": [
+      "render identity=1"
+    ],
+    "road": [
+      "context",
+      "float low",
+      "float high"
+    ],
+    "dig": [
+      "selected",
+      "action",
+      "context",
+      "signed render low byte",
+      "zero",
+      "float low",
+      "float high"
+    ],
+    "trap": [
+      "building type",
+      "action low byte",
+      "float low",
+      "float high"
+    ],
+    "min_ap": [
+      "arena identity 0/1",
+      "stack slot 0..3"
+    ],
+    "cargo": [
+      "arena identity 0/1",
+      "stack slot 0..3"
+    ],
+    "building_new": [
+      "type",
+      "selected",
+      "float low",
+      "float high",
+      "template identity 1..3",
+      "force"
+    ],
+    "minimap": [
+      "signed row",
+      "signed column"
+    ],
+    "sound": [
+      "string identity 1..3",
+      "volume"
+    ],
+    "button_sound": [
+      "string identity: unselected=1/no-builder=2"
+    ],
+    "info": [
+      "message identity 1..3",
+      "style",
+      "delay",
+      "context",
+      "local-copy-end identity=4",
+      "global-message-end identity=5"
+    ],
+    "begin": [
+      "render identity=1",
+      "zero"
+    ],
+    "sync": [
+      "context"
+    ],
+    "status": [
+      "context"
+    ],
+    "refresh": [
+      "context"
+    ]
+  },
+  "header_words": 9,
+  "event_words": 31,
+  "final_words": 26,
+  "category_counts": {
+    "rejected": 9,
+    "recovered-delay": 9,
+    "guard": 3,
+    "poll": 3,
+    "dispatch": 12,
+    "continuation": 7,
+    "construction": 8,
+    "noncanonical-bool-boundary": 6,
+    "modulo-address": 2,
+    "fresh-state": 2,
+    "cleanup": 1
+  },
+  "defined_before_cases": 48,
+  "before_expected_match_cases": 42,
+  "defined_before_expected_divergence_cases": 6,
+  "original": {
+    "instruction_start": "0x0040A0E0",
+    "instruction_end_exclusive": "0x0040A35D",
+    "instruction_bytes": 637,
+    "instruction_sha256": "d306d75ff1b565be8925eba747d4c18c55676611d5bf0be864ddf83962a0fa7b",
+    "padding_bytes": 3,
+    "code_with_padding_sha256": "5b6977779a850ab9067687bfe88d345b394cf9867cf9cc85d320cc77a01ccbc9",
+    "jump_table_start": "0x0040A0C0",
+    "jump_table_bytes": 24,
+    "jump_table_sha256": "2334ba158c01664f81a1cb77d1515e44ee4b5b1952661785f24116dbb2aed3f6",
+    "copies": [
+      {
+        "path": "/mnt/c/Users/andrz/.codex/worktrees/a46b/clash-disassembly/clash95.exe",
+        "sha256": "fd5cdd10e77049cb1ba8450905022f1c0144110a3927693d5b1a821923414b3f",
+        "file_offset": 38112
+      },
+      {
+        "path": "/mnt/c/clash/clash95.exe",
+        "sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae",
+        "file_offset": 38112
+      }
+    ],
+    "linked_code_verified_exact": true,
+    "linked_jump_table_verified_exact": true,
+    "probe_sha256": "ff059157447971bb4c2fa68d098ed114c12b6b93bbf5f4cb52dda3194cde6441",
+    "exit_code": 0
+  },
+  "delay_supplement": {
+    "cases": 16,
+    "output_sha256": "198f45901d06c1ecbc8424d47b28bb9e07c919a8cc05e708cf55855bdaf26be5",
+    "code": [
+      {
+        "name": "animation",
+        "bytes": 106,
+        "sha256": "d5a445354b126412dbe729e4c7f18238dda782d652d9e84c52162935a93a4ece",
+        "embedded_exact": true
+      },
+      {
+        "name": "has-builder",
+        "bytes": 83,
+        "sha256": "56a19b4c7647424c61e04441018635f4f0e4f34b3a33a1813d355319ecb106f3",
+        "embedded_exact": true
+      },
+      {
+        "name": "button-sound",
+        "bytes": 147,
+        "sha256": "e542d027d8197a0df9f60c874f5d3007ff5a8ff6025080e7f56ac67746fb60fd",
+        "embedded_exact": true
+      }
+    ],
+    "report": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/delay-callees/results.json",
+      "sha256": "9840fe3180f58d06fc334306268934298ec7a671648ece1535d74abc8ed351de"
+    }
+  },
+  "bindings": {
+    "contract": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/contract.py",
+      "sha256": "086e1c7af1afedf3956ff66cfa359fb8210d033a40ea97889d0dc769045e3a5a"
+    },
+    "byte_provenance": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/original-byte-provenance.json",
+      "sha256": "bd400e78ba3efe3950cb98de373d9a7a49a344c3cffe0798dbbbdf9af5641ae7"
+    },
+    "build": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/original-build.json",
+      "sha256": "9223ed3d29eb4b1d326bd70ca969af7b11cf871491687e25a3faf90584ecd2d7"
+    },
+    "measurement": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/run-01/results.json",
+      "sha256": "3f1c6c179315a7f5ff37e42645e6f68894436fc3367d932ce4c20d81c13c9366"
+    },
+    "message_provenance": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/original-message-provenance.json",
+      "sha256": "aa434a0a153c105c80ef3b0a3b7649b22698c5adaa8cfb0a5d828907a39aca43"
+    },
+    "boundary_contract": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/boundary-contract.md",
+      "sha256": "9ae14f809de1af14aa1c197aa66dc04bc4b965fd6c66c41540efe290523615ad"
+    },
+    "readme": {
+      "path": "artifacts/readability/road-functions-20260906/batch-18-menu/original-proof/README.md",
+      "sha256": "e33676209ded22729fd85c4dd54d17d5e7bdb342cdfa9f90452d1fb325493fd2"
+    }
+  },
+  "scope": "Measured unchanged original menu instructions under 23 explicit callee boundaries, plus separate real-callee ECX preservation. No original initializer/diagnostic call, real gameplay or frame claim."
+}

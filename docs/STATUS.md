@@ -2,6 +2,37 @@
 
 Last consolidated: 2026-09-13.
 
+## Builder Action Menu Readability
+
+Track: Win95 reconstruction, reached Road builder-menu lifecycle.
+`WorldMap_HandleBuilderActionMenu`, the twenty-first individually reviewed
+Road-family function, now has named actions, early rejection returns, a
+structured modal loop and typed signed stack coordinates. Original ECX evidence
+replaces the uninitialized no-builder argument; the Trap logging slot is
+explicitly zero. Three constructor checks match the original exact-one
+predicate, without claiming a reached noncanonical-return bug.
+All 62 original scenarios and 743 recorded events match the actual body under
+four compiler profiles. A separate 16-case original-callee probe verifies ECX
+preservation. Both native builds pass; all 150 other objects and the neighboring
+function/data sections remain unchanged. All eight public CTests and 528 tooling
+tests pass with 746 inputs and compiler artifacts frozen. Eighteen compiled
+negative controls are rejected; 42 defined parent scenarios match, with six
+noncanonical predicate differences and 14 undefined-before exclusions separate.
+Strict linked comparisons pass without
+allowances; the same 20 header and 439/691 historical link differences remain.
+Only one canonical body hash changes. Runtime, visual and campaign milestones
+do not advance.
+[Evidence, validation and limits](HUMAN_READABILITY.md#batch-18-worldmap_handlebuilderactionmenu).
+
+## Published CI At 438272e
+
+Both compiler builds, eight public CTests, all 526 tooling tests and the separate
+coverage gate pass. This run measures 92.65% across all 718 selected functions,
+with none uncovered. Header and linked-symbol ratchets still fail; complete link
+counts remain 439 GCC / 691 Clang with zero crosscheck errors. The preceding
+local coverage measurement remains separate.
+[Remote measurements](HUMAN_READABILITY.md#published-ci-observation-after-road-widget-ownership).
+
 ## Road Widget Ownership And Header Dependencies
 
 Track: Win95 reconstruction, inherited CI repair. The unchanged builder/Road

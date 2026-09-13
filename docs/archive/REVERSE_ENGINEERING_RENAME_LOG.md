@@ -1,5 +1,30 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Road readability: builder action menu
+
+Track: Win95 reconstruction. Reviewed `WorldMap_HandleBuilderActionMenu`
+(`0x40A0E0`) individually. Named actions and carried arguments, separated entry
+rejections, removed the decompiler label and used the existing stack fields
+with explicit 32-bit addressing. Recovered entry ECX replaces the no-builder
+undefined argument; the ignored Trap logging slot becomes zero. Construction
+checks require exactly one as in the original; real-callee returns remain 0/1.
+All 62 original scenarios match four actual-source compiler profiles, and a
+separate 16-case original-callee probe verifies ECX preservation. Callback
+short circuits, live reads, native initialization seams and raw return values
+remain. One canonical body hash changes; no public symbol, global, layout,
+historical identity or source ownership changes. Confidence is high within the
+explicit caller boundary and backed address domains. Real action-callee register
+outputs, x87 consumption, mouse interaction and rendered parity remain separate.
+The mission-05 runtime frontier and campaign completion count do not advance.
+Both builds, eight public CTests and all 528 tooling tests pass with 746 inputs
+and native outputs frozen. All 42 defined canonical parent cases match under
+four profiles; six noncanonical predicate differences remain distinct from 14
+undefined-before exclusions. Eighteen compiled negative controls are rejected.
+Strict linked comparisons pass without allowances; all 150 other objects and
+neighboring code/data remain exact. Existing 20 header and 439/691 raw link
+differences remain unresolved, with no altered policy or coverage claim.
+[Evidence and validation](../HUMAN_READABILITY.md#batch-18-worldmap_handlebuilderactionmenu).
+
 ## 2026-09-13 - Road widget ownership
 
 Track: Win95 reconstruction, inherited CI repair. Physically moved the unchanged

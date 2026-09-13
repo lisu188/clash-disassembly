@@ -29,124 +29,151 @@ CLASH95_LOCAL void UnitBattle_WriteActionWidgetRecord (unsigned char *record, in
 signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3);
 
 //----- (0040A0E0) --------------------------------------------------------
-int  WorldMap_HandleBuilderActionMenu(int widget, int delayTicks, int a3, DWORD a4, double st7_0)
+int WorldMap_HandleBuilderActionMenu(
+        int widget,
+        int delayTicks,
+        int frameUpdateArgument,
+        DWORD entryUiContext,
+        double carriedValue)
 {
-  int v7; // ecx
-  int v9; // ecx
-  int noBuilderTexts[7]; // [esp+0h] [ebp-1Ch] BYREF
-
   if ( g_SelectedUnitIndex == -1 )
   {
     Audio_PlayButtonSound(aWrong_5);
     return Render_Begin((int)(intptr_t)g_RenderState, 0);
   }
-  else
+
+  UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
+  if ( !UnitStack_HasBuilder(g_SelectedUnitIndex) )
   {
-    UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
-    if ( UnitStack_HasBuilder(g_SelectedUnitIndex) )
-    {
-      WorldMap_EnsureBuilderWidgetTables();
-      UIWidgetTable_InitDrawStates((_DWORD*)(g_UI_YesNoDims));
-      WorldMap_RedrawViewport(1);
-      g_WorldMapBuilderMenuAction = -1;
-      Diagnostics_TraceWorldMapActionEvent("builder_menu_enter", g_SelectedUnitIndex, -1, 0, 0);
-      while ( 1 )
-      {
-        DD_Pump((int)(intptr_t)g_RenderState, a3);
-        WorldMap_RedrawFrame(a3);
-        if ( UI_TrySelectFriendlyStackUnderCursor() || !UIWidgetTable_PollHoverAndActions((_DWORD*)(g_UI_YesNoDims), 0x40u) && DD_IsFlipping((int)(intptr_t)g_RenderState) )
-          break;
-        a3 = g_WorldMapBuilderMenuAction;
-        if ( g_WorldMapBuilderMenuAction == -1 )
-          goto LABEL_13;
-        switch ( g_WorldMapBuilderMenuAction )
-        {
-          case 0:
-            Builder_StartRoadBuildMode(0x40u, st7_0);
-            break;
-          case 1:
-            Treasure_TryDigHere(g_SelectedUnitIndex, g_WorldMapBuilderMenuAction, 0x40u, (char)(intptr_t)g_RenderState, 0, st7_0);
-            break;
-          case 2:
-            BuildBuilding(3, v7, g_WorldMapBuilderMenuAction, st7_0);
-            break;
-          case 3:
-            if ( UnitStack_GetMinCurrentActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
-            {
-              a3 = g_SelectedUnitIndex;
-              if ( Building_New(0, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type0, 0) )
-              {
-                MiniMap_DrawTileCell(
-                  (void *)(uintptr_t)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET),
-                  *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
-                Audio_PlaySoundEffectByName(aStruktur, 64);
-              }
-            }
-            break;
-          case 4:
-            if ( !UnitStack_HasPeasantCargo(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) )
-            {
-              a3 = g_SelectedUnitIndex;
-              if ( Building_New(1, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type1, 0) )
-                Audio_PlaySoundEffectByName(aStruktur_0, 64);
-            }
-            break;
-          case 5:
-            a3 = g_SelectedUnitIndex;
-            if ( Building_New(2, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type2, 0) )
-              Audio_PlaySoundEffectByName(aStruktur_1, 64);
-            break;
-          default:
-            break;
-        }
-        if ( !DD_IsFlipping((int)(intptr_t)g_RenderState) )
-        {
-LABEL_13:
-          if ( g_WorldMapBuilderMenuAction != -1 )
-            break;
-        }
-        else
-        {
-          g_WorldMapBuilderMenuAction = -1;
-        }
-      }
-      g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
-      WorldMap_EnsureActionButtonWidgetTable();
-      UIWidgetTable_InitDrawStates((_DWORD*)(g_WorldMapActionButtonWidgetTable));
-      WorldMap_SyncSelectionForHumanPlayer(0x40u);
-      WorldMap_RedrawViewport(1);
-      WorldMap_RefreshUnitStatusPanel(0x40u);
-      return UnitStackSelection_RefreshForSelectedStack(0x40u);
-    }
-    else
-    {
-      Audio_PlayButtonSound(aWrong_6);
-      noBuilderTexts[0] = (int)(intptr_t)g_Text_NoBuilder[0];
-      noBuilderTexts[1] = (int)(intptr_t)g_Text_NoBuilder[1];
-      noBuilderTexts[2] = (int)(intptr_t)g_Text_NoBuilder[2];
-      return UI_ShowInfoWindow(
-               (const char*)(uintptr_t)(noBuilderTexts[(unsigned __int8)g_LanguageIndex]),
-               1u,
-               v9,
-               a4,
-               (int)(intptr_t)&noBuilderTexts[3],
-               (int)(intptr_t)&g_Text_NoBuilder[3]);
-    }
+    Audio_PlayButtonSound(aWrong_6);
+    // Preserve the three copied DWORDs and the original one-past-copy argument.
+    int noBuilderTexts[7];
+    noBuilderTexts[0] = (int)(intptr_t)g_Text_NoBuilder[0];
+    noBuilderTexts[1] = (int)(intptr_t)g_Text_NoBuilder[1];
+    noBuilderTexts[2] = (int)(intptr_t)g_Text_NoBuilder[2];
+    return UI_ShowInfoWindow(
+            (const char *)(uintptr_t)noBuilderTexts[(unsigned __int8)g_LanguageIndex],
+            1u,
+            delayTicks, // All three preceding original callees preserve ECX.
+            entryUiContext,
+            (int)(intptr_t)&noBuilderTexts[3],
+            (int)(intptr_t)&g_Text_NoBuilder[3]);
   }
+
+  enum BuilderMenuAction
+  {
+    noAction = -1,
+    buildRoad = 0,
+    digForTreasure = 1,
+    placeTrap = 2,
+    buildKeep = 3,
+    buildFortress = 4,
+    buildCastle = 5
+  };
+  constexpr DWORD menuContext = 0x40u;
+
+  WorldMap_EnsureBuilderWidgetTables();
+  UIWidgetTable_InitDrawStates((_DWORD *)g_UI_YesNoDims);
+  WorldMap_RedrawViewport(1);
+  g_WorldMapBuilderMenuAction = noAction;
+  Diagnostics_TraceWorldMapActionEvent("builder_menu_enter", g_SelectedUnitIndex, -1, 0, 0);
+
+  while ( true )
+  {
+    // Original EBX is carried between frames, then overwritten during dispatch.
+    DD_Pump((int)(intptr_t)g_RenderState, frameUpdateArgument);
+    WorldMap_RedrawFrame(frameUpdateArgument);
+    if ( UI_TrySelectFriendlyStackUnderCursor() )
+      break;
+    if ( !UIWidgetTable_PollHoverAndActions((_DWORD *)g_UI_YesNoDims, menuContext)
+      && DD_IsFlipping((int)(intptr_t)g_RenderState) )
+      break;
+
+    frameUpdateArgument = g_WorldMapBuilderMenuAction;
+    // The -1 sentinel skips both dispatch and the post-action flipping query.
+    if ( g_WorldMapBuilderMenuAction != noAction )
+    {
+      switch ( g_WorldMapBuilderMenuAction )
+      {
+        case buildRoad:
+          Builder_StartRoadBuildMode(menuContext, carriedValue);
+          break;
+        case digForTreasure:
+          Treasure_TryDigHere(
+                  g_SelectedUnitIndex, g_WorldMapBuilderMenuAction, menuContext,
+                  (char)(intptr_t)g_RenderState, 0, carriedValue);
+          break;
+        case placeTrap:
+          // BuildBuilding uses this ECX-shaped slot only in discarded log args.
+          BuildBuilding(3, 0, g_WorldMapBuilderMenuAction, carriedValue);
+          break;
+        case buildKeep:
+        {
+          // Keep the original 32-bit address arithmetic at each call boundary.
+          const uint32_t stackAddress = static_cast<uint32_t>(gameData)
+                  + UNIT_STACK_TABLE_OFFSET
+                  + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+          if ( !UnitStack_GetMinCurrentActionPoints(stackAddress) )
+            break;
+
+          frameUpdateArgument = g_SelectedUnitIndex;
+          if ( Building_New(0, g_SelectedUnitIndex, carriedValue,
+                  (char *)&g_Building_FootprintTemplate_Type0, 0) != 1 )
+            break;
+
+          // Construction can change both the arena and the selected stack.
+          const uint32_t builtStackAddress = static_cast<uint32_t>(gameData)
+                  + UNIT_STACK_TABLE_OFFSET
+                  + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+          const UnitStackRecord *builtStack = (const UnitStackRecord *)(uintptr_t)builtStackAddress;
+          MiniMap_DrawTileCell((void *)(uintptr_t)builtStack->tile_row, builtStack->tile_column);
+          Audio_PlaySoundEffectByName(aStruktur, 64);
+          break;
+        }
+        case buildFortress:
+        {
+          const uint32_t stackAddress = static_cast<uint32_t>(gameData)
+                  + UNIT_STACK_TABLE_OFFSET
+                  + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+          if ( UnitStack_HasPeasantCargo(static_cast<int>(stackAddress)) )
+            break;
+
+          frameUpdateArgument = g_SelectedUnitIndex;
+          if ( Building_New(1, g_SelectedUnitIndex, carriedValue,
+                  (char *)&g_Building_FootprintTemplate_Type1, 0) == 1 )
+            Audio_PlaySoundEffectByName(aStruktur_0, 64);
+          break;
+        }
+        case buildCastle:
+          frameUpdateArgument = g_SelectedUnitIndex;
+          if ( Building_New(2, g_SelectedUnitIndex, carriedValue,
+                  (char *)&g_Building_FootprintTemplate_Type2, 0) == 1 )
+            Audio_PlaySoundEffectByName(aStruktur_1, 64);
+          break;
+        default:
+          break;
+      }
+
+      if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
+      {
+        g_WorldMapBuilderMenuAction = noAction;
+        continue;
+      }
+    }
+
+    // Action and flipping callbacks may have changed the menu action.
+    if ( g_WorldMapBuilderMenuAction != noAction )
+      break;
+  }
+
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
+  WorldMap_EnsureActionButtonWidgetTable();
+  UIWidgetTable_InitDrawStates((_DWORD *)g_WorldMapActionButtonWidgetTable);
+  WorldMap_SyncSelectionForHumanPlayer(menuContext);
+  WorldMap_RedrawViewport(1);
+  WorldMap_RefreshUnitStatusPanel(menuContext);
+  return UnitStackSelection_RefreshForSelectedStack(menuContext);
 }
-// 40A182: variable 'a5' is possibly undefined
-// 40A1DF: variable 'v9' is possibly undefined
-// 40A24E: variable 'v7' is possibly undefined
-// 511130: using guessed type char g_LanguageIndex;
-// 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 511BC0: using guessed type int g_UI_YesNoDims[3];
-// 511D34: using guessed type char *g_Text_NoBuilder[3];
-// 511D40: using guessed type _DWORD dword_511D40[2];
-// 5202E0: using guessed type int dword_5202E0;
-// 5202E4: using guessed type int gameData;
-// 520308: using guessed type int dword_520308;
-// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 CLASH95_LOCAL void WorldMap_WriteActionWidgetRecord(
         unsigned char *record,

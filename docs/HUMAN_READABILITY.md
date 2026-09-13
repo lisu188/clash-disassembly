@@ -1666,6 +1666,145 @@ functions present, 584 fully covered, 134 partial and none uncovered. The 89.7%
 floor and zero-uncovered requirement remain unchanged. These results validate
 the bounded source move; they do not establish new game-route or visual proof.
 
+### Published CI observation after Road widget ownership
+
+The [438272e CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34749418188)
+passes both compiler builds, four asset-free CTests per compiler, unit-runner
+policy checks and all 526 tooling tests (158.493 seconds). Overall CI still fails
+the header and both linked-symbol ratchets. The complete logs report 439 GCC /
+691 Clang link differences and zero library crosscheck errors.
+
+This run's separate coverage job measures 6163/6652 lines (92.65%) across all
+718 selected functions: 585 fully covered, 133 partial and none uncovered. The
+local ownership batch's 92.62% and preceding remote results remain separate
+measurements. Run metadata and all four complete job logs are retained under
+artifacts/readability/road-functions-20260906/batch-18-menu/build-validation/ci-observation/.
+
+### Batch 18: WorldMap_HandleBuilderActionMenu
+
+Track: Win95 reconstruction, reached Road builder-menu lifecycle. The handler
+at `0x40A0E0` now separates rejected input from the active menu, names the six
+actions and carried arguments, and uses a structured loop in place of the
+decompiler label. Its signature types and source ownership remain unchanged.
+The physical widget order is Road, Trap, Dig, Keep, Fortress, Castle; their
+action values remain 0, 2, 1, 3, 4, 5 respectively.
+
+The no-builder branch forwards `delayTicks` to the info window instead of
+reading uninitialized `v9`. Original animation, builder-query and button-sound
+callees preserve incoming ECX along this branch. The three copied text DWORDs,
+unsigned language byte, seven-element local backing and one-past-third pointer
+arguments remain. Trap dispatch replaces uninitialized `v7` with zero only in
+the native slot consumed by discarded logging arguments. This normalization
+does not claim that original ECX literally contained zero.
+
+All three construction branches now require `Building_New` to return exactly
+one, matching the original comparison. The inspected real callee returns zero
+or one; noncanonical returns used to distinguish this predicate are boundary
+tests, not evidence of a reached gameplay defect. Stack addresses use explicit
+32-bit wrapping arithmetic, and the existing packed `UnitStackRecord` provides
+the signed row and column after Keep construction. Selection and arena values
+are freshly loaded at their original callback boundaries.
+
+The menu retains friendly-selection and poll/flipping short circuits, the
+special -1 action path that skips the later flipping query, fresh action reads
+after callbacks, and the carried frame argument between iterations. Its guarded
+builder initialization, diagnostic placement, current-primary render-device
+restore, main table initialization and raw final selection-refresh return stay
+in order. No public symbol, global, table, layout or legacy identity is renamed.
+Only this canonical body hash changes; all 26 other definitions in its TU remain
+exact. The original instruction and assembly evidence is `clash95.asm:15044`
+through the handler end, including the separate six-target jump table. Both
+local PE copies agree on the 640-byte function range: 637 instruction bytes
+ending at `0x40A35D`, followed by three alignment bytes. The separate jump table
+contains 24 bytes at `0x40A0C0`.
+
+Private batch evidence is retained under
+artifacts/readability/road-functions-20260906/batch-18-menu/:
+`preparation/` contains the source/assembly contract, `original-proof/` owns
+the original-byte execution evidence, `regression/` owns the actual-source
+comparison and `build-validation/` owns compiler and repository checks.
+The private applied-source.json records the exact source and one-record metadata change.
+The first application script stopped before writing because the scanner's
+required second argument was omitted; its unchanged failed version is retained.
+The corrected script passes the complete neighboring-definition comparison.
+
+Original child-gameplay behavior, callee register outputs, x87 consumption,
+authentic mouse interaction and rendered menu parity remain separate gates.
+This batch does not advance the mission-05 first-Road endpoint or campaign
+completion count. The next runtime frontier remains normal turn refresh and
+Road continuation from `(49,50)` on turn 6.
+
+The original-byte probe executes 62 scenarios and records 743 boundary events.
+Both linked menu and jump-table sections are checked against the captured PE
+bytes before execution. All 62 scenarios match the actual recovered C++ body
+under GCC 13 and Clang 18 at O0/O2: 248 matching scenario executions. The four
+native output hashes equal the original output SHA256
+`2216468bbf0719c94e7096cdc3de8810bba70dff3f6f96f2cbcf483d239edb7c`.
+Native probes use strict warnings and undefined-behavior trapping, excluding
+packed alignment as required by the recovered layout. They execute the real
+builder and main-table initializers, check poisoned cold buffers and preserved
+warm state, and verify the original physical action order and pointer fields.
+
+A separate 16-case original-callee probe verifies preservation of entry ECX
+through the unchanged animation, builder-query and button-sound instructions.
+It covers delay bits 0, 20, `0x80000000`, `0xFFFFFFFF`, audio enabled/disabled,
+builder and no-builder paths, descriptor sounds and pump waiting. Inner recording
+stubs deliberately clobber ECX where the original saves it. This supplements the
+menu's explicit preserving-callee contract; it does not recover arbitrary action
+callees' register outputs or x87 behavior.
+
+The public regression is asset-free:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_builder_menu.py -v
+```
+
+It extracts the actual body and initialization helpers, then checks each trace
+and the aggregate output against the measured original hashes in
+`tests/tools/fixtures/builder_menu/provenance.json`. The main table's unchanged
+initializer supplies its native reference bytes, with independent callback and
+sentinel checks; this establishes initialization timing and preservation, not
+a new original whole-main-table data oracle. Compiler, CTest, metadata and
+private probe commands are retained in the corresponding evidence directories.
+
+Both supported native builds and all eight asset-free CTests pass. Each compiler
+retains 151 active objects and the same ordered 148 archive members; 150 objects
+remain byte-identical. In world002, only the reviewed function's code and its
+own jump-table relocations change. Independent ownership checks place all six
+native table targets inside that function; 27 neighboring executable sections,
+unrelated allocated contents and 26 neighboring unwind records remain exact.
+The raw whole-object comparison remains false for the intentional target change.
+Its narrowed ownership proof is separate; no generic comparison rule is relaxed.
+
+Strict before/after linked comparisons pass without allowances. Historical raw
+link rows remain exactly 439 GCC / 691 Clang with zero crosscheck errors. All
+14 nonratchet metadata checks pass; the complete 20 header-failure rows, limits
+and emitted surface remain unchanged. Incremental world002 warning totals are
+4 GCC / 5 Clang, and both warning checks pass. The changed menu is outside the
+selected 718-function coverage set; its selected neighboring callback and the
+coverage metadata remain unchanged, so this batch does not rerun or substitute
+a new coverage percentage for the existing local and remote measurements.
+
+The untouched parent matches all 42 defined canonical scenarios in all four
+compiler profiles. Its six defined noncanonical constructor-return scenarios
+retain the expected first extra minimap or sound call; they are distinct from
+the 14 excluded no-builder/Trap undefined-argument and wrapping-arithmetic
+cases. The first parent harness builds reject its existing mixed `&&`/`||`
+warning. Those attempts remain, and the corrected before-only compile policy
+downgrades that warning and the existing uninitialized warnings while retaining
+the exact parent body and sanitizer. Candidate builds retain warnings as errors.
+All 18 targeted negative controls compile strictly and are rejected by native
+checks or measured-original trace comparison. They discriminate skipped/eager
+initialization, wrong action mapping, short circuits, stale callback state,
+constructor predicates, missing cleanup and incorrect raw returns.
+
+The full tooling suite passes all 528 tests in 148.633 seconds with no skips.
+All 746 production/tooling inputs and both complete native artifact sets remain
+frozen through validation. The public fixture adds two test methods; no existing
+gate, baseline or coverage floor changes. Markdown links and whitespace checks
+pass. The first link check identified the private applied-source report as an
+unresolved public path; the corrected prose reference and failed log are retained.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

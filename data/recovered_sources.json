@@ -92235,7 +92235,7 @@
       "original_line": 1299,
       "source": "src/world/0040A0E0_0040B020_world_002.cpp",
       "linkage": "external",
-      "body_sha256": "01258e81bb1020c7e6649fd29e8b34cdf4f4f35cf514d0754d3f1545f6418d31",
+      "body_sha256": "061329846d603d250514a975bebaabb98650ebed111fb80393cb680a11f75e57",
       "original_address_range": {
         "start": "0x0040A0E0",
         "end_exclusive": "0x0040A360"
