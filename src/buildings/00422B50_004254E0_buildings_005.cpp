@@ -1091,38 +1091,31 @@ signed int  Road_Build(int unitIndex, int direction, char a3, DWORD a4, double a
 //----- (00424EC0) --------------------------------------------------------
 signed int  UnitStack_MoveOneTileInDirection(int unitIndex, int direction, double a3)
 {
-  int unitStackByteOffset; // esi
-  int unitStackRecordBase; // edx
-  int originColumn; // ebx
-  signed int result; // eax
-  int v9; // edx
-
   g_SelectedUnitIndex = unitIndex;
-  unitStackByteOffset = UNIT_STACK_STRIDE * unitIndex;
-  unitStackRecordBase = gameData + UNIT_STACK_STRIDE * unitIndex;
-  originColumn = *(__int16 *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
-  result = (signed int)(intptr_t)Unit_MoveTrack(
-                         unitIndex,
-                         *(__int16 *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TABLE_OFFSET),
-                         *(__int16 *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TABLE_OFFSET) + Map_NeighborDX[2 * direction],
-                         originColumn,
-                         unitIndex,
-                         originColumn + Map_NeighborDY[2 * direction]);
-  if ( result )
-  {
-    qmemcpy((void *)(uintptr_t)(unitStackByteOffset + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)(uintptr_t)result, UNIT_STACK_PATH_BYTES);
-    j__nfree_();
-    UnitStack_ExecuteQueuedPath(unitIndex, v9, originColumn, unitIndex, a3);
-    WorldMap_RefreshUnitStatusPanel(unitIndex);
-    return 1;
-  }
-  return result;
+  const int unitStackByteOffset = UNIT_STACK_STRIDE * unitIndex;
+  const UnitStackRecord *sourceStack = UNIT_STACK_RECORD(unitIndex);
+  const int sourceColumn = sourceStack->tile_column;
+  // The original ADD instructions wrap even when live table deltas exceed
+  // the usual neighboring-tile offsets.
+  const int targetColumn = static_cast<int32_t>(static_cast<uint32_t>(sourceColumn)
+      + static_cast<uint32_t>(Map_NeighborDY[2 * direction]));
+  const int sourceRow = sourceStack->tile_row;
+  const int targetRow = static_cast<int32_t>(static_cast<uint32_t>(sourceRow)
+      + static_cast<uint32_t>(Map_NeighborDX[2 * direction]));
+  const int pathAddress = (signed int)(intptr_t)Unit_MoveTrack(
+      unitIndex, sourceRow, targetRow, sourceColumn, unitIndex, targetColumn);
+  if ( !pathAddress )
+    return 0;
+
+  UnitStackRecord *pathDestination = (UnitStackRecord *)(uintptr_t)(
+      unitStackByteOffset + gameData + UNIT_STACK_TABLE_OFFSET);
+  qmemcpy(&pathDestination->queued_path, (const void *)(uintptr_t)pathAddress, UNIT_STACK_PATH_BYTES);
+  j__nfree_();
+  // Original EDX=1 survives the free wrapper and enables path animation.
+  UnitStack_ExecuteQueuedPath(unitIndex, 1, sourceColumn, unitIndex, a3);
+  WorldMap_RefreshUnitStatusPanel(unitIndex);
+  return 1;
 }
-// 424F4D: variable 'v9' is possibly undefined
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 513334: using guessed type int dword_513334[];
-// 513338: using guessed type int dword_513338[63];
-// 5202E4: using guessed type int gameData;
 
 //----- (00424F70) --------------------------------------------------------
 BOOL  Map_TileHasOwner(int row, int column)

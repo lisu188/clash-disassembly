@@ -1,6 +1,17 @@
 # Current Status
 
-Last consolidated: 2026-09-08.
+Last consolidated: 2026-09-13.
+
+## Resumed Class Migration And Origin Integration
+
+Track: Win95 reconstruction, requested behavior-class migration. Origin e387a35
+adds the single-tile movement and queued-path Road caller recoveries to the
+validated 13-method class checkpoint. Both clean supported builds, warning
+checks, strict cumulative symbol/storage/initialization comparisons and eight
+asset-free gates pass; both incoming focused regressions also pass. The 145-TU
+inventory, all 4,157 identities and existing ratchets remain. Further UnitSlot
+and UnitStack extraction is underway; full migration remains incomplete.
+See [CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md).
 
 ## UnitStack Register Recovery Before Class Extraction
 
@@ -54,6 +65,42 @@ The full migration is incomplete. See
 [CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md) for the exact incoming
 commit, tooling first-failure/retry evidence, coverage and current limitations.
 Mission 05 remains partial and completed direct routes remain 6/20.
+
+## Queued-Path Road Caller Readability And Stack Index
+
+Track: Win95 reconstruction, Road/queued-path orchestration.
+`Rules_BuildRoadOrStepTowardQueuedPath`, the seventeenth individually reviewed
+Road-family function, now uses typed waypoints and one shared attempt loop.
+The original's preserved input stack index replaces an undefined local.
+Fresh owner coordinates, diagonal fallback order, carried arguments and the
+four-byte final path-count clear remain. Named waypoint-address arithmetic also
+preserves original 32-bit wrap and backed raw-count aliases. All 255 original
+scenarios match in four compiler profiles; nine defined empty-path before cases
+also match.
+Both builds and eight public gates pass. Target code is roughly halved, one
+warning disappears per compiler, and Clang's target-local switch data shrinks.
+Shared data, neighboring code, identities and frozen baselines remain.
+The final revised tooling suite passes all 261 tests.
+The first-Road runtime baseline and turn-7 continuation frontier are unchanged.
+Evidence, commands, validation and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-14-rules_buildroadorsteptowardqueuedpath).
+
+## Single-Tile Movement Readability And Animation Argument
+
+Track: Win95 reconstruction, reached Road/queued-movement fallback family.
+`UnitStack_MoveOneTileInDirection`, the sixteenth individually reviewed
+Road-family function, now uses named coordinates, packed fields and an early
+null return. The successful path retains the fresh destination and exact
+404-byte copy. Original instructions and the real free wrapper prove animation
+argument 1, replacing an undefined local; coordinate addition now matches
+original wrap. All 230 original-measured scenarios match in four compiler
+profiles, including the 89 defined-before cases. Both builds and all eight
+public gates pass, with only target code changed and one fewer warning per
+compiler. All 259 tooling tests pass. Identities, layouts and frozen baselines
+remain.
+The first-Road runtime baseline and turn-7 continuation frontier are unchanged.
+Evidence, commands, validation and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-13-unitstack_moveonetileindirection).
 
 ## Road Construction Readability
 

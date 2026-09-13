@@ -186,3 +186,25 @@ The dated local evidence root is `artifacts/cpp-classes/20260908/`:
 This batch does not resolve all family readiness contracts, visual defects,
 mission-05 continuation or campaign progression. Class assignment and byte-view
 helpers are not counted as canonical behavior migration.
+# Resumed origin integration, 2026-09-13
+
+The migration branch now incorporates origin `e387a35` after the validated
+`c65e476` class/recovery checkpoint. The two incoming identities are
+`UnitStack_MoveOneTileInDirection` and
+`Rules_BuildRoadOrStepTowardQueuedPath`; their original-backed recovery tests
+remain intact. Thirteen canonical class methods, their separate adapters, both
+registered bindings, all 4,157 historical identities and the ordered 145-source
+inventory remain. The status conflict retains both branches' evidence entries.
+
+Fresh GCC 13 and Clang 18 Debug builds pass warning ratchets, strict cumulative
+migration symbol/storage/initialization comparisons against the retained
+1b8b4b8 snapshot, and all eight asset-free gates. Both incoming focused tests and
+source/generated-header audits pass. No baseline is raised. Exact commands and
+logs are in `artifacts/cpp-classes/20260913/origin-refresh/`; the validator is
+`artifacts/cpp-classes/20260913/validate-stage.py`.
+
+Build directories now live under `build/class-migration-20260913/` in this
+worktree. Old Linux scratch build directories were unavailable on resumption;
+retained workspace evidence is not relabeled as a fresh run. Full native,
+coverage and runtime checks for this checkpoint are recorded separately as they
+complete. Shared main remains under the separately coordinated publication.
