@@ -1,0 +1,19 @@
+{
+  "source": "src/render/00405DB0_00407D20_render_004.cpp",
+  "function": "DLXSprite_LoadCachedEntry",
+  "commit": "5376757fe8cefd1af5eab0907601fab3ab9bc121",
+  "source_body_sha256": "2e82235ac16edff0b170e3e6a721afb573ca85ba6f2bcd07df448436954d344a",
+  "fixture_sha256": "53ee3647cf8b64f2070d7ca80e6283612d3b320551f86597433f062c4d63218b",
+  "original_routine": "sub_4060E0 at 0x004060E0",
+  "assembly_lines": [
+    9229,
+    9361
+  ],
+  "original_contract_scope": "Successful nonmutating query/allocation boundaries only; instruction listing reviewed, original instructions are not executed by this fixture.",
+  "canonical_differences_retained": [
+    "Canonical null-query return has no corresponding guard in the original listing.",
+    "Canonical caches directory start before the EOF-size callback; original reads it after that callback and again for seek.",
+    "Canonical final payload read uses cached handle and size; original reloads fields.",
+    "Canonical returning failure hooks can continue to payload read/release; original has additional apparently noreturn sub_472558(10) and different vararg failure calls."
+  ]
+}

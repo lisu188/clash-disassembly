@@ -1,0 +1,30 @@
+{
+  "reference_head": "356a9ad14e37e4325dec056348aae52f5edb7e18",
+  "separate_repair": "Enemy-contact unused LogAllUnits argument normalized to 0",
+  "functions": [
+    {
+      "name": "Unit_NewTurnRegen",
+      "original_address": "0x0041E6D0",
+      "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
+      "body_sha256": "1dc77b6afa51a4678d70c9f6bb92a45b766f1a626088b6cbc29cf1139a8b4d34",
+      "file_sha256": "825f9a557da9552b73dcdb266023217c3f8fc69b41016e3fb91b4fc73f3818f8",
+      "fixture": "Unit_NewTurnRegen.cpp"
+    },
+    {
+      "name": "Unit_UpdatePerTurn",
+      "original_address": "0x0041E730",
+      "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
+      "body_sha256": "98237f399991d8656bb45b4cd6292e9aca88e02438a076ca3839fe3d04dd88c2",
+      "file_sha256": "86c7b51e61afdfd464140a0068474d284259a10263f485495ed9bbfc52543576",
+      "fixture": "Unit_UpdatePerTurn.cpp"
+    },
+    {
+      "name": "Unit_NewTurn",
+      "original_address": "0x004118E0",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "body_sha256": "0a7fc74f0159f79e7a35b97785cf8d87f554cc0ac1b22ae3e91d111290212ad2",
+      "file_sha256": "146bbc8911c7ef62579d3b85cdc2e06577d3bcf33fb403c36bcfe5661f906525",
+      "fixture": "Unit_NewTurn.cpp"
+    }
+  ]
+}

@@ -199,6 +199,21 @@ def apply_identity_migration(root: Path, spec_path: Path, write: bool) -> bool:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     decls = json.loads(decls_path.read_text(encoding="utf-8"))
 
+    # A schema-3 identity also owns class assignment, qualified implementation,
+    # adapter and historical provenance. The schema-1 rename spec cannot describe
+    # their coordinated update. Refuse before touching any source or metadata.
+    relevant = [record for record in manifest.get("functions", [])
+                if record.get("name") in (payload["old_name"], payload["new_name"])]
+    if any(record.get("adapter") is not None or
+           record.get("implementation", {}).get("kind") == "method"
+           for record in relevant):
+        raise ValueError("class-backed identity migration requires an explicit "
+                         "historical-alias migration; no files written")
+    if manifest.get("schema_version") == 3 and any(
+            record.get("name") == payload["old_name"] for record in relevant):
+        raise ValueError("schema 3 identity migration requires an explicit "
+                         "historical-alias migration; no files written")
+
     pre = validate_pre_state(root, payload, manifest, decls)
     if pre is None:
         if validate_post_state(root, payload, manifest, decls):

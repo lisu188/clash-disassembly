@@ -62,6 +62,9 @@ import re
 import sys
 from pathlib import Path
 
+from recovered_implementation import manifest_sources, implementation_name
+from split_source_index import scan_definitions
+
 REPO = Path(__file__).resolve().parents[1]
 DECLS = REPO / "data" / "recovered_decls.json"
 MANIFEST = REPO / "data" / "recovered_sources.json"
@@ -115,8 +118,7 @@ def load():
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     subsystem_of = {r["name"]: r["subsystem"] for r in manifest["functions"]}
     manifest_by_name = {r["name"]: r for r in manifest["functions"]}
-    sources = {r["source"] for r in manifest["functions"]}
-    sources.add(manifest["state_owner"])
+    sources = set(manifest_sources(manifest))
     problems = []
     layout = decls.get("shared_state_layout", "aggregate")
     if layout not in ("aggregate", "consumer"):
@@ -138,7 +140,7 @@ def load():
                 original = manifest_by_name.get(name, {})
                 if original.get("linkage") != "static":
                     problems.append(f"{name}: tu-local requires manifest static linkage")
-                if rec.get("source") != original.get("source"):
+                if rec.get("source") != original.get("adapter", original).get("source"):
                     problems.append(f"{name}: tu-local source differs from manifest")
                 if not rec["decl"].lstrip().startswith(("CLASH95_LOCAL ", "static ")):
                     problems.append(f"{name}: tu-local declaration must retain static storage")
@@ -215,8 +217,9 @@ def scan_usage(manifest):
     import tempfile
 
     marker = "CLASH95_SCAN_MARKER_31415"
-    sources = sorted({r["source"] for r in manifest["functions"]}
-                     | {manifest["state_owner"]})
+    sources = manifest_sources(manifest)
+    method_names = {implementation_name(r) for r in manifest["functions"]
+                    if r.get("implementation", {}).get("kind") == "method"}
     tu_tokens: dict[str, set] = {}
     with tempfile.TemporaryDirectory() as td:
         for rel in sources:
@@ -227,6 +230,15 @@ def scan_usage(manifest):
                 re.escape(MARK_BEGIN) + r".*?" + re.escape(MARK_END),
                 " ", body, flags=re.DOTALL)
             body = re.sub(r'^\s*#\s*include[^\n]*$', " ", body, flags=re.M)
+            if method_names:
+                # Method and adapter signatures are definitions, not consumers
+                # of their own recovered identity. Keep their actual bodies.
+                names = method_names | {r["name"] for r in manifest["functions"]}
+                definitions = scan_definitions(body, names)
+                for definition in reversed(definitions):
+                    body = (body[:definition.start]
+                            + re.sub(r"[^\r\n]", " ", body[definition.start:definition.opening_brace])
+                            + body[definition.opening_brace:])
             tmp.write_text(
                 '#include "recovered_types.h"\n'
                 f"int {marker};\n" + body,
@@ -342,10 +354,20 @@ def main() -> int:
     fn_db = decls["functions"]
     gl_db = decls["globals"]
     man_fns = manifest["functions"]
-    defining_tu = {r["name"]: r["source"] for r in man_fns}
+    defining_tu = {r["name"]: r.get("adapter", r)["source"] for r in man_fns}
     defining_tu.update({name: rec["source"] for name, rec in fn_db.items()
                         if rec["class"] == "helper"})
     man_order = {r["name"]: i for i, r in enumerate(man_fns)}
+    class_headers = {}
+    own_class_headers: dict[str, set] = {}
+    for record in man_fns:
+        implementation = record.get("implementation", {})
+        if implementation.get("kind") != "method":
+            continue
+        header = implementation["header"]
+        class_name = implementation["qualified_name"].rsplit("::", 2)[-2]
+        class_headers.setdefault(class_name, set()).add(header)
+        own_class_headers.setdefault(record["source"], set()).add(header)
 
     tu_tokens = scan_usage(manifest)
     xname = expanded_names(fn_db, gl_db, cpp=any(
@@ -615,6 +637,12 @@ def main() -> int:
         if any(fn_xname[n] in toks and defining_tu.get(n) == rel
                for n in seams):
             incs.append("../recovered_test_seams.h")
+        needed_classes = set(own_class_headers.get(rel, ()))
+        for class_name, headers in class_headers.items():
+            if class_name in toks:
+                needed_classes.update(headers)
+        for header in sorted(needed_classes):
+            incs.append("../" + header.removeprefix("src/"))
         lines = [MARK_BEGIN] + [f'#include "{i}"' for i in incs] + [MARK_END]
         return "\n".join(lines)
 

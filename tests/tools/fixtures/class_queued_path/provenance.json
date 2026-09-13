@@ -1,0 +1,14 @@
+{
+  "reference_commit": "8aa0260dc25add28d2cc3ecc12f6fa12e94affc9",
+  "reference_source": "src/units/00414390_00416750_units_004.cpp",
+  "reference_line": 1030,
+  "functions": [
+    {
+      "name": "QueuedPath_StartsInBuildingFootprint",
+      "original_address": "0x00415D00",
+      "fixture": "QueuedPath_StartsInBuildingFootprint.cpp",
+      "file_sha256": "c7f07326e0249870aebb27338ea63908d39557df281599a2bffab412f89873c0",
+      "body_sha256": "5b9265afc4f9ae9ae335313e6ded38f75160422d757c384d80fa1da74d273251"
+    }
+  ]
+}

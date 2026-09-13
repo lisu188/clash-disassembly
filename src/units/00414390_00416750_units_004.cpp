@@ -10,6 +10,8 @@
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/QueuedPath.hpp"
+#include "../world/WorldGeometry.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00414390) --------------------------------------------------------
@@ -1017,61 +1019,25 @@ void  Pathing_DisableBridgeCrossings(int a1, char a2, DWORD a3)
 // 52556C: using guessed type int g_PathingAllowBridgeCrossings;
 
 //----- (00415CD0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  QueuedPath_StartsAtTile(_DWORD *pathBuffer, int tileRow, int tileColumn)
 {
-  int firstStep; // eax
-
-  if ( !*pathBuffer )
-    return 0;
-  firstStep = pathBuffer[1];
-  return (unsigned __int8)firstStep == tileRow && BYTE1(firstStep) == tileColumn;
+  return clash95::QueuedPath(pathBuffer, gameData).QueuedPath_StartsAtTile(tileRow, tileColumn);
 }
 
 //----- (00415D00) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  QueuedPath_StartsInBuildingFootprint(_DWORD *pathBuffer, int buildingIndex)
 {
-  unsigned __int8 *buildingRecord; // eax
-  int firstStep; // edx
-  BOOL result; // eax
-  unsigned __int8 buildingColumn; // bh
-
-  buildingRecord = (unsigned __int8 *)(uintptr_t)(UNIT_RECORD(buildingIndex));
-  if ( !*pathBuffer )
-    return 0;
-  firstStep = pathBuffer[1];
-  if ( !buildingRecord[4] )
-    return (_WORD)firstStep == *(_WORD *)buildingRecord;
-  result = 0;
-  if ( (unsigned __int8)firstStep >= *buildingRecord && (unsigned __int8)firstStep <= *buildingRecord + 1 )
-  {
-    buildingColumn = buildingRecord[1];
-    if ( BYTE1(firstStep) >= buildingColumn && BYTE1(firstStep) <= buildingColumn + 1 )
-      return 1;
-  }
-  return result;
+  return clash95::QueuedPath(pathBuffer, gameData).QueuedPath_StartsInBuildingFootprint(buildingIndex);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00415D80) --------------------------------------------------------
+__attribute__((used, retain))
 int  Math_SinDegreesQ16(signed int degrees)
 {
-  int angle; // edx
-  int absAngle; // edx
-
-  angle = degrees;
-  if ( degrees < 0 )
-  {
-    absAngle = -degrees;
-    if ( -degrees >= 360 )
-      absAngle %= 360;
-    return -g_MathSinTableQ16[absAngle];
-  }
-  else
-  {
-    if ( degrees >= 360 )
-      angle = degrees % 360;
-    return g_MathSinTableQ16[angle];
-  }
+  return clash95::WorldGeometry(g_MathSinTableQ16).Math_SinDegreesQ16(degrees);
 }
 // 513434: using guessed type int dword_513434[363];
 
@@ -1106,29 +1072,10 @@ unsigned int  Rng_RandRange(int minValue, int maxValue)
 // 525578: using guessed type int dword_525578;
 
 //----- (00415E40) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Math_CeilSqrt(signed int value)
 {
-  int quotient; // eax
-  int estimate; // ecx
-
-  if ( value < 4 )
-    return 1;
-  quotient = value / 20 + 2;
-  estimate = quotient;
-  do
-  {
-    while ( 1 )
-    {
-      estimate = (estimate + quotient) / 2;
-      quotient = value / estimate;
-      if ( estimate - value / estimate <= 0 )
-        break;
-      if ( estimate - value / estimate <= 1 )
-        return estimate;
-    }
-  }
-  while ( value / estimate - estimate > 1 );
-  return estimate;
+  return clash95::WorldGeometry(g_MathSinTableQ16).Math_CeilSqrt(value);
 }
 
 //----- (00415EA0) --------------------------------------------------------

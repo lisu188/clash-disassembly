@@ -445,7 +445,8 @@ if(CLASH95_COVERAGE)
   if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(clash95_recovered_coverage_objects PRIVATE
       -Wall -Wextra -Wformat=2
-      -Werror=return-type -g -O0 --coverage -fprofile-abs-path
+      -Werror=return-type -g -O0 --coverage
+      $<$<CXX_COMPILER_ID:GNU>:-fprofile-abs-path>
       -ffunction-sections -fdata-sections -fno-pie)
   endif()
 
@@ -483,7 +484,8 @@ if(CLASH95_COVERAGE)
     CXX_EXTENSIONS YES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
   target_compile_options(clash95_unit_tests PRIVATE
-    -Wall -Wextra -Wpedantic -Werror -g -O0 --coverage -fprofile-abs-path
+    -Wall -Wextra -Wpedantic -Werror -g -O0 --coverage
+    $<$<CXX_COMPILER_ID:GNU>:-fprofile-abs-path>
     -ffunction-sections -fdata-sections -fno-pie)
   target_link_options(clash95_unit_tests PRIVATE --coverage -Wl,--gc-sections -no-pie)
   target_link_libraries(clash95_unit_tests PRIVATE PkgConfig::SDL2 X11::X11 Threads::Threads m)

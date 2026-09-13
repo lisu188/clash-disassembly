@@ -1,0 +1,34 @@
+{
+  "reference_commit": "dd54ee075b2b16b174eef0f910a23ccd81400bca",
+  "functions": [
+    {
+      "name": "Facing_DirectionFromDelta8",
+      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "line": 280,
+      "original_address": "0x0040FA80",
+      "fixture": "Facing_DirectionFromDelta8.cpp",
+      "file_sha256": "dd28a5b402ccf9a9f7f091d2d111d04c1ddab36c1c4cc5e29421f29c304f629d",
+      "body_sha256": "68bad095cbd36ed70ea765948c53584e630571abd6f36f75ed93b701f5cea6e2"
+    },
+    {
+      "name": "Math_SinDegreesQ16",
+      "source": "src/units/00414390_00416750_units_004.cpp",
+      "line": 1040,
+      "original_address": "0x00415D80",
+      "fixture": "Math_SinDegreesQ16.cpp",
+      "file_sha256": "ef67ff9da3f47bf376b4dcfd849d89ca151219dda6215301e26cb9383a4ea9e1",
+      "body_sha256": "5e336b247d2ba8b79e744e0d9df0c018089b871b33a7fa5b2b48646f0ed3735a",
+      "reference_stage": "after separate INT_MIN address-wrap recovery",
+      "pre_recovery_body_sha256": "035e909953f9b915e9c16b6b863b43a66a85bf37604b96bc3799aca6f0d26a41"
+    },
+    {
+      "name": "Math_CeilSqrt",
+      "source": "src/units/00414390_00416750_units_004.cpp",
+      "line": 1097,
+      "original_address": "0x00415E40",
+      "fixture": "Math_CeilSqrt.cpp",
+      "file_sha256": "7c56a2bb8e9eebb286f1bad9580998ccbaa2a61a1e1031d191c92aa4939fec97",
+      "body_sha256": "39f43c8df73b330154d97094f2c2d1d08694f575da0111344b108edc958ef7f5"
+    }
+  ]
+}

@@ -1196,6 +1196,10 @@ python3 -m unittest discover -s tests/tools -p test_queued_path_bridge_query.py 
 
 ## Next migration batches
 
+The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in
+[DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md), including the
+actual-source fixture, retained compatibility differences and validation.
+
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.
 2. Replace remaining raw position/owner/facing accesses across `world/`, `buildings/` and `strategic/` with the canonical `UnitStackRecord` view.
 3. Extend the same approach to the existing typed `PlayerRuntimeState` and building overlays.

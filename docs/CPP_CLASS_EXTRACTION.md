@@ -80,6 +80,12 @@ The header word at `+4` and bytes `+6..+9` remain deliberately unnamed. `DLXSpri
 
 All 32-bit fields after the serialized header are unaligned, so the view uses byte-safe `memcpy` loads and stores rather than aligned native references.
 
+`DLXSprite_LoadCachedEntry` now uses these existing views for payload-handle
+and serialized-size access, preserving the current loader's ownership, arithmetic
+and callback order. The bounded actual-source equivalence fixture and retained
+original/canonical differences are documented in
+[DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).
+
 ### `RenderSurfaceView`
 
 `src/render/render_surface_view.h` separates the two surface-storage shapes that the recovered renderer currently conflates through raw `_DWORD *` arithmetic. This is a storage/layout view, not a claim that the original renderer used the same modern C++ inheritance declarations.

@@ -1,5 +1,9 @@
 # GNU++20 migration
 
+This document records the completed language cutover. The subsequent,
+in-progress game-system class migration and its changing source inventory are
+tracked in [CPP_CLASS_MIGRATION.md](CPP_CLASS_MIGRATION.md).
+
 Track: Win95 reconstruction. The staged migration is complete: the maintained
 runtime and native test harness use GNU++20. All 4,157 recovered identities
 remain in 140 independently compiled translation units across the same 12

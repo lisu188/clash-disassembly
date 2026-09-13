@@ -10,6 +10,7 @@
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
+#include "../units/UnitTurn.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0041D030) --------------------------------------------------------
@@ -855,74 +856,13 @@ char  Building_AutoFillOrUseGarrison(unsigned __int8 *buildingPtr, double a2)
 //----- (0041E6D0) --------------------------------------------------------
 _BYTE * Unit_NewTurnRegen(_BYTE *result)
 {
-  _BYTE *slotsEnd; // ecx
-  unsigned __int8 v2; // dl
-  char countdown; // dl
-
-  if ( result[429] )
-  {
-    countdown = result[429] - 1;
-    result[429] = countdown;
-    if ( !countdown )
-      ++result[421];
-  }
-  slotsEnd = result + 7;
-  do
-  {
-    v2 = result[422];
-    if ( v2 < 0x64u )
-    {
-      result[422] = v2 + 10;
-      if ( (unsigned __int8)(v2 + 10) > 0x64u )
-        result[422] = 100;
-    }
-    ++result;
-  }
-  while ( result != slotsEnd );
-  return result;
+  return clash95::UnitTurn::borrow().Unit_NewTurnRegen(result);
 }
 
 //----- (0041E730) --------------------------------------------------------
 int  Unit_UpdatePerTurn(int buildingPtr, int a2)
 {
-  __int16 currentHitPoints; // dx
-  unsigned __int16 maxHitPoints; // cx
-  int damagePercent; // eax
-  int damageUpper; // esi
-  int damageLower; // ebx
-  int result; // eax
-  int slotWalker; // ecx
-  char rolledDamage; // dl
-
-  (void)a2;
-  currentHitPoints = *(_WORD *)(uintptr_t)(buildingPtr + 16);
-  if ( !currentHitPoints )
-  {
-    memset((void *)(uintptr_t)(unsigned int)(buildingPtr + 422), 100, 7);
-    return buildingPtr + 422;
-  }
-  maxHitPoints = g_BuildingTypeMaxHitPoints[*(char *)(uintptr_t)(buildingPtr + 4)];
-  damagePercent = 100 * (maxHitPoints - currentHitPoints) / maxHitPoints;
-  damageUpper = damagePercent + 10;
-  damageLower = damagePercent - 10;
-  slotWalker = buildingPtr;
-  do
-  {
-    result = Rng_RandRange(damageLower, damageUpper);
-    rolledDamage = result;
-    if ( result < 0 )
-    {
-      rolledDamage = 0;
-    }
-    else if ( result > 100 )
-    {
-      rolledDamage = 100;
-    }
-    ++slotWalker;
-    *(_BYTE *)(uintptr_t)(slotWalker + 421) = rolledDamage;
-  }
-  while ( slotWalker != buildingPtr + 7 );
-  return result;
+  return clash95::UnitTurn::borrow().Unit_UpdatePerTurn(buildingPtr, a2);
 }
 // 513A70: using guessed type __int16 word_513A70[4];
 
@@ -1457,3 +1397,14 @@ signed int  Building_FindFreeAdjacentSpawnTile(unsigned __int8 *buildingPtr, _DW
 // 513A10: using guessed type int dword_513A10[];
 // 513A14: using guessed type int dword_513A14[23];
 // 5202E4: using guessed type int gameData;
+
+// Borrowing glue retains its original adapter/storage anchor.
+extern char aUnit_newturn[15];
+extern __int16 g_BuildingTypeMaxHitPoints[4];
+extern int g_CurrentPlayerIndex;
+extern int g_SelectedUnitIndex;
+extern int gameData;
+clash95::UnitTurn clash95::UnitTurn::borrow() noexcept
+{
+  return UnitTurn(::aUnit_newturn, ::g_BuildingTypeMaxHitPoints, ::g_CurrentPlayerIndex, ::g_SelectedUnitIndex, ::gameData);
+}

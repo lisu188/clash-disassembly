@@ -1433,3 +1433,9 @@ int * DLXSpriteSet_CopyEntriesFrom(int *sprite_set, DWORD *source_set, int a3, s
   return sprite_set;
 }
 // 405D73: variable 'v6' is possibly undefined
+
+// Historical reconstruction name retained as a compatibility boundary.
+int Surface_SwapDirtyTrackingFlag(int surface, int new_flag)
+{
+  return Render_SetResourceHandle(surface, new_flag);
+}

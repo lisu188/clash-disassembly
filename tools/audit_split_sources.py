@@ -13,6 +13,12 @@ from pathlib import Path
 from typing import Any
 
 from split_source_index import Definition, body_sha256, scan_definitions
+from recovered_implementation import manifest_sources
+from class_source_inventory import SourceInventoryError, resolve_source_inventory
+from class_binding_inventory import validate_binding_sources
+from identity_alias_inventory import validate_alias_sources
+from support_class_inventory import validate_inventory_sources
+from game_class_catalog import validate_registry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -157,6 +163,7 @@ def audit_production_layout(audit: Audit) -> None:
     candidates += list((ROOT / "src").rglob("*.c"))
     candidates += list((ROOT / "src").rglob("*.cpp"))
     candidates += list((ROOT / "src").rglob("*.h"))
+    candidates += list((ROOT / "src").rglob("*.hpp"))
     for path in sorted(set(candidates)):
         try:
             text = path.read_text(encoding="utf-8")
@@ -212,7 +219,24 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
     manifest = load_manifest(manifest_path, audit)
     if manifest is None:
         return audit
-    audit.require(manifest.get("schema_version") == 2, "manifest must use schema 2")
+    audit.require(manifest.get("schema_version") in (2, 3), "manifest must use schema 2 or 3")
+    if manifest.get("schema_version") == 3:
+        try:
+            registry = json.loads((ROOT / "data/game_class_registry.json").read_text(encoding="utf-8"))
+            declarations = json.loads((ROOT / "data/recovered_decls.json").read_text(encoding="utf-8"))
+            inventory_errors = validate_registry(registry, manifest, declarations)
+            if not inventory_errors:
+                inventory_errors = validate_binding_sources(registry, manifest, declarations, ROOT)
+            if not inventory_errors:
+                inventory_errors = validate_alias_sources(manifest, ROOT, declarations, registry)
+            if not inventory_errors:
+                support = json.loads((ROOT / "data/support_class_inventory.json").read_text(encoding="utf-8"))
+                inventory_errors = validate_inventory_sources(support, ROOT, manifest, declarations)
+                audit.check("inventoried support definitions", len(support.get("definitions", [])))
+            audit.errors.extend(inventory_errors)
+            audit.check("registered class bindings", len(registry.get("class_bindings", [])))
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            audit.errors.append(f"class inventory: {error}")
     audit.require(manifest.get("cutover") == "canonical-split", "manifest is not split-only")
     language = manifest.get("language")
     valid_suffixes = LANGUAGE_SUFFIXES.get(language, set()) if isinstance(language, str) else set()
@@ -229,14 +253,11 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
     )
     state_owner = repo_path(manifest.get("state_owner"), "state_owner", audit)
 
-    generated = sorted(
-        {
-            ROOT / value["source"]
-            for value in records
-            if isinstance(value, dict) and isinstance(value.get("source"), str)
-        }
-        | ({state_owner} if state_owner is not None else set())
-    )
+    try:
+        generated = [ROOT / source for source in manifest_sources(manifest)]
+    except (ValueError, KeyError, TypeError) as exc:
+        audit.errors.append(f"invalid implementation inventory: {exc}")
+        return audit
     actual_sources = {
         path
         for subsystem in RECOVERED_SUBSYSTEMS
@@ -257,6 +278,12 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
         audit.errors.append(f"cannot read canonical CMake source list: {exc}")
         source_list_text = ""
     listed_sources = [ROOT / value for value in CMAKE_SOURCE_RE.findall(source_list_text)]
+    if manifest.get("schema_version") == 3:
+        try:
+            ordered_inventory = resolve_source_inventory(manifest, source_list_text)
+            audit.check("ordered source groups", len(ordered_inventory))
+        except SourceInventoryError as exc:
+            audit.errors.append(f"invalid ordered source inventory: {exc}")
     audit.require(
         len(listed_sources) == len(set(listed_sources)),
         "src/sources.cmake contains duplicate translation units",
@@ -283,6 +310,7 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
 
     names: set[str] = set()
     records_by_source: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    targets: dict[str, dict[str, Any]] = {}
     identities: set[tuple[str, int, str]] = set()
     for index, value in enumerate(records):
         if not isinstance(value, dict):
@@ -302,7 +330,35 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
         if not isinstance(source, str):
             audit.errors.append(f"{name}: source must be a path")
             continue
-        records_by_source[source].append(value)
+        implementation = value.get("implementation", {"kind": "free", "qualified_name": name})
+        kind = implementation.get("kind")
+        qualified = implementation.get("qualified_name")
+        audit.require(kind in ("free", "method"), f"{name}: invalid implementation kind")
+        audit.require(isinstance(qualified, str) and bool(qualified), f"{name}: missing implementation name")
+        if kind == "free":
+            audit.require(qualified == name, f"{name}: free implementation identity differs")
+            audit.require("adapter" not in value, f"{name}: free implementation has adapter")
+        else:
+            audit.require(isinstance(qualified, str) and qualified.endswith("::" + name),
+                          f"{name}: method must retain original leaf name")
+        source_targets = []
+        if kind == "method":
+            adapter = value.get("adapter", {})
+            adapter_source = adapter.get("source")
+            adapter_hash = adapter.get("body_sha256")
+            audit.require(isinstance(adapter_source, str), f"{name}: adapter source missing")
+            audit.require(isinstance(adapter_hash, str) and bool(SHA256_RE.fullmatch(adapter_hash)),
+                          f"{name}: invalid adapter body hash")
+            if isinstance(adapter_source, str):
+                source_targets.append(dict(value, name=name, source=adapter_source,
+                                           body_sha256=adapter_hash, target_role="adapter"))
+        if isinstance(qualified, str):
+            source_targets.append(dict(value, name=qualified, target_role="canonical"))
+        for target in source_targets:
+            target["identity"] = name
+            audit.require(target["name"] not in targets, f"duplicate implementation target: {target['name']}")
+            targets[target["name"]] = target
+            records_by_source[target["source"]].append(target)
         audit.require(isinstance(origin, str) and bool(origin), f"{name}: missing historical origin")
         audit.require(legacy == origin, f"{name}: legacy_path differs from original_source")
         audit.require(isinstance(line, int) and line > 0, f"{name}: invalid original_line")
@@ -339,7 +395,7 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
             filename = path.name
             audit.require(file_markers[0].address in filename, f"{source}: first address absent from filename")
             audit.require(file_markers[-1].address in filename, f"{source}: last address absent from filename")
-        definitions = scan_definitions(text, names)
+        definitions = scan_definitions(text, set(targets))
         for definition in definitions:
             indexed[definition.name].append(
                 (source, definition, body_sha256(text, definition))
@@ -359,6 +415,10 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
             record = by_name.get(definition.name)
             if record is None:
                 continue
+            if record.get("implementation", {}).get("kind") == "method" and record["target_role"] == "canonical":
+                # Original address order belongs to the adapter/storage anchor;
+                # class methods retain provenance through their explicit mapping.
+                continue
             marker = containing_marker(file_markers, definition.line)
             expected_address = f"0x{marker.address}" if marker else None
             audit.require(
@@ -377,7 +437,7 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
         f"address_marker_count differs: {manifest.get('address_marker_count')} != {total_markers}",
     )
     audit.check("ordered address markers", total_markers)
-    for record in records:
+    for record in targets.values():
         if not isinstance(record, dict) or not isinstance(record.get("name"), str):
             continue
         name = record["name"]
@@ -387,9 +447,10 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
         source, _, digest = matches[0]
         audit.require(source == record.get("source"), f"{name}: source differs from manifest")
         audit.require(digest == record.get("body_sha256"), f"{name}: canonical body hash differs")
-        audit.check("manifest functions")
+        audit.check("canonical implementations" if record["target_role"] == "canonical" else "ABI adapters")
 
-    audit.require(len(indexed) == len(records), "not every manifest function was indexed once")
+    audit.require(len(indexed) == len(targets), "not every implementation/adapter was indexed once")
+    audit.check("manifest functions", len(records))
     audit_production_layout(audit)
     return audit
 

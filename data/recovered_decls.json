@@ -22231,6 +22231,12 @@
       "class": "legacy-import",
       "decl": "int __fastcall wctomb_(_DWORD a1, _DWORD a2);",
       "home": "legacy"
+    },
+    "Surface_SwapDirtyTrackingFlag": {
+      "class": "helper",
+      "decl": "extern __attribute__((used, retain)) int Surface_SwapDirtyTrackingFlag(int surface, int new_flag);",
+      "home": "render",
+      "source": "src/render/004046D0_00405D20_render_003.cpp"
     }
   },
   "globals": {
