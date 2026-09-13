@@ -567,25 +567,34 @@ int  WorldMap_PollActionButtonWidgets(DWORD a1)
 // 5202E0: using guessed type int dword_5202E0;
 
 //----- (0040A490) --------------------------------------------------------
-void  WorldMap_SyncSelectionForHumanPlayer(DWORD a1)
+void WorldMap_SyncSelectionForHumanPlayer(DWORD entryContext)
 {
-  void *gameDataPtr; // ecx
+  // Original ECX retains this 32-bit arena address across the refresh callback.
+  const uint32_t entryGameData = static_cast<uint32_t>(gameData);
+  const uint32_t playerAddress = entryGameData + PLAYER_RUNTIME_STATE_OFFSET
+          + PLAYER_DATA_STRIDE * static_cast<uint32_t>(g_CurrentPlayerIndex);
+  const PlayerRuntimeState *player = (const PlayerRuntimeState *)(uintptr_t)playerAddress;
+  if ( !player->controller_mode )
+    return;
 
-  gameDataPtr = (void *)(uintptr_t)gameData;
-  if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
+  bool clearSelection = g_SelectedUnitIndex == -1;
+  if ( !clearSelection )
   {
-    if ( g_SelectedUnitIndex == -1 || *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1 )
-    {
-      g_SelectedUnitIndex = -1;
-      WorldMap_RefreshActionButtonBarState((void *)(uintptr_t)gameData);
-    }
-    UnitStackSelection_SyncForCurrentSelection(gameDataPtr, a1);
+    const uint32_t stackAddress = entryGameData + UNIT_STACK_TABLE_OFFSET
+            + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+    const UnitStackRecord *selectedStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+    clearSelection = selectedStack->unit_slots[0].unit_type_id == -1;
   }
+
+  if ( clearSelection )
+  {
+    g_SelectedUnitIndex = -1;
+    WorldMap_RefreshActionButtonBarState((void *)(uintptr_t)entryGameData);
+  }
+
+  // The helper receives the entry arena even if refresh replaced global gameData.
+  UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)entryGameData, entryContext);
 }
-// 40A4ED: variable 'v1' is possibly undefined
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A500) --------------------------------------------------------
 void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2)

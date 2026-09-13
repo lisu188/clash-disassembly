@@ -1,5 +1,28 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Road readability: human-player selection cleanup
+
+Track: Win95 reconstruction. Reviewed `WorldMap_SyncSelectionForHumanPlayer`
+(`0x40A490`) individually. Named entry context and arena snapshot, replaced raw
+offsets with existing packed player/unit fields, separated nonhuman rejection
+and made the selection-clearing decision explicit. Original DWORD/WORD widths,
+32-bit address arithmetic, first-slot sentinel and callback order remain.
+The entry arena survives refresh, independently verified by eight cases using
+the actual original refresh/UI wrapper with ECX-clobbering child callbacks.
+All 22 original caller scenarios and 28 events match four actual-source compiler
+profiles. The parent matches 18 defined cases; its one defined opaque-pointer
+conversion difference remains separate from three signed-overflow exclusions.
+Nine strictly compiled mutations are rejected. Both builds, eight public
+CTests and all 530 tooling tests pass, with 750 inputs and native artifacts
+frozen; all 150 other objects and neighboring code/data remain exact.
+Strict linked comparisons pass without allowances. Existing 20 header and
+439/691 raw link differences remain unresolved. One canonical body hash changes;
+no public symbol, layout, historical identity or source ownership changes.
+Confidence is high within the stated caller and backed-address domains.
+Child selection gameplay, rendered fidelity and campaign advancement remain
+separate; the mission-05 runtime frontier does not advance.
+[Evidence and validation](../HUMAN_READABILITY.md#batch-19-worldmap_syncselectionforhumanplayer).
+
 ## 2026-09-13 - Road readability: builder action menu
 
 Track: Win95 reconstruction. Reviewed `WorldMap_HandleBuilderActionMenu`

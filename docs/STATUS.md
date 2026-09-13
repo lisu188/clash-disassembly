@@ -2,6 +2,35 @@
 
 Last consolidated: 2026-09-13.
 
+## Human-Player Selection Cleanup Readability
+
+Track: Win95 reconstruction, selection cleanup reached from the Road menu.
+`WorldMap_SyncSelectionForHumanPlayer`, the twenty-second individually reviewed
+Road-family function, now uses named context and arena values, existing packed
+player/unit fields, an early controller rejection and a clear selection decision.
+Original 32-bit address arithmetic, field widths, callback order and the entry
+arena snapshot remain explicit. All 22 original scenarios and 28 events match
+four actual-source compiler profiles. Eight separate original refresh/UI-wrapper
+cases verify the snapshot across callbacks that overwrite ECX. The parent
+matches 18 defined cases; one defined pointer-conversion difference and three
+signed-overflow exclusions remain separate. Nine compiled mutations are caught.
+Both native builds, eight public CTests and all 530 tooling tests pass, with
+750 inputs and both native artifact sets frozen. All 150 other objects,
+neighboring code/data and archive order remain exact. Strict linked comparisons
+pass without allowances; the same 20 header and 439/691 raw link differences
+remain. Only one canonical body hash changes. Runtime, visual and campaign
+milestones do not advance.
+[Evidence, validation and limits](HUMAN_READABILITY.md#batch-19-worldmap_syncselectionforhumanplayer).
+
+## Published CI At ef47584
+
+Both builds, eight public CTests and 528 tooling tests pass. The separate
+coverage gate measures 92.65% across all 718 functions, with none uncovered.
+Header and both linked-symbol ratchets still fail; raw link differences remain
+439 GCC / 691 Clang with zero crosscheck errors. Complete logs were retrieved
+without restarting any CI job.
+[Remote measurements](HUMAN_READABILITY.md#published-ci-observation-after-the-builder-menu-review).
+
 ## Builder Action Menu Readability
 
 Track: Win95 reconstruction, reached Road builder-menu lifecycle.

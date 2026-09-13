@@ -1805,6 +1805,131 @@ gate, baseline or coverage floor changes. Markdown links and whitespace checks
 pass. The first link check identified the private applied-source report as an
 unresolved public path; the corrected prose reference and failed log are retained.
 
+### Published CI observation after the builder-menu review
+
+The [ef47584 CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34750672143)
+passes both compiler builds, all eight native CTests and 528 tooling tests
+(175.822 seconds). Its separate coverage job measures 6163/6652 lines (92.65%)
+across all 718 selected functions: 585 fully covered, 133 partial, none uncovered.
+Header and linked-symbol ratchets still fail; raw link rows remain 439 GCC /
+691 Clang with zero library crosscheck errors. These remote measurements remain
+separate from the preceding local batch, which did not rerun coverage.
+
+Complete logs are retained under
+artifacts/readability/road-functions-20260906/batch-19-selection/build-validation/ci-observation/.
+The first GCC log fetch encountered an invalid local ZIP cache; the complete log
+was retrieved through the job-log API. No CI job was restarted.
+
+### Batch 19: WorldMap_SyncSelectionForHumanPlayer
+
+Track: Win95 reconstruction, selection cleanup reached from the Road builder
+menu. The function at `0x40A490` now names its entry context and arena snapshot,
+returns early for a nonhuman controller, and uses the existing packed
+`PlayerRuntimeState.controller_mode` and first `UnitSlotRecord.unit_type_id`.
+The named clearing decision replaces the combined raw-offset expression.
+Original 32-bit player and stack address arithmetic is explicit.
+
+Every nonzero controller DWORD still takes the human path; this is not a
+byte-sized flag test. Selection `-1` skips the unit-record read. Otherwise only
+the first signed unit-type WORD equal to `-1` clears the selection. Other negative
+types and later unit slots do not change this predicate. Clearing precedes the
+action-bar refresh, and synchronization runs once for each human path. The
+function retains its void return and opaque context argument.
+
+The entry arena is intentionally retained across refresh. Original ECX is
+loaded before the controller check and preserved on the refresh helper's
+guaranteed no-selection branch. That branch saves ECX around cursor work, and
+both widget-refresh wrappers save it across their indirect callbacks. A callback
+can change global arena, player and selection state without changing the arena
+argument forwarded to the final helper. The helper can still inspect those
+live globals itself. This conclusion does not cover arbitrary selected-stack
+calls to the refresh helper's different branch.
+
+Evidence: `clash95.asm:15408`–15443 for the caller, 15282–15328 for the action
+bar, 40260–40274 for the widget wrapper, and the existing packed layout/offset
+assertions. Source, captured originals and bounded proof artifacts are retained
+under artifacts/readability/road-functions-20260906/batch-19-selection/.
+The source edit changes only this function, its stale annotations and its
+canonical body hash. All 26 other definitions in world002, public signatures,
+identities, layouts and source ownership remain. No gameplay, rendering or
+campaign milestone is promoted.
+
+The unchanged original caller records 28 callback events across 22 scenarios.
+Its 102 instruction bytes end at `0x40A4F6`; the manifest range retains ten
+following alignment bytes. Both local PE copies agree, and the embedded section
+is verified before execution. The fixture keeps signed-arithmetic exclusions
+separate from the parent's defined pointer-sign-extension difference: converting
+a negative integer to an opaque native pointer is not itself signed overflow.
+
+All 22 original traces match the extracted actual C++ body under GCC 13 and
+Clang 18 at both `-O0` and `-O2`, with strict warnings and undefined-behavior
+sanitization. The untouched parent matches the 18 defined equivalent scenarios
+in all four profiles. Its separate negative-base case retains the expected
+opaque-pointer sign extension; the three wrapping-index cases are excluded from
+parent execution because its signed stride arithmetic overflows. These bounded
+address cases establish original 32-bit semantics, not a reached gameplay bug.
+
+A separate eight-case probe executes the actual original no-selection refresh
+and widget wrapper. Their 151 and 18 instruction bytes and original widget-table
+callback addresses are independently verified. Recording cursor and draw
+callbacks deliberately overwrite ECX and change global arena state. The entry
+arena and context survive every case, including both, neither or just one draw
+callback passing the signed coordinate gate. This substantiates the snapshot
+without assuming that the indirect draw callback preserves ECX.
+
+Nine compiled negative controls are rejected. They distinguish an incorrect
+live arena reload, controller/first-unit access widths, the wrong unit slot,
+late selection clearing, lost context, an eager nonhuman stack read and signed
+stride overflow. Guard pages make the specific rejected nonhuman read fail
+deterministically. The measured caller has two semantic callback boundaries;
+real child selection gameplay remains outside this fixture.
+
+Both native builds pass. Only the reviewed function's executable section and
+its instruction relocations change in world002; ordinary allocated data and
+27 neighboring code sections remain exact. All 150 other objects are
+byte-identical and the ordered 148 archive members remain. The ordinary object
+comparison passes without the preceding menu batch's jump-table exception.
+Strict linked comparisons pass without allowances. Historical raw link rows
+remain 439 GCC / 691 Clang with zero crosscheck errors; all 14 nonratchet metadata
+checks pass and the complete 20 header-failure rows remain unchanged.
+
+All eight asset-free CTests pass. Incremental world002 warning counts remain
+4 GCC / 5 Clang, and both warning gates pass. The reviewed function is outside
+the selected 718-function coverage set; the selected neighboring callback,
+coverage metadata and unit fixtures remain unchanged. No new coverage run or
+percentage is claimed for this batch. The published ef47584 measurement above
+remains separate.
+
+The private validation preparation first rejected an expected source-proof key
+that belonged to an earlier batch. The retained corrected driver consumes this
+batch's exact 26-neighbor proof; the rejection occurred before either build.
+No production repair, baseline update or gate exception was needed.
+
+The public regression is asset-free:
+
+```sh
+python3 -B tests/tools/test_human_selection.py
+```
+
+Both test methods pass, executing the actual function under all four compiler
+profiles. The fixture README and measured trace bindings are in
+`tests/tools/fixtures/human_selection/`. Its readable Python contract has the
+same syntax tree, 22 case records and packed input bytes as the retained private
+measurement contract. Provenance binds both files separately; no expected
+trace was regenerated from the candidate. The private original, regression and
+build-validation directories retain exact commands and raw results.
+
+Confidence is high within the stated caller and backed-address domains.
+Public names and structure layouts remain unchanged; no uncertain field or
+child-callee semantics are promoted by this review.
+
+The full tooling suite passes all 530 tests in 240.450 seconds. All 750
+production/tooling inputs and both complete native artifact sets remain
+unchanged through that run. The four new public fixture/test files add two
+test methods; existing checks, baselines and coverage policy remain. The
+coordinating review verifies 203 original/regression evidence bindings, and
+the Markdown link/path check passes.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in
