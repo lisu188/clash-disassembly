@@ -1,0 +1,107 @@
+{
+  "head": "79d700c86e253180b1bb81c0a2833b48ae5fe1ba",
+  "records": [
+    {
+      "name": "UnitStack_RegroupWithOtherStackByHealth",
+      "source": "src/strategic/00455740_004582B0_strategic_003.cpp",
+      "source_sha256": "5f01fa4f0f02449fc2297afe8d08c4786ab8b37d6d48171dbd12ef033a29b44c",
+      "before_body_sha256": "22a9095c4b88d1d47ad8826331d7b401d46f690bf006b53c238f9833c32be80d",
+      "before_text_sha256": "46bc3b0ca64faa9c4a7e4405631a505db2bf4a998a68e0185b33176d71358da5",
+      "after_text_sha256": "19ffbf29c3ae4b1dae8a40ce47bcbb349bdbc5d2fb41cfd226d5bf8bf593c82e"
+    }
+  ],
+  "original_exe_sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae",
+  "original_ranges": [
+    {
+      "name": "regroup",
+      "start": "0x4582b0",
+      "end_exclusive": "0x4589b6",
+      "sha256": "19fdec51da66badc8abcfd0887ac37bd16d8370b57c11de8c9955ceb82ee3be4",
+      "file_offset": 358064
+    }
+  ],
+  "fixtures": [
+    {
+      "file": "regroup-native-harness.cpp",
+      "sha256": "c7159d9812e944306caf459bb792de58203fcb229f2e3111140b598977c17359"
+    },
+    {
+      "file": "native-prelude.hpp",
+      "sha256": "4800008a9062fd67a7fa588393558b58f0dbda98a5f6985dcb1620d3554479ff"
+    },
+    {
+      "file": "regroup-original-measured.json.gz",
+      "sha256": "b2efacde2347af000315c8a42a7c97dbab3c7538b09afb8efeb2c6628f271611"
+    }
+  ],
+  "golden_exports": [
+    {
+      "family": "copy",
+      "command": [
+        "g++-13",
+        "-m32",
+        "-std=gnu++20",
+        "-O0",
+        "-fno-pie",
+        "-no-pie",
+        "-fno-exceptions",
+        "-fno-rtti",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-ftrivial-auto-var-init=pattern",
+        "-nostdlib",
+        "-static",
+        "-Wl,--build-id=none",
+        "-Wl,-T,/var/tmp/clash95-unit-copy-regroup-recovery-20260908/original.ld",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/compiled-UnitStack_CopyFromTemplate.cpp",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/compiled-BattleUnitEntry_CopyMergingPackedFlags.cpp",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/compiled-UnitTrackElement_CopyFromTemplate.cpp",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/copy-original-export.cpp",
+        "/mnt/c/Users/andrz/git/clash-disassembly/.worktrees/game-system-classes-20260906/artifacts/cpp-classes/20260908/unit-copy-regroup-recovery/copy-boundary.S",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/original.S",
+        "-Wl,--wrap=BattleUnitEntry_CopyMergingPackedFlags",
+        "-Wl,--wrap=UnitTrackElement_CopyFromTemplate",
+        "-o",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/copy-original-export"
+      ],
+      "binary_sha256": "7971a77643960e9658269193da348113fb96ed7f4cc9bd3fc969d2d1ad1eb59a",
+      "cases": 8192,
+      "record_bytes": 5428,
+      "stream_sha256": "1e990646a27a156b46d377643ac0c0335d91be81b1cf02411e4959a4a4f069c9"
+    },
+    {
+      "family": "regroup",
+      "command": [
+        "g++-13",
+        "-m32",
+        "-std=gnu++20",
+        "-O0",
+        "-fno-pie",
+        "-no-pie",
+        "-fno-exceptions",
+        "-fno-rtti",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-ftrivial-auto-var-init=pattern",
+        "-nostdlib",
+        "-static",
+        "-Wl,--build-id=none",
+        "-Wl,-T,/var/tmp/clash95-unit-copy-regroup-recovery-20260908/regroup.ld",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/compiled-regroup.cpp",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/regroup-original-export.cpp",
+        "/mnt/c/Users/andrz/git/clash-disassembly/.worktrees/game-system-classes-20260906/artifacts/cpp-classes/20260908/unit-copy-regroup-recovery/regroup-boundary.S",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/original.S",
+        "-o",
+        "/var/tmp/clash95-unit-copy-regroup-recovery-20260908/regroup-original-export"
+      ],
+      "binary_sha256": "8c54776a92afc92cedc6895b799297268ac03fbb498fa2fabe84ede62e1a7c66",
+      "cases": 4096,
+      "record_bytes": 9124,
+      "stream_sha256": "8fdac4ad6e96872ce18cab8efdfec629227a4ff665682e19e2a388092644dd34"
+    }
+  ],
+  "family_split": {
+    "source_provenance_sha256": "3bc093817efb33e7eb10a16aea864db4ae3e9e82f0e59efa55a741c6863d9360",
+    "reason": "Regroup has no dependency on unresolved array-copy descriptors."
+  }
+}

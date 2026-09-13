@@ -2,6 +2,17 @@
 
 Last consolidated: 2026-09-13.
 
+## Unit Regroup Recovery Before Class Extraction
+
+The original saved stack index, signed health comparison and packed word access
+are recovered in `UnitStack_RegroupWithOtherStackByHealth`; two proven-unused
+movement contexts receive defined zero values. All 4,096 original-measured
+scenarios pass in four compiler profiles. Both production builds, strict
+symbol/storage/initialization comparisons and eight asset-free gates pass.
+The independent copy-descriptor contract remains unresolved and its proposed
+repair is unapplied. No class or campaign count changes. See
+[UNIT_REGROUP_RECOVERY.md](UNIT_REGROUP_RECOVERY.md).
+
 ## Resumed Class Migration And Origin Integration
 
 Track: Win95 reconstruction, requested behavior-class migration. Origin e387a35
