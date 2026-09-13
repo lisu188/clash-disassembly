@@ -816,8 +816,9 @@
    "original_line": 2893,
    "source": "src/units/004115E0_00412BE0_units_002.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitStack_CalcMilitaryStrength"
+    "kind": "method",
+    "qualified_name": "clash95::UnitStack::UnitStack_CalcMilitaryStrength",
+    "header": "src/units/UnitStack.hpp"
    }
   },
   {

@@ -597,8 +597,15 @@ signed int  UnitStack_HasPeasantCargo(int stackPtr)
 }
 
 //----- (004121D0) --------------------------------------------------------
-signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double a3)
+__attribute__((used, retain))
+signed int UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double a3)
 {
+  return clash95::UnitStack((intptr_t)stackPtr).UnitStack_NormalizePeasantCargo(a2, a3);
+}
+
+signed int clash95::UnitStack::UnitStack_NormalizePeasantCargo(DWORD a2, double a3) const
+{
+  __int16 *stackPtr = (__int16 *)(uintptr_t)address_;
   typedef __int16 SlotTypeWord __attribute__((aligned(1), may_alias));
   SlotTypeWord *slotPtr; // ecx
   int totalPeasantQuantity; // esi
@@ -633,7 +640,7 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
   }
   // 0x412201 preserves this EDX threshold across the AP query.
   consolidationThreshold = (peasantSlotCount - 1) * 100;
-  minActionPoints = UnitStack_GetMinCurrentActionPoints((intptr_t)stackPtr);
+  minActionPoints = this->UnitStack_GetMinCurrentActionPoints();
   if ( consolidationThreshold > totalPeasantQuantity )
   {
     clearCursor = (SlotTypeWord *)stackPtr;
@@ -1279,8 +1286,15 @@ int  UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck(char *slotArray,
 // 412B90: could not find valid save-restore pair for ebx
 
 //----- (00412BE0) --------------------------------------------------------
-int  UnitStack_CalcMilitaryStrength(int stackPtr)
+__attribute__((used, retain))
+int UnitStack_CalcMilitaryStrength(int stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_CalcMilitaryStrength();
+}
+
+int clash95::UnitStack::UnitStack_CalcMilitaryStrength() const
+{
+  int stackPtr = (int)address_;
   signed int squadCount; // eax
 
   squadCount = Unit_GetSquadCount(stackPtr);

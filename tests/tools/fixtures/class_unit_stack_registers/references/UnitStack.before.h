@@ -9,8 +9,6 @@ class CLASH95_INTERNAL UnitStack final {
   signed int UnitStack_GetMinCurrentActionPoints() const;
   signed int UnitStack_HasReadyUnits() const;
   signed int UnitStack_HasBuilder() const;
-  int UnitStack_CalcMilitaryStrength() const;
-  signed int UnitStack_NormalizePeasantCargo(DWORD a2, double a3) const;
  private:
   intptr_t address_;
 };

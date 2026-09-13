@@ -220,6 +220,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
         }
       ],
       "archive_text": [
@@ -439,6 +453,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
         }
       ]
     },
@@ -618,6 +646,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
         }
       ],
       "archive_text": [
@@ -795,6 +837,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
         }
       ]
     }

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "reference_commit": "c65e476273c96fe86b2e4a308798cea89c8696bc",
+  "functions": [
+    {
+      "name": "UnitStack_CalcMilitaryStrength",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x00412BE0",
+      "body_sha256": "61baac29d05cdea1353c7dfacea7d155255fb567e38a9de1fd335c0d5dc5e4d7",
+      "file_sha256": "2b159ca86cf5b4e2b6190df46eab72107646c8cb6e8a85ff170cd7aa5c6d92ca",
+      "fixture": "UnitStack_CalcMilitaryStrength.cpp"
+    },
+    {
+      "name": "UnitStack_NormalizePeasantCargo",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x004121D0",
+      "body_sha256": "6ccfca18bb6ffafc399f87111ba963beae73800713618b22e1ce69887de05b1d",
+      "file_sha256": "ce85a72b10af86d3cfebb4e932a2d2128e4c41a7b82928eba76889748eb8f595",
+      "fixture": "UnitStack_NormalizePeasantCargo.cpp"
+    }
+  ],
+  "ap_dependency": {
+    "name": "UnitStack_GetMinCurrentActionPoints",
+    "original_address": "0x00410010",
+    "members": [
+      {
+        "role": "canonical",
+        "fixture": "AP-canonical.cpp",
+        "qualified_name": "clash95::UnitStack::UnitStack_GetMinCurrentActionPoints",
+        "body_sha256": "d8b571a5ea220bf052b3a23c620acbd5b082db9b463f9a4c0f88d45240b7def8",
+        "file_sha256": "e4321896223cecc8ff6c69dc7d4e7899097c5e3d0de42ba519a5a8eb29fb1a77"
+      },
+      {
+        "role": "adapter",
+        "fixture": "AP-adapter.cpp",
+        "qualified_name": "UnitStack_GetMinCurrentActionPoints",
+        "body_sha256": "7e5183e754d142fdcc01d0ec181d93ee3a10ebdf4ab6c28bce9cbef95c41500f",
+        "file_sha256": "3ac24204b93dd273ed9722c3f4d87ef485c8d357cffdc4569bf9898ca3ce9b98"
+      }
+    ],
+    "header": {
+      "fixture": "UnitStack.before.h",
+      "file_sha256": "c8c0e6266f94e9b00d22ed649263e7cfe251546e9d54bf8d1ad1da2e1dd83b5c"
+    }
+  }
+}

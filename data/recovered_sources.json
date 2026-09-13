@@ -88823,7 +88823,7 @@
       "original_line": 2192,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "6ccfca18bb6ffafc399f87111ba963beae73800713618b22e1ce69887de05b1d",
+      "body_sha256": "39669af993f257243beac880f7203d811840c8351bb495970d44821d864b9b61",
       "original_address_range": {
         "start": "0x004121D0",
         "end_exclusive": "0x00412300"
@@ -88833,12 +88833,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "afdd96ae769a317fbd70227c540480db8d7954534ea37781c7fc3f90f3e57945",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_NormalizePeasantCargo"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_NormalizePeasantCargo",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_NormalizePeasantCargo is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "aee0a36c926361e29e9e7ae5ee729ff0ac3143cbc07fe11aa001ea6194f52bba"
+      }
     },
     {
       "name": "UnitStack_CaptureDefeatedStack",
@@ -89260,7 +89265,7 @@
       "original_line": 2893,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "61baac29d05cdea1353c7dfacea7d155255fb567e38a9de1fd335c0d5dc5e4d7",
+      "body_sha256": "1ea77fd39c689e72003fcb5bd53a5b0290260640aac3e5fc5a081ab7cf262330",
       "original_address_range": {
         "start": "0x00412BE0",
         "end_exclusive": "0x00412C00"
@@ -89270,12 +89275,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "cebe18708edc2a80ff25ffaba27eaee0d87600d7aed5ec5e0f439f50531b174f",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_CalcMilitaryStrength"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_CalcMilitaryStrength",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_CalcMilitaryStrength is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "d1a6c835526ef03573ab44616c0423d6f57d25c565b1f4f5d14118515f1b38ab"
+      }
     },
     {
       "name": "Building_CalcGarrisonStrength",

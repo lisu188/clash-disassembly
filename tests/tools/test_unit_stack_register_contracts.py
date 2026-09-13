@@ -97,16 +97,10 @@ HARNESS=r"""
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-typedef short __int16;
-#define __int64 long long
-#define CLASH95_UNUSED __attribute__((unused))
-typedef uint32_t DWORD;
-typedef unsigned char _BYTE;
-typedef unsigned short _WORD;
-#define UNIT_STACK_SLOT_COUNT 10
-#define UNIT_SLOT_RECORD_BYTES 31
-#define UNIT_TYPE_PEASANT_CARGO 32
-#define LOBYTE(x) (*((unsigned char *)&(x)))
+#include "units/UnitStack.hpp"
+#include "units/units_internal.h"
+#include "strategic/strategic_api.h"
+#include "recovered_legacy_imports.h"
 static uint32_t row[8];
 static unsigned char input[800], actual[800], expected[936];
 static unsigned char *stack_address;
@@ -136,6 +130,11 @@ signed int Unit_GetSquadCount(intptr_t value) {
 signed int UnitStack_GetMinCurrentActionPoints(intptr_t value) {
   event(1,offset(value));return row[3];
 }
+// Original-stream dependency seam. The separate class differential executes
+// the actual AP canonical method; this pinned corpus controls its return value.
+signed int clash95::UnitStack::UnitStack_GetMinCurrentActionPoints() const {
+  event(1,offset(address_));return row[3];
+}
 signed int Unit_CompactSquad(__int16 *value,int context,double time) {
   event(2,offset(uintptr_t(value)),offset(uint32_t(context)),0,time,true);
   return 0x31415926;
@@ -158,12 +157,12 @@ int main(int argc,char **argv) {
   unsigned index=0;
   while(fread(row,sizeof(row),1,cases)==1) {
     if(fread(input,sizeof(input),1,cases)!=1||fread(expected,sizeof(expected),1,expect)!=1)return 4;
+    for(int route=0;route<__ROUTES__;++route) {
     memcpy(actual,input,sizeof(actual));memset(trace,0,sizeof(trace));trace_count=0;
     stack_address=actual+32+(row[0]?row[1]:0);
     if(uintptr_t(actual)+sizeof(actual)>INT32_MAX)return 5;
     double time;memcpy(&time,row+6,8);
-    int result=row[0]?UnitStack_NormalizePeasantCargo((__int16 *)stack_address,row[5],time)
-                     :UnitStack_CalcMilitaryStrength(int(row[1]));
+    int result=__INVOKE__;
     unsigned char output[936];
     const uint32_t returned=uint32_t(result);
     memcpy(output,&returned,4);memcpy(output+4,&trace_count,4);
@@ -174,6 +173,7 @@ int main(int argc,char **argv) {
                 index,row[0],row[1],i,output[i],expected[i]);break;
       }
       return 6;
+    }
     }
     ++index;
   }
@@ -198,20 +198,25 @@ def extracted_fixture():
   assert set(originals)==NAMES
   for name,record in records.items():
    assert int(record['original_address'],16)==int(originals[name]['address'],16), name+': original identity changed'
-   assert record.get('implementation',{}).get('kind','free')=='free', (
-    name+' now has a canonical class method; adapt this fixture to compile that '
-    'actual method before accepting migration, rather than testing its adapter')
   sources={r['source'] for r in records.values()}
+  sources.update(r['adapter']['source'] for r in records.values() if r.get('adapter'))
   indexed=index_manifest_definitions(manifest,ROOT,sources)
   snippets=[]
   for name in sorted(NAMES):
-   resolved=indexed[(name,'canonical')]
-   assert resolved.target.name==name, name+': expected original free canonical identity'
-   assert resolved.body_sha256==records[name]['body_sha256'], name+': manifest body hash drift'
-   source=(ROOT/resolved.target.source).read_text()
-   d=resolved.definition
-   snippets.append(source[d.start:d.end])
- return HARNESS.replace('__TARGETS__','\n'.join(snippets))
+   record=records[name]
+   for role in ('canonical','adapter') if record.get('adapter') else ('canonical',):
+    resolved=indexed[(name,role)]
+    expected=record['body_sha256'] if role=='canonical' else record['adapter']['body_sha256']
+    assert resolved.body_sha256==expected, name+': manifest body hash drift'
+    expected_name=record['implementation']['qualified_name'] if role=='canonical' else name
+    assert resolved.target.name==expected_name
+    source=(ROOT/resolved.target.source).read_text();d=resolved.definition
+    snippets.append(source[d.start:d.end])
+ free='row[0]?UnitStack_NormalizePeasantCargo((__int16 *)stack_address,row[5],time):UnitStack_CalcMilitaryStrength(int(row[1]))'
+ classed=SOURCE is None and all(records[n].get('adapter') for n in NAMES)
+ direct='row[0]?clash95::UnitStack((intptr_t)stack_address).UnitStack_NormalizePeasantCargo(row[5],time):clash95::UnitStack(int(row[1])).UnitStack_CalcMilitaryStrength()'
+ invoke='route?('+direct+'):('+free+')' if classed else free
+ return HARNESS.replace('__TARGETS__','\n'.join(snippets)).replace('__ROUTES__','2' if classed else '1').replace('__INVOKE__',invoke)
 
 def verify_original_streams(inputs,expected,count):
  provenance=json.loads(PROVENANCE.read_text())
@@ -246,7 +251,7 @@ class RegisterContractTests(unittest.TestCase):
     for optimization in ('-O0','-O2'):
      for unsigned_char in (False,True):
       with self.subTest(compiler=compiler,optimization=optimization,unsigned_char=unsigned_char):
-       cmd=[compiler,'-std=gnu++20',optimization,'-fno-pie','-no-pie','-Wall','-Wextra','-Werror',
+       cmd=[compiler,'-std=gnu++20','-U_GNU_SOURCE','-I',str(ROOT/'src'),optimization,'-fno-pie','-no-pie','-Wall','-Wextra','-Werror',
          '-fsanitize=undefined','-fsanitize-undefined-trap-on-error']
        if unsigned_char:cmd+=['-funsigned-char']
        cmd+=[str(work/'probe.cpp'),'-o',str(work/'probe')]
