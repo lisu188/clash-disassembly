@@ -1122,6 +1122,78 @@ public regression from the repository root in Linux/WSL:
 python3 -m unittest discover -s tests/tools -p test_road_path_fallback.py -v
 ```
 
+### Batch 15: Rules_IsQueuedPathTargetBridgeCrossing
+
+Track: Win95 reconstruction, Road/queued-path query orchestration. Reviewed
+`Rules_IsQueuedPathTargetBridgeCrossing` (`0x454A20`) as the eighteenth
+Road-family function. The function now reads the existing typed stack/path,
+copies the target waypoint into a named `PathWaypoint`, and directly normalizes
+the bridge-cost result. Repeated offset expressions and register aliases are
+removed. The empty-path return remains zero with no call or write.
+
+The original reads stable, nonvolatile count/base storage without an intervening
+call or write. The refactor preserves its unsigned 32-bit waypoint-address
+arithmetic, including backed raw counts that wrap to the count word, earlier
+waypoints or adjacent bytes. It does not introduce a capacity clamp. Row and
+column remain the first two unsigned bytes; the cost word is ignored. The
+single bridge-cost call receives those two values, and every nonzero result
+becomes exactly one. State changed by that call is retained without a late
+read, path clear or other caller write.
+
+The probe executes all 128 unchanged original instruction bytes, excluding the
+following 56 bytes of the neighboring caller's switch tables. All 283 scenarios
+match both the unchanged before body and the actual refactored body under GCC
+13 and Clang 18 at O0/O2: 1132 comparisons for each version. They include nine
+empty paths, every conventional count 0..100, 48 backed raw-count cases,
+unsigned coordinate boundaries, cost-word independence and callback mutations.
+The 274 call events record exact arguments and state. Both recorders compare
+their complete game arenas and selected/base globals before and after the
+callback, enforcing no caller writes. Path/arena fingerprints in the traces
+are separate observations; the public fixture stores SHA-256 trace digests.
+
+Twelve compiled negative controls reject incorrect empty returns, clamping,
+waypoint choice, coordinate order/signedness, stack selection, normalization,
+pre-call writes, post-call clearing, late count reads and unwrapped addresses.
+Every control compiles before its runtime or trace rejection is counted.
+
+The real bridge-cost implementation returns only zero or five. Seven scenarios
+with other scripted results test the conditional normalization contract, not
+additional real callee behavior. The source record and resolved four-byte
+waypoint address require valid backing. Raw-count game/save reachability,
+asynchronous mutation, invalid stack indexes and the real map's support for
+every forwarded byte coordinate are not established by this caller fixture.
+Confidence is high within this documented storage/call domain. No public name,
+signature, layout, global or table changes; only the target's canonical body
+hash changes and all 4157 recovered identities remain.
+
+Both supported builds and all eight public asset-free gates pass. Target code
+shrinks from 224 to 175 bytes under GCC and 224 to 143 under Clang. All 61
+neighboring executable sections, the other 145 objects and ordinary allocated
+data/relocations remain exact, including the neighboring caller's Clang switch
+table. Scoped warnings remain 38 GCC / 39 Clang. Linked data classes, sizes and
+order remain unchanged, with zero recovered-library crosscheck errors.
+Manifest, split-source and generated metadata/header/include checks pass.
+Raw link ratchets retain 428 GCC / 680 Clang differences and the header ratchet
+retains its 14 existing failures; no baseline is raised.
+
+The final full tooling suite passes all 263 tests in 79.401 seconds. All 401
+production/tooling inputs, the public test/provenance pair, both executables and
+archives, and all 146 objects per compiler remain frozen through final checks.
+
+Private source/original freezes, exact commands, compiled negative controls and
+validation reports are retained under
+artifacts/readability/road-functions-20260906/batch-15/.
+Its candidate-audit, original-proof/final-review, test-audit, scope-audit,
+metadata and build-validation directories record the respective evidence and
+limits. Private scripts are absent from clean checkouts. The separate first-Road
+runtime baseline and normal turn-7 refresh/continuation frontier remain
+unchanged. No new route or visual-fidelity claim follows. Reproduce the focused
+public regression from the repository root in Linux/WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_queued_path_bridge_query.py -v
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

@@ -1,6 +1,22 @@
 # Current Status
 
-Last consolidated: 2026-09-08.
+Last consolidated: 2026-09-13.
+
+## Queued-Path Bridge Query Readability
+
+Track: Win95 reconstruction, Road/queued-path query orchestration.
+`Rules_IsQueuedPathTargetBridgeCrossing`, the eighteenth individually reviewed
+Road-family function, now uses named waypoint fields and a direct Boolean
+return. Its original wrapping address calculation, unsigned coordinate bytes,
+empty return and absence of caller writes remain. All 283 original scenarios
+match the unchanged before and actual after bodies in four compiler profiles,
+including 48 backed raw-count cases. Twelve compiled negative controls are
+rejected. Both builds and eight public gates pass; only target code changes,
+with smaller code and unchanged warnings, neighboring code and data.
+The final full tooling suite passes all 263 tests with its inputs frozen.
+The first-Road runtime baseline and turn-7 continuation frontier are unchanged.
+Evidence, commands, validation and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-15-rules_isqueuedpathtargetbridgecrossing).
 
 ## Queued-Path Road Caller Readability And Stack Index
 

@@ -1,5 +1,21 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Road readability: queued-path bridge query
+
+Track: Win95 reconstruction. Reviewed `Rules_IsQueuedPathTargetBridgeCrossing`
+(`0x454A20`) individually. Reused packed stack/path/waypoint fields, named the
+wrapping waypoint address and simplified return normalization. Stable base/count
+reads, raw-count aliases, unsigned row/column bytes and no caller writes remain.
+All 283 original traces match both unchanged-before and actual-after bodies in
+four compiler profiles, including 48 backed raw-count cases. Twelve compiled
+negative controls are rejected. Both builds and eight public gates pass, with
+smaller target code, unchanged warnings, and exact neighboring code/data.
+The final full tooling suite passes all 263 tests with frozen inputs.
+One canonical body hash changes; all 4157 identities, legacy hashes and layouts
+remain. Confidence is high within the documented storage/call domain. No
+campaign or visual milestone changes.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-15-rules_isqueuedpathtargetbridgecrossing).
+
 ## 2026-09-08 - Road readability: queued-path fallback caller
 
 Track: Win95 reconstruction. Reviewed `Rules_BuildRoadOrStepTowardQueuedPath`

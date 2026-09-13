@@ -711,20 +711,19 @@ signed int  UnitStack_GetSquadCountByIndex(int stack_index)
 //----- (00454A20) --------------------------------------------------------
 signed int  Rules_IsQueuedPathTargetBridgeCrossing(int stack_index)
 {
-  signed int result; // eax
-  int stack_table_base; // ebx
-
-  if ( !*(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) )
+  const UnitStackRecord *sourceStack = UNIT_STACK_RECORD(stack_index);
+  const uint32_t waypointCount = static_cast<uint32_t>(sourceStack->queued_path.waypoint_count);
+  if ( !waypointCount )
     return 0;
-  stack_table_base = gameData + UNIT_STACK_TABLE_OFFSET;
-  result = Map_GetBridgeCrossingCostOrZero(
-             (unsigned __int8)*(_DWORD *)(uintptr_t)(stack_table_base + UNIT_STACK_STRIDE * stack_index + 4 * (*(_DWORD *)(uintptr_t)(stack_table_base + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET) - 1) + 320),
-             (unsigned __int8)BYTE1(*(_DWORD *)(uintptr_t)(stack_table_base + UNIT_STACK_STRIDE * stack_index + 4 * (*(_DWORD *)(uintptr_t)(stack_table_base + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET) - 1) + 320)));
-  if ( result )
-    return 1;
-  return result;
+
+  // Original scaled addressing wraps to 32 bits, including raw count aliases.
+  const uint32_t waypointByteOffset = waypointCount * sizeof(PathWaypoint);
+  const uint32_t waypointAddress = static_cast<uint32_t>((uintptr_t)&sourceStack->queued_path)
+      + waypointByteOffset;
+  PathWaypoint targetWaypoint;
+  qmemcpy(&targetWaypoint, (const void *)(uintptr_t)waypointAddress, sizeof(targetWaypoint));
+  return Map_GetBridgeCrossingCostOrZero(targetWaypoint.tile_row, targetWaypoint.tile_column) != 0;
 }
-// 5202E4: using guessed type int gameData;
 
 //----- (00454AE0) --------------------------------------------------------
 signed int  Rules_BuildRoadOrStepTowardQueuedPath(int stack_index, DWORD a2, double a3)
