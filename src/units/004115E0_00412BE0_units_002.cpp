@@ -1101,8 +1101,15 @@ int  UnitStack_SetPlagueFlag(int result)
 }
 
 //----- (00412AC0) --------------------------------------------------------
-signed int  UnitStack_HasPlague(int stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasPlague(int stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_HasPlague();
+}
+
+signed int clash95::UnitStack::UnitStack_HasPlague() const
+{
+  int stackPtr = (int)address_;
   UnitStackRecord *stack;
   int slotIndex;
 
@@ -1119,8 +1126,15 @@ signed int  UnitStack_HasPlague(int stackPtr)
 }
 
 //----- (00412AF0) --------------------------------------------------------
-signed int  UnitStack_HasLowMoraleUnit(int stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasLowMoraleUnit(int stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_HasLowMoraleUnit();
+}
+
+signed int clash95::UnitStack::UnitStack_HasLowMoraleUnit() const
+{
+  int stackPtr = (int)address_;
   UnitStackRecord *stack;
   int slotIndex;
 

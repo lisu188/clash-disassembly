@@ -262,6 +262,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ],
       "archive_text": [
@@ -523,6 +537,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ]
     },
@@ -744,6 +772,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ],
       "archive_text": [
@@ -963,6 +1005,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ]
     }

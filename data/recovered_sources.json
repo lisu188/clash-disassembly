@@ -89155,7 +89155,7 @@
       "original_line": 2779,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "0fa4c92e9e12a96ede0945099d4a2746aeba3e90d0fdf8f4237cecaa311ff7d7",
+      "body_sha256": "e04f765e9f7041f9fb475c7439671a0ddc6824a3db21ed10463b0284cd41c34c",
       "original_address_range": {
         "start": "0x00412AC0",
         "end_exclusive": "0x00412AF0"
@@ -89165,12 +89165,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "bab7ecbbf0b865a3278521264c5cf6769179119230d23f3a0f0a09361d132530",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_HasPlague"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_HasPlague",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_HasPlague is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "ac7fd3e02a6aba18eeccec6b1edf317fc8ab266ff2e3cf5cfd561e7d27feea10"
+      }
     },
     {
       "name": "UnitStack_HasLowMoraleUnit",
@@ -89179,7 +89184,7 @@
       "original_line": 2799,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "055fe45d56c4264aee6eb3d0e04e7e453a74245679d58ab30de8be1513561444",
+      "body_sha256": "5c78e7457556dd795331d8946d7eaa14f97a4f2a6e935e0638b5e04b9e69a2d2",
       "original_address_range": {
         "start": "0x00412AF0",
         "end_exclusive": "0x00412B20"
@@ -89189,12 +89194,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "997f33b1d16d72e163ab90ce7a7b4ceb10c2e31589b60d47c2a8279b3d9cdce8",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_HasLowMoraleUnit"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_HasLowMoraleUnit",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_HasLowMoraleUnit is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "c1a0e50c8610d1decfae8406f0a2de3212c414720c7bf3287062ac99f576bf15"
+      }
     },
     {
       "name": "UnitStackSelection_BuildSelectedSlotIndexList",

@@ -2,6 +2,15 @@
 
 Last consolidated: 2026-09-13.
 
+## UnitStack Plague And Morale Query Extraction
+
+Two packed-record queries now use canonical UnitStack methods and retained
+adapters. Eight focused compiler profiles, both production builds, strict
+storage/symbol/initialization checks and eight asset-free gates pass. There are
+23 canonical methods, with two awaiting separate relocation; no TU or storage
+is added. Nearby setter repairs remain separate. See
+[UNIT_STACK_QUERY_CLASSES.md](UNIT_STACK_QUERY_CLASSES.md).
+
 ## UnitSlot Action-Point Class Extraction And Relocation
 
 The two AP queries now use canonical UnitSlot methods and retained adapters;
