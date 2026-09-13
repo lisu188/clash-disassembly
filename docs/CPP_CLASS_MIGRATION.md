@@ -98,7 +98,8 @@ so future source synchronization rejects that reorder before compiling.
 
 The next extraction completes `QueuedPath` with
 `QueuedPath_StartsInBuildingFootprint`. After its independent extraction gate,
-the unchanged body was relocated into `QueuedPath.cpp`. The object borrows a live
+the unchanged body was relocated into
+[QueuedPath.cpp](../src/units/QueuedPath.cpp). The object borrows a live
 `gameData` reference as well as the path bytes; holding an object across state
 rebinding observes the new building table. The original 1x1/2x2 footprint
 branches, byte comparisons and early-return order remain intact.
@@ -130,7 +131,8 @@ build-directory/CLI attempts, source hashes and full native outcomes are in
 `queued-path-native/`. The full tooling suite now passes 245 tests.
 The unchanged raw link ratchets remain red at 432 GCC / 684 Clang differences:
 each is its historical 427/679 plus exactly the five reviewed canonical method
-symbols. `pilot/queued-path-raw-link-delta.json` enumerates those additions.
+symbols. The private pilot/queued-path-raw-link-delta.json enumerates those
+additions.
 The stronger migration comparison passes with explicit method/constructor
 allowances and no storage, initialization, legacy identity or order changes.
 The header ratchet still has exactly 14 historical differences.
@@ -196,8 +198,8 @@ pass the saved surface checks without allowances. See `baseline-rebuild/`.
 
 The CMake coverage configuration now limits GCC-only `-fprofile-abs-path` to
 GCC. The baseline Clang native run uses a privately extracted distro profiling
-runtime with package/header provenance in `baseline/README.md`; no system
-dependency installation or coverage stripping was used.
+runtime with package/header provenance in the private baseline/README.md; no
+system dependency installation or coverage stripping was used.
 
 ## Remaining sequence
 

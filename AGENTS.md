@@ -39,8 +39,9 @@ Reasoning effort, permissions, and authentication remain user settings.
 - `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
   runtime, reaches responsive menus, and runs validated gameplay routes.
 - The recovered implementation is canonical only in the 12 manifest-backed
-  subsystem directories directly under `src/`: 4,157 functions in 140 independently compiled GNU++20
-  translation units. The unified source, recovered include-C fragments, and
+  subsystem directories directly under `src/`: 4,157 historical identities in
+  144 independently compiled GNU++20 translation units, including four canonical
+  class sources. The unified source, recovered include-C fragments, and
   compatibility symlinks were removed after the recorded parity gate.
 - Broad placeholder renaming is no longer the main frontier. Remaining work is
   reached behavioral recovery, structure recovery, compatibility cleanup, and

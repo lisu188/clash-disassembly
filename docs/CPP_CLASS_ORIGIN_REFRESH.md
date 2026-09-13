@@ -55,9 +55,11 @@ initialization, identity and ordering checks have no allowances.
 
 The existing header baseline remains frozen. Incoming baseline increases are
 retained as an explicit comparison artifact, not adopted to make checks pass.
-The exact-origin raw link ratchets still report 428 GCC and 680 Clang differences;
-the header ratchet still reports 14. These historical failures are not hidden by
-the stronger migration-specific comparisons.
+The exact-origin raw link ratchets report 428 GCC and 680 Clang differences;
+the earlier header record quoted 14. These are historical/reference counts;
+the complete later combined recount below has 22 header failures under the
+stricter limits. These failures are not hidden by the stronger migration-specific
+comparisons.
 
 Actual-method differential tests pass for the unit queries, queued paths, world
 geometry and unit turns. The separate sine and logging-context recovery tests
@@ -119,8 +121,8 @@ initialization or identity changes are permitted. The nine focused Road modal,
 timing and readability-runner tests pass. Historical raw link/header ratchets
 remain unchanged.
 
-Exact commands and source hashes are in `refresh/latest-build.py`,
-`refresh/latest-build-source.json` and `refresh/latest-comparison.py`; reference
+Exact commands and source hashes are in refresh/latest-build.py,
+refresh/latest-build-source.json and refresh/latest-comparison.py; reference
 builds, snapshots and verified archives are under `origin-latest-reference/`.
 The native and runtime observations above remain tied to the preceding frozen
 integration. They do not substitute for a final regression of subsequent code.
@@ -186,3 +188,19 @@ The dated local evidence root is `artifacts/cpp-classes/20260908/`:
 This batch does not resolve all family readiness contracts, visual defects,
 mission-05 continuation or campaign progression. Class assignment and byte-view
 helpers are not counted as canonical behavior migration.
+
+## Subsequent combined main validation
+
+The DLX task integrates this committed checkpoint `9ec82b0` and the subsequent
+origin movement recovery `d652a03` at `1d59bca`. Its final source retains the
+11 methods, complete schema-3 metadata and stricter premigration header limits.
+The unsigned DLX loader replaces the concurrent signed-subtraction variant.
+Both production builds, eight public gates, 514 tooling tests and strict class
+symbol/storage/initialization comparisons pass. The unchanged native repeat
+matches the earlier 1087-pass/527-crash set; initial extra crashes and a public
+audit timeout remain recorded. Full header metrics are unchanged; all 22
+failures under the stricter limits are enumerated despite the console's
+15-row truncation. Raw link failures are 441 GCC / 693 Clang, including the
+13 incoming strong text additions. No baseline is raised. The exact frozen
+inputs, commands, runtime evidence and limits of this later combined validation
+are recorded in [DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).

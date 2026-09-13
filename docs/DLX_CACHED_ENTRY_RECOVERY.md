@@ -203,8 +203,105 @@ reported metric uses the fresh 16 worker shards. No ratchet is raised.
 Integration evidence is retained in this batch's integration-audit,
 integration-fixture, integration-tooling and integration-validation artifacts.
 
+Both `55872f9` integration first-Road probes pass. Clang's first attempt exits
+zero in 237.719 seconds. GCC's first attempt fails after 206.524 seconds when
+the viewport driver exhausts 80 pan attempts after reaching the fifth-leg save:
+turn 5, stack 4 at `(55,53)`, 15 AP, empty path and 179 visible tiles. Its stale
+slot-2 save is not the furthest reached state. The unchanged GCC binary passes
+from a fresh native private runtime root in 297.805 seconds. Both attempts and
+their full evidence remain; no failure cause or route repair is inferred.
+All ten decoded saves match the selected GCC retry and Clang run, and both
+retain the established first-Road endpoint.
+
+Selected memory, visibility and six Road words match the retained historical
+original with zero differences. The original/selected-GCC frame differs at
+287,446 pixels with RGB MAD 11.324215495/255; original/Clang differs at 287,430
+pixels with MAD 11.297054036. Cross-build differences cover 16,850 pixels, with
+3,796 outside the observed temporal variation. Those differences remain
+unresolved. The comparison pairs, exact commands, failed-attempt details and
+state proof are retained under integration-runtime; no fresh original execution
+or visual/campaign promotion is claimed.
+
 The user's standing preference for frequent main synchronization and prompt
 merging of validated batches is recorded in [AGENTS.md](../AGENTS.md).
+
+## Combined class and origin integration
+
+Local main subsequently advanced to `9ec82b07c67f5e0fbb9e1bd20799f33c65006381`.
+Its owner confirmed that this committed class checkpoint was ready to publish;
+later RNG work on the separate class branch was explicitly excluded. Merge
+`024024e` preserves its schema-3 manifest, 11 canonical methods, adapters,
+historical alias, class catalogs and all 144 ordered translation units. Its
+entire production/tooling tree matches that checkpoint except for this batch's
+validated DLX body and its two reviewed plans. No class assignment or catalog
+was rewritten to represent the storage-view change.
+
+A final origin refresh then found `d652a0394db3c68e9d518bbfd93ae35775165df4`.
+Merge `1d59bca` retains its single-tile movement source and original-backed
+fixture verbatim. Relative to the class checkpoint, only the DLX and incoming
+movement current-body hashes change; all identities, class metadata and history
+remain. Status and recovery-log conflicts retain both entries. This commit is
+the frozen production source for the final combined validation. Preliminary
+9ec-only build processes were stopped when origin advanced; their partial logs
+remain explicitly superseded, not reported as completed checks.
+
+The class checkpoint restores eight header-surface limits by one to their
+premigration values. Those incoming stricter limits, the warning/link baselines
+and frozen coverage requirements remain intact. The detailed class recovery and
+its earlier validation boundaries remain in
+[CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md).
+
+The full combined tooling suite passes **514 tests, zero skips** in 339.918
+seconds. All 732 bound source/test/tool/metadata inputs remain unchanged during
+the run; their inventory SHA-256 is
+`f13b0eff0336c258da776285758870b3a64d9450a91ed97c929ea75c2ddc3817`.
+All 13 non-header checks pass, including generators and the four class
+inventories/synchronization checks. The final header audit exits one with
+**22 failures**, compared with the earlier 14. Its console output prints only
+the first 15. Full API, dependency-edge and shared-global metrics are identical
+between `55872f9`, `9ec82b0` and the final source; eight additional failures
+come solely from the incoming stricter baseline for the render API and seven
+render dependency edges. No prior failure disappears. The stricter limits are
+retained. Exact outputs and the complete comparison remain in
+class-integration-tooling and integration-audit-class-main. The earlier unchanged
+14-failure result applies only to the pre-class integration.
+
+Both final production builds compile and link. GCC's four public gates pass
+on the initial run; Clang's split-source CTest initially reaches its unchanged
+60-second timeout, while its other three gates pass. With compilation/tooling
+activity finished, the unchanged Clang build passes all four gates, including
+the split audit in 16.70 seconds. Both attempts remain; no timeout is raised.
+
+Warnings decrease by one per compiler to **6580 GCC / 6582 Clang**, within the
+unchanged warning limits. Raw linked-surface ratchets now report **441 / 693**
+differences, compared with 428 / 680 before the class integration; all 13
+additional strong text symbols are the incoming 11 methods, borrowing factory
+and historical alias. Library crosschecks still report zero errors. These
+raw failures remain visible; no linked-surface baseline is raised.
+
+Both strict class comparisons pass against the retained `integration-55872`
+binaries/archives and the immutable schema-2 manifest at `3d2b0fd`, using the
+class checkpoint's unchanged approved text additions. GCC admits 21 linked / 27
+archive additions and Clang 17 / 20, including weak borrowing constructors.
+There are no removed, unreviewed or stale symbols. All 4,157 legacy identities,
+named archive storage bytes/relocations/alignment, linked data sizes/order and
+archive/linked initializer records match. Both archives contain 147 members.
+Commands, hashes and complete reports remain in integration-audit-class-main/strict;
+this is a scoped class comparison, not blanket executable-byte equality.
+
+The first combined native run records 1085 passes, zero assertion failures and
+529 isolated crashes out of 1614. The two additional crash identities are
+`cov2_09_rules.compile_strategic_rules_file` and
+`cov4_03_ai.find_best_strategic_target_hits_treasure_branch`. A repeat of the
+unchanged binary records **1087/0/527**, with exactly the pre-class integration's
+crash identities. No cause is assigned to the initial variability. The initial
+case log and all 16 coverage shards remain separately preserved and hashed.
+Initial coverage is 6159/6652 lines (92.59%); the repeat is **6161/6652 (92.62%)**,
+with all 718 functions reached, zero uncovered functions and no gcov diagnostics.
+The extra executable line relative to the pre-class result is the incoming
+receiver binding, not a DLX coverage improvement. Commands and every attempt
+are retained under class-integration-validation and coverage/integration-final
+and coverage/integration-final-repeat.
 
 ## Validation commands and retained evidence
 

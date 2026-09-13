@@ -13,9 +13,13 @@ metadata remain. The actual-source fixture passes 160 paired cases across
 GCC 13/Clang 18 at O0/O2, with ownership, stale-size and signed-overflow negative
 controls. Main integration preserves the incoming Road work and archives the
 competing signed-subtraction specification; the original uint32 subtraction wins
-the conflict. Both builds, all eight public asset-free gates and 263 tooling tests pass;
-existing header/link ratchet failures remain unchanged. Evidence, native/runtime
-results and retained original/canonical differences:
+the conflict. Integration of main's 11 class methods and subsequent single-tile
+movement recovery retains all 144 ordered TUs and schema-3 metadata. Both builds,
+all eight public gates, strict class comparisons and 514 tooling tests pass.
+The unchanged native repeat matches the prior 527 crash identities. Incoming
+stricter header limits yield 22 failures (15 printed); class text additions yield
+441 GCC / 693 Clang raw link differences. No ratchet is raised. Exact attempts,
+native/runtime evidence and retained original/canonical differences:
 [DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).
 No campaign milestone advances; normal mission-05 turn-7 refresh and Road
 continuation remain the gameplay target.
