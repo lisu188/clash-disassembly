@@ -1,5 +1,25 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Road widget ownership
+
+Track: Win95 reconstruction, inherited CI repair. Physically moved the unchanged
+builder/Road initializer and original builder selector into buildings, preserving
+their symbols and authentic world-origin evidence. The trimmed world TU is
+renamed to its actual final address, 0x0040A040. Current source, registry,
+declaration and coverage paths follow the move; all 4,157 identity/body records
+and five caller positions remain. The ordered canonical inventory has 145 TUs.
+Header violations decrease 22 to 20 without new failing keys or raised limits.
+Both builds, eight public CTests and 526 tooling tests pass with 741 frozen
+inputs; coverage passes at 92.62% across the same 718 selected functions, none
+uncovered. Independent preprocessing, object and linked proof preserves code,
+storage and references, accounting explicitly for the 21-object read-only move,
+equivalent per-TU metadata and decoded unwind padding. Raw link totals remain
+439 GCC / 691 Clang. The strict order difference and failed validation-harness
+attempts remain recorded; no allowance or baseline update hides them.
+Confidence is high for the two validated compiler outputs. No function symbol,
+Road review count, original-game route or visual milestone changes.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#road-widget-ownership-and-header-dependencies).
+
 ## 2026-09-13 - Bootstrap label and support-state scanner
 
 Track: Win95 reconstruction, inherited CI repair. Restored the private bootstrap

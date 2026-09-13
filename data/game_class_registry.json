@@ -66821,11 +66821,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00408030",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::UI_TrySelectFriendlyStackUnderCursor",
-        "clash95.asm@0x00408030"
+        "clash95.asm@0x00408030",
+        "src/world/00408030_0040A040_world_001.cpp::UI_TrySelectFriendlyStackUnderCursor"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66841,11 +66842,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00408140",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::MapTile_HasOwnUnitStack",
-        "clash95.asm@0x00408140"
+        "clash95.asm@0x00408140",
+        "src/world/00408030_0040A040_world_001.cpp::MapTile_HasOwnUnitStack"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66861,11 +66863,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00408200",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::MapTile_HasVisibleEnemyUnitStack",
-        "clash95.asm@0x00408200"
+        "clash95.asm@0x00408200",
+        "src/world/00408030_0040A040_world_001.cpp::MapTile_HasVisibleEnemyUnitStack"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66881,11 +66884,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x004082C0",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::MapTile_HasOwnOrVisibleEnemyUnitStack",
-        "clash95.asm@0x004082C0"
+        "clash95.asm@0x004082C0",
+        "src/world/00408030_0040A040_world_001.cpp::MapTile_HasOwnOrVisibleEnemyUnitStack"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66901,11 +66905,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x004082F0",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::MapTile_HasOwnBuilding",
-        "clash95.asm@0x004082F0"
+        "clash95.asm@0x004082F0",
+        "src/world/00408030_0040A040_world_001.cpp::MapTile_HasOwnBuilding"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66921,11 +66926,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00408390",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::MapTile_HasEnemyBuilding",
-        "clash95.asm@0x00408390"
+        "clash95.asm@0x00408390",
+        "src/world/00408030_0040A040_world_001.cpp::MapTile_HasEnemyBuilding"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66941,11 +66947,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00408430",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::MapTile_HasBuilding",
-        "clash95.asm@0x00408430"
+        "clash95.asm@0x00408430",
+        "src/world/00408030_0040A040_world_001.cpp::MapTile_HasBuilding"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66961,11 +66968,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00408460",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::Port_IsInsideFootprint",
-        "clash95.asm@0x00408460"
+        "clash95.asm@0x00408460",
+        "src/world/00408030_0040A040_world_001.cpp::Port_IsInsideFootprint"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -66981,11 +66989,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x004084A0",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_HandleTileHoverAndClick",
-        "clash95.asm@0x004084A0"
+        "clash95.asm@0x004084A0",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_HandleTileHoverAndClick"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67001,11 +67010,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00409CC0",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_ShowQuitConfirmDialog",
-        "clash95.asm@0x00409CC0"
+        "clash95.asm@0x00409CC0",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_ShowQuitConfirmDialog"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67021,11 +67031,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00409CE0",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_HandleSaveGameAction",
-        "clash95.asm@0x00409CE0"
+        "clash95.asm@0x00409CE0",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_HandleSaveGameAction"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67041,11 +67052,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00409D00",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_HandleLoadGameAction",
-        "clash95.asm@0x00409D00"
+        "clash95.asm@0x00409D00",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_HandleLoadGameAction"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67061,11 +67073,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00409D30",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_HandleSurrenderAction",
-        "clash95.asm@0x00409D30"
+        "clash95.asm@0x00409D30",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_HandleSurrenderAction"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67081,11 +67094,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00409D80",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_HandleDeselectUnitAction",
-        "clash95.asm@0x00409D80"
+        "clash95.asm@0x00409D80",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_HandleDeselectUnitAction"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67101,11 +67115,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00409DF0",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_SelectNextActiveUnitStack",
-        "clash95.asm@0x00409DF0"
+        "clash95.asm@0x00409DF0",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_SelectNextActiveUnitStack"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67121,11 +67136,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x00409F00",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_CenterViewOnNextOwnedBuildingWithUnit",
-        "clash95.asm@0x00409F00"
+        "clash95.asm@0x00409F00",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_CenterViewOnNextOwnedBuildingWithUnit"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67141,11 +67157,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x0040A000",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_HandleHideUnitAction",
-        "clash95.asm@0x0040A000"
+        "clash95.asm@0x0040A000",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_HandleHideUnitAction"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67161,11 +67178,12 @@
       "identity_kind": "original",
       "legacy_subsystem": "world",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/world/00408030_0040A040_world_001.cpp",
       "original_address": "0x0040A040",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_ToggleSelectedUnitModeFlag",
-        "clash95.asm@0x0040A040"
+        "clash95.asm@0x0040A040",
+        "src/world/00408030_0040A040_world_001.cpp::WorldMap_ToggleSelectedUnitModeFlag"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -67179,13 +67197,14 @@
     {
       "name": "WorldMap_ComputeBuildMenuActionFromCursor",
       "identity_kind": "original",
-      "legacy_subsystem": "world",
+      "legacy_subsystem": "buildings",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
-      "legacy_source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "legacy_source": "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp",
       "original_address": "0x0040A0A0",
       "evidence": [
         "src/world/00408030_0040A0A0_world_001.cpp::WorldMap_ComputeBuildMenuActionFromCursor",
-        "clash95.asm@0x0040A0A0"
+        "clash95.asm@0x0040A0A0",
+        "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp::WorldMap_ComputeBuildMenuActionFromCursor"
       ],
       "classification": "game-method",
       "confidence": "medium",
@@ -71655,11 +71674,12 @@
     },
     {
       "name": "WorldMap_EnsureBuilderWidgetTables",
-      "source": "src/world/0040A0E0_0040B020_world_002.cpp",
+      "source": "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp",
       "rationale": "WorldMap_EnsureBuilderWidgetTables is an explicitly registered reconstruction helper with no original address.",
       "evidence": [
         "data/recovered_decls.json#WorldMap_EnsureBuilderWidgetTables",
-        "src/world/0040A0E0_0040B020_world_002.cpp::WorldMap_EnsureBuilderWidgetTables"
+        "src/world/0040A0E0_0040B020_world_002.cpp::WorldMap_EnsureBuilderWidgetTables",
+        "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp::WorldMap_EnsureBuilderWidgetTables"
       ],
       "classification": "game-method",
       "class_owner": "RoadBuildMode",

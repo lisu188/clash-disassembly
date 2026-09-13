@@ -2,7 +2,7 @@
   "schema_version": 3,
   "language": "GNU C++20",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.cpp",
-  "source_file_count": 144,
+  "source_file_count": 145,
   "function_count": 4157,
   "functions": [
     {
@@ -91777,7 +91777,7 @@
       "original_address": "0x00408030",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 6,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "5ef80da96721e09a1d2f95ef6d7a46d8e68c36fb44f828d2675fcab71cab8cc9",
       "original_address_range": {
@@ -91801,7 +91801,7 @@
       "original_address": "0x00408140",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 57,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "6db7516700be45890832d729ba7ba5dbcb3772ceb15efd6717e550c4b1d6576b",
       "original_address_range": {
@@ -91825,7 +91825,7 @@
       "original_address": "0x00408200",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 74,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "201a924e5d5109b0d47b64c7775ab8e52f162c8581439f37b179f2f9e667d076",
       "original_address_range": {
@@ -91849,7 +91849,7 @@
       "original_address": "0x004082C0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 95,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "57a01d539d79e7822b6f4193ccf57661f6e927e1dfb8ebdfc20d24f4ac0bddfa",
       "original_address_range": {
@@ -91873,7 +91873,7 @@
       "original_address": "0x004082F0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 108,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "695a949da13dceb3bcff857f38905d3001136b1958df629a39260f907ced6adf",
       "original_address_range": {
@@ -91897,7 +91897,7 @@
       "original_address": "0x00408390",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 135,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "d9ec30d130beed9aa7d5b3c4d4a17a406364a3f3caeabe20c645bc416b881517",
       "original_address_range": {
@@ -91921,7 +91921,7 @@
       "original_address": "0x00408430",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 162,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "e13e733a62cb9679d8f1b9e05582fd59fa13fecd1af736b93f5edd033aecf0d8",
       "original_address_range": {
@@ -91945,7 +91945,7 @@
       "original_address": "0x00408460",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 175,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "a20905b11286d5e7d62c2e49e820e4b2f28220cc07f191eed36ec86103e84dad",
       "original_address_range": {
@@ -91969,7 +91969,7 @@
       "original_address": "0x004084A0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 194,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "1897e5788b2b1386dfacde5b66da693c9e4343729d4f4167a06ab6871a75b0f5",
       "original_address_range": {
@@ -91993,7 +91993,7 @@
       "original_address": "0x00409CC0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1042,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "ba60c4e1db5520732b44435ebc77e89404ecec83a837c55062fedccfa7ff9ddd",
       "original_address_range": {
@@ -92017,7 +92017,7 @@
       "original_address": "0x00409CE0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1055,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "fb3d3f00edb0f3202fc66d19a56f3dd41d83404ef1a657b6673f564823c3d8de",
       "original_address_range": {
@@ -92041,7 +92041,7 @@
       "original_address": "0x00409D00",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1063,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "9eb473db3c43a5eedb62fcf22d771689d5ab654716aa33c1d21688b5bce5c6d8",
       "original_address_range": {
@@ -92065,7 +92065,7 @@
       "original_address": "0x00409D30",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1084,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "cbe5b62d0f0a82181654a3a12317e24e7b19ce17b1fd37c4e82b9f089f4e3a4a",
       "original_address_range": {
@@ -92089,7 +92089,7 @@
       "original_address": "0x00409D80",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1110,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "80566d4a1c9d76985aefc760ad366da6383535dfe6ad33d71d74f7106349f8e3",
       "original_address_range": {
@@ -92113,7 +92113,7 @@
       "original_address": "0x00409DF0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1134,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "3c8a8e4b7623a8f6ca20c4a6e35c14d5d58adb2a7d3186faab09114d7a48728f",
       "original_address_range": {
@@ -92137,7 +92137,7 @@
       "original_address": "0x00409F00",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1199,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "ae3c51a2e0e4daac78c826bbd1a8f35e0d62d4211e2eaa76614c447e33b591ee",
       "original_address_range": {
@@ -92161,7 +92161,7 @@
       "original_address": "0x0040A000",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1237,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "5be6fdc0ae075815ec97c8fffd2a466b07a14edf16bdf791633e4f30a8bae4cc",
       "original_address_range": {
@@ -92185,7 +92185,7 @@
       "original_address": "0x0040A040",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1254,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/world/00408030_0040A040_world_001.cpp",
       "linkage": "external",
       "body_sha256": "913cc3530a4288608593a36b804aa3bc90ff354ea4b9e98056339b4cb7212d13",
       "original_address_range": {
@@ -92209,14 +92209,14 @@
       "original_address": "0x0040A0A0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 1283,
-      "source": "src/world/00408030_0040A0A0_world_001.cpp",
+      "source": "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp",
       "linkage": "external",
       "body_sha256": "bc3ad876750b02ad093ce65034f27f08a283d7e519d48fcd77681e7d9b0497df",
       "original_address_range": {
         "start": "0x0040A0A0",
         "end_exclusive": "0x0040A0E0"
       },
-      "subsystem": "world",
+      "subsystem": "buildings",
       "state_owner": "src/state/00000000_0054FFFF_recovered_state.cpp",
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "be797dceaa758c0ec37312d5fd3e2e462a8f51c4d9c9a2cd6430a1700880f934",
@@ -97565,7 +97565,8 @@
         "src/buildings/0043CD00_0043E4B0_buildings_005.cpp",
         "src/buildings/0043E500_0043FDE0_buildings_006.cpp",
         "src/buildings/0043FEF0_00441BE0_buildings_007.cpp",
-        "src/buildings/00441C80_00441D20_buildings_008.cpp"
+        "src/buildings/00441C80_00441D20_buildings_008.cpp",
+        "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp"
       ]
     },
     {
@@ -97734,7 +97735,7 @@
     {
       "group": "world",
       "sources": [
-        "src/world/00408030_0040A0A0_world_001.cpp",
+        "src/world/00408030_0040A040_world_001.cpp",
         "src/world/0040A0E0_0040B020_world_002.cpp",
         "src/world/0040B0A0_0040D560_world_003.cpp",
         "src/world/0040D6D0_0040F4D0_world_004.cpp",

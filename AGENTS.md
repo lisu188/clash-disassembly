@@ -40,7 +40,7 @@ Reasoning effort, permissions, and authentication remain user settings.
   runtime, reaches responsive menus, and runs validated gameplay routes.
 - The recovered implementation is canonical only in the 12 manifest-backed
   subsystem directories directly under `src/`: 4,157 historical identities in
-  144 independently compiled GNU++20 translation units, including four canonical
+  145 independently compiled GNU++20 translation units, including four canonical
   class sources. The unified source, recovered include-C fragments, and
   compatibility symlinks were removed after the recorded parity gate.
 - Broad placeholder renaming is no longer the main frontier. Remaining work is

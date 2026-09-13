@@ -21303,7 +21303,7 @@
     "WorldMap_ComputeBuildMenuActionFromCursor": {
       "class": "manifest",
       "decl": "int  WorldMap_ComputeBuildMenuActionFromCursor(int widget, int a2);",
-      "home": "world"
+      "home": "buildings"
     },
     "WorldMap_DeferBuildingActionCallback": {
       "class": "test-seam",
@@ -21373,8 +21373,8 @@
     "WorldMap_EnsureBuilderWidgetTables": {
       "class": "helper",
       "decl": "CLASH95_INTERNAL void WorldMap_EnsureBuilderWidgetTables(void);",
-      "home": "world",
-      "source": "src/world/0040A0E0_0040B020_world_002.cpp"
+      "home": "buildings",
+      "source": "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp"
     },
     "WorldMap_HandleBuilderActionMenu": {
       "class": "manifest",

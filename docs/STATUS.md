@@ -2,6 +2,25 @@
 
 Last consolidated: 2026-09-13.
 
+## Road Widget Ownership And Header Dependencies
+
+Track: Win95 reconstruction, inherited CI repair. The unchanged builder/Road
+initializer and original builder selector now reside together in buildings.
+All five initialization call positions, 4,157 identity/body records and shared
+storage remain. Explicit source/provenance and coverage paths follow the move;
+the canonical inventory increases to 145 TUs. Complete header comparison removes
+two violations, leaving 20, with no new failing keys or changed limits.
+Both builds, four asset-free CTests per compiler and all 526 tooling tests pass
+with 741 inputs frozen. Coverage passes at 92.62% across all 718 selected
+functions, with none uncovered. The rejected first coverage location is retained.
+Independent source, preprocessing, object and linked-data proof accounts for
+the exact code/data relocation, unwind padding and duplicate per-TU note.
+Historical raw link totals remain 439 GCC / 691 Clang; the intentional strict
+read-only order difference remains explicit without allowances. Overall CI
+repair remains incomplete. Road review count stays twenty; the runtime and
+campaign frontier do not advance.
+[Evidence, commands and remaining dependency](HUMAN_READABILITY.md#road-widget-ownership-and-header-dependencies).
+
 ## Bootstrap Storage Label And State-Name Scanner
 
 Track: Win95 reconstruction, inherited CI repair. The private bootstrap command-
@@ -17,6 +36,15 @@ remain. Strict comparison's one intentional name difference remains recorded;
 no baseline or policy is weakened. The original failed scanner-audit attempts
 are retained. Road-function count, runtime and campaign frontiers do not advance.
 [Proof, commands and limits](HUMAN_READABILITY.md#bootstrap-command-line-symbol-and-state-scanner).
+
+## Published CI At a40417b
+
+Both compiler builds, four public CTests per compiler, 526 tooling tests and the
+separate coverage gate pass. Overall CI still fails the header and linked-symbol
+ratchets: 22 header rows and 439 GCC / 691 Clang link differences, with zero
+library crosscheck errors. Coverage measures 92.62% across the selected 718
+functions, with none uncovered; the prior run's measurements remain separate.
+[Run and evidence](HUMAN_READABILITY.md#published-ci-observation-after-the-bootstrap-repair).
 
 ## Published CI At 4033aa8
 

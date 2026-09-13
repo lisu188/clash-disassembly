@@ -2,7 +2,7 @@
 
 Track: Win95 reconstruction. Frontier: origin integration after unit queries,
 world geometry and unit-turn relocation. Eleven canonical methods now reside in
-four class-named sources; the ordered manifest contains 144 translation units.
+four class-named sources; the ordered manifest contains 145 translation units.
 This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 

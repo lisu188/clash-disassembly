@@ -262,7 +262,7 @@ def harness_source(body=None):
     data = "".join(builder_road.byte_array(name, values) for name, values in (
         ("original_road", road), ("original_builder", builder),
         ("road_pointer_mask", masks["road"]), ("builder_pointer_mask", masks["builder"])))
-    initializer = builder_road.extract(builder_road.WORLD2, "WorldMap_EnsureBuilderWidgetTables")
+    initializer = builder_road.extract(builder_road.BUILDER_WIDGETS, "WorldMap_EnsureBuilderWidgetTables")
     if body is None:
         body = builder_road.extract(SOURCE, FUNCTION)
     return (HARNESS.replace("@STATE_ENUM@", ", ".join("S_" + key.upper() for key in STATE_FIELDS))

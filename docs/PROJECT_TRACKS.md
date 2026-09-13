@@ -22,7 +22,7 @@ Current baseline:
 - all 17 `JUMPOUT` control-flow scars are recovered;
 - the recovered implementation is split-only: 4,157 identities across 12
   subsystem object libraries; the ordered source manifest currently contains
-  144 GNU++20 translation units, including four canonical class sources;
+  145 GNU++20 translation units, including four canonical class sources;
 - `clash95_bootstrap` builds and enters the authentic SDL-backed runtime;
 - menu, direct campaign, save-format, multiplayer-map, and route probes exist;
 - all recovered multiplayer map IDs `0..10` have direct-load visual/liveness

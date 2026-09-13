@@ -51,7 +51,7 @@ def harness_source():
             assert int(entry["original_pointer"], 16) == 0
             checks.append(f"check_pointer({field}, 0);")
     bodies = "\n\n".join(builder_road.extract(path, name) for path, name in (
-        (builder_road.WORLD2, "WorldMap_EnsureBuilderWidgetTables"),
+        (builder_road.BUILDER_WIDGETS, "WorldMap_EnsureBuilderWidgetTables"),
         (builder_road.BUILDINGS, "Map_NormalizeRoadOverlayTileId"),
     ))
     data = "".join(builder_road.byte_array(name, values) for name, values in (

@@ -1536,6 +1536,136 @@ scope-audit-02 contain the integrated checks. Public regression reproduction:
 python3 -m unittest discover -s tests/tools -p test_support_class_inventory.py -v
 ```
 
+### Published CI observation after the bootstrap repair
+
+The [a40417b CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34747910860)
+passes both builds, four asset-free CTests per compiler, the unit-runner policy
+checks and all 526 tooling tests (169.218 seconds). The linked-symbol jobs report
+439 GCC / 691 Clang differences with zero library crosscheck errors, matching
+the complete local measurements. Overall CI still fails the header and both
+linked-symbol ratchets; these passing build/test results do not resolve them.
+
+The separate coverage job measures 6161/6652 lines (92.62%) across the same 718
+selected functions: 584 fully covered, 134 partial and none uncovered. These are
+this run's measurements; the earlier Temple run's 92.65% is retained separately.
+Run metadata and complete job logs are retained under
+artifacts/readability/ci-road-dependency-20260913/build-validation/ci-observation/.
+
+### Road widget ownership and header dependencies
+
+Track: Win95 reconstruction, inherited CI dependency repair. The complete
+`WorldMap_EnsureBuilderWidgetTables` helper and original
+`WorldMap_ComputeBuildMenuActionFromCursor` selector now reside together in
+`src/buildings/0040A0A0_0040A0A0_buildings_001.cpp`. The Road consumers and
+callbacks already belong to buildings. Their table initialization therefore
+no longer exposes three Road callbacks through the buildings public interface
+to world. The world menu still calls the same initializer at the same point.
+
+Both names, signatures, linkage and complete bodies remain. The original
+selector retains address 0x0040A0A0, its world-origin comment and all historical
+manifest fields. The reconstruction helper gains no original identity. The
+trimmed world file now ends at 0x0040A040. The explicit inventory appends the new
+buildings TU and retains the existing order; its count increases 144 to 145.
+Current manifest, declaration, class-registry and three coverage-source paths
+follow the physical move. Historical evidence remains, with both relocations
+recorded in `docs/SOURCE_PATH_MAP.csv`.
+
+Source comparison preserves all 94 definitions in the affected files, all five
+initializer call positions and every original body hash across 4,157 identities.
+The initializer still copies 322 builder bytes and 706 Road bytes, relocates
+42 then 70 pointer fields, and sets its single guard last. Its 19 text objects,
+shared sound-string pointer, null fields, overlapping Road scan and warm-call
+behavior remain. All state definitions stay in the existing state TU.
+
+The full generated surface equals the reviewed transition. Nine of 70 compared
+headers change, preserving the exact declarations and linkage. The existing
+include-policy and visibility checks pass, and frozen limits remain unchanged.
+
+| Metric | Before | After | Frozen limit |
+| --- | ---: | ---: | ---: |
+| World public functions | 53 | 52 | 52 |
+| Buildings public functions | 161 | 159 | 158 |
+| World to buildings function dependencies | 46 | 44 | 43 |
+| Buildings to world function dependencies | 28 | 27 | 27 |
+| Shared globals | 243 | 244 | 244 |
+| Failing header metrics | 22 | 20 | 0 |
+
+There are no new failing metric keys. Shared declaration visibility increases
+11,933 to 12,038: 83 declarations in the new TU, plus one in each of 18 existing
+buildings and four world consumers. This exposure change is retained explicitly.
+The independent raw-source graph has the same inherited macro/alias limitations
+before and after; emitted preprocessed metrics remain authoritative.
+
+Historical emitted metadata at `8e5ff4f568689fe58dd812fc61e1dfefe3682b56`
+attributes both remaining Road-related excess counts to the initializer's
+required world-menu call. The current API and edge sets preserve the historical
+158 and 43 members and add only that helper. Removing the call would violate
+cold initialization. The next bounded review is the builder-menu handler in
+place; moving its whole body merely to reduce counts would add other dependency
+failures. Exact historical membership and rejected options are retained in
+`residual-road-audit` under the batch evidence directory.
+
+Four public fixture modules only change their extraction paths. Existing
+fixtures check the original table bytes, pointer identities, selector/bridge
+results, cold normalizer/highlight/modal entry, and warm mutations. They do not
+execute a direct cold bridge-predicate call or the complete world builder-menu
+handler. Unchanged caller bodies are checked separately. These fixtures provide
+no new menu-runtime or campaign proof. The reviewed Road-function count remains
+twenty, and the mission-05 frontier does not advance.
+
+Source, provenance, complete header deltas and validation commands are retained
+under artifacts/readability/ci-road-dependency-20260913/. The `provenance-plan`
+directory preserves the original candidate; `generated-surface-audit`,
+`move-proof`, `metadata`, and `build-validation` keep the separate proof scopes.
+Both native builds pass with 151 active objects and 148 archive members per
+compiler. Archive order changes only by renaming the trimmed world member and
+inserting the new buildings member at zero-based position 39. Old world objects
+remain as inactive build evidence. Of 149 common object paths, 148 Clang objects
+and 106 GCC objects remain byte-identical; the remaining hashes require the
+separate code/data comparison rather than an assumption of binary equivalence.
+Warning totals remain 6577 GCC / 6579 Clang and pass their frozen ratchets.
+
+Independent object comparison preserves all 148 unaffected objects' runtime
+contents; GCC's 42 additional hash changes affect metadata only. Both moved
+functions and their 21 local read-only objects retain code/data bytes, symbols
+and relocations. The additional TU contributes an equivalent unwind header and
+a GCC property note identical to the existing notes; the linked property note
+is unchanged. Two GCC unwind records exchange four trailing decoded no-op bytes,
+without changing their PC ranges or unwind instructions. The initial raw GCC
+object failure and the explicit structural proof are both retained.
+
+The linked comparison proves the exact 21-object block movement, with every
+other ordered data row unchanged. It checks 203 GCC / 204 Clang relocation
+fields in each before and after binary against actual symbol and PLT targets.
+All 21 local byte extents remain distinct and exact, and all 16 shared sound
+references retain their aliasing. The table and guard addresses and initial
+bytes are unchanged. All 140 unaffected canonical sources remain byte-identical,
+including the separate inventory-only state TU.
+
+Historical raw link totals remain 439 GCC / 691 Clang with zero crosscheck
+errors. Direct before/after comparison reports only read-only data order, with
+the same symbol multiset. The unchanged strict checker records
+`linked_data_ordered: changed`; all other fields compare exactly. This raw
+failure is retained without allowances or baseline changes. All four asset-free
+CTests pass under each compiler. Preprocessing preserves the 94 affected
+definitions and 17 selected declarations in both profiles.
+
+All 526 tooling tests pass in 154.156 seconds, with all 741 inputs and both
+complete native output sets unchanged. All 151 compiler commands retain their
+flags; only the reviewed source/output paths change. Complete warning logs
+cover all 145 canonical TUs. An initial private inventory check incorrectly
+assumed unique source paths for the separately compiled instrumentation
+source; the corrected output-identity check and the failed attempt are retained.
+
+The first isolated coverage build completed, but its CTest wrapper rejected the
+`artifacts/` build location before executing fixtures. The unchanged wrapper
+requires a path under `build/`. That attempt is retained; the replacement uses
+`build/coverage-road-ownership-20260913`. The replacement build, coverage CTest
+and frozen-floor measurement pass: 6161/6652 lines (92.62%), with all 718 selected
+functions present, 584 fully covered, 134 partial and none uncovered. The 89.7%
+floor and zero-uncovered requirement remain unchanged. These results validate
+the bounded source move; they do not establish new game-route or visual proof.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in
