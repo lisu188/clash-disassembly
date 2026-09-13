@@ -70,3 +70,11 @@ The integrated extraction passes both production builds, strict comparisons
 against the pinned published-main snapshot and all eight asset-free gates.
 The two focused public tests pass all eight compiler profiles against the
 integrated tree. Method relocation follows in its own validation/commit stage.
+
+Relocation after extraction commit `736ea90` moves the same two canonical bodies
+into `UnitStack.cpp`. Method hashes remain unchanged. All focused profiles, both
+production builds, strict current-main comparisons and eight asset-free gates
+pass again. The predicted declaration visibility change is exactly 11,942 to
+11,995; original storage and initialization checks still pass. All **19 methods
+are now in six class-named sources**, with 146 ordered recovered TUs. Logs carry
+the separate `unit-stack-relocation` stage name.

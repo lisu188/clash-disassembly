@@ -2,14 +2,15 @@
 
 Last consolidated: 2026-09-13.
 
-## UnitStack Strength And Cargo Class Extraction
+## UnitStack Strength And Cargo Class Extraction And Relocation
 
 The two repaired identities now use `UnitStack` methods with retained adapters;
 cargo calls the canonical AP query directly. Original-measured and independently
 frozen production comparisons pass all eight compiler profiles, and both
 production builds, strict surface comparisons and eight asset-free gates pass.
-Nineteen methods are implemented; these two remain in their original TU pending
-the separate relocation stage. See [UNIT_STACK_REGISTER_CLASSES.md](UNIT_STACK_REGISTER_CLASSES.md).
+The separate relocation passes the same gates with unchanged method hashes.
+Nineteen methods are now in six class-named sources; the 146-TU inventory and
+historical ratchets remain. See [UNIT_STACK_REGISTER_CLASSES.md](UNIT_STACK_REGISTER_CLASSES.md).
 
 ## UnitSlot Class Extraction And Relocation
 

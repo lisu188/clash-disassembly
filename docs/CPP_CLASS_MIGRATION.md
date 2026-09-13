@@ -1,9 +1,8 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: UnitStack strength/cargo extraction after
-UnitSlot relocation. Nineteen identities have canonical methods: seventeen in
-six class-named sources and two in their original TU pending relocation. The
-ordered manifest contains 146 translation units.
+Track: Win95 reconstruction. Frontier: UnitStack strength/cargo relocation after
+UnitSlot relocation. Nineteen identities have canonical methods in six
+class-named sources. The ordered manifest contains 146 translation units.
 This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 
