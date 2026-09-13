@@ -583,8 +583,9 @@
    "original_line": 380,
    "source": "src/units/0040F510_00411560_units_001.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitSlot_GetBaseActionPoints"
+    "kind": "method",
+    "qualified_name": "clash95::UnitSlot::UnitSlot_GetBaseActionPoints",
+    "header": "src/units/UnitSlot.hpp"
    }
   },
   {

@@ -99,9 +99,11 @@ signed int UnitStack_AdjustMoraleByPredicate(__int16 *p,int delta,BOOL(*f)(int),
 __int16 *UnitStack_ClearSpentTurnFlag(int p) {
   fixture::event("clear_spent",fixture::address(p)); ((unsigned char *)(intptr_t)p)[720]&=0xFE; return (__int16 *)(intptr_t)p;
 }
+#ifndef UNIT_TURN_COMPOSED_SLOT_AP
 int UnitSlot_CalcActionPointsFromFatigue(__int16 *p) {
   fixture::event("calc_ap",fixture::address((intptr_t)p)); return (255-((unsigned char *)p)[10])&255;
 }
+#endif
 signed int Rules_LinkArmyFact(clash95_unaligned_int16 *p,int a,int b,double c,char d,DWORD e) {
   fixture::event("rules_link",fixture::address((intptr_t)p),fixture::address(a),b,(int)(c*8),d,e);
   ((unsigned char *)p)[721]^=0x3C; return 19;

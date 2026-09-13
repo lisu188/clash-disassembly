@@ -10,6 +10,8 @@ class CLASH95_INTERNAL UnitSlot final {
   BOOL UnitSlot_CanRecoverFatigue() const;
   BOOL UnitSlot_HasSevereFatigue() const;
   int UnitSlot_CycleOrderState() const;
+  int UnitSlot_CalcActionPointsFromFatigue() const;
+  int UnitSlot_GetBaseActionPoints() const;
  private:
   intptr_t address_;
 };

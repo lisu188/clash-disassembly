@@ -33,7 +33,7 @@ unwind records. Only two method text symbols are added; no constructor or
 binding change is required.
 
 Extraction places each method immediately after its ABI adapter in the original
-units_002 TU. Relocation is a separate commit into existing `UnitStack.cpp` with
+units_002 TU. Relocation is a separate commit into existing `src/units/UnitStack.cpp` with
 unchanged canonical body hashes. The integrated extraction contains 19 canonical
 methods; 17 are already in six class-named sources and these two initially remain
 in their original TU. The ordered inventory stays at 146 TUs and 4,157 identities.
@@ -41,7 +41,7 @@ in their original TU. The ordered inventory stays at 146 TUs and 4,157 identitie
 The preserved parameter token `a2` is also an existing global name. The current
 lexical dependency generator treats uses of that local parameter as global
 uses when the cargo body relocates, adding 53 visible declarations through
-`units_shared_state.h`. The method does not access that global. This expected
+`src/units/units_shared_state.h`. The method does not access that global. This expected
 generated-header change is reported rather than raising a frozen baseline or
 changing an uncertain parameter contract. Military strength is in the frozen
 718 set; its new executable receiver-binding line must be counted by the fresh
@@ -57,7 +57,7 @@ python3 tools/gen_subsystem_headers.py --check
 python3 tools/gen_subsystem_headers.py --check-tu-includes
 ```
 
-Root production comparison uses the established `validate-stage.py` wrapper with
+Root production comparison uses the established validation wrapper with
 the pinned published-main reference, explicit text additions and all four
 asset-free gates per compiler. Exact stages, commands, exits and logs are under
 `artifacts/cpp-classes/20260913/unit-stack-integration/`. Preparation hashes,
@@ -72,7 +72,7 @@ The two focused public tests pass all eight compiler profiles against the
 integrated tree. Method relocation follows in its own validation/commit stage.
 
 Relocation after extraction commit `736ea90` moves the same two canonical bodies
-into `UnitStack.cpp`. Method hashes remain unchanged. All focused profiles, both
+into `src/units/UnitStack.cpp`. Method hashes remain unchanged. All focused profiles, both
 production builds, strict current-main comparisons and eight asset-free gates
 pass again. The predicted declaration visibility change is exactly 11,942 to
 11,995; original storage and initialization checks still pass. All **19 methods

@@ -10,7 +10,9 @@
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitSlot.hpp"
 #include "../units/UnitStack.hpp"
 #include "../world/WorldGeometry.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
@@ -306,8 +308,15 @@ int  Camera_CenterOnUnit(int stackIndex)
 }
 
 //----- (0040FDB0) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_CalcActionPointsFromFatigue(__int16 *slotPtr)
 {
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_CalcActionPointsFromFatigue();
+}
+
+int clash95::UnitSlot::UnitSlot_CalcActionPointsFromFatigue() const
+{
+  __int16 *slotPtr = (__int16 *)address_;
   UnitSlotRecord *slot;
   int unitType;
   int fatigueLevel;
@@ -318,7 +327,7 @@ int  UnitSlot_CalcActionPointsFromFatigue(__int16 *slotPtr)
   if ( unitType < 0 || unitType >= UNIT_TYPE_COUNT )
     return 0;
   fatigueLevel = slot->fatigue;
-  result = (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unitType];
+  result = (unsigned __int8)UnitSlot_BorrowTypeMetadata()[unitType].base_action_points;
   if ( fatigueLevel >= 80 && fatigueLevel <= 89 )
     return (192 * result - (__CFSHL__((192 * result) >> 31, 8) + ((192 * result) >> 31 << 8))) >> 8;
   if ( fatigueLevel >= 90 && fatigueLevel <= 99 )
@@ -329,9 +338,17 @@ int  UnitSlot_CalcActionPointsFromFatigue(__int16 *slotPtr)
 }
 
 //----- (0040FE60) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_GetBaseActionPoints(__int16 *slotPtr)
 {
-  return (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * *slotPtr];
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_GetBaseActionPoints();
+}
+
+int clash95::UnitSlot::UnitSlot_GetBaseActionPoints() const
+{
+  typedef __int16 SlotTypeWord __attribute__((aligned(1), may_alias));
+  SlotTypeWord *slotPtr = (SlotTypeWord *)address_;
+  return (unsigned __int8)UnitSlot_BorrowTypeMetadata()[*slotPtr].base_action_points;
 }
 
 //----- (0040FE80) --------------------------------------------------------

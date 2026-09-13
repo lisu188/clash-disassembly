@@ -95,6 +95,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
         }
       ],
       "archive_text": [
@@ -136,16 +157,16 @@
         {
           "name": "_ZN7clash958UnitSlotC1El",
           "class": "W",
-          "count": 1,
+          "count": 3,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
         },
         {
           "name": "_ZN7clash958UnitSlotC2El",
           "class": "W",
-          "count": 1,
+          "count": 3,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
         },
         {
           "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
@@ -188,6 +209,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
         }
       ]
     },
@@ -269,6 +311,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
         }
       ],
       "archive_text": [
@@ -303,9 +366,9 @@
         {
           "name": "_ZN7clash958UnitSlotC2El",
           "class": "W",
-          "count": 1,
+          "count": 3,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
         },
         {
           "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
@@ -348,6 +411,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
         }
       ]
     }

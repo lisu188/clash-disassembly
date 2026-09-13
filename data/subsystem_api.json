@@ -85,7 +85,7 @@
   "units->persistence": 6,
   "units->render": 15,
   "units->runtime": 4,
-  "units->state": 6,
+  "units->state": 7,
   "units->strategic": 21,
   "units->world": 26,
   "world->battle": 6,
@@ -2168,7 +2168,8 @@
     "UnitType_GetLocalizedName",
     "UnitType_GetWorldMoveCost",
     "UnitType_GetRoadMoveCost",
-    "Rules_EnsureObjectPatternVTable"
+    "Rules_EnsureObjectPatternVTable",
+    "UnitSlot_BorrowTypeMetadata"
    ],
    "internal_function_count": 0,
    "state_globals": 0

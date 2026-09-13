@@ -22237,6 +22237,12 @@
       "decl": "extern __attribute__((used, retain)) int Surface_SwapDirtyTrackingFlag(int surface, int new_flag);",
       "home": "render",
       "source": "src/render/004046D0_00405D20_render_003.cpp"
+    },
+    "UnitSlot_BorrowTypeMetadata": {
+      "class": "helper",
+      "decl": "extern CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord *UnitSlot_BorrowTypeMetadata(void);",
+      "home": "state",
+      "source": "src/state/00000000_0054FFFF_recovered_state.cpp"
     }
   },
   "globals": {

@@ -41,12 +41,43 @@ def main():
   random_definition=random_defs[0]
   assert body_sha256(random_text,random_definition)==random_binding['body_sha256']
   parts.append(random_text[random_definition.start:random_definition.end])
+ # Compose the actual AP method and its immutable table when that family is
+ # migrated. The frozen UnitTurn reference calls the pinned pre-migration AP
+ # body, keeping this dependency comparison independent of the new adapter.
+ ap_name='UnitSlot_CalcActionPointsFromFatigue'
+ ap_composed=records[ap_name]['implementation']['kind']=='method'
+ ap_inputs={}
+ if ap_composed:
+  ap_fixture=root/'tests/tools/fixtures/class_unit_slot_ap'
+  ap_provenance=json.loads((ap_fixture/'provenance.json').read_text())
+  ap_row=next(x for x in ap_provenance['functions'] if x['name']==ap_name)
+  ap_path=ap_fixture/ap_row['fixture']; ap_reference=ap_path.read_text()
+  assert hashlib.sha256(ap_path.read_bytes()).hexdigest()==ap_row['file_sha256']
+  ap_definition=scan_definitions(ap_reference,{ap_name})[0]
+  assert body_sha256(ap_reference,ap_definition)==ap_row['body_sha256']
+  assert records[ap_name]['original_address']==ap_row['original_address']
+  parts.extend(['#include "units/UnitSlot.hpp"','#include "state/state_api.h"','#define UNIT_TURN_COMPOSED_SLOT_AP 1'])
+  parts.append(ap_reference.replace(ap_name+'(', 'Reference_'+ap_name+'(',1))
+  import re
+  state=root/ap_provenance['table_source']; state_text=state.read_text()
+  table_start=state_text.index('const UnitTypeRuntimeCoreMetadataRecord g_UnitTypeRuntimeCoreMetadata[')
+  table_end=state_text.index('};',table_start)+2
+  table=state_text[table_start:table_end]
+  assert hashlib.sha256(table.encode()).hexdigest()==ap_provenance['table_sha256']
+  parts.append(table)
+  helper_name='UnitSlot_BorrowTypeMetadata'
+  helper_definition=scan_definitions(state_text,{helper_name})[0]
+  helper=state_text[helper_definition.start:helper_definition.end]
+  assert body_sha256(state_text,helper_definition)==ap_provenance['binding']['body_sha256']
+  parts.append(helper)
+  for path in [ap_path,ap_fixture/'provenance.json',state,root/'src/units/UnitSlot.hpp']:
+   ap_inputs[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
  # The production factory retains exact declarations at its original anchor;
  # generated consumer headers can legitimately stop exposing these globals.
  parts.extend(declarations['globals'][name]['decl'] for name in binding['referenced_globals'])
  import re
  names=set()
- inputs={}
+ inputs=dict(ap_inputs)
  sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
  for record in provenance['functions']:
   name=record['name']; names.add(name); path=HERE/'references'/record['fixture']; text=path.read_text(); inputs[str(path)]=sha(path)
@@ -54,9 +85,11 @@ def main():
   definitions=scan_definitions(text,{name}); assert len(definitions)==1
   assert body_sha256(text,definitions[0])==record['body_sha256'],name+' reference body hash'
   assert records[name]['original_address']==record['original_address'],name+' original identity'
+  if ap_composed: text=text.replace('UnitSlot_CalcActionPointsFromFatigue(', 'Reference_UnitSlot_CalcActionPointsFromFatigue(')
   parts.append('__attribute__((no_sanitize("alignment")))\n'+re.sub(r'\b'+name+r'(?=\s*\()','Reference_'+name,text,count=1))
  sources=set()
  dependencies={'UnitStack_HasReadyUnits'}
+ if ap_composed: dependencies.add(ap_name)
  for dependency in dependencies:
   sources.update([records[dependency]['source'],records[dependency]['adapter']['source']])
  for name in names:
@@ -95,7 +128,7 @@ def main():
     item.update(run=executed.returncode,stdout=executed.stdout,stderr=executed.stderr,binary_sha256=sha(binary))
    results.append(item); print(json.dumps(item),flush=True)
  unchanged=all(Path(p).exists() and sha(Path(p))==v for p,v in inputs.items())
- report={'root':str(root),'inputs_unchanged':unchanged,'input_sha256':inputs,'profiles':results,'expected_cases_per_profile':{'regen':4096,'damage':6144,'turn':336},'limitations':['instrumented external service boundaries, not full game runtime','zero max HP and invalid building type are outside source preconditions','frozen references retain original x86 unaligned loads and are exempt from alignment sanitizer; methods/adapters are trapped']}
+ report={'root':str(root),'inputs_unchanged':unchanged,'input_sha256':inputs,'profiles':results,'expected_cases_per_profile':{'regen':4096,'damage':6144,'turn':336},'composed_ap_dependency':ap_composed,'limitations':['instrumented external service boundaries, not full game runtime','zero max HP and invalid building type are outside source preconditions','frozen references retain original x86 unaligned loads and are exempt from alignment sanitizer; methods/adapters are trapped']}
  (output/'summary.json').write_text(json.dumps(report,indent=2)+'\n')
  return 0 if unchanged and all(x.get('build')==0 and x.get('run')==0 for x in results) else 1
 if __name__=='__main__': raise SystemExit(main())

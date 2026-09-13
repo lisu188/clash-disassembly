@@ -87641,7 +87641,7 @@
       "original_line": 357,
       "source": "src/units/0040F510_00411560_units_001.cpp",
       "linkage": "external",
-      "body_sha256": "8edbdba786457f346c27fc9248f563a5c8cce80beab081d95ddce77d0c7c02f7",
+      "body_sha256": "d52c985af41e60b8206916fef97ae0b7286acb374b397ef4cbc7fc8c2e7dbbee",
       "original_address_range": {
         "start": "0x0040FDB0",
         "end_exclusive": "0x0040FE60"
@@ -87651,12 +87651,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "b0a90b8d2bdfc35e31aecdbb7a2052c27973d2b46a4e10812caaf603de480146",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitSlot_CalcActionPointsFromFatigue"
+        "kind": "method",
+        "qualified_name": "clash95::UnitSlot::UnitSlot_CalcActionPointsFromFatigue",
+        "header": "src/units/UnitSlot.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitSlot_CalcActionPointsFromFatigue is assigned to the UnitSlot behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitSlot"
+      "class_owner": "clash95::UnitSlot",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "7856fa0ba26128e9c1ed4f390834600db3d6a81759629eb424d791ce21c9d9e8"
+      }
     },
     {
       "name": "UnitSlot_GetBaseActionPoints",
@@ -87665,7 +87670,7 @@
       "original_line": 380,
       "source": "src/units/0040F510_00411560_units_001.cpp",
       "linkage": "external",
-      "body_sha256": "5591c0aecfb6c206ed47ee20b04c2bbb877ba621ea60908ac450bcb575aff6ac",
+      "body_sha256": "c42c8ae077e320abd47e5c0e87d2fa7eceb6517e6b089e4aeea3e55df8beb834",
       "original_address_range": {
         "start": "0x0040FE60",
         "end_exclusive": "0x0040FE80"
@@ -87675,12 +87680,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "101e77b09ca2775cb7e39886d037cf935dbdfe71b8d5f24ceff38ca2c54ea040",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitSlot_GetBaseActionPoints"
+        "kind": "method",
+        "qualified_name": "clash95::UnitSlot::UnitSlot_GetBaseActionPoints",
+        "header": "src/units/UnitSlot.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitSlot_GetBaseActionPoints is assigned to the UnitSlot behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitSlot"
+      "class_owner": "clash95::UnitSlot",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "1e8d7c6f91e605877e03e57de004de5886daf64addec5f35ed9669989859bd3a"
+      }
     },
     {
       "name": "UnitStack_GetMinBaseActionPoints",
@@ -88453,7 +88463,7 @@
       "original_line": 1603,
       "source": "src/units/UnitTurn.cpp",
       "linkage": "external",
-      "body_sha256": "3586037eee5422e3cb5457cabfde73d3b2145bad52b167cde43491b8ffd86d14",
+      "body_sha256": "8a26d94ae3470cdd2037c56e5fc5282673d381594b56fc4e61f51a31a0e71cdc",
       "original_address_range": {
         "start": "0x004118E0",
         "end_exclusive": "0x00411AB0"

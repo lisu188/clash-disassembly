@@ -58,6 +58,6 @@ The durable local report and exact commands are in
 `artifacts/cpp-classes/20260913/native-baseline/README.md`. Authoritative completed
 results are `gcc13/complete/` and `clang18/complete/`, with actual registrations,
 per-case comparisons, full coverage JSON, separate default/strict profile
-archives and verified binaries. `evidence-freeze.json` seals 330 output files;
+archives and verified binaries. The evidence-freeze.json receipt seals 330 output files;
 the source and build artifacts remain separately pinned. No presented frames or
 campaign progress are established by these asset-free native tests.

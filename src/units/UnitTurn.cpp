@@ -7,6 +7,7 @@
 #include "../buildings/buildings_api.h"
 #include "../strategic/strategic_api.h"
 #include "../core/GameRandom.hpp"
+#include "../units/UnitSlot.hpp"
 #include "../units/UnitStack.hpp"
 #include "../units/UnitTurn.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
@@ -151,7 +152,7 @@ signed int clash95::UnitTurn::Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
         break;
       }
       slotCursor += UNIT_SLOT_RECORD_BYTES;
-      actionPoints = ::UnitSlot_CalcActionPointsFromFatigue((__int16 *)(uintptr_t)(stackPtr + 6 + UNIT_SLOT_RECORD_BYTES * slotIndex++));
+      actionPoints = clash95::UnitSlot((intptr_t)(uintptr_t)(stackPtr + 6 + UNIT_SLOT_RECORD_BYTES * slotIndex++)).UnitSlot_CalcActionPointsFromFatigue();
       *(_BYTE *)(uintptr_t)(slotCursor - 17) = actionPoints;
     }
     while ( slotIndex < UNIT_STACK_SLOT_COUNT );

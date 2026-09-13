@@ -71677,6 +71677,16 @@
         "data/function_identity_migrations/render_set_resource_handle_v1.json",
         "src/render/004046D0_00405D20_render_003.cpp::Surface_SwapDirtyTrackingFlag"
       ]
+    },
+    {
+      "name": "UnitSlot_BorrowTypeMetadata",
+      "source": "src/state/00000000_0054FFFF_recovered_state.cpp",
+      "classification": "retained-boundary",
+      "rationale": "Address-free storage accessor returns the existing immutable unit metadata table; it preserves storage ownership and does not implement a recovered game identity.",
+      "evidence": [
+        "src/state/00000000_0054FFFF_recovered_state.cpp::g_UnitTypeRuntimeCoreMetadata",
+        "src/recovered_types.h::UnitTypeRuntimeCoreMetadataRecord"
+      ]
     }
   ],
   "class_bindings": [

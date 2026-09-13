@@ -2,6 +2,18 @@
 
 Last consolidated: 2026-09-13.
 
+## UnitSlot Action-Point Class Extraction
+
+The two AP queries now use canonical UnitSlot methods and retained adapters;
+UnitTurn calls the method directly. The immutable metadata table remains in
+its original storage owner behind one narrow accessor. Actual-source AP and
+composed-turn comparisons, both production builds, strict surface checks and
+eight asset-free gates pass. The current stage has 21 methods, including two
+awaiting separate relocation. See [UNIT_SLOT_AP_CLASSES.md](UNIT_SLOT_AP_CLASSES.md).
+The preceding 19-method checkpoint passes all 523 tooling tests and eleven
+metadata checks; the unchanged header and raw link ratchets still fail as
+enumerated in [CPP_CLASS_RESUMED_VALIDATION.md](CPP_CLASS_RESUMED_VALIDATION.md).
+
 ## UnitStack Strength And Cargo Class Extraction And Relocation
 
 The two repaired identities now use `UnitStack` methods with retained adapters;
@@ -19,7 +31,7 @@ ordinary callback adapters. Every compiler/optimization profile passes 1,048,576
 byte scenarios; both builds, strict storage/symbol/initialization comparisons and
 eight asset-free gates pass after an unchanged-body source-order correction.
 The separately validated relocation moves the exact four definitions into
-`UnitSlot.cpp`. Seventeen methods are now in six class-named sources; the ordered
+`src/units/UnitSlot.cpp`. Seventeen methods are now in six class-named sources; the ordered
 inventory has 146 TUs. See [UNIT_SLOT_CLASS_MIGRATION.md](UNIT_SLOT_CLASS_MIGRATION.md).
 
 Published main `b2f3764` is integrated into the class branch. The unsigned DLX
