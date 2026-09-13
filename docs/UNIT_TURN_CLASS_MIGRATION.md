@@ -136,23 +136,23 @@ profiles. See the recovery document for its separate production gates.
 ## Durable preparation, reproduction and acceptance limits
 
 Prepared evidence is retained under
-`artifacts/cpp-classes/20260906/unit-turn/`: `preparation.tar.gz`, `summary.json`
-and `README.md`. The archive SHA-256 is
+`artifacts/cpp-classes/20260906/unit-turn/`: preparation.tar.gz, summary.json
+and README.md. The archive SHA-256 is
 `ba9176c6a9853bc9c552f3fac90a60cf6b9b694dd64d6df16078e433d73d091a`.
 The original scratch root was `/var/tmp/clash95-class-unit-turn-20260906/`;
 its continued existence is not required for the durable evidence.
 
 Final preparation records inside the archive include:
 
-- `evidence/direct-ready-extraction/summary.json` and
-  `evidence/direct-ready-relocation/summary.json`: all four profiles pass.
-- `evidence/direct-ready-integration-test/summary.json`: the maintained wrapper
+- evidence/direct-ready-extraction/summary.json and
+  evidence/direct-ready-relocation/summary.json: all four profiles pass.
+- evidence/direct-ready-integration-test/summary.json: the maintained wrapper
   passes against the prepared class source.
-- `evidence/direct-ready-translation-unit-builds.json`: ten affected whole-TU
+- evidence/direct-ready-translation-unit-builds.json: ten affected whole-TU
   compiler/source combinations pass at O0 across GCC and Clang.
-- `evidence/recovery-real-ready-{production,class,negative}/summary.json`:
+- evidence/recovery-real-ready-{production,class,negative}/summary.json:
   stronger actual-readiness recovery checks and expected unrepaired failures.
-- `evidence/direct-ready-patch-checks.json`: separate repair, extraction and
+- evidence/direct-ready-patch-checks.json: separate repair, extraction and
   relocation patch checks; final method, adapter and factory hashes are in the
   sibling summary.
 
@@ -196,7 +196,8 @@ remain on direct packed loads/stores. This changes no pointer value, width or
 call order. The final Unit_NewTurn method body hash is
 `d8c36d5dd375e5df2ee5d00d729b749c9173f2bd41ad2b3a8c080d86744e02cb`.
 The other two method hashes and all adapter/factory hashes are unchanged.
-`boundary-cast-review.json` records the six exact calls and before/after hash.
+The private boundary-cast-review.json records the six exact calls and
+before/after hash.
 
 Fresh clean GCC 13 and Clang 18 builds retain warning totals 6,618/6,628 and
 pass the unchanged warning ratchets. The migration surface permits only the

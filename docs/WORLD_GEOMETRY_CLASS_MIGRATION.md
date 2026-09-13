@@ -13,8 +13,9 @@ Clang 18 production builds, exact symbol/storage/initialization comparisons and
 all eight asset-free gates pass without new allowances. Commands and logs are
 `artifacts/cpp-classes/20260906/pilot/*sine-recovery*`. The initial test invocation
 selected the wrong filename and correctly reported zero tests; the corrected
-`test_math_sin_degrees_q16.py` run is recorded separately. Class extraction and
-relocation now also pass their separate production gates below. No native or
+[test_math_sin_degrees_q16.py](../tests/tools/test_math_sin_degrees_q16.py)
+run is recorded separately. Class extraction and relocation now also pass their
+separate production gates below. No native or
 runtime outcome is inferred from the focused arithmetic fixture.
 
 Production extraction now passes all four differential profiles, both compiler

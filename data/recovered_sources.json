@@ -31316,7 +31316,7 @@
       "original_line": 3917,
       "source": "src/render/00405DB0_00407D20_render_004.cpp",
       "linkage": "external",
-      "body_sha256": "f25e22a129509bd7c539b4f51074d0d357e0f5daab21fa8c61846f652aa8e4ea",
+      "body_sha256": "133ed67aff8d37b4d8e43e483419c741e68e9efc7fdfa1dc00edf39805983668",
       "original_address_range": {
         "start": "0x004060E0",
         "end_exclusive": "0x00406260"

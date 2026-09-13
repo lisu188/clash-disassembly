@@ -75,8 +75,8 @@ assembly-backed batch.
 Local evidence: `artifacts/cpp-classes/20260908/road-readiness/`. The complete
 archive includes exact canonical bodies/hashes, seven-header closure, original
 assembly, commands, all initial and final probe outcomes, and the later origin
-recheck. `archive-verification.json` verifies every archive member against its
-source hash. No scratch files or historical evidence were removed.
+recheck. The private archive-verification.json verifies every archive member
+against its source hash. No scratch files or historical evidence were removed.
 
 The frozen original scratch can be rerun in WSL:
 

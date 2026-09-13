@@ -2,6 +2,13 @@
 
 Last consolidated: 2026-09-13.
 
+Published main `b2f3764` is integrated into the class branch. The unsigned DLX
+gate, both builds, current-main strict comparisons and eight asset-free gates
+pass. The older comparison's one removed unused inline accessor stays reported.
+Fresh earlier `be837d1` GCC first-Road evidence passes; two Clang input-wait
+failures remain unresolved and retained. See
+[CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md) for precise scope.
+
 ## Unit Regroup Recovery Before Class Extraction
 
 The original saved stack index, signed health comparison and packed word access
@@ -60,6 +67,32 @@ GCC/Clang O0/O2 profile; reverted repairs fail the intended checks. Both product
 builds, exact storage/initialization/symbol comparisons and eight asset-free gates
 pass. This is a separate behavior-repair batch; no new class method or campaign
 milestone is claimed. See [GAME_RANDOM_RECOVERY.md](GAME_RANDOM_RECOVERY.md).
+
+## DLX Cached-Entry View Migration
+
+Track: Win95 reconstruction, bounded render-storage readability.
+`DLXSprite_LoadCachedEntry` now uses the existing sprite views for payload
+and serialized-size fields and reuses the ten-byte header constant. Original
+field widths, callback order, current cached arguments and raw ownership bytes
+remain. One current body hash changes; all 4157 identities and historical
+metadata remain. The actual-source fixture passes 160 paired cases across
+GCC 13/Clang 18 at O0/O2, with ownership, stale-size and signed-overflow negative
+controls. Main integration preserves the incoming Road work and archives the
+competing signed-subtraction specification; the original uint32 subtraction wins
+the conflict. Integration of main's 11 class methods and subsequent single-tile
+movement recovery retains all 144 ordered TUs and schema-3 metadata. Both builds,
+all eight public gates, strict class comparisons and 516 tooling tests pass.
+The unchanged native repeat matches the prior 527 crash identities. Incoming
+stricter header limits yield 22 failures (15 printed); class text additions yield
+441 GCC / 693 Clang raw link differences. No ratchet is raised. Exact attempts,
+native/runtime evidence and retained original/canonical differences:
+[DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).
+Both final first-Road probes pass with ten matching saved states; Clang uses
+the existing shorter pan-key option after two retained viewport-overshoot
+failures. Fresh original/reconstruction comparison pairs retain the known
+visual debt and do not claim visual parity.
+No campaign milestone advances; normal mission-05 turn-7 refresh and Road
+continuation remain the gameplay target.
 
 ## Game-System Classes: Origin Integration
 

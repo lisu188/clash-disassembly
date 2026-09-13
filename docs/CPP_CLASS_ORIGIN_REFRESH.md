@@ -55,9 +55,11 @@ initialization, identity and ordering checks have no allowances.
 
 The existing header baseline remains frozen. Incoming baseline increases are
 retained as an explicit comparison artifact, not adopted to make checks pass.
-The exact-origin raw link ratchets still report 428 GCC and 680 Clang differences;
-the header ratchet still reports 14. These historical failures are not hidden by
-the stronger migration-specific comparisons.
+The exact-origin raw link ratchets report 428 GCC and 680 Clang differences;
+the earlier header record quoted 14. These are historical/reference counts;
+the complete later combined recount below has 22 header failures under the
+stricter limits. These failures are not hidden by the stronger migration-specific
+comparisons.
 
 Actual-method differential tests pass for the unit queries, queued paths, world
 geometry and unit turns. The separate sine and logging-context recovery tests
@@ -119,8 +121,8 @@ initialization or identity changes are permitted. The nine focused Road modal,
 timing and readability-runner tests pass. Historical raw link/header ratchets
 remain unchanged.
 
-Exact commands and source hashes are in `refresh/latest-build.py`,
-`refresh/latest-build-source.json` and `refresh/latest-comparison.py`; reference
+Exact commands and source hashes are in refresh/latest-build.py,
+refresh/latest-build-source.json and refresh/latest-comparison.py; reference
 builds, snapshots and verified archives are under `origin-latest-reference/`.
 The native and runtime observations above remain tied to the preceding frozen
 integration. They do not substitute for a final regression of subsequent code.
@@ -188,6 +190,35 @@ mission-05 continuation or campaign progression. Class assignment and byte-view
 helpers are not counted as canonical behavior migration.
 # Resumed origin integration, 2026-09-13
 
+The subsequent merge incorporates published main `b2f3764` after the separate
+regroup repair `f6849c6`. Its production source is identical to validated
+`8e7b694`; the two publication-only changes are documentation. The unsigned DLX
+loader wins the old signed-subtraction variant. Its six focused tests pass,
+as do both production builds and eight asset-free gates.
+
+The comparison against the older `1b8b4b8` snapshot reports exactly one removed
+weak inline `DLXSpriteMutableView::data()` symbol in each linked/archive profile:
+the incoming loader now uses the original raw sprite address. This is an
+explained upstream text change, not a lost recovered identity. That first
+failure remains in `artifacts/cpp-classes/20260913/main-b2f-integration/`.
+The subsequent strict comparison uses the exact published-main snapshots after
+verifying all 144 source inputs and both retained binary/archive hashes. It
+passes with only the separately enumerated GameRandom additions. The reference
+and import provenance are under `artifacts/cpp-classes/20260913/published-main-reference/`;
+`data/class_migration_published_main_text_additions.json` records this comparison.
+All historical ratchets, prior snapshots and failed reports remain unchanged.
+
+Fresh headless gameplay evidence is frozen at the earlier `be837d1` source:
+GCC passes the seven-leg first-Road route with turn 6, `(49,50)`, 2 AP, no path,
+roads 867/879 and all 1,300 visibility bytes matching the September 8 original
+capture. Its unmasked frame comparison has 287,498 differing pixels and mean
+absolute RGB-channel difference 14.44650390625; visual equivalence is not claimed.
+Two Clang attempts fail at input waits (first-path confirmation, then initial
+stack selection). Both complete logs, nonblank frames, saves and verified
+archives remain. Their causes are unresolved; neither is a passing Clang route.
+These runs predate the incoming DLX merge and subsequent unit classes.
+Evidence is `artifacts/cpp-classes/20260913/runtime-before-units/`.
+
 The migration branch now incorporates origin `e387a35` after the validated
 `c65e476` class/recovery checkpoint. The two incoming identities are
 `UnitStack_MoveOneTileInDirection` and
@@ -208,3 +239,20 @@ worktree. Old Linux scratch build directories were unavailable on resumption;
 retained workspace evidence is not relabeled as a fresh run. Full native,
 coverage and runtime checks for this checkpoint are recorded separately as they
 complete. Shared main remains under the separately coordinated publication.
+
+
+## Subsequent combined main validation
+
+The DLX task integrates this committed checkpoint `9ec82b0` and the subsequent
+origin movement recovery `d652a03` at `1d59bca`. Its final source retains the
+11 methods, complete schema-3 metadata and stricter premigration header limits.
+The unsigned DLX loader replaces the concurrent signed-subtraction variant.
+Both production builds, eight public gates, 514 tooling tests and strict class
+symbol/storage/initialization comparisons pass. The unchanged native repeat
+matches the earlier 1087-pass/527-crash set; initial extra crashes and a public
+audit timeout remain recorded. Full header metrics are unchanged; all 22
+failures under the stricter limits are enumerated despite the console's
+15-row truncation. Raw link failures are 441 GCC / 693 Clang, including the
+13 incoming strong text additions. No baseline is raised. The exact frozen
+inputs, commands, runtime evidence and limits of this later combined validation
+are recorded in [DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).

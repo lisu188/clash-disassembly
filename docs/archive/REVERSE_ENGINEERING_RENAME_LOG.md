@@ -1,5 +1,20 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-08 - DLX cached-entry storage view
+
+Track: Win95 reconstruction. Migrated `DLXSprite_LoadCachedEntry` (`0x4060E0`)
+to existing non-owning sprite views for five payload/size accesses and two
+serialized-header lengths. Original assembly and established view/layout tests
+corroborate the fields. Confidence is high within the valid low32 storage and
+documented call contract. Signed index/entry arithmetic, uint32 payload
+subtraction, fresh field reads, cached final arguments and raw ownership bytes
+remain. No public symbols are renamed; one current body hash changes, preserving
+all 4157 identities, historical hashes, APIs and frozen baselines. The actual
+before/after bodies pass 144 paired compiler-profile cases and two negative
+controls. Both builds, eight public gates and 258 tooling tests pass; existing
+ratchet failures remain. No original-loader or campaign completion is claimed.
+[Evidence, validation and deferred differences](../DLX_CACHED_ENTRY_RECOVERY.md).
+
 ## 2026-09-08 - Road readability: queued-path fallback caller
 
 Track: Win95 reconstruction. Reviewed `Rules_BuildRoadOrStepTowardQueuedPath`

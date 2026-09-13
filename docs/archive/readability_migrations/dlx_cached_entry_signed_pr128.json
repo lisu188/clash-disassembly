@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "source": "src/render/00405DB0_00407D20_render_004.cpp",
+  "includes": [
+    "dlx_sprite_view.h"
+  ],
+  "functions": [
+    {
+      "name": "DLXSprite_LoadCachedEntry",
+      "expected_body_sha256": "2e82235ac16edff0b170e3e6a721afb573ca85ba6f2bcd07df448436954d344a",
+      "replacement_body": "{\n  int query_handle; // [esp+100h] [ebp-1Ch] BYREF\n  int entry_offset; // [esp+104h] [ebp-18h]\n  int entry_end_offset; // [esp+108h] [ebp-14h]\n  int payload_size;\n  unsigned int payload_handle;\n  char path[256]; // [esp+0h] [ebp-11Ch] BYREF\n  clash95::render::DLXSpriteMutableView spriteView((void *)(uintptr_t)sprite);\n\n  spriteView.clearPayloadHandle();\n  strcpy(path, aGfx_3);\n  strcat(path, file_name);\n  query_handle = FileSystem_ResolveReadPath(path, 1);\n  if ( !query_handle )\n    return sprite;\n  Compat_QueryRead(query_handle, g_DlxDirectoryEntryStartOffsets, DLX_DIRECTORY_BYTES);\n  entry_offset = g_DlxDirectoryEntryStartOffsets[entry_index];\n  if ( g_DlxDirectoryEntryEndOffsets[entry_index] )\n    entry_end_offset = g_DlxDirectoryEntryEndOffsets[entry_index];\n  else\n    entry_end_offset = IO_QueryVTableStreamSize(query_handle);\n  spriteView.setSerializedSize((std::uint32_t)(entry_end_offset - entry_offset));\n  Compat_QuerySeek(query_handle, entry_offset);\n  Compat_QueryRead(query_handle, spriteView.data(),\n                   clash95::render::DLXSpriteView::kSerializedHeaderSize);\n  payload_size = (int)spriteView.readOnly().serializedSize()\n      - (int)clash95::render::DLXSpriteView::kSerializedHeaderSize;\n  payload_handle = (unsigned int)nmalloc_(payload_size, 4);\n  spriteView.setPayloadHandle(payload_handle);\n  if ( !spriteView.readOnly().payloadHandle() )\n  {\n    Debug_Log(0, 10, payload_size, (int)(intptr_t)aNotEnoughMem_7);\n    App_RequestQuit((int)(intptr_t)aNotEnoughMem_8);\n  }\n  Compat_QueryRead(query_handle, (void *)(uintptr_t)payload_handle, payload_size);\n  Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);\n  return sprite;\n}"
+    }
+  ]
+}

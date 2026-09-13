@@ -109,16 +109,16 @@ separate. No historical ratchet is reset by this repair.
 
 Durable preparation archive:
 `artifacts/cpp-classes/20260906/unit-turn/preparation.tar.gz`, with sibling
-`summary.json`, `README.md` and `preparation.tar.gz.sha256`. Archive SHA-256:
+summary.json, README.md and preparation.tar.gz.sha256. Archive SHA-256:
 `ba9176c6a9853bc9c552f3fac90a60cf6b9b694dd64d6df16078e433d73d091a`.
 The original scratch root was `/var/tmp/clash95-class-unit-turn-20260906/`;
 use the archive if that working directory has been reclaimed.
 
 Within the archive, `recovery/` holds the separate source patch, body hashes,
 production-resolving regression and fixture. The final, stronger runs are
-`evidence/recovery-real-ready-production/summary.json`,
-`evidence/recovery-real-ready-class/summary.json` and
-`evidence/recovery-real-ready-negative/summary.json`. They compile the actual
+evidence/recovery-real-ready-production/summary.json,
+evidence/recovery-real-ready-class/summary.json and
+evidence/recovery-real-ready-negative/summary.json. They compile the actual
 readiness method and free adapter. Production and scratch class runs pass all
 four compiler/optimization profiles; every frozen unrepaired control fails at
 the expected first-stack zero-context assertion. These final runs supersede
@@ -127,7 +127,7 @@ the earlier stubbed-readiness recovery fixture without deleting its evidence.
 Older `recovery-production-first`, `recovery-relocated-class` and
 `recovery-true-negative-control` runs remain historical preparation evidence.
 The initial missing-include failure and its corrected fixture also remain in
-`repair-contract-first-matrix.json` and `repair-contract-matrix.json`. The
+repair-contract-first-matrix.json and repair-contract-matrix.json. The
 separate [UnitTurn class migration](UNIT_TURN_CLASS_MIGRATION.md) compares against
 the repaired body; its extraction and relocation gates are recorded separately.
 
