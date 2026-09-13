@@ -9,6 +9,7 @@
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitSlot.hpp"
 #include "../units/UnitStack.hpp"
 #include "../units/UnitTurn.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
@@ -151,22 +152,43 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
 // 411887: variable 'v11' is possibly undefined
 
 //----- (004118A0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  UnitSlot_ShouldGainFatigueFromLowActionPoints(int slotPtr)
 {
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_ShouldGainFatigueFromLowActionPoints();
+}
+
+BOOL clash95::UnitSlot::UnitSlot_ShouldGainFatigueFromLowActionPoints() const
+{
+  int slotPtr = (int)address_;
   UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
   return slot->current_action_points <= 3u && (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
 }
 
 //----- (004118C0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  UnitSlot_CanRecoverFatigue(int slotPtr)
 {
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_CanRecoverFatigue();
+}
+
+BOOL clash95::UnitSlot::UnitSlot_CanRecoverFatigue() const
+{
+  int slotPtr = (int)address_;
   UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
   return (slot->state_flags & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
 }
 
 //----- (004118D0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  UnitSlot_HasSevereFatigue(int slotPtr)
 {
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_HasSevereFatigue();
+}
+
+BOOL clash95::UnitSlot::UnitSlot_HasSevereFatigue() const
+{
+  int slotPtr = (int)address_;
   UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
   return (int8_t)slot->fatigue >= 80;
 }
@@ -1086,8 +1108,15 @@ signed int  UnitStack_AdjustMoraleByPredicate(
 }
 
 //----- (00412970) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_CycleOrderState(int result)
 {
+  return clash95::UnitSlot((intptr_t)result).UnitSlot_CycleOrderState();
+}
+
+int clash95::UnitSlot::UnitSlot_CycleOrderState() const
+{
+  int result = (int)address_;
   UnitSlotRecord *slot;
   char nextOrderState;
   char clearedFlags;

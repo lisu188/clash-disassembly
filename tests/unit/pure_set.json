@@ -693,8 +693,9 @@
    "original_line": 1597,
    "source": "src/units/004115E0_00412BE0_units_002.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitSlot_HasSevereFatigue"
+    "kind": "method",
+    "qualified_name": "clash95::UnitSlot::UnitSlot_HasSevereFatigue",
+    "header": "src/units/UnitSlot.hpp"
    }
   },
   {
@@ -770,8 +771,9 @@
    "original_line": 2676,
    "source": "src/units/004115E0_00412BE0_units_002.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitSlot_CycleOrderState"
+    "kind": "method",
+    "qualified_name": "clash95::UnitSlot::UnitSlot_CycleOrderState",
+    "header": "src/units/UnitSlot.hpp"
    }
   },
   {

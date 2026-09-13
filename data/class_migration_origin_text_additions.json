@@ -185,6 +185,48 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC1El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
         }
       ],
       "archive_text": [
@@ -369,6 +411,48 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC1El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
         }
       ]
     },
@@ -520,6 +604,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
         }
       ],
       "archive_text": [
@@ -669,6 +788,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
         }
       ]
     }
