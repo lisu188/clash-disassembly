@@ -305,6 +305,81 @@ and coverage/integration-final-repeat.
 
 ## Validation commands and retained evidence
 
+### Publication refresh, 2026-09-13
+
+Final source `8e7b694098254471b115e038db1c7ea28d59ff7c` merges origin
+`e387a3530b4f10803990925cd2c38ecef72e10a1`. Only the incoming
+`Rules_BuildRoadOrStepTowardQueuedPath` body and its current manifest hash differ
+from the preceding source checkpoint. Its whole translation unit matches
+upstream; the DLX translation unit, unsigned loader hash, schema-3 metadata,
+11 methods, 144 ordered TUs and all frozen ratchets remain intact. Later work
+on the other tasks' branches is excluded from this publication.
+
+Both clean builds and all eight public gates pass with GCC 13.3.0 and Clang
+18.1.3. Warning totals decrease to 6579 / 6581; raw link failures remain
+441 / 693 with zero library crosscheck errors. Both strict comparisons pass
+using precisely the previous class text allowances. GCC also has a direct
+surface comparison against the retained preceding binary/archive. The prior
+Clang binary/archive were not copied before their native paths were rebuilt;
+its comparison uses the earlier hash-bound observations against the same
+frozen baseline. No anonymous compiler switch-table equivalence is inferred
+from these named-storage checks.
+
+All **516 tooling tests pass, zero skips**, in 158.243 seconds, including the
+incoming 255-scenario original-instruction regression in all four compiler
+profiles. Seven standalone generator/metadata/save checks pass. The header
+report remains exactly 22 failures, with byte-identical 15-row console output.
+All 734 bound inputs stay unchanged; inventory SHA-256 is
+`5a2ce5c09dfe9c803ef945df823773ffd82e095c6165a76a389666ef419762a9`.
+The native run and unchanged repeat both match **1087/0/527** by case identity,
+with **6161/6652 covered lines (92.62%)**, 718 reached functions and zero wholly
+uncovered functions. The initial stale unsharded strategic-TU gcov diagnostic
+remains recorded; fresh worker shards supply the metric and the repeat has no
+diagnostic. The private reporter's initial path typo is retained; its corrected
+summary uses existing successful logs without rerunning the checks.
+
+The September 8 memory-backed class-integration replay was interrupted before
+durable persistence. Its RAM root was absent on resumption, so its reported GCC
+completion and unfinished Clang observation are not accepted as durable runtime
+proof. This publication uses fresh persistent private roots and preserves all
+attempts. The earlier fully retained pre-class runs remain historical evidence.
+
+The first persistent GCC replay passes in 222.413 seconds. Clang's first two
+attempts stop at the viewport driver's unchanged 80-attempt limit, in 222.685
+and 111.501 seconds, before Road construction. Their final viewports are
+`(49,45)` and `(59,45)`. The second log records horizontal jumps such as
+56→61→57→62 while trying to reach the requested column: the default 0.10-second
+key hold overshoots. A separately recorded retry uses the existing
+`CLASH95_PAN_KEY_HOLD=0.005` option. It retains the identical binary and all
+12 route input hashes, destinations and assertions; it changes only the driver's
+key duration. The tracked route fixture and game code are unchanged, and both
+failed attempts remain preserved.
+
+The calibrated Clang replay passes in **187.181 seconds**. The selected GCC
+and Clang runs have identical decoded state at all ten save checkpoints and
+both finish at turn 6, stack 4 `(49,50)`, 2 AP, empty path, Road words 867/879
+and 228 visible tiles. Periodic frame capture uses the documented private
+stride-128 variant; explicit screenshots, route actions and game assertions are
+unchanged. All four attempts are retained in persistent native roots and
+lossless, member-hash-verified archives; no raw files are deleted.
+
+Fresh comparison pairs against the retained September 6 original were inspected.
+Selected world/stack headers, all 310 unit-slot bytes, path count, all 1300
+visibility bytes and six Road words match the original exactly. Full-frame
+differences remain 286,586 pixels / RGB MAD 11.235241970 for GCC and 287,419 /
+11.319169922 for Clang. Current compiler frames differ at 17,236 pixels with
+MAD 1.242452257; 4,576 differences remain outside observed temporal variation.
+Missing labels/panels, displaced badges, lower-left map/text corruption and
+fog/water differences remain explicit debt. The comparison uses the historical
+original capture, not a new original execution, and establishes no visual or
+campaign promotion.
+
+Detailed commands, input/binary hashes and results are in final-origin-audit,
+publication-tooling-20260913, coverage/publication-20260913 and each compiler's
+publication-20260913 artifacts. The new runtime scripts/results are under
+publication-runtime-20260913. All paths are relative to this batch's evidence
+root below; retail assets remain private.
+
 All checks run in Linux/WSL against this worktree, not the separate main
 checkout. The local shell environment translates the inherited Windows Git
 paths explicitly:

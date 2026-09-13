@@ -1,6 +1,6 @@
 # Current Status
 
-Last consolidated: 2026-09-08.
+Last consolidated: 2026-09-13.
 
 ## DLX Cached-Entry View Migration
 
@@ -15,12 +15,16 @@ controls. Main integration preserves the incoming Road work and archives the
 competing signed-subtraction specification; the original uint32 subtraction wins
 the conflict. Integration of main's 11 class methods and subsequent single-tile
 movement recovery retains all 144 ordered TUs and schema-3 metadata. Both builds,
-all eight public gates, strict class comparisons and 514 tooling tests pass.
+all eight public gates, strict class comparisons and 516 tooling tests pass.
 The unchanged native repeat matches the prior 527 crash identities. Incoming
 stricter header limits yield 22 failures (15 printed); class text additions yield
 441 GCC / 693 Clang raw link differences. No ratchet is raised. Exact attempts,
 native/runtime evidence and retained original/canonical differences:
 [DLX_CACHED_ENTRY_RECOVERY.md](DLX_CACHED_ENTRY_RECOVERY.md).
+Both final first-Road probes pass with ten matching saved states; Clang uses
+the existing shorter pan-key option after two retained viewport-overshoot
+failures. Fresh original/reconstruction comparison pairs retain the known
+visual debt and do not claim visual parity.
 No campaign milestone advances; normal mission-05 turn-7 refresh and Road
 continuation remain the gameplay target.
 
