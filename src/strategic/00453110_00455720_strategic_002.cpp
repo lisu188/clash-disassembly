@@ -508,58 +508,85 @@ signed int  Move_CommitIfWithinCost(
 //----- (00454330) --------------------------------------------------------
 signed int  Rules_MarchToTemple(unsigned int stack_index, int temple_x, int temple_y, double a4)
 {
-  int *Track; // edx
-  int stack_record; // eax
-  int prev_x; // edi
-  int prev_y; // ebx
-  int v10; // ecx
-  int stack_offset; // ebp
-  int stack_record_after; // eax
-  int v13; // ecx
-  _DWORD pa_value[6]; // [esp+0h] [ebp-28h] BYREF
-  int queued_target_xy; // [esp+18h] [ebp-10h]
+  const uint32_t stackByteOffset = UNIT_STACK_STRIDE * stack_index;
+  const uint32_t stackRecordOffset = UNIT_STACK_TABLE_OFFSET + stackByteOffset;
+  uint32_t stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  UnitStackRecord *entryStack = (UnitStackRecord *)(uintptr_t)stackAddress;
 
-  if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) )
+  if ( entryStack->queued_path.waypoint_count )
   {
-    queued_target_xy = *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
-    if ( (int)abs32(temple_x - (unsigned __int8)queued_target_xy) > 1 || (int)abs32(temple_y - BYTE1(queued_target_xy)) > 1 )
-      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) = 0;
-  }
-  if ( !*(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) )
-  {
-    Track = Temple_GenerateApproachTrack(stack_index, temple_x, temple_x, temple_y);
-    if ( Track )
+    const PathWaypoint firstWaypoint = entryStack->queued_path.waypoints[0];
+
+    // Original subtraction and absolute value wrap at 32 bits. INT_MIN stays
+    // negative, so the original signed comparison treats it as within range.
+    uint32_t rowDistanceBits = static_cast<uint32_t>(temple_x) - firstWaypoint.tile_row;
+    if ( static_cast<int32_t>(rowDistanceBits) < 0 )
+      rowDistanceBits = 0u - rowDistanceBits;
+    bool outsideTargetArea = static_cast<int32_t>(rowDistanceBits) > 1;
+    if ( !outsideTargetArea )
     {
-      qmemcpy((void *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET), Track, UNIT_STACK_PATH_BYTES);
+      uint32_t columnDistanceBits = static_cast<uint32_t>(temple_y) - firstWaypoint.tile_column;
+      if ( static_cast<int32_t>(columnDistanceBits) < 0 )
+        columnDistanceBits = 0u - columnDistanceBits;
+      outsideTargetArea = static_cast<int32_t>(columnDistanceBits) > 1;
+    }
+    if ( outsideTargetArea )
+      entryStack->queued_path.waypoint_count = 0;
+  }
+
+  if ( !entryStack->queued_path.waypoint_count )
+  {
+    int *generatedTrack = Temple_GenerateApproachTrack(stack_index, temple_x, temple_x, temple_y);
+    if ( generatedTrack )
+    {
+      // The generator can replace gameData before the complete path is copied.
+      stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+      UnitStackRecord *destinationStack = (UnitStackRecord *)(uintptr_t)stackAddress;
+      qmemcpy(&destinationStack->queued_path, generatedTrack, sizeof(QueuedPathBuffer));
+      // The native free thunk retains its existing argumentless interface.
       j__nfree_();
     }
   }
-  if ( !*(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) )
+
+  stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *sourceStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  if ( !sourceStack->queued_path.waypoint_count )
     return 0;
-  stack_record = gameData + UNIT_STACK_STRIDE * stack_index;
-  prev_x = *(__int16 *)(uintptr_t)(stack_record + UNIT_STACK_TABLE_OFFSET);
-  prev_y = *(__int16 *)(uintptr_t)(stack_record + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
-  UnitStack_ExecuteQueuedPath(stack_index, 1, prev_y, stack_index, a4);
-  if ( stack_index <= 0x1F4 && (unsigned int)*(__int16 *)(uintptr_t)(v10 + gameData + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 )
-  {
-    stack_offset = UNIT_STACK_STRIDE * stack_index;
-    stack_record_after = gameData + stack_offset;
-    if ( *(__int16 *)(uintptr_t)(gameData + stack_offset + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1 )
-      return 0;
-    if ( prev_x == *(__int16 *)(uintptr_t)(stack_record_after + UNIT_STACK_TABLE_OFFSET) && prev_y == *(__int16 *)(uintptr_t)(stack_record_after + 147176) )
-    {
-      pa_value[1] = 1;
-      pa_value[2] = Rules_AddIntegerValue(0);
-      Rules_PutInstanceSlotValue(*(_DWORD *)(uintptr_t)(gameData + stack_offset + 147895), (_BYTE*)(aPa_0), v13, pa_value, a4);
-    }
-  }
+
+  const int previousRow = sourceStack->tile_row;
+  const int previousColumn = sourceStack->tile_column;
+  UnitStack_ExecuteQueuedPath(stack_index, 1, static_cast<char>(previousColumn), stack_index, a4);
+
+  // The original checks these ranges only after executing the queued path.
+  constexpr unsigned int maximumStackIndex = 500;
+  constexpr unsigned int maximumFirstUnitType = 40;
+  if ( stack_index > maximumStackIndex )
+    return 1;
+  stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *executedStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  if ( static_cast<unsigned int>(executedStack->unit_slots[0].unit_type_id) > maximumFirstUnitType )
+    return 1;
+
+  stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *currentStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  // Retain the original repeated type read before the coordinate comparison.
+  if ( currentStack->unit_slots[0].unit_type_id == -1 )
+    return 0;
+  if ( currentStack->tile_row != previousRow || currentStack->tile_column != previousColumn )
+    return 1;
+
+  // Only the scalar type and integer-node words are consumed by the slot writer.
+  DWORD paValue[6];
+  paValue[1] = CLIPS_TYPE_INTEGER;
+  paValue[2] = Rules_AddIntegerValue(0);
+  stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *instanceStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  uint32_t instance;
+  qmemcpy(&instance, instanceStack->unrecovered_0x2D1_0x2D5, sizeof(instance));
+  // Execute and AddInteger preserve the stack byte offset in original ECX.
+  Rules_PutInstanceSlotValue(instance, (_BYTE *)(aPa_0), static_cast<int>(stackByteOffset), paValue, a4);
   return 1;
 }
-// 4544DF: simplified comparisons for 'ebp.4': <0 || >=1F5 became >=1F5u
-// 454500: simplified comparisons for 'eax.4': <0 || >=29 became >=29u
-// 4544F6: variable 'v10' is possibly undefined
-// 45457B: variable 'v13' is possibly undefined
-// 5202E4: using guessed type int gameData;
 
 //----- (00454590) --------------------------------------------------------
 signed int  Rules_MarchNearTile(DWORD stack_index, int target_x, int target_y, double a4)

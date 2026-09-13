@@ -1,5 +1,26 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Road readability: Temple march
+
+Track: Win95 reconstruction. Reviewed the canonical `Rules_MarchToTemple`
+(`0x454330`) individually. Named existing stack/path fields and replacement
+phases; recovered the preserved ECX offset at two uninitialized native uses.
+Retained original wrapping distance/address arithmetic, first-waypoint choice,
+four-byte count clear, 404-byte copy, callback order and late inclusive bounds.
+All 224 original scenarios match the actual body across four compiler profiles;
+all 69 defined-before cases also match. Twenty-three compiled controls are
+rejected. Arithmetic/address and uninitialized-before exclusions remain
+explicit, including sanitizer limitations. One canonical body hash changes;
+all 4157 identities and schema-3 metadata remain. No public symbol is renamed.
+The existing argumentless free thunk and instance-tail ownership remain
+unrecovered. Confidence is high within the documented caller/storage domain.
+Both builds, eight public CTests and 522 tooling tests pass with 740 inputs and
+compiler outputs frozen. Scoped warnings drop by two per compiler. Strict
+linked comparisons pass without allowances; neighboring code/data and 149 other
+objects remain exact. The inherited header/raw-link failures remain unresolved.
+No route or visual milestone is promoted.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-17-rules_marchtotemple).
+
 ## 2026-09-13 - Road readability: movement commit
 
 Track: Win95 reconstruction. Reviewed `Move_CommitIfWithinCost` (`0x454210`)
@@ -17,6 +38,12 @@ metadata remain. No public symbol is renamed and
 no broader record-tail ownership is claimed. Confidence is high within the
 documented caller/storage domain. No route or visual milestone advances.
 [Evidence, commands and limits](../HUMAN_READABILITY.md#batch-16-move_commitifwithincost).
+
+Subsequent remote observation confirms successful builds, public gates, 520
+tooling tests and the 718-function coverage job at 6126b40. The overall CI run
+remains failed at the same header/link ratchets as 1ca2457; no baseline or
+workflow is changed to accept those failures.
+[Remote CI evidence](../HUMAN_READABILITY.md#published-ci-observation-after-batch-16).
 
 ## 2026-09-13 - Bridge-query and class integration
 

@@ -1321,6 +1321,132 @@ Run it from the repository root in Linux/WSL:
 python3 -m unittest discover -s tests/tools -p test_movement_commit.py -v
 ```
 
+### Published CI observation after batch 16
+
+Remote CI remains failed at the inherited header and linked-symbol ratchets.
+The [6126b40 run](https://github.com/lisu188/clash-disassembly/actions/runs/34744304390)
+and [preceding 1ca2457 run](https://github.com/lisu188/clash-disassembly/actions/runs/34743423928)
+fail the same three steps. Both compiler builds, warning gates, all eight public
+CTests, unit-runner policy tests and the separate coverage job pass. The later
+run also passes all 520 tooling tests in 160.539 seconds.
+
+All emitted CI failure rows match between the two runs: 15 printed header rows
+and 80 printed link rows per compiler. Exact published header metadata recovers
+the same complete 22 header failures; retained local binary snapshots reproduce
+all 441 GCC / 693 Clang link differences and agree with the CI totals and every
+printed row, with zero library crosscheck errors. The unprinted link rows are
+local reconstruction evidence, not a complete remote CI log. No baseline or
+workflow was changed for this observation.
+
+The 6126b40 coverage job measures 6163 of 6652 lines (92.65%) across its fixed
+718-function set, with 585 fully covered functions and zero uncovered functions.
+The preceding run measures 6157 lines and 584 fully covered functions. These are
+the coverage harness's scope and thresholds, not coverage of all 4157 recovered
+identities. The complete CI workflow still requires genuine header-dependency
+and linked-surface repairs before it can pass.
+
+Run metadata, job logs, failed logs, normalized comparisons and exact commands
+are retained under artifacts/readability/road-functions-20260906/batch-17/ci-observation/.
+
+### Batch 17: Rules_MarchToTemple
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration. Reviewed
+`Rules_MarchToTemple` (`0x454330`) as the twentieth Road-family function.
+Its name is the canonical source/manifest name; this address has no public map
+entry. Named stack, waypoint, coordinate and generated-path values replace raw
+accesses and register aliases. The two uninitialized ECX values are recovered
+as the original stack byte offset at the post-Execute type read and PA call.
+Unsigned arithmetic preserves original 32-bit addresses and distance behavior.
+Only this body's canonical hash changes; all 4157 historical identities,
+144 source entries and schema-3 method/adapter metadata remain.
+
+Every nonzero entry count reads the first waypoint, independent of the count's
+magnitude. The original row-first subtraction and absolute value wrap at 32
+bits, with a signed comparison against one. INT_MIN remains negative and is
+accepted by that comparison; widening the distance or saturating it changes
+the recovered behavior. A far waypoint clears only the count DWORD. If a path
+is then needed, a nonnull generated track is copied as exactly 404 bytes into
+the fresh game-data base, followed by the existing free boundary. A null return
+still permits generator changes to be observed by the final count read.
+
+The final count and signed16 coordinates are read after generator/free. Execute
+receives the index, animation flag one, the previous column's low byte, the
+index again and the forwarded double. The index and signed first-type bounds
+remain after Execute, accepting 0..500 and 0..40 respectively. The original
+repeated type==-1 read remains before coordinate comparison, although no stable
+synchronous state can satisfy it after the preceding type check. No invented
+inter-read callback is used to exercise that branch. Unchanged coordinates
+lead to integer-zero construction and a PA slot-writer call using a fresh
+instance tail. Its separate third argument is the byte offset, not scalar type
+one. Only the six-word local buffer's type/node fields are initialized and
+consumed by the proven scalar chain; Put's result is ignored.
+
+The retained probe executes all 604 unchanged original instruction bytes,
+excluding the following four alignment bytes. All 224 scenarios and 514 call
+events match the applied body under GCC 13 and Clang 18 at O0/O2: 896
+comparisons. All 69 defined unchanged-before scenarios also match in those
+profiles, giving 276 before comparisons. The first-defect exclusions partition
+the other 155 cases: 25 signed-address additions, 119 uninitialized-v10 uses,
+four signed absolute-value negations, four signed subtractions and three
+negative-int addresses widened to invalid native pointers. Later overlapping
+defects, including v13, remain recorded separately. A sanitizer's failure to
+report a statically undefined expression does not make that case a valid before
+oracle; the retained diagnostic limitations are explicit in the provenance.
+
+Exact whole-arena comparisons and checks of gameData/selection admit only the
+29 observed four-byte count clears and 50 complete path copies. Both entire
+512-byte source-track regions, including their guards, are checked as well.
+The two game arenas back records -1, 0, 1, 499, 500 and 501 across the signed
+address boundary. Scripted changes distinguish fresh destination/count/type/
+coordinate/instance reads after the relevant callbacks. Twenty-three compiled
+negative controls are rejected with explicit first witnesses. Compact trace
+fingerprints are separate from the literal full-buffer guards.
+
+Original allocation dataflow corroborates a separate 404-byte result that the
+bridge-corner helper returns unchanged or replaces with null. With a valid heap,
+that allocation is disjoint from live game data. The copy proof assumes backed,
+nonoverlapping regions and the original clear direction flag. The original-only
+adapter verifies the returned pointer in EAX at free and the copy registers;
+the common native free call has no arguments and the compatibility thunk is
+inert. This batch therefore does not recover allocation release or claim full
+generator/free equivalence. The actual generator, movement, CLIPS allocation/
+storage, asynchronous state changes and altered floating-point environments
+remain outside the recording boundaries. Finite double forwarding, conditional
+raw node words and scripted mutations establish caller behavior only.
+
+Confidence is high within that documented caller/storage domain. No public
+symbol, signature, shared layout or table is renamed. The instance tail retains
+its unresolved ownership semantics. No temple arrival, Road continuation,
+runtime route, visual-fidelity or campaign milestone is promoted.
+
+Both incremental compiler builds and all eight public CTests pass. Scoped
+strategic warnings fall from 38 to 36 with GCC 13 and from 39 to 37 with Clang 18,
+removing the two uninitialized values. Target code grows from 685 to 774 bytes
+with GCC and from 651 to 722 with Clang. Only the target executable section,
+instructions and relocations change; all 61 neighboring executable sections,
+ordinary allocated data and the Clang Road table's 56 bytes/seven relocations
+remain exact. All 149 other objects per compiler remain unchanged. Strict
+class-aware linked comparisons pass without allowances. The complete inherited
+22 header failures and raw 441 GCC / 693 Clang link differences remain, with
+zero crosscheck errors; no baseline is raised. The earlier CI observation above
+remains failed overall and these local comparisons do not promote it to green.
+
+All 522 tooling tests pass in 161.964 seconds without skips. All 740 production
+and tooling inputs, both binaries/archives, 150 objects per compiler, compile
+commands and the 147-member archive ordering stay frozen through validation.
+
+Private original/source freezes, exact commands, independent before-domain and
+trace reviews, allocation-route corroboration and negative controls are under
+artifacts/readability/road-functions-20260906/batch-17/.
+The candidate-audit, original-proof, test-plan and test-audit directories retain
+their respective proof and limits; scope-audit, metadata and build-validation
+record integration. Private scripts are absent from clean checkouts. The public
+regression uses tracked source and provenance without retail assets:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_temple_march.py -v
+```
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

@@ -2,6 +2,35 @@
 
 Last consolidated: 2026-09-13.
 
+## Temple March Readability And Preserved Stack Offset
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration.
+`Rules_MarchToTemple`, the twentieth individually reviewed Road-family function,
+now uses named stack/waypoint fields and explicit path-replacement phases.
+Original ECX recovery replaces two uninitialized values; 32-bit arithmetic
+preserves the original distance and address behavior. Exact count clearing,
+full path copying, fresh state reads and late inclusive bounds remain.
+All 224 original scenarios match the actual body in four compiler profiles,
+and all 69 defined-before scenarios match. Twenty-three compiled negative
+controls are rejected. The native free thunk's missing pointer/ownership
+behavior remains separate compatibility debt. One canonical body hash changes;
+no route, visual-fidelity or campaign milestone advances.
+Both compiler builds, all eight public CTests and all 522 tooling tests pass.
+All 740 inputs and compiler outputs remain frozen. Scoped warnings decrease
+by two per compiler; neighboring code/data and all 149 other objects remain
+unchanged. Strict linked comparisons need no allowances. The inherited 22
+header failures and 441 GCC / 693 Clang raw link differences remain unresolved.
+[Evidence, commands and limits](HUMAN_READABILITY.md#batch-17-rules_marchtotemple).
+
+## Published CI At 6126b40
+
+Remote CI remains failed at the same header and linked-symbol ratchet steps as
+the preceding main revision. Both compiler builds, warning gates, eight public
+CTests, 520 tooling tests and the separate 718-function coverage gate pass.
+The measured 22 header failures and 441 GCC / 693 Clang link differences are
+unchanged; no baseline is raised or check disabled. CI repair remains required.
+[Remote runs, evidence scopes and coverage](HUMAN_READABILITY.md#published-ci-observation-after-batch-16).
+
 ## Movement Commit Readability And Original Call Arguments
 
 Track: Win95 reconstruction, upstream Road/queued-path orchestration.
