@@ -460,58 +460,50 @@ signed int  Move_CommitIfWithinCost(
         DWORD a3,
         double a4)
 {
-  int stack_offset; // ebx
-  int stack_record; // eax
-  int prev_x; // esi
-  int prev_y; // edi
-  int stack_record_after; // eax
-  _DWORD pa_value[9]; // [esp-4h] [ebp-24h] BYREF
+  (void)a2; // The original saves incoming ECX but does not consume it.
+  const uint32_t stackByteOffset = UNIT_STACK_STRIDE * stack_index;
+  const uint32_t stackRecordOffset = UNIT_STACK_TABLE_OFFSET + stackByteOffset;
 
-  /* 00454210.  Only EAX (stack_index) is a real parameter: 454216 'mov ecx,eax'
-     overwrites the ECX that IDA guessed was arg2, and EBP is never read, so a2
-     and a3 are phantoms.  ECX then holds stack_index for the WHOLE body and EBX
-     holds stack_index*725; sub_410330 (UnitStack_ExecuteQueuedPath) saves and
-     restores both (its prologue is 'push ebx; push ecx; push esi; push ebp'),
-     which is why 454284 can range-check ECX right after the call.  The
-     decompiler lost every one of those live registers and emitted the
-     never-assigned v10/v11/v13/v14 - IDA flags all four at 454284/4542BD/
-     454313/45431F.  Recovered verbatim from the asm. */
-  pa_value[8] = a2;                                   /* 454210: push ecx */
-  if ( !*(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) )
+  // Keep original 32-bit addressing and reload gameData after each call phase.
+  uint32_t stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *sourceStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  if ( !sourceStack->queued_path.waypoint_count )
     return 0;
-  stack_offset = UNIT_STACK_STRIDE * stack_index;     /* ebx */
-  stack_record = gameData + UNIT_STACK_STRIDE * stack_index;
-  prev_x = *(__int16 *)(uintptr_t)(stack_record + UNIT_STACK_TABLE_OFFSET);
-  prev_y = *(__int16 *)(uintptr_t)(stack_record + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
-  /* 45427D: `mov eax,ecx; call sub_410330` with edx=1, ebx=stack_offset and
-     ecx=stack_index still live. */
-  UnitStack_ExecuteQueuedPath(stack_index, 1, (char)stack_offset, stack_index, a4);
-  /* 454284: `test ecx,ecx; jl` + `cmp ecx,1F4h; jg` - the surviving ECX, i.e.
-     the stack index, bounded by the 500-entry stack table. */
-  if ( stack_index > 0x1F4 || (unsigned int)*(__int16 *)(uintptr_t)(stack_offset + gameData + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) > 0x28 )
+
+  const int previousRow = sourceStack->tile_row;
+  const int previousColumn = sourceStack->tile_column;
+  // Incoming EBP is retained at both Execute and Road call boundaries.
+  UnitStack_ExecuteQueuedPath(stack_index, 1, (char)stackByteOffset, a3, a4);
+
+  // The original checks these ranges only after executing the queued path.
+  constexpr unsigned int maximumStackIndex = 500;
+  constexpr unsigned int maximumFirstUnitType = 40;
+  if ( stack_index > maximumStackIndex )
     return 1;
-  if ( Rules_IsQueuedPathTargetBridgeCrossing(stack_index) )   /* 4542B0: mov eax,ecx */
-    Rules_BuildRoadOrStepTowardQueuedPath(stack_index, a3, a4);/* 4542BB: mov eax,ecx */
-  stack_record_after = gameData + UNIT_STACK_STRIDE * stack_index;
-  if ( prev_x == *(__int16 *)(uintptr_t)(stack_record_after + UNIT_STACK_TABLE_OFFSET)
-    && prev_y == *(__int16 *)(uintptr_t)(stack_record_after + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) )
-  {
-    /* 454303: `mov ecx,1` - that same 1 is stored into the argument block AND
-       is the ECX register argument of sub_480160 at 45431F. */
-    pa_value[1] = 1;
-    pa_value[2] = Rules_AddIntegerValue(0);
-    Rules_PutInstanceSlotValue(
-      *(_DWORD *)(uintptr_t)(stack_offset + gameData + 147895),
-      (_BYTE*)(aPa),
-      1,
-      pa_value,
-      a4);
-  }
+  stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *executedStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  if ( static_cast<unsigned int>(executedStack->unit_slots[0].unit_type_id) > maximumFirstUnitType )
+    return 1;
+
+  if ( Rules_IsQueuedPathTargetBridgeCrossing(stack_index) )
+    Rules_BuildRoadOrStepTowardQueuedPath(stack_index, a3, a4);
+
+  stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *currentStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  if ( currentStack->tile_row != previousRow || currentStack->tile_column != previousColumn )
+    return 1;
+
+  // The scalar slot writer consumes only the type and integer-node words.
+  DWORD paValue[6];
+  paValue[1] = CLIPS_TYPE_INTEGER;
+  paValue[2] = Rules_AddIntegerValue(0);
+  stackAddress = static_cast<uint32_t>(gameData) + stackRecordOffset;
+  const UnitStackRecord *instanceStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+  uint32_t instance;
+  qmemcpy(&instance, instanceStack->unrecovered_0x2D1_0x2D5, sizeof(instance));
+  Rules_PutInstanceSlotValue(instance, (_BYTE *)(aPa), 1, paValue, a4);
   return 1;
 }
-// 454284: simplified comparisons for 'ecx.4': <0 || >=1F5 became >=1F5u
-// 45429D: simplified comparisons for 'eax.4': >=0 && <29 became <29u
-// 5202E4: using guessed type int gameData;
 
 //----- (00454330) --------------------------------------------------------
 signed int  Rules_MarchToTemple(unsigned int stack_index, int temple_x, int temple_y, double a4)

@@ -1,5 +1,23 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-13 - Road readability: movement commit
+
+Track: Win95 reconstruction. Reviewed `Move_CommitIfWithinCost` (`0x454210`)
+individually, using existing stack/path/unit views and named call phases.
+Recovered incoming EBP at Execute's fourth argument and original 32-bit address
+arithmetic. Kept the late inclusive bounds, fresh base reads, scalar PA payload
+and ignored callee results. All 140 original scenarios match the actual body
+under four compiler profiles; unchanged-before comparisons retain 115 matches,
+12 defined argument-only mismatches and 13 distinct address exclusions per
+profile. Fifteen compiled negative controls are rejected. Both builds, all
+eight public gates and 520 tooling tests pass with 738 inputs and compiler
+outputs frozen. Neighboring code/data and existing ratchet failures remain.
+Only the target's canonical body hash changes; all 4157 identities and schema-3
+metadata remain. No public symbol is renamed and
+no broader record-tail ownership is claimed. Confidence is high within the
+documented caller/storage domain. No route or visual milestone advances.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-16-move_commitifwithincost).
+
 ## 2026-09-13 - Bridge-query and class integration
 
 Track: Win95 reconstruction. Integrated published DLX/class checkpoint

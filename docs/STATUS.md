@@ -2,6 +2,24 @@
 
 Last consolidated: 2026-09-13.
 
+## Movement Commit Readability And Original Call Arguments
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration.
+`Move_CommitIfWithinCost`, the nineteenth individually reviewed Road-family
+function, now uses named stack fields, explicit call phases and early exits.
+Original incoming-argument forwarding replaces an incorrect Execute argument;
+32-bit addresses and fresh game-data reads replace signed intermediate pointers.
+The late inclusive index/type bounds, partial scalar value and ignored return
+values remain. All 140 original scenarios match the actual body in four compiler
+profiles, including separately diagnosed before-address failures. Fifteen
+compiled negative controls are rejected. Both builds and all eight public gates
+pass, as do all 520 tooling tests with 738 inputs and compiler outputs frozen.
+Neighboring code/data, warning counts and existing ratchet failures remain.
+One canonical body hash changes; identities, layouts and shared tables
+remain. No route, visual-fidelity or campaign milestone changes.
+The first-Road runtime baseline and normal turn-7 continuation frontier remain.
+[Evidence, commands and limits](HUMAN_READABILITY.md#batch-16-move_commitifwithincost).
+
 ## Bridge Query Integration With Class Recovery
 
 Track: Win95 reconstruction, integrate the completed Road readability batch.

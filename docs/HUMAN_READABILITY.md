@@ -1230,6 +1230,97 @@ from clean checkouts. Incoming first-Road replay/frame evidence remains tied to
 its recorded `8e7b694` source checkpoint; this combined build adds no runtime,
 visual-fidelity or campaign milestone claim.
 
+### Batch 16: Move_CommitIfWithinCost
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration. Reviewed
+`Move_CommitIfWithinCost` (`0x454210`) as the nineteenth Road-family function.
+The function now uses existing packed stack/path/unit fields, named coordinates,
+explicit call phases and early exits. Original 32-bit address arithmetic replaces
+signed intermediate addresses, with fresh game-data reads after Execute, the
+bridge/Road phase and integer-node construction. No name, signature, layout or
+shared table changes; only this function's canonical body hash changes, retaining
+all 4157 historical identities and schema-3 method/adapter metadata.
+
+The original forwards incoming EBP to both Execute and Road. The previous caller
+instead passed the stack index as Execute's fourth argument. The recovered
+caller now forwards its existing argument there. This is a defined discrepancy
+at the call boundary; a reached gameplay effect is not established. The real
+Execute implementation has its own register recovery, outside this batch.
+
+The empty path returns zero without a callee call or world-state write. Every
+nonempty path executes before the index check, which accepts 0..500 inclusive,
+followed by the signed16 first-unit-type check accepting 0..40. These bounds
+are preserved exactly; the unit-type registry count is not a substitute.
+Any nonzero bridge result calls
+Road, whose result is ignored. If fresh coordinates still equal the entry
+coordinates, the caller interns zero, calls the PA slot writer and returns one.
+The slot-put result is also ignored. The original 24-byte local value buffer
+initializes only its type and integer-node words; the proven scalar consumer
+chain uses only those words. The saved incoming ECX lies outside that buffer.
+The existing four-byte record tail is copied as an instance argument without
+claiming additional field ownership or structure semantics.
+
+All 288 unchanged original instruction bytes execute in the retained proof.
+The actual production body matches all 140 scenarios and 411 call events under
+GCC 13 and Clang 18 at O0/O2: 560 comparisons. Per compiler profile, the unchanged
+before body has 115 exact matches and 12 defined mismatches confined to Execute's
+fourth argument. Thirteen high-address cases are excluded from before equivalence
+for distinct reasons: ten signed-addition overflows and three negative-int
+addresses sign-extended into invalid native pointers. Retained diagnostic probes
+confirm both classes; the original and recovered caller execute all 13 with
+backed storage. No patched before body serves as an oracle.
+
+Two complete 0x90000-byte arenas at 0x10000000 and 0x7FFE0000 back records -1, 0,
+1, 499, 500 and 501. Full arena byte comparisons and exact checks of gameData
+and selection before every callback and return enforce absence of caller
+world-state writes and preserve scripted mutations.
+Compact path/arena fingerprints are separate observations. Required registers
+and finite floating-point forwarding are checked at the recording boundaries.
+Fifteen compiled negative controls are rejected. An initially surviving stale
+post-query-base control exposed equal-coordinate test data; two appended cases
+change the fresh arena's coordinates and reject it. That failed sensitivity
+result remains preserved. Earlier input case payloads, excluding the changing
+four-byte case-count header, and complete output trace prefixes remain exact.
+
+Confidence is high within the documented backed-storage and caller domain.
+Five recording boundaries replace actual movement, bridge query, Road building,
+CLIPS interning and slot storage. Scripted non-Boolean returns, raw integer-node
+words and mutations test conditional caller behavior, not additional real
+callee behavior. Arbitrary unbacked indices, asynchronous/volatile mutation,
+NaNs, infinities and altered floating-point environments remain outside this
+proof. No runtime route, visual-fidelity or campaign milestone is promoted.
+
+Both production builds and all eight explicit public CTests pass. Only the
+target's code, instructions and relocations change: 433 to 468 bytes under GCC,
+399 to 430 under Clang. The 61 neighboring executable sections, ordinary
+allocated data/relocations, Clang's neighboring 56-byte Road dispatch table and
+its seven relocations remain exact. All 149 other objects per compiler and both
+compile-command files remain unchanged. Unwind and nonallocated debug metadata
+are excluded from the object comparison. Strict linked class/storage/order and
+initialization comparisons pass without allowances. Scoped warnings remain
+38 GCC / 39 Clang; raw link ratchets retain 441 / 693 differences with zero
+library crosscheck errors. Manifest, split-source, metadata, generators and
+class inventories pass. All 22 existing header failures, their complete metrics
+and stricter limits remain unchanged. No baseline is raised.
+
+All 520 tooling tests pass in 172.354 seconds, with no skips. All 738
+production/tooling inputs, both binaries and archives, all 150 objects per
+compiler and both compile-command files remain frozen through the full run.
+
+Private original/source freezes, exact commands, independent trace decoding,
+before-domain diagnostics and compiled negative controls are retained under
+artifacts/readability/road-functions-20260906/batch-16/.
+The original-proof/fresh-coordinate-extension and test-audit directories bind
+the actual source to the reviewed candidate and public fixture. The scope-audit,
+metadata and build-validation directories record integration checks. Private
+scripts are absent from clean checkouts. The public test requires only tracked
+sources and its provenance JSON, with no retail assets or original executable.
+Run it from the repository root in Linux/WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_movement_commit.py -v
+```
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in
