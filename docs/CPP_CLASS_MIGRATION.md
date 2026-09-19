@@ -1,8 +1,7 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: UnitStack personage query extraction.
-Twenty-seven identities have canonical methods; 24 occupy six class-named
-sources and three await separately validated relocation from their original TUs.
+Track: Win95 reconstruction. Frontier: UnitStack personage query relocation.
+Twenty-seven identities have canonical methods in six class-named sources.
 The ordered manifest contains 147 translation units,
 including the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
@@ -19,6 +18,7 @@ advance campaign or visual-fidelity claims.
 The three personage/order queries pass eight actual-source compiler profiles,
 both production builds, strict surface comparisons and eight asset-free gates.
 Their direct method dependency and original adapters are validated separately.
+The subsequent unchanged-body relocation passes the same gates.
 See [UNIT_STACK_PERSONAGE_CLASSES.md](UNIT_STACK_PERSONAGE_CLASSES.md).
 
 The explicit initializer passes its actual-source differential fixture, both

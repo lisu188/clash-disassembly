@@ -510,56 +510,6 @@ signed int UnitStack_HasNormalCombatUnits(intptr_t stackPtr)
   return clash95::UnitStack(stackPtr).UnitStack_HasNormalCombatUnits();
 }
 
-signed int clash95::UnitStack::UnitStack_HasNormalCombatUnits() const
-{
-  intptr_t stackPtr = address_;
-  typedef __int16 StackTypeWord __attribute__((aligned(1), may_alias));
-  signed int result; // eax
-  intptr_t slot_record; // edx
-  signed int squad_count; // esi
-  signed int has_normal_unit; // ebx
-  signed int slot_index; // ecx
-  int unit_type; // eax
-
-  if ( *(StackTypeWord *)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
-    return 0;
-  result = Unit_GetSquadCount(stackPtr);
-  squad_count = result;
-  if ( result )
-  {
-    slot_record = stackPtr;
-    has_normal_unit = 0;
-    slot_index = 0;
-    if ( result > 0 )
-    {
-      while ( !has_normal_unit )
-      {
-        unit_type = *(StackTypeWord *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET);
-        if ( unit_type == UNIT_TYPE_GOLD_CARGO
-          || unit_type == UNIT_TYPE_PEASANT_CARGO
-          || unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
-          || unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-        {
-          ++slot_index;
-          slot_record += UNIT_STACK_SLOT_STRIDE;
-          if ( slot_index >= squad_count )
-            return has_normal_unit;
-        }
-        else
-        {
-          has_normal_unit = 1;
-          ++slot_index;
-          slot_record += UNIT_STACK_SLOT_STRIDE;
-          if ( slot_index >= squad_count )
-            return 1;
-        }
-      }
-    }
-    return has_normal_unit;
-  }
-  return result;
-}
-
 //----- (00412170) --------------------------------------------------------
 signed int  UnitStack_HasGoldCargo(int stackPtr)
 {
@@ -1152,24 +1102,6 @@ __attribute__((used, retain))
 signed int UnitStack_HasSpecialPersonageUnits(intptr_t stackPtr)
 {
   return clash95::UnitStack(stackPtr).UnitStack_HasSpecialPersonageUnits();
-}
-
-signed int clash95::UnitStack::UnitStack_HasSpecialPersonageUnits() const
-{
-  intptr_t stackPtr = address_;
-  UnitStackRecord *stack;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)stackPtr;
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    int slotType = stack->unit_slots[slotIndex].unit_type_id;
-    if ( slotType == -1 )
-      return 0;
-    if ( slotType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slotType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-      return 1;
-  }
-  return 0;
 }
 
 //----- (00412B90) --------------------------------------------------------

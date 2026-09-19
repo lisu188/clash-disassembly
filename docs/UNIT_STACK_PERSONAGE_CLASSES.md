@@ -42,9 +42,13 @@ runtime/native evidence remains pinned to the 23-method checkpoint.
 
 ## Relocation and limits
 
-Relocation into `src/units/UnitStack.cpp` is the next separately validated stage.
-The prepared relocation preserves all three canonical body hashes. Source
-extraction alone establishes neither campaign completion nor visual equivalence.
+Relocation into `src/units/UnitStack.cpp` passes as a separate stage after
+extraction commit `f56a28b`. All three canonical body hashes remain identical.
+The actual-source fixture again passes all eight profiles; both production
+builds, strict surface comparisons and all eight asset-free gates pass. All 27
+methods now occupy six class-named files, with the same 147-TU inventory.
+Canonical hash, coverage mapping and Markdown checks also pass. This evidence
+establishes neither campaign completion nor visual equivalence.
 Nearby morale, plague and spent-turn repairs remain separate behavioral work.
 
 ## Reproduction and retained evidence

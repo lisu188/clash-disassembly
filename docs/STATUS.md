@@ -2,14 +2,15 @@
 
 Last consolidated: 2026-09-19.
 
-## UnitStack Personage Query Extraction
+## UnitStack Personage Query Extraction And Relocation
 
 Three personage/order queries now have canonical UnitStack methods in their
 original TUs and retained adapters. The max-order query calls its migrated peer
 directly. Eight actual-source compiler profiles, both production builds, strict
 surface comparisons and eight asset-free gates pass. There are 27 canonical
-methods, with 24 already in six class-named files; unchanged-body relocation of
-the three new methods follows separately. All 4,157 identities and 147 TUs remain.
+methods. Separately validated relocation preserves all three body hashes and
+passes the same focused, production, strict-surface and eight asset-free gates.
+All 27 methods now occupy six class-named files. All 4,157 identities and 147 TUs remain.
 The special-personage query adds one executable line to the unchanged coverage
 inventory. See [UNIT_STACK_PERSONAGE_CLASSES.md](UNIT_STACK_PERSONAGE_CLASSES.md).
 
