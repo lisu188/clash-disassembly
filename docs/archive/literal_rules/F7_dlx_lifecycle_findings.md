@@ -133,6 +133,19 @@ expression is regrouped, widened, narrowed or converted to an accessor.
   F6's stack-slot supplement is independent. This bounded batch does not
   claim that every remaining numeric token has an established meaning.
 
+The next bounded naming family is three physical extents: the two unsuffixed
+`22` allocation arguments in `DLXSpriteSet_Load` and
+`DLXSpriteSet_CopyEntriesFrom` (render 003 lines 1330 and 1417 at F7), and the
+unsuffixed `4` payload-handle transfer in `DLXSprite_CopyFrom` (render 004 line
+315). Independent borrowed/owning original allocations request `16h`
+(`clash95.asm:8641-8648`, `8841-8846`); the final dword at offset `12h` ends at
+byte 22. The original copy explicitly transfers four bytes into offset `0Ah`
+(`9547-9564`), independently corroborated by constructor/destructor/serializer
+dword accesses to that field. Existing view definitions agree. These sites
+are candidates for a subsequent reviewed plan, not applied F7 replacements.
+The equal-valued set-entry stride and allocator arguments remain separate
+domains; native pointer size must not replace the original handle width.
+
 ## Review and validation mechanism
 
 Resolve these rules with `tools/apply_literal_names.py` after adding the four
