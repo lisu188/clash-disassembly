@@ -1,6 +1,22 @@
 # Current Status
 
-Last consolidated: 2026-09-13.
+Last consolidated: 2026-09-19.
+
+## DLX Lifecycle Literal Names
+
+Track: Win95 reconstruction, behavior-preserving numeric naming.
+Twenty-three literals in seven DLX lifecycle functions now use four private
+macros for serialized-header bytes and payload-handle, serialized-size and
+ownership offsets. The two meanings of decimal `10` remain separate. Original
+producer and consumer instructions support the names; literal spelling,
+arithmetic types, access widths and callback behavior remain intact.
+Both complete canonical preprocessor streams are exactly equal before guard
+regeneration. Four guards and seven current body hashes are refreshed while
+all 4157 identities, 145 TUs, historical hashes and class metadata remain.
+The numeric census decreases by exactly 23; existing unresolved pointer-width,
+return-register and unrelated literal questions remain documented.
+[Evidence, reviewed rules and validation](archive/literal_rules/F7_dlx_lifecycle_findings.md).
+No runtime, visual-fidelity or campaign milestone advances.
 
 ## Human-Player Selection Cleanup Readability
 
