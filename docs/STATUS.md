@@ -2,6 +2,22 @@
 
 Last consolidated: 2026-09-19.
 
+## Selected-Slot Predicate Readability
+
+Track: Win95 reconstruction, Road-family selection helpers.
+`UnitStackSelection_HasSelectedSlots` now scans the existing ten-DWORD array
+directly, with the original exact `-1` inactive guard and full-DWORD nonzero
+tests. Assembly and independent source review agree; 34 neighbors are unchanged
+and exactly one canonical body hash changes. Manifest and generated-header
+checks, both incremental builds and warning gates, strict surface comparisons
+without allowances and eight existing CTests pass. Each compiler preserves the
+other 152 objects. Header rows and raw-link failures remain unchanged; no full
+tooling or coverage run is repeated. This validated task-branch checkpoint uses
+`a0dc2f0` as its reference; the next main integration remains separate. Four
+adjacent selection helpers were reviewed and retained unchanged. No runtime,
+visual or campaign milestone advances.
+[Predicate evidence and validation scope](HUMAN_READABILITY.md#batch-21-unitstackselection_hasselectedslots).
+
 ## Current-Selection Integration With Class Main
 
 Track: Win95 reconstruction, Road-family selection readability. The selection
@@ -21,6 +37,13 @@ measurements, not fresh merged-tree coverage or native-suite runs. The changed
 function has zero calls in all 32 retained default-worker observations. Runtime,
 visual and campaign milestones remain unchanged.
 [Integrated evidence and limits](HUMAN_READABILITY.md#batch-20-integration-with-class-main).
+
+The subsequent published `a0dc2f0` CI run completes both builds, warning gates,
+eight asset-free CTests and 542 tooling tests successfully. Its fresh GCC
+coverage is 6167/6656 lines (92.65%), all 718 functions covered. The overall run
+fails on header/link checks and two unchanged references to private class
+evidence. These are separate remote measurements, not new local Clang coverage.
+[Published CI evidence](HUMAN_READABILITY.md#published-ci-after-batch-20-integration).
 
 ## Current-Selection Synchronization Before Class Integration
 

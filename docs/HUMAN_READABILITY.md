@@ -2126,6 +2126,79 @@ validated production commit. Confidence is high for the bounded assembly-backed
 refactor and measured integration comparisons. No new runtime, visual or
 campaign milestone is claimed.
 
+### Published CI after batch 20 integration
+
+[CI run 35439348039](https://github.com/lisu188/clash-disassembly/actions/runs/35439348039)
+completed for published main `a0dc2f0`. Both supported builds and warning gates,
+all eight asset-free CTests, both runner-policy test sets and all 542 tooling
+tests pass. The remote tooling suite takes 257.851 seconds. Fresh GCC coverage
+measures 6167/6656 lines (92.65%) across all 718 selected functions, none
+uncovered. This is a new CI measurement for the published selection/class merge;
+it is separate from the local historical coverage reuse recorded above and does
+not measure the next selected-slot refactor.
+
+The overall run fails on the retained header and raw-link checks, plus two
+Markdown references to private class evidence absent from the checkout. The
+header output retains the `UnitStack.hpp` `a2` finding; raw link counts are
+453 GCC / 705 Clang with zero archive crosscheck errors. The missing references
+are the class native-baseline README and origin-refresh validation script,
+also reproduced by the preceding local check in unchanged documents. The
+successful native CTest wrapper is not an assertion that every isolated native
+case passes. All four terminal job logs and run metadata are retained under
+artifacts/readability/road-functions-20260906/batch-20-selection-sync/published-ci-a0dc2f0/.
+No job was restarted.
+
+### Batch 21: UnitStackSelection_HasSelectedSlots
+
+Track: Win95 reconstruction, Road-family selection helpers. The predicate at
+`0x423AC0` now uses an early inactive-selection return and a direct loop over
+the existing ten-DWORD flag array. The byte-offset loop, pointer casts and one
+stale guessed-type annotation are removed. Only active index `-1` returns
+before the scan; every other index still scans flags in order. Any nonzero full
+DWORD returns exactly one, all-zero flags return zero, and index ten is never
+read. The public signature, globals and existing slot-count constant remain.
+
+The original instruction sequence at `clash95.asm:54982` through line 55011,
+the shared-state declarations and the existing ten-slot layout assertion agree
+with the rewritten body. Independent review finds the applied body identical
+to the reviewed candidate. All 34 neighboring definitions are byte-identical,
+and the manifest changes only this canonical body hash. Confidence is high for
+this bounded predicate; there are no unresolved semantic candidates here.
+
+The manifest, generated-header and TU-include checks pass. Header metrics and
+all 23 ratchet rows equal the published `a0dc2f0` reference; the separate
+include-policy gate has not been rerun. After a coordinated disk reserve hold,
+both incremental native builds and warning gates pass. Each compiler changes
+exactly one object, preserves the other 152 and retains identical compile
+commands. The warning comparison for the changed source file retains 13 GCC /
+25 Clang diagnostics, with no new messages against its retained full-build log.
+Both strict surface comparisons pass without
+allowances, and all eight existing CTests pass. Complete raw profiles and their
+453 GCC / 705 Clang failure rows remain exact. Archive membership (150 names)
+and order are unchanged. Public raw-link gates remain failed; no baseline changes.
+
+All 807 inputs remain stable through validation, and the immutable batch-20
+reference is reverified unchanged. No full tooling or coverage run is repeated
+for this source-only edit. The final validation freeze is under the batch's
+validation directory. This is a validated task-branch checkpoint against
+`a0dc2f0`; main integration with the neighboring task remains separate.
+
+No test or oracle is added for this direct, behavior-preserving scan. The
+function is outside the 718 selected coverage implementations. Its five selected
+neighbors retain their bodies; the two following Road exit functions move nine
+source lines earlier. No new coverage percentage or indirect non-execution
+claim is made. Private review and exact command receipts are retained under
+artifacts/readability/road-functions-20260906/batch-21-selected-slots/.
+No runtime, visual or campaign milestone advances.
+
+The neighboring Begin, End, ClearMask and Refresh helpers were also reviewed
+against the original and retained unchanged. Their existing call ordering,
+diagnostic placement and return contracts are already clear. In particular,
+ClearMask returns the cleared-array pointer's low 32-bit integer result,
+whereas Begin, End and Refresh return the viewport redraw result. Refresh
+must not gain Begin's flag clear or mode writes. The bounded review is retained
+under artifacts/readability/road-functions-20260906/selection-family-next-review/.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

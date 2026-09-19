@@ -3909,7 +3909,7 @@
       "original_line": 5733,
       "source": "src/buildings/00422B50_004254E0_buildings_005.cpp",
       "linkage": "external",
-      "body_sha256": "b4d0496531554e54685af01d4df6069cb49cca6c306789ba2e5117f15b49e36c",
+      "body_sha256": "9372e3e64c68e053c88bc5857de989c32484cb37beee69afe0fd823e9bb17bec",
       "original_address_range": {
         "start": "0x00423AC0",
         "end_exclusive": "0x00423B00"

@@ -1,5 +1,22 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-19 - Selected-slot predicate readability checkpoint
+
+Track: Win95 reconstruction. Replaced the byte-offset scan in
+`UnitStackSelection_HasSelectedSlots` (`0x423AC0`) with an indexed loop over the
+existing ten-DWORD array and an early inactive-selection return. Original
+assembly confirms the exact `-1` guard, full-DWORD tests and 0/1 return. No public
+identity, state, type or layout changes; 34 neighboring definitions remain exact.
+One stale annotation is removed and one canonical body hash changes. Independent
+review, static manifest/header checks, both incremental builds and warning
+gates, strict surface comparisons without allowances and eight existing CTests
+pass against `a0dc2f0`. Each compiler preserves 152 other objects. Existing
+header/link failures remain; no full tooling or coverage run is repeated. This
+is a task-branch checkpoint pending main integration. Begin, End, ClearMask and
+Refresh were separately reviewed and retained unchanged. Confidence is high
+within these bounded contracts; no runtime or campaign milestone advances.
+[Evidence and validation](../HUMAN_READABILITY.md#batch-21-unitstackselection_hasselectedslots).
+
 ## 2026-09-19 - Selection readability integration with class main
 
 Track: Win95 reconstruction. Integrated the current-selection refactor with
