@@ -597,30 +597,51 @@ void WorldMap_SyncSelectionForHumanPlayer(DWORD entryContext)
 }
 
 //----- (0040A500) --------------------------------------------------------
-void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2)
+void UnitStackSelection_SyncForCurrentSelection(void *entryReceiver, DWORD entryContext)
 {
-  if ( g_SelectedUnitIndex == -1 )
+  const int selectedStackIndex = g_SelectedUnitIndex;
+  if ( selectedStackIndex == -1 )
   {
-    if ( g_UnitStackSelectionActiveUnitIndex == -1 )
-      return;
-LABEL_4:
-    UnitStackSelection_End(a1);
+    if ( g_UnitStackSelectionActiveUnitIndex != -1 )
+      UnitStackSelection_End(entryReceiver);
     return;
   }
-  if ( Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) == 1 && g_UnitStackSelectionActiveUnitIndex != -1 )
-    goto LABEL_4;
-  if ( Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) > 1 && g_UnitStackSelectionActiveUnitIndex == -1 )
+
+  const uint32_t firstStackTableAddress = static_cast<uint32_t>(gameData)
+          + UNIT_STACK_TABLE_OFFSET;
+  const uint32_t firstStackAddress = firstStackTableAddress
+          + UNIT_STACK_STRIDE * static_cast<uint32_t>(selectedStackIndex);
+  const int firstSquadCount = Unit_GetSquadCount(static_cast<intptr_t>(firstStackAddress));
+  if ( firstSquadCount == 1 && g_UnitStackSelectionActiveUnitIndex != -1 )
   {
-    UnitStackSelection_BeginForSelectedStack(a2);
+    // Original Count preserves ECX as this query's stack-table base.
+    UnitStackSelection_End(
+        reinterpret_cast<void *>(static_cast<uintptr_t>(firstStackTableAddress)));
+    return;
   }
-  else if ( g_UnitStackSelectionActiveUnitIndex != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) > 1 )
+
+  // Each original count query reads the current selection and arena again.
+  const uint32_t beginStackIndex = static_cast<uint32_t>(g_SelectedUnitIndex);
+  const uint32_t beginStackAddress = static_cast<uint32_t>(gameData)
+          + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * beginStackIndex;
+  const int beginSquadCount = Unit_GetSquadCount(static_cast<intptr_t>(beginStackAddress));
+  if ( beginSquadCount > 1 && g_UnitStackSelectionActiveUnitIndex == -1 )
   {
-    UnitStackSelection_RefreshForSelectedStack(a2);
+    UnitStackSelection_BeginForSelectedStack(entryContext);
+    return;
   }
+
+  const int activeSelectionIndex = g_UnitStackSelectionActiveUnitIndex;
+  const int refreshStackIndex = g_SelectedUnitIndex;
+  if ( activeSelectionIndex == refreshStackIndex )
+    return;
+
+  const uint32_t refreshStackAddress = static_cast<uint32_t>(gameData)
+          + UNIT_STACK_TABLE_OFFSET
+          + UNIT_STACK_STRIDE * static_cast<uint32_t>(refreshStackIndex);
+  if ( Unit_GetSquadCount(static_cast<intptr_t>(refreshStackAddress)) > 1 )
+    UnitStackSelection_RefreshForSelectedStack(entryContext);
 }
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 514194: using guessed type int dword_514194;
-// 5202E4: using guessed type int gameData;
 
 //----- (0040A600) --------------------------------------------------------
 void * WorldMap_DrawTurnBannerReveal(int animate)

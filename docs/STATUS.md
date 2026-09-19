@@ -39,6 +39,58 @@ All 4,157 identities and 147 TUs remain; the initializer's coverage denominator
 changes explicitly by one line. See
 [UNIT_SLOT_INITIALIZER_CLASS.md](UNIT_SLOT_INITIALIZER_CLASS.md).
 
+## Current-Selection Integration With Class Main
+
+Track: Win95 reconstruction, Road-family selection readability. The selection
+refactor is integrated with published class main `dd9bd1a`, retaining 147
+canonical TUs, six class sources and all 4,157 identities. Both fresh compiler
+builds, warning gates, strict surface comparisons without allowances, eight
+asset-free CTests and all 542 tooling tests pass. The 807 production/tooling
+inputs are frozen. The public header gate still fails with 23 ratchet rows and
+one inherited `UnitStack.hpp` parameter-name finding; raw link gates still fail
+with 453 GCC / 705 Clang differences. Complete error lists and measured profiles
+match the immutable class reference; no baseline or policy changes.
+
+Coverage uses the sealed class measurements with an input and execution-counter
+proof: GCC 6165/6656 lines, all 718 functions covered, gate passing; Clang
+6812/7345 lines, eight uncovered functions, gate failing. These are historical
+measurements, not fresh merged-tree coverage or native-suite runs. The changed
+function has zero calls in all 32 retained default-worker observations. Runtime,
+visual and campaign milestones remain unchanged.
+[Integrated evidence and limits](HUMAN_READABILITY.md#batch-20-integration-with-class-main).
+
+## Current-Selection Synchronization Before Class Integration
+
+Track: Win95 reconstruction, selection synchronization reached from the Road
+builder menu. `UnitStackSelection_SyncForCurrentSelection` is the twenty-third
+individually reviewed Road-family function. Named query phases and early returns
+replace the decompiler label while preserving three count calls, live global
+reads, signed comparisons and original 32-bit addressing. Original ECX evidence
+also recovers the singleton End argument; the reached callee does not consume
+that receiver, so no gameplay-state defect is claimed.
+All 28 original scenarios and 74 events match four actual-source profiles;
+eight direct Count cases and two real caller paths corroborate the leaf behavior.
+Ten compiled mutations are rejected. Both native builds, eight public CTests
+and all 532 tooling tests pass, with 755 inputs frozen. Coverage reaches 92.62%
+across all 718 selected functions, none uncovered. The native harness separately
+reports 1089 passes and 527 isolated crashes among 1616 cases, with no assertion
+failures. The inherited AP fixture compile error is repaired by reading the
+immutable metadata table; both AP tests pass separately with strict crash handling.
+All 150 other objects and neighboring code/data remain
+exact; strict before/after link checks pass without allowances. Existing 20
+header and 439/691 raw link differences remain. One canonical body hash changes;
+runtime, visual and campaign milestones do not advance.
+[Evidence, validation and limits](HUMAN_READABILITY.md#batch-20-unitstackselection_syncforcurrentselection).
+
+## Published CI At 5f3da7b
+
+Both builds, eight public CTests, 530 tooling tests and the separate coverage
+gate pass. Coverage measures 92.65% across all 718 selected functions, none
+uncovered. Only the inherited header and linked-symbol steps fail; raw link
+differences remain 439 GCC / 691 Clang with zero crosscheck errors. Complete
+logs were retrieved without failures or restarting jobs.
+[Remote measurements](HUMAN_READABILITY.md#published-ci-observation-after-human-player-selection-cleanup).
+
 ## September Main Integration And Class Validation
 
 Track: Win95 reconstruction, behavior-class migration. Published main `02c00bf`
