@@ -525,7 +525,7 @@
    "original_address": "0x0040F440",
    "original_source": "src/recovered/world/00408030_world_map.inc.c",
    "original_line": 5206,
-   "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+   "source": "src/units/UnitSlot.cpp",
    "implementation": {
     "kind": "method",
     "qualified_name": "clash95::UnitSlot::UnitSlot_InitFromType",

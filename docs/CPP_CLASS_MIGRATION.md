@@ -1,9 +1,8 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: explicit UnitSlot initializer extraction.
-Twenty-four identities have canonical methods: 23 in six class-named sources,
-with the initializer temporarily in its original world translation unit pending
-separately validated relocation. The ordered manifest contains 147 translation units,
+Track: Win95 reconstruction. Frontier: explicit UnitSlot initializer relocation.
+Twenty-four identities have canonical methods in six class-named sources.
+The ordered manifest contains 147 translation units,
 including the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).

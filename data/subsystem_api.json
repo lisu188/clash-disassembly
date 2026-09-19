@@ -94,7 +94,7 @@
   "world->persistence": 20,
   "world->render": 23,
   "world->runtime": 4,
-  "world->state": 8,
+  "world->state": 7,
   "world->strategic": 21,
   "world->units": 41
  },

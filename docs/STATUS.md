@@ -2,14 +2,17 @@
 
 Last consolidated: 2026-09-19.
 
-## UnitSlot Explicit Initializer Extraction
+## UnitSlot Explicit Initializer Extraction And Relocation
 
 The initializer now has a canonical UnitSlot method in its original world TU
 and a retained original-signature adapter. Construction only binds the record;
 initialization remains explicit. All 2,863,104 differential scenarios per
 compiler/optimization profile pass, as do both production builds, strict
 symbol/storage/initialization comparisons and eight asset-free gates. There are
-24 canonical methods, with this new method awaiting separate relocation.
+24 canonical methods. The separately validated relocation moves the unchanged
+body into UnitSlot.cpp; both production builds and strict comparisons pass.
+All eight asset-free gates pass, including the unchanged retry of a source audit
+that initially timed out. All 24 methods now occupy six class-named files.
 All 4,157 identities and 147 TUs remain; the initializer's coverage denominator
 changes explicitly by one line. See
 [UNIT_SLOT_INITIALIZER_CLASS.md](UNIT_SLOT_INITIALIZER_CLASS.md).

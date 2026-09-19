@@ -47,8 +47,14 @@ lines changing from 26 to 27, explicitly +1 rather than resetting the denominato
 
 ## Relocation and limits
 
-Relocation into `src/units/UnitSlot.cpp` is the next separately validated step.
-Its prepared canonical body hash is identical. Preparation records the exact
+Relocation into `src/units/UnitSlot.cpp` passes as a separate stage after the
+extraction commit. The canonical body hash is identical, and the original world
+TU retains only the adapter. Both production builds and strict surface comparisons
+pass, as does the actual-source fixture again. All eight asset-free gates pass.
+The first Clang source-audit invocation timed out at its existing 60-second limit;
+the unchanged single-test retry passes in 13.4 seconds, with both logs retained.
+There are now 24 methods in six class-named files, with the same 147-TU inventory.
+Preparation records the exact
 GCC O2 anonymous two-byte constant `80 f0` moving with the method; that compiler
 constant is not an allowance to alter named game storage.
 
