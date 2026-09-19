@@ -178,3 +178,23 @@ individual build/run outcomes and exact canonical-body hashes are retained in
 remain unchanged. Their distinct AP algorithms require separate original-backed
 arithmetic repairs before extraction; the migration does not narrow their public
 input domains to hide the findings.
+
+## Header parameter declaration correction
+
+The integrated selection check reproduced a separate inherited policy error:
+`UnitStack_NormalizePeasantCargo(DWORD a2, double a3)` declares a parameter named
+`a2`, while the recovered declaration database also contains `extern char a2[3]`.
+The token-only dependency check mistook the parameter declaration for use of that
+global. The audit now masks only proven ordinary parameter declaration tokens.
+The recovered parameter name stays unchanged. Default expressions, array bounds,
+type tokens, qualified global references, other scopes and inline behavior remain
+checked; ambiguous complex declarators remain conservative.
+
+All 32 focused header-policy tests pass, including seven new regression methods.
+The unchanged checker reproduces eight failing positive scenarios and the exact
+production `a2` finding. The corrected current checker reports no class-header
+policy error. Its overall check still fails on the same 23 numeric ratchet rows;
+all rows are compared explicitly, and no baseline changes. The preparation and
+integrated logs are retained under `artifacts/cpp-classes/20260919/` in
+`header-policy-shadowing/` and `header-policy-integration/`. This tooling change
+does not modify any canonical implementation, storage or runtime behavior.

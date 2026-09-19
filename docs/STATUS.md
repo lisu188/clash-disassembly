@@ -2,6 +2,14 @@
 
 Last consolidated: 2026-09-19.
 
+## Class Header Parameter Audit Correction
+
+The header dependency audit now distinguishes ordinary parameter declarations
+from same-named recovered globals, fixing the inherited `DWORD a2` finding.
+All 32 focused tests pass. Actual global dependencies and inline behavior remain
+checked; the same 23 numeric ratchet failures and unchanged baseline remain.
+See [the integration record](CPP_CLASS_SEPTEMBER_INTEGRATION.md#header-parameter-declaration-correction).
+
 ## Spent-Turn Address Repair Before Class Extraction
 
 The two spent-turn setters now preserve unsigned low32 entry and return addresses

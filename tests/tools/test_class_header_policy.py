@@ -68,6 +68,80 @@ class WorldMap final {
 ''')
         self.assertEqual(errors, [])
 
+    def test_recovered_parameter_name_is_not_a_global_dependency(self):
+        self.declarations['globals']['a2'] = {'decl': 'extern char a2[3];'}
+        self.write('data/recovered_decls.json', json.dumps(self.declarations))
+        self.write('src/recovered_types.h', '#pragma once\ntypedef unsigned int DWORD;\n')
+        self.assertEqual(self.errors('''#include "../recovered_types.h"
+namespace clash95 {
+class WorldMap {
+  signed int UnitStack_NormalizePeasantCargo(DWORD a2, double a3) const;
+};
+}
+'''), [])
+
+    def test_named_parameters_do_not_create_recovered_dependencies(self):
+        for parameter in ('int shared_game_global',
+                          'const unsigned long &shared_game_global',
+                          'Record *shared_game_global',
+                          'types::Record &&shared_game_global',
+                          'const Alias shared_game_global',
+                          'int shared_game_global[3]',
+                          'int LegacyCall'):
+            with self.subTest(parameter=parameter):
+                self.assertEqual(self.errors('class WorldMap { int operation('
+                                             + parameter + ') const; };'), [])
+
+    def test_parameter_default_and_bound_dependencies_are_retained(self):
+        for parameter in ('int value = shared_game_global',
+                          'int shared_game_global = ::shared_game_global',
+                          'int value[shared_game_global]',
+                          'int shared_game_global[shared_game_global]',
+                          'int LegacyCall = LegacyCall()'):
+            with self.subTest(parameter=parameter):
+                self.assertTrue(any('canonical dependencies' in error for error in
+                                    self.errors('class WorldMap { int operation('
+                                                + parameter + '); };')))
+
+    def test_parameter_declaration_does_not_mask_other_scopes(self):
+        for access in ('return shared_game_global;', 'return ::shared_game_global;'):
+            with self.subTest(access=access):
+                errors = self.errors('class WorldMap { int first(int shared_game_global); '
+                                     'int second() const { ' + access + ' } };')
+                self.assertTrue(any('shared_game_global' in error for error in errors))
+        errors = self.errors('class WorldMap { int first(int shared_game_global); }; '
+                             'inline int other() { return shared_game_global; }')
+        self.assertTrue(any('shared_game_global' in error for error in errors))
+
+    def test_unnamed_typedef_parameter_is_not_treated_as_a_name(self):
+        # This narrow declarator filter must not erase type tokens. Type-alias
+        # ownership is a distinct question; ambiguous token collisions stay
+        # fail-closed rather than becoming a recovered-global allowlist.
+        for parameter in ('shared_game_global', 'const shared_game_global',
+                          'volatile shared_game_global &',
+                          'types::shared_game_global', 'struct shared_game_global'):
+            with self.subTest(parameter=parameter):
+                text = 'class WorldMap { int operation(' + parameter + '); };'
+                masked = audit._mask_class_method_declarators(text, {'LegacyCall'})
+                self.assertIn('shared_game_global', masked)
+
+    def test_local_declarations_are_not_parameter_exemptions(self):
+        errors = self.errors('class WorldMap { int operation() { '
+                             'int shared_game_global = 1; return shared_game_global; } };')
+        self.assertTrue(any('nontrivial inline helper' in error for error in errors))
+        text = 'class WorldMap { using shared_game_global = int; };'
+        self.assertIn('shared_game_global', audit._mask_class_method_declarators(text, set()))
+
+    def test_complex_parameter_declarators_remain_fail_closed(self):
+        for parameter in ('int (*shared_game_global)(int)',
+                          'decltype(shared_game_global) value',
+                          'Container<shared_game_global> value'):
+            with self.subTest(parameter=parameter):
+                text = 'class WorldMap { int operation(' + parameter + '); };'
+                masked = audit._mask_class_method_declarators(text, set())
+                self.assertIn('shared_game_global', masked)
+
+
     def test_direct_forbidden_aggregate_is_rejected(self):
         for name in ('recovered_all.h', 'recovered_internal.h', 'recovered_functions.h', 'recovered_foundation.h'):
             with self.subTest(name=name):
