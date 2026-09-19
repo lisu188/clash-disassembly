@@ -2,6 +2,16 @@
 
 Last consolidated: 2026-09-19.
 
+## AP-Spending Arithmetic Repair Before Class Extraction
+
+The clamped, floor-zero and unchecked routines preserve their distinct algorithms
+while using defined byte/low32 arithmetic and alignment-safe sentinel reads.
+All 36,432 original-measured cases pass eight compiler profiles; both production
+builds, strict comparisons and eight asset-free gates pass. The Clang disk-reserve
+stop and separately passing resume remain recorded. These three functions remain
+procedural; all identity, storage and coverage inventories are unchanged.
+See [UNIT_STACK_AP_SPENDING_REPAIR.md](UNIT_STACK_AP_SPENDING_REPAIR.md).
+
 ## Class Header Parameter Audit Correction
 
 The header dependency audit now distinguishes ordinary parameter declarations
@@ -119,8 +129,11 @@ tests pass; individual historical crash/assertion outcomes remain reported.
 GCC coverage passes at 92.62%, with all 718 functions covered. Clang measures
 92.74% but retains the same eight uncovered CLIPS functions, so its gate fails.
 Both executable denominators grow by four; the inventory and floor are unchanged.
-The first supplementary mission-13 replay stopped on a dark checkpoint frame;
-controlled baseline/retry evidence is pending. See
+Supplementary mission 13 passes on both compilers, retaining the first GCC
+dark-frame failure and unchanged passing repeat. Mission 00 reproduces the
+baseline selection failure. Mission 01 reaches two checkpoints with corrected
+capture cadence, then stops at the evidence-storage guard; the remaining route
+matrix is held for resource-safe capture retention. See
 [CPP_CLASS_SEPTEMBER_INTEGRATION.md](CPP_CLASS_SEPTEMBER_INTEGRATION.md).
 
 ## UnitStack Plague And Morale Query Extraction And Relocation

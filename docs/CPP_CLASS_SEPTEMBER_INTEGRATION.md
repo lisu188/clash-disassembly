@@ -162,11 +162,32 @@ Source headers. There are no zero-executable canonical methods. All failed
 reader attempts and the first source-index freeze failure remain retained under
 `artifacts/cpp-classes/20260919/runtime-native-preparation/`.
 
-The supplementary six-route replay is still in progress. Its first mission-13
-GCC attempt stopped on a dark checkpoint-frame metric at turn 2. An exact-main
-control and unchanged current retry are being retained to classify the capture
-and state evidence. This attempt is not promoted to a route pass or attributed
-to a class regression without the controlled comparison.
+The supplementary six-route replay remains incomplete and pinned to the frozen
+23-method binaries. Mission 13 passes on both compilers, with the first GCC
+dark-frame failure retained separately from its unchanged passing repeat. The
+exact-main control also passes. Concurrent live-window observations show that
+stride-128 capture can leave the latest dumped frame stale; they do not prove
+the precise cause of the earlier unobserved failure. Fresh nonblank human-turn
+frames are retained, while the objective transition's actual black window and
+older bright dump are reported separately.
+
+Mission 00 fails on both compilers with the same selection-marker mismatch as
+exact main. Mission 01's sparse initial black dump is reproduced on exact main
+while a concurrent actual window is nonblank. Restoring capture cadence 1, with
+unchanged route inputs, passes the initial and Stormus-exit checkpoints. Its
+2 GiB RAM evidence guard then stops the run after 26.99 seconds of game activity;
+this is a capacity stop, not a gameplay failure. All 1,751 raw members are
+verified in the 176,949,336-byte archive. At the observed approximately 79.5 MB/s
+raw rate, another blind 6 GiB attempt would be insufficient. Missions 02–04 and
+Clang mission 01 remain unrun while transparent compression is assessed. No
+route acceptance or campaign milestone is advanced by this partial matrix.
+
+The detailed commands, attempts and capture investigation are in
+`artifacts/cpp-classes/20260919/integrated-runtime/completed-routes/`. Lossless
+cleanup recovered 1,095,121,878 bytes from 886 current and historical loose
+BMP/log duplicates only after archive/member size and SHA verification. Existing
+archives retain all raw bytes; screenshots, saves, binaries, source freezes and
+reports stay available. Exact removal mappings are retained in that directory.
 
 A read-only preflight of the next AP-spending family found additional inherited
 boundary debt. On `INT_MIN` amounts, Clang diagnoses signed subtraction overflow

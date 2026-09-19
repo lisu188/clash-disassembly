@@ -467,14 +467,14 @@ signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmoun
   slotPtr = stackPtr + 3;
   for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
   {
-    slotType = *slotPtr;
+    slotType = *(clash95_unaligned_int16 *)slotPtr;
     if ( slotType == -1 )
       break;
     if ( *((unsigned __int8 *)slotPtr + 8) < spendAmount )
       spendAmount = *((unsigned __int8 *)slotPtr + 8);
     currentActionPoints = *((_BYTE *)slotPtr + 8);
     slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
-    LOBYTE(slotType) = currentActionPoints - spendAmount;
+    LOBYTE(slotType) = (unsigned int)(unsigned __int8)currentActionPoints - (unsigned int)spendAmount;
     *((_BYTE *)slotPtr - 23) = slotType;
   }
   return Rules_LinkArmyFact(stackPtr, spendAmount, i, a4, slotType, a3);
@@ -483,20 +483,20 @@ signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmoun
 //----- (00410170) --------------------------------------------------------
 int  UnitStack_SpendActionPointsUnchecked(int stackPtr, char spendAmount)
 {
-  int slotPtr; // eax
+  unsigned int slotPtr; // eax
   int slotIndex; // edx
 
-  slotPtr = stackPtr + 6;
+  slotPtr = (unsigned int)stackPtr + 6u;
   slotIndex = 0;
   while ( slotIndex < UNIT_STACK_SLOT_COUNT )
   {
-    if ( *(__int16 *)(uintptr_t)slotPtr == -1 )
+    if ( *(clash95_unaligned_int16 *)(uintptr_t)slotPtr == -1 )
       break;
     UNIT_SLOT_ACTION_POINTS(slotPtr) -= spendAmount;
     slotPtr += UNIT_SLOT_RECORD_BYTES;
     ++slotIndex;
   }
-  return slotPtr;
+  return (int)slotPtr;
 }
 
 //----- (004101A0) --------------------------------------------------------
@@ -509,7 +509,7 @@ signed int  UnitStack_SubtractActionPointsFloorZero(__int16 *stackPtr, int subtr
   slotPtr = stackPtr + 3;
   for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
   {
-    currentActionPoints = *slotPtr;
+    currentActionPoints = *(clash95_unaligned_int16 *)slotPtr;
     if ( currentActionPoints == -1 )
       break;
     currentActionPoints = *((unsigned __int8 *)slotPtr + 8);
@@ -519,7 +519,7 @@ signed int  UnitStack_SubtractActionPointsFloorZero(__int16 *stackPtr, int subtr
     }
     else
     {
-      LOBYTE(currentActionPoints) = currentActionPoints - subtractAmount;
+      LOBYTE(currentActionPoints) = (unsigned int)currentActionPoints - (unsigned int)subtractAmount;
       *((_BYTE *)slotPtr + 8) = currentActionPoints;
     }
     slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
