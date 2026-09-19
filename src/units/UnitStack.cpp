@@ -158,6 +158,42 @@ signed int clash95::UnitStack::UnitStack_NormalizePeasantCargo(DWORD a2, double 
   return Rules_SyncArmyFactStrength(stackPtr, 0, 0, i, a2, a3);
 }
 
+signed int clash95::UnitStack::UnitStack_HasPlague() const
+{
+  int stackPtr = (int)address_;
+  UnitStackRecord *stack;
+  int slotIndex;
+
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
+  {
+    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
+    if ( slot->unit_type_id == -1 )
+      return 0;
+    if ( (slot->state_flags & UNIT_SLOT_FLAG_PLAGUE) != 0 )
+      return 1;
+  }
+  return 0;
+}
+
+signed int clash95::UnitStack::UnitStack_HasLowMoraleUnit() const
+{
+  int stackPtr = (int)address_;
+  UnitStackRecord *stack;
+  int slotIndex;
+
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
+  {
+    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
+    if ( slot->unit_type_id == -1 )
+      return 0;
+    if ( (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) != 0 )
+      return 1;
+  }
+  return 0;
+}
+
 int clash95::UnitStack::UnitStack_CalcMilitaryStrength() const
 {
   int stackPtr = (int)address_;

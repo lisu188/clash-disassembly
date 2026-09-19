@@ -1,14 +1,16 @@
 # Current Status
 
-Last consolidated: 2026-09-13.
+Last consolidated: 2026-09-19.
 
-## UnitStack Plague And Morale Query Extraction
+## UnitStack Plague And Morale Query Extraction And Relocation
 
 Two packed-record queries now use canonical UnitStack methods and retained
 adapters. Eight focused compiler profiles, both production builds, strict
 storage/symbol/initialization checks and eight asset-free gates pass. There are
-23 canonical methods, with two awaiting separate relocation; no TU or storage
-is added. Nearby setter repairs remain separate. See
+23 canonical methods in six class-named files after separately validated,
+unchanged-body relocation. The September 13 disk-space stop and September 19
+successful retry are both recorded; no TU or storage is added. Nearby setter
+repairs remain separate. See
 [UNIT_STACK_QUERY_CLASSES.md](UNIT_STACK_QUERY_CLASSES.md).
 
 ## UnitSlot Action-Point Class Extraction And Relocation

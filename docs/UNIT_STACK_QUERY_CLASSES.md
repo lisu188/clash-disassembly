@@ -59,3 +59,22 @@ both production builds, strict symbol/storage/initialization comparisons and
 all eight asset-free gates. It has **23 canonical methods**, with the two new
 queries still in the original TU pending separate relocation; six class-named
 files and 146 recovered TUs remain. Header generation produces no changed bytes.
+
+## Relocation and resumed validation
+
+After extraction commit `c3165bb`, the same method bodies move into
+`src/units/UnitStack.cpp`, before military strength in historical identity order.
+Canonical and adapter hashes remain unchanged. The original TU keeps both
+ordinary compatibility functions; no storage or initialization moves.
+
+The September 13 focused relocation fixture passed, but the production runner
+stopped at its disk-space guard before starting either build. This is retained
+as an incomplete attempt. On September 19, after verifying the unchanged
+checkout and available space, the actual-source fixture, both production
+builds, strict current-main-reference comparisons and all eight asset-free
+gates pass. Resumed logs are under
+`artifacts/cpp-classes/20260919/unit-stack-query-integration/`, with the stage
+name `unit-stack-query-relocation-resumed` and the same validation command
+documented above. All **23 methods are now in six class-named files**; the
+146-TU inventory and all 4,157 identities remain. This checkpoint precedes
+integration of the later Road ownership changes on origin/main.
