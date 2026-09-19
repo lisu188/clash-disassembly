@@ -163,7 +163,7 @@ def harness_source(body=None):
     ))
     if body is None:
         body = builder_road.extract(builder_road.BUILDINGS, target)
-    bodies = builder_road.extract(builder_road.WORLD2, "WorldMap_EnsureBuilderWidgetTables") + "\n" + body
+    bodies = builder_road.extract(builder_road.BUILDER_WIDGETS, "WorldMap_EnsureBuilderWidgetTables") + "\n" + body
     return (HARNESS.replace("@INPUT_ENUM@", ", ".join("IN_" + name.upper() for name in INPUT_FIELDS))
             .replace("@SPIES@", spies).replace("@BODIES@", bodies).replace("@DATA@", data)
             .replace("@POINTER_CHECKS@", "\n".join(checks))

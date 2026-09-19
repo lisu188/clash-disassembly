@@ -393,7 +393,7 @@
    "original_address": "0x004082C0",
    "original_source": "src/recovered/world/00408030_world_map.inc.c",
    "original_line": 95,
-   "source": "src/world/00408030_0040A0A0_world_001.cpp",
+   "source": "src/world/00408030_0040A040_world_001.cpp",
    "implementation": {
     "kind": "free",
     "qualified_name": "MapTile_HasOwnOrVisibleEnemyUnitStack"
@@ -404,7 +404,7 @@
    "original_address": "0x00408430",
    "original_source": "src/recovered/world/00408030_world_map.inc.c",
    "original_line": 162,
-   "source": "src/world/00408030_0040A0A0_world_001.cpp",
+   "source": "src/world/00408030_0040A040_world_001.cpp",
    "implementation": {
     "kind": "free",
     "qualified_name": "MapTile_HasBuilding"
@@ -415,7 +415,7 @@
    "original_address": "0x00409CE0",
    "original_source": "src/recovered/world/00408030_world_map.inc.c",
    "original_line": 1055,
-   "source": "src/world/00408030_0040A0A0_world_001.cpp",
+   "source": "src/world/00408030_0040A040_world_001.cpp",
    "implementation": {
     "kind": "free",
     "qualified_name": "WorldMap_HandleSaveGameAction"

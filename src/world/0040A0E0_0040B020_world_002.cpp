@@ -29,124 +29,151 @@ CLASH95_LOCAL void UnitBattle_WriteActionWidgetRecord (unsigned char *record, in
 signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3);
 
 //----- (0040A0E0) --------------------------------------------------------
-int  WorldMap_HandleBuilderActionMenu(int widget, int delayTicks, int a3, DWORD a4, double st7_0)
+int WorldMap_HandleBuilderActionMenu(
+        int widget,
+        int delayTicks,
+        int frameUpdateArgument,
+        DWORD entryUiContext,
+        double carriedValue)
 {
-  int v7; // ecx
-  int v9; // ecx
-  int noBuilderTexts[7]; // [esp+0h] [ebp-1Ch] BYREF
-
   if ( g_SelectedUnitIndex == -1 )
   {
     Audio_PlayButtonSound(aWrong_5);
     return Render_Begin((int)(intptr_t)g_RenderState, 0);
   }
-  else
+
+  UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
+  if ( !UnitStack_HasBuilder(g_SelectedUnitIndex) )
   {
-    UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
-    if ( UnitStack_HasBuilder(g_SelectedUnitIndex) )
-    {
-      WorldMap_EnsureBuilderWidgetTables();
-      UIWidgetTable_InitDrawStates((_DWORD*)(g_UI_YesNoDims));
-      WorldMap_RedrawViewport(1);
-      g_WorldMapBuilderMenuAction = -1;
-      Diagnostics_TraceWorldMapActionEvent("builder_menu_enter", g_SelectedUnitIndex, -1, 0, 0);
-      while ( 1 )
-      {
-        DD_Pump((int)(intptr_t)g_RenderState, a3);
-        WorldMap_RedrawFrame(a3);
-        if ( UI_TrySelectFriendlyStackUnderCursor() || !UIWidgetTable_PollHoverAndActions((_DWORD*)(g_UI_YesNoDims), 0x40u) && DD_IsFlipping((int)(intptr_t)g_RenderState) )
-          break;
-        a3 = g_WorldMapBuilderMenuAction;
-        if ( g_WorldMapBuilderMenuAction == -1 )
-          goto LABEL_13;
-        switch ( g_WorldMapBuilderMenuAction )
-        {
-          case 0:
-            Builder_StartRoadBuildMode(0x40u, st7_0);
-            break;
-          case 1:
-            Treasure_TryDigHere(g_SelectedUnitIndex, g_WorldMapBuilderMenuAction, 0x40u, (char)(intptr_t)g_RenderState, 0, st7_0);
-            break;
-          case 2:
-            BuildBuilding(3, v7, g_WorldMapBuilderMenuAction, st7_0);
-            break;
-          case 3:
-            if ( UnitStack_GetMinCurrentActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
-            {
-              a3 = g_SelectedUnitIndex;
-              if ( Building_New(0, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type0, 0) )
-              {
-                MiniMap_DrawTileCell(
-                  (void *)(uintptr_t)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET),
-                  *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET));
-                Audio_PlaySoundEffectByName(aStruktur, 64);
-              }
-            }
-            break;
-          case 4:
-            if ( !UnitStack_HasPeasantCargo(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) )
-            {
-              a3 = g_SelectedUnitIndex;
-              if ( Building_New(1, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type1, 0) )
-                Audio_PlaySoundEffectByName(aStruktur_0, 64);
-            }
-            break;
-          case 5:
-            a3 = g_SelectedUnitIndex;
-            if ( Building_New(2, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type2, 0) )
-              Audio_PlaySoundEffectByName(aStruktur_1, 64);
-            break;
-          default:
-            break;
-        }
-        if ( !DD_IsFlipping((int)(intptr_t)g_RenderState) )
-        {
-LABEL_13:
-          if ( g_WorldMapBuilderMenuAction != -1 )
-            break;
-        }
-        else
-        {
-          g_WorldMapBuilderMenuAction = -1;
-        }
-      }
-      g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
-      WorldMap_EnsureActionButtonWidgetTable();
-      UIWidgetTable_InitDrawStates((_DWORD*)(g_WorldMapActionButtonWidgetTable));
-      WorldMap_SyncSelectionForHumanPlayer(0x40u);
-      WorldMap_RedrawViewport(1);
-      WorldMap_RefreshUnitStatusPanel(0x40u);
-      return UnitStackSelection_RefreshForSelectedStack(0x40u);
-    }
-    else
-    {
-      Audio_PlayButtonSound(aWrong_6);
-      noBuilderTexts[0] = (int)(intptr_t)g_Text_NoBuilder[0];
-      noBuilderTexts[1] = (int)(intptr_t)g_Text_NoBuilder[1];
-      noBuilderTexts[2] = (int)(intptr_t)g_Text_NoBuilder[2];
-      return UI_ShowInfoWindow(
-               (const char*)(uintptr_t)(noBuilderTexts[(unsigned __int8)g_LanguageIndex]),
-               1u,
-               v9,
-               a4,
-               (int)(intptr_t)&noBuilderTexts[3],
-               (int)(intptr_t)&g_Text_NoBuilder[3]);
-    }
+    Audio_PlayButtonSound(aWrong_6);
+    // Preserve the three copied DWORDs and the original one-past-copy argument.
+    int noBuilderTexts[7];
+    noBuilderTexts[0] = (int)(intptr_t)g_Text_NoBuilder[0];
+    noBuilderTexts[1] = (int)(intptr_t)g_Text_NoBuilder[1];
+    noBuilderTexts[2] = (int)(intptr_t)g_Text_NoBuilder[2];
+    return UI_ShowInfoWindow(
+            (const char *)(uintptr_t)noBuilderTexts[(unsigned __int8)g_LanguageIndex],
+            1u,
+            delayTicks, // All three preceding original callees preserve ECX.
+            entryUiContext,
+            (int)(intptr_t)&noBuilderTexts[3],
+            (int)(intptr_t)&g_Text_NoBuilder[3]);
   }
+
+  enum BuilderMenuAction
+  {
+    noAction = -1,
+    buildRoad = 0,
+    digForTreasure = 1,
+    placeTrap = 2,
+    buildKeep = 3,
+    buildFortress = 4,
+    buildCastle = 5
+  };
+  constexpr DWORD menuContext = 0x40u;
+
+  WorldMap_EnsureBuilderWidgetTables();
+  UIWidgetTable_InitDrawStates((_DWORD *)g_UI_YesNoDims);
+  WorldMap_RedrawViewport(1);
+  g_WorldMapBuilderMenuAction = noAction;
+  Diagnostics_TraceWorldMapActionEvent("builder_menu_enter", g_SelectedUnitIndex, -1, 0, 0);
+
+  while ( true )
+  {
+    // Original EBX is carried between frames, then overwritten during dispatch.
+    DD_Pump((int)(intptr_t)g_RenderState, frameUpdateArgument);
+    WorldMap_RedrawFrame(frameUpdateArgument);
+    if ( UI_TrySelectFriendlyStackUnderCursor() )
+      break;
+    if ( !UIWidgetTable_PollHoverAndActions((_DWORD *)g_UI_YesNoDims, menuContext)
+      && DD_IsFlipping((int)(intptr_t)g_RenderState) )
+      break;
+
+    frameUpdateArgument = g_WorldMapBuilderMenuAction;
+    // The -1 sentinel skips both dispatch and the post-action flipping query.
+    if ( g_WorldMapBuilderMenuAction != noAction )
+    {
+      switch ( g_WorldMapBuilderMenuAction )
+      {
+        case buildRoad:
+          Builder_StartRoadBuildMode(menuContext, carriedValue);
+          break;
+        case digForTreasure:
+          Treasure_TryDigHere(
+                  g_SelectedUnitIndex, g_WorldMapBuilderMenuAction, menuContext,
+                  (char)(intptr_t)g_RenderState, 0, carriedValue);
+          break;
+        case placeTrap:
+          // BuildBuilding uses this ECX-shaped slot only in discarded log args.
+          BuildBuilding(3, 0, g_WorldMapBuilderMenuAction, carriedValue);
+          break;
+        case buildKeep:
+        {
+          // Keep the original 32-bit address arithmetic at each call boundary.
+          const uint32_t stackAddress = static_cast<uint32_t>(gameData)
+                  + UNIT_STACK_TABLE_OFFSET
+                  + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+          if ( !UnitStack_GetMinCurrentActionPoints(stackAddress) )
+            break;
+
+          frameUpdateArgument = g_SelectedUnitIndex;
+          if ( Building_New(0, g_SelectedUnitIndex, carriedValue,
+                  (char *)&g_Building_FootprintTemplate_Type0, 0) != 1 )
+            break;
+
+          // Construction can change both the arena and the selected stack.
+          const uint32_t builtStackAddress = static_cast<uint32_t>(gameData)
+                  + UNIT_STACK_TABLE_OFFSET
+                  + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+          const UnitStackRecord *builtStack = (const UnitStackRecord *)(uintptr_t)builtStackAddress;
+          MiniMap_DrawTileCell((void *)(uintptr_t)builtStack->tile_row, builtStack->tile_column);
+          Audio_PlaySoundEffectByName(aStruktur, 64);
+          break;
+        }
+        case buildFortress:
+        {
+          const uint32_t stackAddress = static_cast<uint32_t>(gameData)
+                  + UNIT_STACK_TABLE_OFFSET
+                  + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+          if ( UnitStack_HasPeasantCargo(static_cast<int>(stackAddress)) )
+            break;
+
+          frameUpdateArgument = g_SelectedUnitIndex;
+          if ( Building_New(1, g_SelectedUnitIndex, carriedValue,
+                  (char *)&g_Building_FootprintTemplate_Type1, 0) == 1 )
+            Audio_PlaySoundEffectByName(aStruktur_0, 64);
+          break;
+        }
+        case buildCastle:
+          frameUpdateArgument = g_SelectedUnitIndex;
+          if ( Building_New(2, g_SelectedUnitIndex, carriedValue,
+                  (char *)&g_Building_FootprintTemplate_Type2, 0) == 1 )
+            Audio_PlaySoundEffectByName(aStruktur_1, 64);
+          break;
+        default:
+          break;
+      }
+
+      if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
+      {
+        g_WorldMapBuilderMenuAction = noAction;
+        continue;
+      }
+    }
+
+    // Action and flipping callbacks may have changed the menu action.
+    if ( g_WorldMapBuilderMenuAction != noAction )
+      break;
+  }
+
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
+  WorldMap_EnsureActionButtonWidgetTable();
+  UIWidgetTable_InitDrawStates((_DWORD *)g_WorldMapActionButtonWidgetTable);
+  WorldMap_SyncSelectionForHumanPlayer(menuContext);
+  WorldMap_RedrawViewport(1);
+  WorldMap_RefreshUnitStatusPanel(menuContext);
+  return UnitStackSelection_RefreshForSelectedStack(menuContext);
 }
-// 40A182: variable 'a5' is possibly undefined
-// 40A1DF: variable 'v9' is possibly undefined
-// 40A24E: variable 'v7' is possibly undefined
-// 511130: using guessed type char g_LanguageIndex;
-// 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 511BC0: using guessed type int g_UI_YesNoDims[3];
-// 511D34: using guessed type char *g_Text_NoBuilder[3];
-// 511D40: using guessed type _DWORD dword_511D40[2];
-// 5202E0: using guessed type int dword_5202E0;
-// 5202E4: using guessed type int gameData;
-// 520308: using guessed type int dword_520308;
-// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 CLASH95_LOCAL void WorldMap_WriteActionWidgetRecord(
         unsigned char *record,
@@ -290,331 +317,7 @@ CLASH95_INTERNAL void WorldMap_EnsureActionButtonWidgetTable(void)
   g_WorldMapActionWidgetsInitialized = 1;
 }
 
-CLASH95_INTERNAL void WorldMap_EnsureBuilderWidgetTables(void)
-{
-  static const _BYTE builder_initial[322] = {
-    0xa0, 0x01, 0x00, 0x00, 0x90, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00,
-    0x0f, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00,
-    0xa0, 0xa0, 0x40, 0x00, 0x65, 0xcb, 0x4e, 0x00, 0x6b, 0xcb, 0x4e, 0x00, 0x70, 0xcb, 0x4e, 0x00,
-    0x01, 0x77, 0xcb, 0x4e, 0x00, 0xe0, 0x01, 0x00, 0x00, 0x90, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00,
-    0x00, 0x0c, 0x03, 0x52, 0x00, 0x13, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00,
-    0x00, 0xf0, 0x91, 0x41, 0x00, 0xa0, 0xa0, 0x40, 0x00, 0x7c, 0xcb, 0x4e, 0x00, 0x84, 0xcb, 0x4e,
-    0x00, 0x89, 0xcb, 0x4e, 0x00, 0x01, 0x8f, 0xcb, 0x4e, 0x00, 0x20, 0x02, 0x00, 0x00, 0x90, 0x01,
-    0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x11, 0x00, 0x00, 0x00, 0x12, 0x00,
-    0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00, 0xa0, 0xa0, 0x40, 0x00, 0x94, 0xcb,
-    0x4e, 0x00, 0xa4, 0xcb, 0x4e, 0x00, 0xb5, 0xcb, 0x4e, 0x00, 0x01, 0xc1, 0xcb, 0x4e, 0x00, 0xa0,
-    0x01, 0x00, 0x00, 0xb0, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x15,
-    0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00, 0xa0,
-    0xa0, 0x40, 0x00, 0xc6, 0xcb, 0x4e, 0x00, 0xcc, 0xcb, 0x4e, 0x00, 0xd1, 0xcb, 0x4e, 0x00, 0x01,
-    0xd6, 0xcb, 0x4e, 0x00, 0xe0, 0x01, 0x00, 0x00, 0xb0, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-    0x0c, 0x03, 0x52, 0x00, 0x17, 0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00,
-    0xf0, 0x91, 0x41, 0x00, 0xa0, 0xa0, 0x40, 0x00, 0xdb, 0xcb, 0x4e, 0x00, 0xe4, 0xcb, 0x4e, 0x00,
-    0xed, 0xcb, 0x4e, 0x00, 0x01, 0xf5, 0xcb, 0x4e, 0x00, 0x20, 0x02, 0x00, 0x00, 0xb0, 0x01, 0x00,
-    0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x19, 0x00, 0x00, 0x00, 0x1a, 0x00, 0x00,
-    0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00, 0xa0, 0xa0, 0x40, 0x00, 0xfa, 0xcb, 0x4e,
-    0x00, 0x00, 0xcc, 0x4e, 0x00, 0x07, 0xcc, 0x4e, 0x00, 0x01, 0x0c, 0xcc, 0x4e, 0x00, 0xff, 0xff,
-    0xff, 0xff,
-  };
-  static const _BYTE road_initial[706] = {
-    0x20, 0x02, 0x00, 0x00, 0x25, 0x02, 0x00, 0x00, 0x34, 0x02, 0x00, 0x00, 0x39, 0x02, 0x00, 0x00,
-    0x40, 0x02, 0x00, 0x00, 0x45, 0x02, 0x00, 0x00, 0x22, 0x02, 0x00, 0x00, 0x23, 0x02, 0x00, 0x00,
-    0x36, 0x02, 0x00, 0x00, 0x37, 0x02, 0x00, 0x00, 0x42, 0x02, 0x00, 0x00, 0x43, 0x02, 0x00, 0x00,
-    0x64, 0x03, 0x66, 0x03, 0x6a, 0x03, 0x6c, 0x03, 0x62, 0x03, 0x63, 0x03, 0x67, 0x03, 0x69, 0x03,
-    0x6b, 0x03, 0x65, 0x03, 0x68, 0x03, 0x63, 0x03, 0x63, 0x03, 0x62, 0x03, 0x62, 0x03, 0x64, 0x03,
-    0x66, 0x03, 0x6a, 0x03, 0x6c, 0x03, 0x62, 0x03, 0x63, 0x03, 0x67, 0x03, 0x69, 0x03, 0x6b, 0x03,
-    0x65, 0x03, 0x68, 0x03, 0x62, 0x03, 0x62, 0x03, 0x63, 0x03, 0x63, 0x03, 0x64, 0x03, 0x66, 0x03,
-    0x66, 0x03, 0x6a, 0x03, 0x6a, 0x03, 0x6c, 0x03, 0x62, 0x03, 0x63, 0x03, 0x67, 0x03, 0x69, 0x03,
-    0x6b, 0x03, 0x65, 0x03, 0x68, 0x03, 0x00, 0x00, 0xf8, 0xff, 0xff, 0xff, 0xfc, 0xff, 0xff, 0xff,
-    0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0xa0, 0x01, 0x00, 0x00,
-    0x90, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x1b, 0x00, 0x00, 0x00,
-    0x1b, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xf0, 0x91, 0x41, 0x00, 0xe0, 0x54, 0x42, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xda, 0xeb, 0x4e,
-    0x00, 0xe0, 0x01, 0x00, 0x00, 0x90, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52,
-    0x00, 0x1c, 0x00, 0x00, 0x00, 0x1c, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xf0, 0x91, 0x41,
-    0x00, 0xe0, 0x54, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0xdf, 0xeb, 0x4e, 0x00, 0x20, 0x02, 0x00, 0x00, 0x90, 0x01, 0x00, 0x00, 0x01, 0x00,
-    0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x1d, 0x00, 0x00, 0x00, 0x1d, 0x00, 0x00, 0x00, 0xff, 0xff,
-    0xff, 0xff, 0xf0, 0x91, 0x41, 0x00, 0xe0, 0x54, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe4, 0xeb, 0x4e, 0x00, 0xa0, 0x01, 0x00, 0x00, 0xb0,
-    0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x1e, 0x00, 0x00, 0x00, 0x1e,
-    0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xf0, 0x91, 0x41, 0x00, 0xe0, 0x54, 0x42, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe9, 0xeb, 0x4e, 0x00,
-    0xa0, 0x01, 0x00, 0x00, 0x90, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00,
-    0x0f, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00,
-    0xf0, 0x50, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0xee, 0xeb, 0x4e, 0x00, 0xe0, 0x01, 0x00, 0x00, 0x90, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00,
-    0x00, 0x0c, 0x03, 0x52, 0x00, 0x13, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00,
-    0x00, 0xf0, 0x91, 0x41, 0x00, 0x10, 0x51, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf3, 0xeb, 0x4e, 0x00, 0x20, 0x02, 0x00, 0x00, 0x90, 0x01,
-    0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x11, 0x00, 0x00, 0x00, 0x12, 0x00,
-    0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00, 0x10, 0x51, 0x42, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0xeb, 0x4e, 0x00, 0xa0,
-    0x01, 0x00, 0x00, 0xb0, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x15,
-    0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00, 0x10,
-    0x51, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0xfd, 0xeb, 0x4e, 0x00, 0xe0, 0x01, 0x00, 0x00, 0xb0, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-    0x0c, 0x03, 0x52, 0x00, 0x17, 0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00,
-    0xf0, 0x91, 0x41, 0x00, 0x10, 0x51, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xec, 0x4e, 0x00, 0x20, 0x02, 0x00, 0x00, 0xb0, 0x01, 0x00,
-    0x00, 0x01, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x52, 0x00, 0x19, 0x00, 0x00, 0x00, 0x1a, 0x00, 0x00,
-    0x00, 0x0e, 0x00, 0x00, 0x00, 0xf0, 0x91, 0x41, 0x00, 0x10, 0x51, 0x42, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0xec, 0x4e, 0x00, 0xff, 0xff,
-    0xff, 0xff,
-  };
-  static const char widget_text_0[] = "\x44\x72\x6f\x67\x61";
-  static const char widget_text_1[] = "\x52\x6f\x61\x64";
-  static const char widget_text_2[] = "\x53\x74\x72\x61\xe1\x65";
-  static const char widget_text_3[] = "\x6d\x61\x6c\x65";
-  static const char widget_text_4[] = "\x50\x75\x92\x61\x70\x6b\x61";
-  static const char widget_text_5[] = "\x54\x72\x61\x70";
-  static const char widget_text_6[] = "\x46\x61\x6c\x6c\x65";
-  static const char widget_text_7[] = "\x4b\x6f\x70\x61\x6e\x69\x65\x20\x73\x6b\x61\x72\x62\xa2\x77";
-  static const char widget_text_8[] = "\x44\x69\x67\x20\x66\x6f\x72\x20\x74\x72\x65\x61\x73\x75\x72\x65";
-  static const char widget_text_9[] = "\x53\x63\x68\x61\x74\x7a\x73\x75\x63\x68\x65";
-  static const char widget_text_10[] = "\x57\x69\x65\xa7\x61";
-  static const char widget_text_11[] = "\x4b\x65\x65\x70";
-  static const char widget_text_12[] = "\x54\x75\x72\x6d";
-  static const char widget_text_13[] = "\x54\x77\x69\x65\x72\x64\x7a\x61";
-  static const char widget_text_14[] = "\x46\x6f\x72\x74\x72\x65\x73\x73";
-  static const char widget_text_15[] = "\x46\x65\x73\x74\x75\x6e\x67";
-  static const char widget_text_16[] = "\x5a\x61\x6d\x65\x6b";
-  static const char widget_text_17[] = "\x43\x61\x73\x74\x6c\x65";
-  static const char widget_text_18[] = "\x42\x75\x72\x67";
-  _DWORD pointer_value;
 
-  if ( g_BuilderRoadWidgetsInitialized )
-    return;
-  /* PE data bytes are retained; only actual pointer fields are relocated.
-   * The 48-DWORD shore scan intentionally overlaps the live north marker. */
-  memcpy(g_UI_YesNoDims, builder_initial, sizeof(builder_initial));
-  memcpy(g_RoadBuildData, road_initial, sizeof(road_initial));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_UI_YesNoDims + 12, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_UI_YesNoDims + 28, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&WorldMap_ComputeBuildMenuActionFromCursor;
-  memcpy(g_UI_YesNoDims + 32, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_0;
-  memcpy(g_UI_YesNoDims + 36, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_1;
-  memcpy(g_UI_YesNoDims + 40, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_2;
-  memcpy(g_UI_YesNoDims + 44, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_UI_YesNoDims + 49, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_UI_YesNoDims + 65, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_UI_YesNoDims + 81, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&WorldMap_ComputeBuildMenuActionFromCursor;
-  memcpy(g_UI_YesNoDims + 85, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_4;
-  memcpy(g_UI_YesNoDims + 89, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_5;
-  memcpy(g_UI_YesNoDims + 93, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_6;
-  memcpy(g_UI_YesNoDims + 97, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_UI_YesNoDims + 102, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_UI_YesNoDims + 118, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_UI_YesNoDims + 134, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&WorldMap_ComputeBuildMenuActionFromCursor;
-  memcpy(g_UI_YesNoDims + 138, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_7;
-  memcpy(g_UI_YesNoDims + 142, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_8;
-  memcpy(g_UI_YesNoDims + 146, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_9;
-  memcpy(g_UI_YesNoDims + 150, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_UI_YesNoDims + 155, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_UI_YesNoDims + 171, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_UI_YesNoDims + 187, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&WorldMap_ComputeBuildMenuActionFromCursor;
-  memcpy(g_UI_YesNoDims + 191, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_10;
-  memcpy(g_UI_YesNoDims + 195, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_11;
-  memcpy(g_UI_YesNoDims + 199, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_12;
-  memcpy(g_UI_YesNoDims + 203, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_UI_YesNoDims + 208, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_UI_YesNoDims + 224, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_UI_YesNoDims + 240, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&WorldMap_ComputeBuildMenuActionFromCursor;
-  memcpy(g_UI_YesNoDims + 244, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_13;
-  memcpy(g_UI_YesNoDims + 248, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_14;
-  memcpy(g_UI_YesNoDims + 252, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_15;
-  memcpy(g_UI_YesNoDims + 256, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_UI_YesNoDims + 261, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_UI_YesNoDims + 277, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_UI_YesNoDims + 293, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&WorldMap_ComputeBuildMenuActionFromCursor;
-  memcpy(g_UI_YesNoDims + 297, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_16;
-  memcpy(g_UI_YesNoDims + 301, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_17;
-  memcpy(g_UI_YesNoDims + 305, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_18;
-  memcpy(g_UI_YesNoDims + 309, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_UI_YesNoDims + 314, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 184, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 200, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_BuildInSelectedDirection;
-  memcpy(g_RoadBuildData + 204, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 208, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 212, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 216, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 221, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 237, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 253, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_BuildInSelectedDirection;
-  memcpy(g_RoadBuildData + 257, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 261, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 265, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 269, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 274, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 290, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 306, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_BuildInSelectedDirection;
-  memcpy(g_RoadBuildData + 310, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 314, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 318, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 322, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 327, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 343, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 359, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_BuildInSelectedDirection;
-  memcpy(g_RoadBuildData + 363, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 367, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 371, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 375, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 380, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 396, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 412, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_RequestExitAfterWidgetPress;
-  memcpy(g_RoadBuildData + 416, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 420, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 424, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 428, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 433, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 449, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 465, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_RequestExit;
-  memcpy(g_RoadBuildData + 469, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 473, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 477, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 481, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 486, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 502, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 518, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_RequestExit;
-  memcpy(g_RoadBuildData + 522, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 526, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 530, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 534, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 539, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 555, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 571, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_RequestExit;
-  memcpy(g_RoadBuildData + 575, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 579, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 583, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 587, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 592, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 608, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 624, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_RequestExit;
-  memcpy(g_RoadBuildData + 628, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 632, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 636, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 640, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 645, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&g_ActionButtonSpriteSet;
-  memcpy(g_RoadBuildData + 661, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&UI_DrawWidgetIcon;
-  memcpy(g_RoadBuildData + 677, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)&RoadBuildMode_RequestExit;
-  memcpy(g_RoadBuildData + 681, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 685, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 689, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)0;
-  memcpy(g_RoadBuildData + 693, &pointer_value, sizeof(pointer_value));
-  pointer_value = (_DWORD)(uintptr_t)widget_text_3;
-  memcpy(g_RoadBuildData + 698, &pointer_value, sizeof(pointer_value));
-  g_BuilderRoadWidgetsInitialized = 1;
-}
 
 CLASH95_LOCAL void UnitBattle_WriteActionWidgetRecord(
         unsigned char *record,
@@ -864,25 +567,34 @@ int  WorldMap_PollActionButtonWidgets(DWORD a1)
 // 5202E0: using guessed type int dword_5202E0;
 
 //----- (0040A490) --------------------------------------------------------
-void  WorldMap_SyncSelectionForHumanPlayer(DWORD a1)
+void WorldMap_SyncSelectionForHumanPlayer(DWORD entryContext)
 {
-  void *gameDataPtr; // ecx
+  // Original ECX retains this 32-bit arena address across the refresh callback.
+  const uint32_t entryGameData = static_cast<uint32_t>(gameData);
+  const uint32_t playerAddress = entryGameData + PLAYER_RUNTIME_STATE_OFFSET
+          + PLAYER_DATA_STRIDE * static_cast<uint32_t>(g_CurrentPlayerIndex);
+  const PlayerRuntimeState *player = (const PlayerRuntimeState *)(uintptr_t)playerAddress;
+  if ( !player->controller_mode )
+    return;
 
-  gameDataPtr = (void *)(uintptr_t)gameData;
-  if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
+  bool clearSelection = g_SelectedUnitIndex == -1;
+  if ( !clearSelection )
   {
-    if ( g_SelectedUnitIndex == -1 || *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) == -1 )
-    {
-      g_SelectedUnitIndex = -1;
-      WorldMap_RefreshActionButtonBarState((void *)(uintptr_t)gameData);
-    }
-    UnitStackSelection_SyncForCurrentSelection(gameDataPtr, a1);
+    const uint32_t stackAddress = entryGameData + UNIT_STACK_TABLE_OFFSET
+            + UNIT_STACK_STRIDE * static_cast<uint32_t>(g_SelectedUnitIndex);
+    const UnitStackRecord *selectedStack = (const UnitStackRecord *)(uintptr_t)stackAddress;
+    clearSelection = selectedStack->unit_slots[0].unit_type_id == -1;
   }
+
+  if ( clearSelection )
+  {
+    g_SelectedUnitIndex = -1;
+    WorldMap_RefreshActionButtonBarState((void *)(uintptr_t)entryGameData);
+  }
+
+  // The helper receives the entry arena even if refresh replaced global gameData.
+  UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)entryGameData, entryContext);
 }
-// 40A4ED: variable 'v1' is possibly undefined
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A500) --------------------------------------------------------
 void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2)

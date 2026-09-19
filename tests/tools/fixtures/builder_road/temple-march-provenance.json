@@ -1,0 +1,2753 @@
+{
+  "function": "Rules_MarchToTemple",
+  "original_function": {
+    "start": "0x454330",
+    "end_exclusive": "0x45458c",
+    "bytes": 604,
+    "sha256": "48732fe00e0d9efba3793aeeefa0f5a99a033f2996c53d2bf43aecea5c29104e"
+  },
+  "cases": 224,
+  "boundary_events": 514,
+  "input_fields": [
+    "unit",
+    "row",
+    "column",
+    "double_low",
+    "double_high",
+    "seed",
+    "event_count"
+  ],
+  "mutable_fields": [
+    "arena",
+    "selected",
+    "row0_0",
+    "column0_0",
+    "type0_0",
+    "count0_0",
+    "first0_0",
+    "instance0_0",
+    "row0_1",
+    "column0_1",
+    "type0_1",
+    "count0_1",
+    "first0_1",
+    "instance0_1",
+    "row0_2",
+    "column0_2",
+    "type0_2",
+    "count0_2",
+    "first0_2",
+    "instance0_2",
+    "row0_3",
+    "column0_3",
+    "type0_3",
+    "count0_3",
+    "first0_3",
+    "instance0_3",
+    "row0_4",
+    "column0_4",
+    "type0_4",
+    "count0_4",
+    "first0_4",
+    "instance0_4",
+    "row0_5",
+    "column0_5",
+    "type0_5",
+    "count0_5",
+    "first0_5",
+    "instance0_5",
+    "row1_0",
+    "column1_0",
+    "type1_0",
+    "count1_0",
+    "first1_0",
+    "instance1_0",
+    "row1_1",
+    "column1_1",
+    "type1_1",
+    "count1_1",
+    "first1_1",
+    "instance1_1",
+    "row1_2",
+    "column1_2",
+    "type1_2",
+    "count1_2",
+    "first1_2",
+    "instance1_2",
+    "row1_3",
+    "column1_3",
+    "type1_3",
+    "count1_3",
+    "first1_3",
+    "instance1_3",
+    "row1_4",
+    "column1_4",
+    "type1_4",
+    "count1_4",
+    "first1_4",
+    "instance1_4",
+    "row1_5",
+    "column1_5",
+    "type1_5",
+    "count1_5",
+    "first1_5",
+    "instance1_5",
+    "track_count0",
+    "track_first0",
+    "track_last0",
+    "track_count1",
+    "track_first1",
+    "track_last1"
+  ],
+  "state_fields": [
+    "arena",
+    "selected",
+    "row0_0",
+    "column0_0",
+    "type0_0",
+    "count0_0",
+    "first0_0",
+    "instance0_0",
+    "row0_1",
+    "column0_1",
+    "type0_1",
+    "count0_1",
+    "first0_1",
+    "instance0_1",
+    "row0_2",
+    "column0_2",
+    "type0_2",
+    "count0_2",
+    "first0_2",
+    "instance0_2",
+    "row0_3",
+    "column0_3",
+    "type0_3",
+    "count0_3",
+    "first0_3",
+    "instance0_3",
+    "row0_4",
+    "column0_4",
+    "type0_4",
+    "count0_4",
+    "first0_4",
+    "instance0_4",
+    "row0_5",
+    "column0_5",
+    "type0_5",
+    "count0_5",
+    "first0_5",
+    "instance0_5",
+    "row1_0",
+    "column1_0",
+    "type1_0",
+    "count1_0",
+    "first1_0",
+    "instance1_0",
+    "row1_1",
+    "column1_1",
+    "type1_1",
+    "count1_1",
+    "first1_1",
+    "instance1_1",
+    "row1_2",
+    "column1_2",
+    "type1_2",
+    "count1_2",
+    "first1_2",
+    "instance1_2",
+    "row1_3",
+    "column1_3",
+    "type1_3",
+    "count1_3",
+    "first1_3",
+    "instance1_3",
+    "row1_4",
+    "column1_4",
+    "type1_4",
+    "count1_4",
+    "first1_4",
+    "instance1_4",
+    "row1_5",
+    "column1_5",
+    "type1_5",
+    "count1_5",
+    "first1_5",
+    "instance1_5",
+    "track_count0",
+    "track_first0",
+    "track_last0",
+    "track_count1",
+    "track_first1",
+    "track_last1",
+    "path_hash0_0",
+    "path_hash0_1",
+    "path_hash0_2",
+    "path_hash0_3",
+    "path_hash0_4",
+    "path_hash0_5",
+    "path_hash1_0",
+    "path_hash1_1",
+    "path_hash1_2",
+    "path_hash1_3",
+    "path_hash1_4",
+    "path_hash1_5",
+    "track_hash0",
+    "track_hash1"
+  ],
+  "calls": [
+    "generate",
+    "free",
+    "execute",
+    "integer",
+    "put"
+  ],
+  "arities": [
+    4,
+    0,
+    6,
+    1,
+    7
+  ],
+  "final_words": 99,
+  "input_sha256": "74fdc905f87631beabd4d8f3c5c1394da8dc84f7077a1aedcec6c2c7d5f99bb9",
+  "output_sha256": "f0af9870c84a0dde9f271377a3a37883a4c937f3d98ee1c55b0e36765d7644da",
+  "case_trace_sha256": [
+    "da1c0eb20db21e48053cc00699b0a70579e8cb312bc9c40c697d5f1cb663fe74",
+    "dfaac466bd10e7fe36b623323d819ae94015403b1bd7610d75c9530d7436a516",
+    "0924edbe88f6f4572e064db21b9ef7c64f18261e3e68f42ed99b43780a4a3e22",
+    "aa2399934749119cac570420a1a39dc2ec395a8bcf7d1d03ddcd610d336d2047",
+    "fcc99d7cd25e2715c959c3068acdc677900ff0be94f4ec85c4a48bf4f4ecccfd",
+    "530595c3fd68fd4aef8e46478e73d937ebd81662467c313a7bb75423c84d3e9d",
+    "81aa5751870d9dc6d9f1fbd17d1e9bdbd47cd1b1268f1b122bacf23a595d08bc",
+    "10ad67d974c8662e056ee99061b9427651fd4e93ee3ef61c1c59a5270de1232f",
+    "b27ddfda4d96e87b2a7931988b914b79957a0ca24ac6321c1d6b1f58d3663d18",
+    "d01ac7bbb4a79ce58cae327c7b0820155aa45d64fd9316f27b09e3d14f0442b7",
+    "ecbc2f1179d20a23084f5d6f4d0d5a9aa8467e31dfb8730ed23da85de35ef07a",
+    "bbb67b538616f3fd0770c4e79e6f39e9411f05ea73fcb5e8d9c6fb668e76a74a",
+    "61f355c4029310a646841255c35e82b56ab10057fd3bd016d883890e1640b351",
+    "f35a988e07de5873256d207b8e8a3be0fbf609e258cd6fa24ebc977ce54ac3fc",
+    "c322bb75317bca1c37dbbbaa7a60d540e4fe01e6f135a619981eb5c9ec7f9fcb",
+    "440132b6947901ac264eef64bad459b8d5fdfd1c5ca8617e0c773669d2157c32",
+    "2cb6e0cb2e10941af6301211a664dff15a1d69de0bf7c9285813c136a3c39466",
+    "ed3668e2200ca6c5cf43be9802d8a01e9941068f16ca05da701dca6549375ca4",
+    "ca6748ef664335b253ec086fba681276dd955564cfacddbd1df9cef60cb10f36",
+    "753cfbfe87cbfc20808460a6e4abe3b426f1a8d032748e713236ea3572c25374",
+    "2159f42c3f36821dcd4e2b4239cf1b0bf35634bbe742f45c51af345c7a9b8de4",
+    "e59ec67e82576262831091ac526d001b0e513afe13955e58e391761f0a872e49",
+    "8897d11c0bdbb031e13859a379904c6d4e14816f60d21ae10742c8418fef3d48",
+    "13e5f111ef9eab37436794514fbf0ee366b69dae2c389f59499194c9642b8b61",
+    "f8d7197644528469452fd93ef80d725931c28ca3b2eb7cee919303b8e18df0b9",
+    "b343e148232047fa41b8a44c8f93db866e1d9f989444138cdd614359979e9b32",
+    "48881e499c1a17ae9ef89614c58752d39b795441cf87404d6ccc38b5e375c1c9",
+    "0171d0e501712c18e46dac6f2f68a763e417baa39a36c80eb8de789f38fd1607",
+    "fd5ef43ed94adace362f1b6c1afdfc9e64b9bf419d8e6274a60403f0510ce405",
+    "295be3c87c6c672a9478e876f3cd098d5122fdde280f14bf8dd3c1d4aadb410f",
+    "35b51b33a007e2ce009151031b20c0f41853785193b0325b4cb16a8e2eb9857b",
+    "fbfba47dac5be211554bf4a4221c8308fd071c9368bf0ce9d46572a31a75da96",
+    "17a43b8ed3f56d17fa07851ec6472c45efa49797b0285f542336898b2c6a4d83",
+    "5628893b40e91841633db2f455b7bf819e056300822b0c65fa62dc4b46f6f679",
+    "7034a1ddcf1ab2b73b3a50cd0242ba935647ffd3f356950e5470159bdc77f800",
+    "b7f371086f62b28fb1f0e7b760bab2f7115e89926d99f8d81e413d721a98d45d",
+    "ae16e0f6eddfd3a4c7ba96951bc2069f58d05c32075062242e8a8b67495c0a09",
+    "47e46edaa4b3a456cf15d3ae3d0434e4f2166b9a5a5e28378bb732f087f3b8cc",
+    "33c97eb636b5d723be5be4b399f40960b542e10f0efc4e557bce83c9aa787eab",
+    "ac18fb02402c63bec99abde174dd15fdb48706946e944c02d2764423b1ffc673",
+    "aa373128d8f7cde9a2425c38930ca808684852ac6b6d0cf43823dd20bb8edb16",
+    "ef5b0d2ce987131dcdae0cb496a2e5d278ed5447ec96e4a1290d336dae475bf4",
+    "c9f8e823270f7d81d5acaf6e1e34a2f3e21195960964f9a9194e7a57072abb64",
+    "2c06461c47efa8d453080be91875ae641c4b0599f9500072cbb97e342874664e",
+    "dc2d05971fd3dac44e63b8ac43e0999a6dd2ccdee6c27a3a53a03decacac7f0a",
+    "f191f024b09f726738564a41af0d2f3386c024ca9efe631103c3514965b163ed",
+    "9f2818d20dc38d2e56f3e37f1e66d998ad3956c3053f19754ab50f8811668169",
+    "66b40b8a4507ddfffa5f32466e1c6499f1315ad3ce6bd3f851d1df22afdb4032",
+    "b71a103bf2e51787a84b9152a9f95539cfcd5230ffd2e1e519dd87d68a2f8f8b",
+    "b9c04b2f69971ae45d456e60950e81fa362b339ca5a350aa41fe417c82476e80",
+    "61d0402b61b300c80edd42cad178485d380821c8abf73349ce242692408b305e",
+    "455c2824fe74144ca8876b211ecdedc08323b324554687a0f729c7741641a2ec",
+    "24c2d6bed7ed67285dff61ad81ef21c650b1205245f7f767e6168bbdc8b7fe17",
+    "e0925d5d8c2932e6a4d2bfb6c93f5aa55bc5b9a2b250e256bbe9e8405759002f",
+    "a08839634e54e39e1a8b56c3c494b32320240d644effd71dca06689f09c2200b",
+    "742779e789d41e899583da331cab587017adc7a862c9a14adb270a91e21bac6d",
+    "ab2fb65f60854335d6cb94628d0c136872344653af1e7851fb6b89bff5d086b1",
+    "b22e82caaf2c49fe3190aa87a0a034cb2fdc523bf9ce788bcf514ad2b92dfa12",
+    "6514d80969c6c6600f9481795d31717a3f399ecd2b12536f1338c1c05bf125a9",
+    "4eb065cc1e1f7439e76a20f54bfd6c1ab53d2e41fa2956672543c7af22efcefc",
+    "bd4e8d2f5a8a1953801cde38c31725982ebc6961bd81baa667311f22b7033e45",
+    "5c502a41a6d24015304a500929f84fd06467deb401f4fbd2000143f1446da8eb",
+    "34d3157d517394b54c438745ece99dd1acbbccac0935a7f6c200a3340c46f6f9",
+    "0c03fe61204c1f283254236e8411da4ad438c3dd13e614d14f56beaa4d29be71",
+    "b2edf960782baf7a785e8d92d660545846f9a3e6c8d4b92177e8bb946090f01b",
+    "3fe79c6dec9056fd9c7818b3c3a581d38e84ca5ecade675a5d4235590f03c6a7",
+    "0734b4962406f5e51e4d601a2679d92b8866e6f157b2dcb31fbb209f2ea9e57a",
+    "0165e278b2e86d31ce8e065b072ddb48fea43b22af010201a8ef4fb0d0a1f006",
+    "e0fe0552b4481436774fc9766b4dbffb086fb3d75cacf26ec0e5a761abde5e8d",
+    "f1069e3418578a44a42c25813cb971794e2ea481239a2b1c8d5b967c97bc4425",
+    "b7f9179b1518ad3bf11ee40df9e302a84f412944f12460a72df4379cab137db4",
+    "893df0e10639446ff1ca56d72b3dda932995472e5197cdd8b7c26380db665348",
+    "9e9e2427584211ddbfa7bb4ddfb788d843db6ceea4219d90d5c6655a3932fc0b",
+    "07b88dad11e0b139abdafdfec259d0f72d113d0fe6c6baad712c2770cf2aba0f",
+    "cd9f4c930447765c0dbf88483ba89ec07f3611eab59b07435b8228402fcf5520",
+    "dc9b2d25194064ec440b43fa4ef9538b632adbc23894585d4552dc2540b41ab5",
+    "7c6b5c039cc7fcaffa39ab8a3b5446f960abded1bdf6d45677847e015270c78f",
+    "2c62b27b420305e8a34a0c3254541005a14a5a019477c42b08012722985c903e",
+    "52739ac952b9b3b037d258e3a8c67f4b273cbea95865c39953ff5dcb1d58cbff",
+    "7176eb3929dadd73a5ddb18fd12f1f54aff55da7b2716fa892fa204717739732",
+    "45e556467d302ae7f99f0cae1e6b3d4576e47e7edff15bb1e8fa81fd34513bca",
+    "bc29d7a3116ef1e610e14e42518b26236e0d108ecca5cf201e6528a93913e32e",
+    "abc911d5794dbe1daa867540e3b7c0c3f99fabb115885cac7faa1127b2e70819",
+    "51af3a3f6da6cf617d5e1210b09cb0847c72e82c047b5ffdea16bed55fd89162",
+    "6938109652ad8d3bce31d7ffc133621250888d327b3004700a36144d3ddcbca0",
+    "999e368f7098b9edec716e7949add87f4d5de60db43112d99764b563722eea5a",
+    "f9bfb03c7eef20167376d5b551972c45b730db82d7c3e8b4bf82916c1a47919e",
+    "f49217f9945c53fc3bf3a1bbe5f514c4cff28627b28afdbabbe9fdc3e6a46d0c",
+    "069867a9b470977f7c480cd28f102f7463b1fffc9953e0f2630ea6d36b8f2e67",
+    "45af4d82aec4d77c03a4033c4437c426b260c391d0f9a67f9f069241e8fe3ebd",
+    "bb23ff755b79cf3a4fbfc1fc604b9843407658bea98ad66eb79f31f546879d43",
+    "b6789350ea64a3e34f430e2ed6ceec37aeeb16c392875381ad0976d7f9093b5c",
+    "d977afeb05ac24383c5cb235c29ef6038a6b31c2a76156005c54134737f5bae9",
+    "611c6e29bd526b4f5ed87c2c126df987ae0f7e23eb81d958baf8c12462f2a94f",
+    "349ab326043b62c21574d3a8c49d900c8210d16a81f13ea2d215532996c7f586",
+    "0c59ed533066c7e06f4cef48a0ff4ea4d8cf90e67d3ded3fd72b5649f2758b1b",
+    "12e43851ab2da7c9e4217e7bc6616cd2601f92e373cfc1a2ecac629f36f225af",
+    "e5ec7fdb29e87500a2bb984766a66194058d0ea79cd7f8cbc7bb987265531a33",
+    "ab28cc255b4d3a886f3036b8f0c10184adbede99f7ea7768a395e2ac19d0f4b0",
+    "23f57a9ab2ee72caed8ccc50520ae8964e1c0faf508fc8dc51a5f18a6a941992",
+    "3b1029bcab7d4e5ff30dc064b6683820022f96c0a20b4fdec8d28e0e15661981",
+    "830616c6ad907b561cf644d21f67cac1657229807a74b5e619b6b1b780b492cf",
+    "b700f4ba902489450daec37b1b183065e1e1fc269630051e3b8166df1d5b2777",
+    "2927b6ff8d6cbd80ee3323b6751ce8ec000d9c7f800f95e572ffee118d3f180a",
+    "34dcd63b8f2724012cbd39e93e2f1be83070836a12e5b1765a8d090d24e56316",
+    "504589aec919d73f7cdd77744892873aff214b49fe6214e0e6ba760af70c8e33",
+    "20ac37941a5e89d627c46dc87165b1051a627d9c6e77faa21720d2437a22cfd6",
+    "d00bb5daf9cf74d0c1305e93bdf2f37ac03f66a51baf86e5a1fd982af5c9f204",
+    "c0f20d2a18ee88b41f817334e0da7f57b00a0b6ca6d5cd94ad71ef84f4f88bbc",
+    "ca51620d7070a797cb28c2e1cfd720a925e9581023809d4aa304f209045c25bf",
+    "44cdda3477a33837f4e5dd72177cb259495ac4d55fb90addcb636a01dae93d2f",
+    "62b4e1b627af536a2d901c5a5cf72f03b3898a5c840e25060e99f55a42e8c4df",
+    "c3f3f727145983be02b10b00ac3bd29cffd19039a85d1e30bf0c4062253d9ae5",
+    "0abe5394d73e95cd6d75d86b0c7e247539c93bd25ec1a99f7c287ecff0cccf09",
+    "f0285dc654856a8771072506829d2ad1ab1a8e7d4bd81a33591f218fd808379d",
+    "d46fb64764977752209d23b2c32bffd63895726838d6ddaa6cd3e1d09bb87cc5",
+    "6da02a6f2a2c525e48a946453e2a07833b1ed833f6031b8153e53a3a8b41b5cc",
+    "6fd70e3046dbfc87d57e2eb3cd46a43cb3b6682456035da22ae813557026b9a2",
+    "7703721dfd5b5f3237b7d8177fe999fb64b65fad64696f2da1213241399119dc",
+    "a08d58a7c1470fac0fc1e8206be0d434221d88f7c549de09cc62b8dd1bfb2bce",
+    "a0787eebad0a37ef316d96c0c0bd4ea3cb92a30aa76244da3e80d6ae25c082a8",
+    "24badaf6ea6ba2b7ce9366e24cac1dceb93597e09665813df830430baeac72d7",
+    "cec4f0ac5baddd410f7cbf9de863e0f7585ecfc4bd4af3ca0ea62d8a52e6c1d9",
+    "070d6604c2c74669ae5ac33e4af2156eb190ad2ce2a2d0ccb13d14c04fdb0632",
+    "b52c0edb01f363c9343fb90a1b51c4f8afb0d31dd83ac3326a300281917e6a01",
+    "52f141a46d6166f4a0e0e2b79eba351d3757231bf194c83ae59b9067ca43e6b9",
+    "ebed5137c5ad10443107d78b09ae3129b38b3a2955719f140d66e3a06aebb614",
+    "8222b3d4a49ca10eb14a061ee493fe41dd1b9aaed62abe6a16fd2b0340341195",
+    "186fdfcfbd8106c5dfd5fbcf482b6c0093f2794e6b2835a60ff992a0a8952b4a",
+    "b11454216f93eec0bbec75b85cae85891eb2631a9f8e78e65eaa3014a95daf5a",
+    "24fe0be1e3050db803ff3af611ee537a6114206178bad938add277f0a1ab62fc",
+    "4c396714fbedf3a297334b2a39063cb4d687a8451d3adeaf7b1b8b104070c7c8",
+    "ff8f5355df00df4b2f8deed30b7123dcc4cab68e4304e2ef512cbf61f8a99ccb",
+    "ae4c328e73dd5e0aeb4101daf900812f2bca654d8a37ef8acc12bae3865195e4",
+    "2318242195f6086da5a13581fc6c7a2db05365f229b7080d08f08d5039f9c287",
+    "86ee59f648e0daca19948ef5789abb5d724d5bb898b2146f6271110d5f008641",
+    "832c9e026b3bc84cb2944275185d3d22ad5650fb872724ee3645b5643bfe58bd",
+    "c3c0a9765da574a50d2045717687bcf4c4d2642a5eadaadbe695200a04fac4e4",
+    "f08bb02a25d5e16eadb197d321b00329f6467b409ad400ff1f514d9649ea89e5",
+    "38e8f9eea86c8149de5d1ffda1d4b2ac98a0f69f53593507d79366eba83f9584",
+    "befae38ad122b9030685a36a3e1fecaa585a21423683d1e5817f86df370e2c58",
+    "a7e8974d0899ace9784352472a6bd61bf2fdda8335b23cbc0b57198ed9198770",
+    "fe2c6542c5dea206e06e5df7b7e9baaabbf04a652894652fdcbae2b9e179e179",
+    "7c81aab1e84fae80be0b347ccebc74ef20449fb5fdf1e3ece87fb1fda475815f",
+    "c4540f93f9e128802959f38c3fc6cf075d0924ef1ff47609419395ff915cfb74",
+    "32a8755b87ffbfa61452055387c48fefda7f6fc5a93d22b3d9f7c6cfbd5a3dd4",
+    "aee84a8a133d8e4045903a3068a25357144a6a845238b0b4f273c603d207c794",
+    "0095e49814c70a57a228cb700cadd125118f15aa75b74f7e8abbdea65545eedd",
+    "b12d603bc602e5ba100e794870a8115d85ce1c89636cd332430a287e982b1c8a",
+    "ffe49d7339cb6c5f27d508c6b7e238910d3a466e3a80c45c4f3d4a685714dec6",
+    "2e949c2baba46a596c714e0fc5a66261129fcee8005988b587fe5ed2e11f07c9",
+    "222615aa78f166dec2b237913cc4c1d10f8857f090fe999aa462981371ada8dd",
+    "a05715abab89a53128e2c6df7447c9c4a1dc3948b81530b0f3f1fb4d2673d74a",
+    "9717b92c2c897f6349e247b1da8369d28c1e069be2c46d4692d280c42b038600",
+    "eb8b499f1209152a04097594d868ade53baa74333492a70fb4b950134fc97943",
+    "76e45c5dffbdeb99a4a209a07fa875c383be184ece069dbcff8fe160f5097f54",
+    "3b2c6271a2ae5f80c0eed7d9895f304beea2193e085d7735c2f04a55732d448d",
+    "b7eadd9ead7c4336de039be521889fdbec039a019ec7d3b31d22b7965cc8f94e",
+    "49483925f32d411e60557f422d7019f4fa14bdfbdd943b281a551baa59531eb9",
+    "1d4e7a9f76051c96d7af8a18308da6dccf2c30a63746fa2a729fe0a22118362a",
+    "9c4de4ddb3133318785a3487357ca23d7ae951871cc9550dbdc059db99bc620e",
+    "20b6cf0c0d8b416f3bc1ae7044b2ac46a3e134b4e01dfd87e438d2222ca3a7d2",
+    "f9e7be1bd2d9cf161d244da27e975b6a3185c85f8c1dcfb5396eeb4e9ed83f93",
+    "c37f1f117c94abb3e9b792cafe66d431b21aa0739fbe00b40dd4efdccf3c6e5c",
+    "a238f35f705174a3cf0941c2fc711a7a674569dc691c5316cd5bda373d06e926",
+    "1e9087f64a840c666d84be45676f56e2607d8863ad213e7c63981d5fba6f3cd2",
+    "f16b092c7b1817a3206bbdb4f16b068a51be9d8fca9d987b92f315d29fb05be8",
+    "fcfad2a4d9f1eb15ebf9498477c548f7e68fb78b67b21d9b9b1fcd049cb92722",
+    "a64d3bafc612d1b64906b5bb21ed7a2523ae2b03705fbcb6fc1b1fa0d1cf5940",
+    "fc31147c78ba5d8763df9f4d47473b56f287c0547bcc54e391308215a91a5939",
+    "69160452512ccbc500ea5d41d93c9b6e9fc0c3450f43ceebcc7474e0bb739fde",
+    "b9e5e2a60f975ec2e719ed74c7e3c7ce558e798cf16b3d27479b604d8cddf215",
+    "0518b93c7085b64b218203fb1d2d2d0f31b6ffd28cbb57089bac723a8b94f3fd",
+    "74bb55038e2e46e4a7cde662255c627a273eb5a18e6b2c60ad52c58c1193f343",
+    "82120cc8cbb763e7532a038d933b4551019ced499627898a0f8d163412d2ff21",
+    "ef41e4478e7df7e369457897bbd2d1a7233e5496d46bc1e8669840cb14be87ae",
+    "c9f284ab904516cc4a55fe6a3107fba3b34435f44c1494a047ede1051395714c",
+    "d36435a0dc84791c2ee0d61af6439e2f403f8cdaa87d4a34459ffc2b138cacb1",
+    "3dc70197dac561a1a27d69c6a5207f1af703df0f9a2ec7bc0144a706cfecd694",
+    "cd5132d7089b1f88f67d838c2d65e34590e124d479ae3fdfe049d7fd7c57b785",
+    "0ca3ca3ecf29d356d03d4511c819206604ba54c878f53c34f1506091a351214c",
+    "d797e8680681da07f3f4f0faee37b17d37a664d258d98c082c70f60ab66e68f1",
+    "2562c09cd051251c5c43395110f65615e0b0fb003d30a1c2ca05a0bca561be47",
+    "9d7e73f56cb96710e5bcab6d500e30e300c316813854b73dbfe6b08db85c82fd",
+    "60d52791cd750a3f52a87f1086f90519e961b478b5cdf12fc5c656993312b140",
+    "cbf942dfbd405176881a7e00c00d1c97d9e5f5abe33ab03f7a05c8044bab979f",
+    "39eceb5f5a491d77caa53b4b9252d11b4ca352ae11b9636648e2eb760a1f3799",
+    "4d9aee6a6a506493168a2c0242158f7b95af927ab7132cf3c8f65b0a67fcd339",
+    "3691149422596e01052127db753ae92c2217df5eda950468bfa0ed5226d40a0c",
+    "0a2b0b99c430fa5a351c073a3cf0ae852155524131bb844682f5c9dbdeb7d38d",
+    "34976374e9989ccfc935e7f64dd0682c981ffcd6fbdc61c426e75e13daa6f469",
+    "3d32ae1ffc1415eb17dd0010f1f1cf6714732f2c9550877960a3a7c08ebaef3e",
+    "46ccb926f385cf2c2b38f0d40d7237fe37de0048d770c045bdc4040e35ab53ac",
+    "98636c7ebf978bbc51cc73143630942a9e0bc48b8449aef5784e18ee904f3b5b",
+    "de05436edb126f14f99adb7171e4c8b35bb9d9a8dcd6f16b4d98178574a9e0f8",
+    "5b568dc56ae9f3d23548f2d6488e74925ee494bba9da1ca834993a9cffbf5d90",
+    "a64c4b7f198e107ba529552727e3730d68cf4b2ab3897b3235c5a158bc994e4b",
+    "89b23d677b7de5995c183a92fa2083b97d6acb5d02385714649615b1f7d048d8",
+    "07b398a35eed001b1274d5d5b971e97e29d8790ad48cb3ed812c7bb2d2d44921",
+    "f5047cd1402034c1334d035a1a089048f90c57ab8ccd98fe6c03e37af10d2714",
+    "47f2eabe4502a19cce62dbf237c14c639b6e5c2c96a810a1403337076950ceb4",
+    "ed915832b5a55709d2d4264d0a58119f1b12269abd3989bca6ebb84543b57d5d",
+    "02367663c7d5b76c5266611c5e1a5b74d47b2a3eef310170621c4952950dbb9b",
+    "1cd59c2c063bb553cfdc1a101fe717ffa08f6b94a7e6487fababc463021faff6",
+    "27bbb87ee5eb10ce7aed18593acf3a8058c0591dfea171727f87bda79af66e9b",
+    "e28812160aaba55b2016e158e68b1f8f548b31d85b0ea7769f96e7082ea19aa9",
+    "5fa1234863fc8d4ad26978883daaec17d2028a6de64f0da2ce88b4c022c2f2f1",
+    "5624535a8c89c4575c8d51ed04376f44654f9f4623f936afdfcf6d425a68bd52",
+    "deedee243e33d94ac6470312ef5ef01a1d7e0e96eb331fd371cb41ff6f975131",
+    "f02b44194464d4536ab4a0c59f4b42ea0dca018c2ed1c8489e1c57c14caae8ef",
+    "3e988ceed58d2fdcb233df994b25649aa7599bb95a317f8f18a150ebd204af74",
+    "3e6b628193c8f41283525526132de87114f34a703f22cef6dc6f1e85e740baa8",
+    "df2d43e3a91edbf263825127435f7d88374600745046622e414389e1318a2239",
+    "b8faa9e3cc29921e0ea8d8b6d7ead5b249efe1f8a5a7651fd615af9c82b4bab0",
+    "132fe50fc3a3f11a4f677655a3ad192e36bfe12394c275ff3849651467abca3d",
+    "42870fce9303c586c43f5940af73e1a33f646af7d498a32b02b8e0bf285b1913",
+    "273b091790d772e1d3287a1dd3581a8d2b4886b1fefde3e59bce45eaaafad763",
+    "743d50f130cde84d85a2c0d917d43fbfa665a66f44d29c7a4ee561566872dd98",
+    "0540dbac254105584a327184b49c57f51ca1424f726d4ddd0a0dc57ea3c24b2f",
+    "2b8630acec8e8c12e7720938f0f3a0ae799b5deff378c2db09b61f7174a73d23",
+    "fc265443b4f243db7f13b067c82ccd6d48964147c812188e62c593079dc014b0",
+    "e6f6a1f255c7ce3cad8cdac0b21931ae91bf5322bfeb1a57a193d830f488e464",
+    "dfa68843460a83f128e5f975724f6f6104cae4226e277b4e5c0d2562a41ea92a",
+    "038f4569f0991432bfbbb180b5f9ce0f2a4420ce13146782deb4b02a89b515cb"
+  ],
+  "before_defined_matching_cases": 69,
+  "before_defined_mismatching_cases": 0,
+  "before_first_defect_counts": {
+    "defined": 69,
+    "signed-add-overflow": 25,
+    "uninitialized-v10": 119,
+    "signed-abs-negation-overflow": 4,
+    "signed-subtraction-overflow": 4,
+    "sign-extended-native-pointer": 3
+  },
+  "before_excluded_cases": [
+    {
+      "name": "empty-arena-1-index--1-track-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index--1-track-2",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-0-track-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-0-track-2",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-1-track-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-1-track-2",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-499-track-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-499-track-2",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-500-track-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-500-track-2",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-501-track-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "empty-arena-1-index-501-track-2",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type--32768",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type-39",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type-40",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type-41",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-0-type-32767",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type--32768",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type-39",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type-40",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type-41",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-1-type-32767",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type--32768",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type-39",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type-40",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type-41",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-499-type-32767",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type--32768",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type-39",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type-40",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type-41",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "index-500-type-32767",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "raw-near-count-00000002",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "raw-near-count-00000064",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "raw-near-count-40000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "raw-near-count-80000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "raw-near-count-ffffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-0-255--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-0-255--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-0-255-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-0-255-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-0-255-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-0-255-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-127-128--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-127-128--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-127-128-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-127-128-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-127-128-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-127-128-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-128-127--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-128-127--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-128-127-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-128-127-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-128-127-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-128-127-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-255-0--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-255-0--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-255-0-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-255-0-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "row-delta-255-0-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-delta-255-0-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-80000000-00000028-00002800",
+      "classification": "signed-abs-negation-overflow",
+      "first_failing_read": "entry-row-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-abs-negation-overflow",
+          "phase": "entry-row-distance"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-80000000-00000028-00002801",
+      "classification": "signed-subtraction-overflow",
+      "first_failing_read": "entry-row-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-subtraction-overflow",
+          "phase": "entry-row-distance"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-80000000-00000028-000028ff",
+      "classification": "signed-subtraction-overflow",
+      "first_failing_read": "entry-row-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-subtraction-overflow",
+          "phase": "entry-row-distance"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-00000014-80000000-00000014",
+      "classification": "signed-abs-negation-overflow",
+      "first_failing_read": "entry-column-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-abs-negation-overflow",
+          "phase": "entry-column-distance"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-00000014-80000000-00000114",
+      "classification": "signed-subtraction-overflow",
+      "first_failing_read": "entry-column-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-subtraction-overflow",
+          "phase": "entry-column-distance"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-00000014-80000000-0000ff14",
+      "classification": "signed-subtraction-overflow",
+      "first_failing_read": "entry-column-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-subtraction-overflow",
+          "phase": "entry-column-distance"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-80000001-00000028-00002801",
+      "classification": "signed-abs-negation-overflow",
+      "first_failing_read": "entry-row-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-abs-negation-overflow",
+          "phase": "entry-row-distance"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "distance-bits-00000014-80000001-00000114",
+      "classification": "signed-abs-negation-overflow",
+      "first_failing_read": "entry-column-distance",
+      "original_path_defects": [
+        {
+          "classification": "signed-abs-negation-overflow",
+          "phase": "entry-column-distance"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-track-1-count-00000001",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-track-1-count-00000064",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-track-1-count-ffffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "far-replaced-track-1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-fresh-high-track-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        },
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-track-2-count-00000001",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-track-2-count-00000064",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-track-2-count-ffffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "far-replaced-track-2",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "copy-fresh-high-track-2",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        },
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "null-generator-publishes-path",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "null-generator-switches-high-nonempty",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "pre-execute-coordinates",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "null-generator-high-coordinate-domain--1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "pre-execute-coordinates",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        }
+      ]
+    },
+    {
+      "name": "null-generator-high-coordinate-domain-0",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "pre-execute-coordinates",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "null-generator-high-coordinate-domain-499",
+      "classification": "sign-extended-native-pointer",
+      "first_failing_read": "pre-execute-coordinates",
+      "original_path_defects": [
+        {
+          "classification": "sign-extended-native-pointer",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "null-generator-high-coordinate-domain-500",
+      "classification": "sign-extended-native-pointer",
+      "first_failing_read": "pre-execute-coordinates",
+      "original_path_defects": [
+        {
+          "classification": "sign-extended-native-pointer",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "null-generator-high-coordinate-domain-501",
+      "classification": "sign-extended-native-pointer",
+      "first_failing_read": "pre-execute-coordinates",
+      "original_path_defects": [
+        {
+          "classification": "sign-extended-native-pointer",
+          "phase": "pre-execute-coordinates"
+        }
+      ]
+    },
+    {
+      "name": "copy-zero-free-publishes-path",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "free-switches-high-fresh-coordinates",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "pre-execute-coordinates",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "generator-high-copy-free-returns-low-empty",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "post-generate-copy-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "post-generate-copy-base"
+        }
+      ]
+    },
+    {
+      "name": "generator-mutates-source-before-copy",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "free-mutates-source-after-copy",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte--32768",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte--257",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte--256",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte--129",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte--128",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte--1",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte-0",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte-127",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte-128",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte-255",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte-256",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "column-byte-32767",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "coordinates--32768-32767-row-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "coordinates--32768-32767-column-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "coordinates-32767--32768-row-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "coordinates-32767--32768-column-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "coordinates-0-0-row-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "coordinates-0-0-column-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "coordinates-128-255-row-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "coordinates-128-255-column-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "execute-switches-high-same-coordinates",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "execute-switches-high-row-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "execute-switches-high-column-change",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "execute-switches-high-invalid-type",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "execute-invalidates-type-in-place",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        }
+      ]
+    },
+    {
+      "name": "execute-clears-count-still-puts",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "integer-switches-high-instance",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "integer-mutates-instance",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "integer-mutates-coordinates-no-recheck",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "put-mutates-world-no-writeback",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "high-entry-index--1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "entry-first-waypoint-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "entry-first-waypoint-base"
+        },
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        }
+      ]
+    },
+    {
+      "name": "high-entry-index-0",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "entry-first-waypoint-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "entry-first-waypoint-base"
+        },
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "high-entry-index-1",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "entry-first-waypoint-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "entry-first-waypoint-base"
+        },
+        {
+          "classification": "signed-add-overflow",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "high-entry-index-499",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "entry-first-waypoint-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "entry-first-waypoint-base"
+        },
+        {
+          "classification": "sign-extended-native-pointer",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "high-entry-index-500",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "entry-first-waypoint-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "entry-first-waypoint-base"
+        },
+        {
+          "classification": "sign-extended-native-pointer",
+          "phase": "pre-execute-coordinates"
+        },
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "high-entry-index-501",
+      "classification": "signed-add-overflow",
+      "first_failing_read": "entry-first-waypoint-base",
+      "original_path_defects": [
+        {
+          "classification": "signed-add-overflow",
+          "phase": "entry-first-waypoint-base"
+        },
+        {
+          "classification": "sign-extended-native-pointer",
+          "phase": "pre-execute-coordinates"
+        }
+      ]
+    },
+    {
+      "name": "finite-double-0000000000000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "finite-double-8000000000000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "finite-double-0000000000000001",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "finite-double-8000000000000001",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "finite-double-0010000000000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "finite-double-7fefffffffffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "finite-double-ffefffffffffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "conditional-node-bits-00000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "conditional-node-bits-00000001",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "conditional-node-bits-7fffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "conditional-node-bits-80000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "conditional-node-bits-ffffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "put-result-ignored-00000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "put-result-ignored-00000001",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "put-result-ignored-ffffffff",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    },
+    {
+      "name": "put-result-ignored-80000000",
+      "classification": "uninitialized-v10",
+      "first_failing_read": "post-execute-type",
+      "original_path_defects": [
+        {
+          "classification": "uninitialized-v10",
+          "phase": "post-execute-type"
+        },
+        {
+          "classification": "uninitialized-v13",
+          "phase": "slot-put-argument"
+        }
+      ]
+    }
+  ],
+  "conditional_integer_node_case_names": [
+    "conditional-node-bits-00000000",
+    "conditional-node-bits-00000001",
+    "conditional-node-bits-7fffffff",
+    "conditional-node-bits-80000000",
+    "conditional-node-bits-ffffffff"
+  ],
+  "negative_controls": [
+    "never-clear-count",
+    "always-clear-count",
+    "last-waypoint-instead-of-first",
+    "reject-distance-one",
+    "unsigned-wrapped-distance",
+    "copy-only-400-bytes",
+    "copy-extra-four-bytes",
+    "omit-free-boundary",
+    "wrong-empty-return",
+    "early-index-guard",
+    "reject-index-500",
+    "reject-type-40",
+    "execute-wrong-fourth-argument",
+    "execute-offset-byte-instead-of-column",
+    "put-one-instead-of-offset",
+    "wrong-scalar-type",
+    "wrong-integer-value",
+    "return-slot-result",
+    "caller-global-write",
+    "cached-copy-destination",
+    "cached-post-free-base",
+    "cached-post-execute-base",
+    "cached-post-integer-base"
+  ],
+  "negative_control_first_witnesses": {
+    "never-clear-count": "raw-far-count-00000002",
+    "always-clear-count": "index--1-type--32768",
+    "last-waypoint-instead-of-first": "index--1-type--32768",
+    "reject-distance-one": "row-delta-0-255--1",
+    "unsigned-wrapped-distance": "distance-bits-80000000-00000028-00002800",
+    "copy-only-400-bytes": "empty-arena-0-index--1-track-1",
+    "copy-extra-four-bytes": "empty-arena-0-index--1-track-1",
+    "omit-free-boundary": "empty-arena-0-index--1-track-1",
+    "wrong-empty-return": "empty-arena-0-index--1-track-0",
+    "early-index-guard": "empty-arena-0-index--1-track-0",
+    "reject-index-500": "index-500-type-0",
+    "reject-type-40": "index-0-type-40",
+    "execute-wrong-fourth-argument": "index--1-type--32768",
+    "execute-offset-byte-instead-of-column": "index--1-type--32768",
+    "put-one-instead-of-offset": "index-0-type-0",
+    "wrong-scalar-type": "index-0-type-0",
+    "wrong-integer-value": "index-0-type-0",
+    "return-slot-result": "put-result-ignored-00000000",
+    "caller-global-write": "empty-arena-0-index--1-track-0",
+    "cached-copy-destination": "copy-fresh-high-track-1",
+    "cached-post-free-base": "null-generator-switches-high-nonempty",
+    "cached-post-execute-base": "execute-switches-high-invalid-type",
+    "cached-post-integer-base": "integer-switches-high-instance"
+  },
+  "event_layout": "Opcode, exact argument arity, then 94 state words before scripted mutations. Generate: index, temple row, repeated temple row, temple column. Free: no arguments. Execute: index, animate 1, raw low byte of previous signed column, index, finite double low/high. Integer: signed integer bits. Put: fresh instance, three PA-name bytes packed little-endian, raw 725*index, initialized type/node words, finite double low/high.",
+  "state_layout": "Arena and selection, followed by two arenas each with six records at indices -1,0,1,499,500,501. Each contributes signed16 row/column/type, DWORD count/first waypoint/instance tail. Each of two tracks contributes DWORD count/first/last. Twelve path and two track FNV-1a32 fingerprints cover 404 bytes each. Final output contains result, 94 state words, two full-arena and two full-512-byte-track fingerprints.",
+  "exact_write_check": "Original and native adapters compare every byte of two 0x90000-byte arenas, both full 512-byte tracks, and gameData/selection before every boundary and at return. Initialization plus only the expected optional four-byte count clear is admitted before the first boundary. After a nonnull Generate callback, the expected snapshot admits only a 404-byte path copy into the fresh arena. Every callback mutation is retained. No other caller world-state writes are admitted. Compact fingerprints are separate observations; the trace does not serialize all guarded bytes. PA local storage is not world-state storage.",
+  "copy_scope": "The two track sources are fully backed, disjoint from the two arena destinations, and independently patterned through all 512 guarded bytes. The first and last copied DWORDs differ. Original rep movsd copies 101 DWORDs, while native qmemcpy is memcpy. Original and recovered allocation chains corroborate a separately allocated successful path. No arbitrary overlapping-copy policy is inferred.",
+  "free_boundary": "The shared native j__nfree_(void) boundary has arity zero and currently returns zero. The original-only adapter separately checks EAX equals the generated pointer, ECX is exhausted, and ESI/EDI advance by 404. Matching the native arity-zero event does not prove pointer forwarding, allocation release or native ownership correctness.",
+  "value_payload": "The original reserves 24 PA local bytes and initializes only type 1 at+4 and the integer-node DWORD at+8. Proven scalar consumers read only those words, including constraint and error-print paths. The recorder reads value[1]/value[2] only; unused PA words are neither inspected nor initialized by the fixture.",
+  "register_recovery": "This target sets EBP to the input index. Execute therefore carries index as its fourth argument, already correct in unchanged before; its char comes from the previous column. ECX holds 725*index and survives Execute and AddInteger, so Put argument 3 is that raw offset. Before v10 and v13 are uninitialized recovered-register artifacts. They are not repaired in the before oracle and must not be confused with movement-commit batch16 incoming-argument recovery.",
+  "distance_arithmetic": "Original subtraction and absolute-value instructions wrap in 32 bits and compare the final bits as signed. INT_MIN remains negative and is accepted as within distance 1. A row distance greater than 1 skips column arithmetic. The candidate preserves this without signed overflow. Historical subtraction and abs32 signed negation remain unchanged for before measurement. Raw nonzero count values all inspect only the first waypoint; no capacity clamp or count-indexed waypoint read is assumed.",
+  "before_comparison": "All four profiles match all 69 defined-before cases. The other 155 cases are excluded by their earliest reached defect: 25 signed additions, 119 uninitialized v10 reads, four abs32 negations, four signed subtractions, and three negative-int pointer widenings. The 106 original-path v13 defects overlap earlier exclusions; later original-path defects are not predictions of deterministic native execution after UB. The initial/final count expression is unsigned. In contrast, first-waypoint and copy-destination expressions begin with signed gameData+TABLE; the copy uses the post-Generate base. Pre-Execute saved-record additions and pointer widening are classified separately. No patched-before body establishes equivalence.",
+  "before_diagnostics": "Clang18 O0 UBSan diagnoses all 36 earliest arithmetic/address exclusions: 33 signed arithmetic errors and three sanitizer-intercepted reads at sign-extended invalid pointers. The 119 v10-first cases are excluded statically and are not executed as equivalence oracles. An earlier GCC13 O0 UBSan high-copy/empty-return probe emitted the matching trace without diagnosing the early signed addition; its input, executable, output and stderr are retained as a sanitizer limitation, not promoted to defined behavior. The initial Clang diagnostic driver expected a raw SIGSEGV; its retained failure was corrected to recognize the sanitizer-intercepted SEGV report, with source and inputs unchanged.",
+  "address_scope": "Fixed arena bases 0x10000000 and 0x7FFE0000, each 0x90000 bytes, back complete records -1,0,1,499,500,501. Track bases are 0x30000000 and 0xA0000000. Original and candidate addresses wrap at 32 bits. The caller executes before the late unsigned index<=500 and signed first-type 0..40 guards. Backing every uint32 index, arbitrary pointers, partial track sources and overlapping copies is outside this fixture.",
+  "return_scope": "A final zero count returns 0, potentially after Generate/Free. Every exercised nonempty normal-return path returns 1; the slot result is ignored. Generate selectors encode null and two backed source identities, not raw pointer-equality claims. Unusual scripted mutations, raw integer-node bits and slot return bits are conditional caller-boundary probes, not claims about actual CLIPS objects or generated routes.",
+  "read_order": "Entry count/first-waypoint and optional clear share a stable phase. Generate may replace gameData before the copy. Free or null Generate may change the fresh final count and captured coordinates. Execute precedes the late index/type check and fresh coordinate comparison. AddInteger precedes the fresh instance read. No callback separates the valid type 0..40 guard from the repeated type==-1 read; the latter is unreachable under the same stable storage and has no invented mutation hook.",
+  "compile_policy": "GCC13 and Clang18 at O0/O2, Wall/Wextra/Werror, UBSan with only the established packed-layout alignment exception. Candidate builds have no warnings. Unchanged-before compilation narrowly allows only its existing v10/v13 uninitialized warnings; neither local is assigned by the fixture. Native mappings use MAP_FIXED_NOREPLACE. The two public tests compile only the actual current body, once per optimization level for each compiler.",
+  "evidence": "artifacts/readability/road-functions-20260906/batch-17/original-proof/, test-audit/native/, original-comparison.json, negative-controls/witnesses.json and before-domain-probes/. All 224 original traces supply the public per-case hashes. Public tests require only tracked source and this JSON; no original bytes or retail assets are required.",
+  "limits": [
+    "Only the isolated unchanged original 604-byte caller and the native caller body execute. Generate, Free, Execute, Integer and Put are recording/mutation boundaries. Actual path generation, movement, allocation/freeing and CLIPS interning/storage do not execute.",
+    "Finite double bits include signed zero, subnormals and finite extremes. Original adapter boundaries preserve x87 state. NaNs, infinities and changes to the floating-point environment are outside this proof.",
+    "Callback mutations establish fresh caller reads and preservation in the fixture, not that every scripted mutation occurs in unmodified gameplay. No asynchronous or volatile-read contract is inferred.",
+    "The record tail at offsets 721..724 is observed as an instance argument; broader ownership or structure semantics remain unproven.",
+    "No actual Temple arrival, route, rendered frame, visual-fidelity or campaign milestone is established."
+  ]
+}

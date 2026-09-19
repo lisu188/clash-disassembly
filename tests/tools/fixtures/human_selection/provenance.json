@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "function": "WorldMap_SyncSelectionForHumanPlayer",
+  "baseline_head": "ef47584acb3d9dad57a4ccfebdf146570dbe7c3a",
+  "source": "src/world/0040A0E0_0040B020_world_002.cpp",
+  "before_body_sha256": "90da1197d59382668b5efb6cdd76d9c17c7aa923e48a034ad59d3c83f4c2acb7",
+  "before_body_token_sha256": "8f1088e89615a1b44f39a71a37d28735ae93f9d6dfb46a318bd254d7fd505477",
+  "cases": 22,
+  "events": 28,
+  "input_sha256": "c7ee63e00e435b14a1d154bb67546e8d599a885bdf13ddff2736d04b74d60309",
+  "output_sha256": "ce839d65b36602c957dd9f8247ef62d9aa0e923bd1e3e4f76835feac5b56eb23",
+  "case_names": [
+    "nonhuman-selected-ffffffff",
+    "nonhuman-selected-00000000",
+    "nonhuman-selected-70000000",
+    "human-dword-00000001",
+    "human-dword-00000002",
+    "human-dword-00000100",
+    "human-dword-80000000",
+    "human-dword-ffffffff",
+    "first-signed-word-ffff",
+    "first-signed-word-0000",
+    "first-signed-word-0011",
+    "first-signed-word-7fff",
+    "first-signed-word-8000",
+    "first-signed-word-fffe",
+    "other-arena-player-stack",
+    "refresh-mutates-live-state",
+    "absent-refresh-mutates-arena",
+    "direct-sync-mutations-retained",
+    "wrapped-controller-rejection",
+    "wrapped-first-slot-kept",
+    "wrapped-first-slot-cleared",
+    "negative-base-pointer-adaptation"
+  ],
+  "case_trace_sha256": [
+    "49002388580a5e0e0362e616c87d152a7d699424af6fedc2c858280392dbceb0",
+    "270f0da203967bb09ad63ae0979c14d9ad62ea4197f9eca10565c1d968465fd7",
+    "ac534791698dca49e3ad6b85416cbec365d92d2a49d31fcceac9a981ae825ef8",
+    "4a4e91b9476b5ae62946eb560bcf77a9eb09fb3eab499ad8a18bbba9286bd692",
+    "2a7335e838e8b22a7250f47052338bc1ed1579a3ea5a77ecf4961a8eef329256",
+    "342c29d8cb2db770ca4e2f7cb70a9a94a27a38346ff92d89822e47b8384a432a",
+    "55472a09cbe1e528a1fbe7ab07aa430a7bb0ec0a4b79ae350255a33ca74c2db5",
+    "5bef7de4e59d393eeae43d0b0c68dff5545731e4d36bd4d93a92caa3acc7177c",
+    "9ccc2d8279013316c8e116336bd3d60c93ee8ec2d120e01025b35f565caf6b9f",
+    "be3da1476fa2b52f8728887ff4c07bad77b6d2fd41a7bf160785723f6b6a7acf",
+    "0a867415c8941078342d54037b94257feff95ef3c558d4ea05b2641cf978f20e",
+    "5e91751b54907cce1223ef9812c5e0788e41ed58c759de5311ddd2f811e8cec7",
+    "af2c6710121cb5847906bd23055775abf7af29115845ac6ed863431b0d1fe0fa",
+    "9e1d4b74c8b199bd066aae91a969d805837c1dfb9278e3bc07a1d4b47a8aa4d1",
+    "1c1cd9227c635ebc826d688b91339922047d64d9a010f0ea4e5abd9d1b15481b",
+    "8f242f321839271200603f297e2b79adce2929860834c0453fb52c8601841911",
+    "405e68e25862de09491b3f004e8676c59fb6e0706c53a2a1c1d61845a0b6ffd3",
+    "848dc928e6a8794dd09ac395e0211dc9b71a6b78f130b777624ad729377c8596",
+    "cbb3340ec25c1f7bf6d990b8d93728dd0641439266be96c8e84d602da246e1d4",
+    "e4f33473c28e10cf7f6fd6835485f64d4ffd6b380d977483b3036c9ef58982b3",
+    "8ac57ff114c35cfd6fc874c83f105be8aeea4bd6f226623ae485f3b8713b7166",
+    "0f5938135f6983e40c0aca8d2af7a2de1a133b66362e6f55cf208ac4f5474ba8"
+  ],
+  "calls": [
+    "refresh_bar",
+    "sync_selection"
+  ],
+  "state_fields": [
+    "arena",
+    "player",
+    "selected",
+    "arena0_player0_controller",
+    "arena0_player1_controller",
+    "arena1_player0_controller",
+    "arena1_player1_controller",
+    "arena0_stack0_unit0",
+    "arena0_stack0_unit1",
+    "arena0_stack1_unit0",
+    "arena0_stack1_unit1",
+    "arena1_stack0_unit0",
+    "arena1_stack0_unit1",
+    "arena1_stack1_unit0",
+    "arena1_stack1_unit1"
+  ],
+  "arguments": {
+    "refresh_bar": [
+      "validated entry arena identity",
+      "zero (no native context argument)"
+    ],
+    "sync_selection": [
+      "validated entry arena identity",
+      "opaque context bits"
+    ]
+  },
+  "header_words": 2,
+  "event_words": 18,
+  "final_words": 17,
+  "void_return": true,
+  "category_counts": {
+    "nonhuman": 3,
+    "controller-width": 5,
+    "first-slot": 6,
+    "indexing": 1,
+    "snapshot": 2,
+    "final-state": 1,
+    "wrapped-address": 3,
+    "pointer-adaptation": 1
+  },
+  "defined_before_cases": 19,
+  "before_expected_match_cases": 18,
+  "defined_before_expected_divergence_cases": 1,
+  "original": {
+    "instruction_start": "0x0040A490",
+    "instruction_end_exclusive": "0x0040A4F6",
+    "instruction_bytes": 102,
+    "padding_bytes": 10,
+    "instruction_sha256": "70d617fd6ccbcf38617fcae45dc88bb0a25f96c724cb337ac460e313eea27ee0",
+    "code_with_padding_sha256": "0233e5b3a4cd801bb81f1d0af71ade307797866f3ce35a10434df9569b3ccb95",
+    "copies": [
+      {
+        "path": "/mnt/c/Users/andrz/.codex/worktrees/a46b/clash-disassembly/clash95.exe",
+        "sha256": "fd5cdd10e77049cb1ba8450905022f1c0144110a3927693d5b1a821923414b3f",
+        "file_offset": 39056
+      },
+      {
+        "path": "/mnt/c/clash/clash95.exe",
+        "sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae",
+        "file_offset": 39056
+      }
+    ],
+    "linked_code_verified_exact": true,
+    "probe_sha256": "873e564b8933f85288da189829727079a0bf6e684778bcc7567fe1eb9aaef822",
+    "exit_code": 0
+  },
+  "snapshot_supplement": {
+    "cases": 8,
+    "output_sha256": "7d6d190bdc918633dc5ce1b03ecb998d310676731ba64d7d3a5ba1b1976ab355",
+    "code": [
+      {
+        "name": "refresh",
+        "bytes": 151,
+        "sha256": "aaa8b76a3a3039c972a8cee2fe6d926034b6fe46357b4bbaa343e17040520f31",
+        "embedded_exact": true
+      },
+      {
+        "name": "widget-refresh",
+        "bytes": 18,
+        "sha256": "e9aa945610ee4da150bd58358581c1976a424a4b8e85240181782a005cbec78d",
+        "embedded_exact": true
+      }
+    ],
+    "report": {
+      "path": "artifacts/readability/road-functions-20260906/batch-19-selection/original-proof/refresh-snapshot/results.json",
+      "sha256": "157b716e489321e90a23dcc7655f77b787d99e3c63119913fdcb39bb2e76848a"
+    }
+  },
+  "bindings": {
+    "contract": {
+      "path": "artifacts/readability/road-functions-20260906/batch-19-selection/original-proof/contract.py",
+      "sha256": "abe868512f60b60ad09ae207e05e89fd237ecbcde5dbf169131b4821a25ba7c7"
+    },
+    "byte_provenance": {
+      "path": "artifacts/readability/road-functions-20260906/batch-19-selection/original-proof/original-byte-provenance.json",
+      "sha256": "eff85b394acf11f1cd50dd050a6e9bf241329c10cf4ce5df751753f4a653ee85"
+    },
+    "measurement": {
+      "path": "artifacts/readability/road-functions-20260906/batch-19-selection/original-proof/original-results.json",
+      "sha256": "3fc0864d82074fb862f3156b366254b4c591532478162c0b91e7141b5dc78489"
+    },
+    "readme": {
+      "path": "artifacts/readability/road-functions-20260906/batch-19-selection/original-proof/README.md",
+      "sha256": "9652006d4914bb27126c8a815638bd25b6000794f0bbbe86a5f435ec95db98f0"
+    },
+    "boundary_contract": {
+      "path": "artifacts/readability/road-functions-20260906/batch-19-selection/original-proof/boundary-contract.md",
+      "sha256": "0f133338177a0581b97a059ebc79f1c3f5b82f44eaa10394df28d4d33e99ccbd"
+    },
+    "public_contract": {
+      "path": "tests/tools/fixtures/human_selection/contract.py",
+      "sha256": "257beb3518132da07a07c2b6ef5646769ae0c5faf80d089e56698280dfacf8d3",
+      "relationship": "Formatting only: identical Python AST, case records, encoded input and output framing to the measured private contract."
+    }
+  },
+  "scope": "Unchanged original caller under two recording boundaries, plus real no-selection refresh/UI-wrapper ECX preservation. No integer return, child gameplay, rendering or campaign claim."
+}

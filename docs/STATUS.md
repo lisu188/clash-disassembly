@@ -2,6 +2,25 @@
 
 Last consolidated: 2026-09-19.
 
+## September Main Integration And Class Validation
+
+Track: Win95 reconstruction, behavior-class migration. Published main `02c00bf`
+is integrated with the 23-method class checkpoint. Its independent Road widget
+ownership move brings the manifest to 147 recovered TUs; six are canonical class
+sources and all 4,157 identities remain. Both clean supported builds, warning
+checks, eight asset-free gates, strict migration comparisons, all 540 tooling
+tests and eleven metadata checks pass. The unchanged header and raw link
+ratchets retain their enumerated failures. CI again checks the frozen baselines
+and writes diagnostic metrics separately.
+
+The integrated GCC first-Road replay passes the complete bounded endpoint byte
+comparison. Default smoke records 11 passes, two historical-selection-marker
+failures and eight skips; exact-main attribution, Clang runtime, the completed
+route matrix and current native/coverage validation remain outstanding. The
+two incoming native AP tests receive a test-only immutable-table correction;
+their executable validation is pending. See
+[CPP_CLASS_SEPTEMBER_INTEGRATION.md](CPP_CLASS_SEPTEMBER_INTEGRATION.md).
+
 ## UnitStack Plague And Morale Query Extraction And Relocation
 
 Two packed-record queries now use canonical UnitStack methods and retained
@@ -111,6 +130,197 @@ GCC/Clang O0/O2 profile; reverted repairs fail the intended checks. Both product
 builds, exact storage/initialization/symbol comparisons and eight asset-free gates
 pass. This is a separate behavior-repair batch; no new class method or campaign
 milestone is claimed. See [GAME_RANDOM_RECOVERY.md](GAME_RANDOM_RECOVERY.md).
+
+## Human-Player Selection Cleanup Readability
+
+Track: Win95 reconstruction, selection cleanup reached from the Road menu.
+`WorldMap_SyncSelectionForHumanPlayer`, the twenty-second individually reviewed
+Road-family function, now uses named context and arena values, existing packed
+player/unit fields, an early controller rejection and a clear selection decision.
+Original 32-bit address arithmetic, field widths, callback order and the entry
+arena snapshot remain explicit. All 22 original scenarios and 28 events match
+four actual-source compiler profiles. Eight separate original refresh/UI-wrapper
+cases verify the snapshot across callbacks that overwrite ECX. The parent
+matches 18 defined cases; one defined pointer-conversion difference and three
+signed-overflow exclusions remain separate. Nine compiled mutations are caught.
+Both native builds, eight public CTests and all 530 tooling tests pass, with
+750 inputs and both native artifact sets frozen. All 150 other objects,
+neighboring code/data and archive order remain exact. Strict linked comparisons
+pass without allowances; the same 20 header and 439/691 raw link differences
+remain. Only one canonical body hash changes. Runtime, visual and campaign
+milestones do not advance.
+[Evidence, validation and limits](HUMAN_READABILITY.md#batch-19-worldmap_syncselectionforhumanplayer).
+
+## Published CI At ef47584
+
+Both builds, eight public CTests and 528 tooling tests pass. The separate
+coverage gate measures 92.65% across all 718 functions, with none uncovered.
+Header and both linked-symbol ratchets still fail; raw link differences remain
+439 GCC / 691 Clang with zero crosscheck errors. Complete logs were retrieved
+without restarting any CI job.
+[Remote measurements](HUMAN_READABILITY.md#published-ci-observation-after-the-builder-menu-review).
+
+## Builder Action Menu Readability
+
+Track: Win95 reconstruction, reached Road builder-menu lifecycle.
+`WorldMap_HandleBuilderActionMenu`, the twenty-first individually reviewed
+Road-family function, now has named actions, early rejection returns, a
+structured modal loop and typed signed stack coordinates. Original ECX evidence
+replaces the uninitialized no-builder argument; the Trap logging slot is
+explicitly zero. Three constructor checks match the original exact-one
+predicate, without claiming a reached noncanonical-return bug.
+All 62 original scenarios and 743 recorded events match the actual body under
+four compiler profiles. A separate 16-case original-callee probe verifies ECX
+preservation. Both native builds pass; all 150 other objects and the neighboring
+function/data sections remain unchanged. All eight public CTests and 528 tooling
+tests pass with 746 inputs and compiler artifacts frozen. Eighteen compiled
+negative controls are rejected; 42 defined parent scenarios match, with six
+noncanonical predicate differences and 14 undefined-before exclusions separate.
+Strict linked comparisons pass without
+allowances; the same 20 header and 439/691 historical link differences remain.
+Only one canonical body hash changes. Runtime, visual and campaign milestones
+do not advance.
+[Evidence, validation and limits](HUMAN_READABILITY.md#batch-18-worldmap_handlebuilderactionmenu).
+
+## Published CI At 438272e
+
+Both compiler builds, eight public CTests, all 526 tooling tests and the separate
+coverage gate pass. This run measures 92.65% across all 718 selected functions,
+with none uncovered. Header and linked-symbol ratchets still fail; complete link
+counts remain 439 GCC / 691 Clang with zero crosscheck errors. The preceding
+local coverage measurement remains separate.
+[Remote measurements](HUMAN_READABILITY.md#published-ci-observation-after-road-widget-ownership).
+
+## Road Widget Ownership And Header Dependencies
+
+Track: Win95 reconstruction, inherited CI repair. The unchanged builder/Road
+initializer and original builder selector now reside together in buildings.
+All five initialization call positions, 4,157 identity/body records and shared
+storage remain. Explicit source/provenance and coverage paths follow the move;
+the canonical inventory increases to 145 TUs. Complete header comparison removes
+two violations, leaving 20, with no new failing keys or changed limits.
+Both builds, four asset-free CTests per compiler and all 526 tooling tests pass
+with 741 inputs frozen. Coverage passes at 92.62% across all 718 selected
+functions, with none uncovered. The rejected first coverage location is retained.
+Independent source, preprocessing, object and linked-data proof accounts for
+the exact code/data relocation, unwind padding and duplicate per-TU note.
+Historical raw link totals remain 439 GCC / 691 Clang; the intentional strict
+read-only order difference remains explicit without allowances. Overall CI
+repair remains incomplete. Road review count stays twenty; the runtime and
+campaign frontier do not advance.
+[Evidence, commands and remaining dependency](HUMAN_READABILITY.md#road-widget-ownership-and-header-dependencies).
+
+## Bootstrap Storage Label And State-Name Scanner
+
+Track: Win95 reconstruction, inherited CI repair. The private bootstrap command-
+line buffer retains its historical assembler name. A reached scanner defect is
+also repaired so assembler labels preserve the existing direct-state evidence;
+the support inventory and recovered manifest remain byte-identical. Four new
+regression tests bring the tooling suite to 526, all passing. Both builds and
+eight public CTests pass with 740 inputs and compiler artifacts frozen.
+Independent ELF comparison preserves storage addresses, runtime code/data and
+relocations under the one exact name correspondence. Raw link differences fall
+441 to 439 GCC and 693 to 691 Clang; every other row and all 22 header failures
+remain. Strict comparison's one intentional name difference remains recorded;
+no baseline or policy is weakened. The original failed scanner-audit attempts
+are retained. Road-function count, runtime and campaign frontiers do not advance.
+[Proof, commands and limits](HUMAN_READABILITY.md#bootstrap-command-line-symbol-and-state-scanner).
+
+## Published CI At a40417b
+
+Both compiler builds, four public CTests per compiler, 526 tooling tests and the
+separate coverage gate pass. Overall CI still fails the header and linked-symbol
+ratchets: 22 header rows and 439 GCC / 691 Clang link differences, with zero
+library crosscheck errors. Coverage measures 92.62% across the selected 718
+functions, with none uncovered; the prior run's measurements remain separate.
+[Run and evidence](HUMAN_READABILITY.md#published-ci-observation-after-the-bootstrap-repair).
+
+## Published CI At 4033aa8
+
+The Temple commit's remote builds, eight public CTests, 522 tooling tests and
+separate coverage gate pass. Complete warning totals drop by two per compiler.
+Overall CI still fails the same header and linked-symbol gates: 22 header rows,
+441 GCC / 693 Clang link differences, zero library crosscheck errors. No
+unexpected regression is found, and no baseline or check was weakened.
+[Run, measurements and scope](HUMAN_READABILITY.md#published-ci-observation-after-batch-17).
+
+## Temple March Readability And Preserved Stack Offset
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration.
+`Rules_MarchToTemple`, the twentieth individually reviewed Road-family function,
+now uses named stack/waypoint fields and explicit path-replacement phases.
+Original ECX recovery replaces two uninitialized values; 32-bit arithmetic
+preserves the original distance and address behavior. Exact count clearing,
+full path copying, fresh state reads and late inclusive bounds remain.
+All 224 original scenarios match the actual body in four compiler profiles,
+and all 69 defined-before scenarios match. Twenty-three compiled negative
+controls are rejected. The native free thunk's missing pointer/ownership
+behavior remains separate compatibility debt. One canonical body hash changes;
+no route, visual-fidelity or campaign milestone advances.
+Both compiler builds, all eight public CTests and all 522 tooling tests pass.
+All 740 inputs and compiler outputs remain frozen. Scoped warnings decrease
+by two per compiler; neighboring code/data and all 149 other objects remain
+unchanged. Strict linked comparisons need no allowances. The inherited 22
+header failures and 441 GCC / 693 Clang raw link differences remain unresolved.
+[Evidence, commands and limits](HUMAN_READABILITY.md#batch-17-rules_marchtotemple).
+
+## Published CI At 6126b40
+
+Remote CI remains failed at the same header and linked-symbol ratchet steps as
+the preceding main revision. Both compiler builds, warning gates, eight public
+CTests, 520 tooling tests and the separate 718-function coverage gate pass.
+The measured 22 header failures and 441 GCC / 693 Clang link differences are
+unchanged; no baseline is raised or check disabled. CI repair remains required.
+[Remote runs, evidence scopes and coverage](HUMAN_READABILITY.md#published-ci-observation-after-batch-16).
+
+## Movement Commit Readability And Original Call Arguments
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration.
+`Move_CommitIfWithinCost`, the nineteenth individually reviewed Road-family
+function, now uses named stack fields, explicit call phases and early exits.
+Original incoming-argument forwarding replaces an incorrect Execute argument;
+32-bit addresses and fresh game-data reads replace signed intermediate pointers.
+The late inclusive index/type bounds, partial scalar value and ignored return
+values remain. All 140 original scenarios match the actual body in four compiler
+profiles, including separately diagnosed before-address failures. Fifteen
+compiled negative controls are rejected. Both builds and all eight public gates
+pass, as do all 520 tooling tests with 738 inputs and compiler outputs frozen.
+Neighboring code/data, warning counts and existing ratchet failures remain.
+One canonical body hash changes; identities, layouts and shared tables
+remain. No route, visual-fidelity or campaign milestone changes.
+The first-Road runtime baseline and normal turn-7 continuation frontier remain.
+[Evidence, commands and limits](HUMAN_READABILITY.md#batch-16-move_commitifwithincost).
+
+## Bridge Query Integration With Class Recovery
+
+Track: Win95 reconstruction, integrate the completed Road readability batch.
+Published DLX/class checkpoint `b2f3764` and bridge-query commit `3ee98b4` are
+merged at `70ed898`. Both clean builds, all eight public gates and all 518
+tooling tests pass. Strict incoming comparisons require no new allowances;
+neighboring strategic code/data and the Road switch table remain exact.
+All 736 source/tooling inputs and both compiler outputs stay frozen through
+validation. The schema-3 manifest retains 4157 identities, 144 source files,
+11 methods and existing adapters/aliases. Incoming warning totals, stricter
+header limits and historical raw-link failures remain unchanged.
+The first-Road replay evidence retains its incoming checkpoint attribution;
+this integration adds no route or visual-fidelity claim.
+[Evidence, commands and limits](HUMAN_READABILITY.md#batch-15-integration-with-dlx-and-class-recovery).
+
+## Queued-Path Bridge Query Readability
+
+Track: Win95 reconstruction, Road/queued-path query orchestration.
+`Rules_IsQueuedPathTargetBridgeCrossing`, the eighteenth individually reviewed
+Road-family function, now uses named waypoint fields and a direct Boolean
+return. Its original wrapping address calculation, unsigned coordinate bytes,
+empty return and absence of caller writes remain. All 283 original scenarios
+match the unchanged before and actual after bodies in four compiler profiles,
+including 48 backed raw-count cases. Twelve compiled negative controls are
+rejected. Both builds and eight public gates pass; only target code changes,
+with smaller code and unchanged warnings, neighboring code and data.
+The final full tooling suite passes all 263 tests with its inputs frozen.
+The first-Road runtime baseline and turn-7 continuation frontier are unchanged.
+Evidence, commands, validation and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-15-rules_isqueuedpathtargetbridgecrossing).
 
 ## DLX Cached-Entry View Migration
 

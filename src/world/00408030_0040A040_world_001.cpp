@@ -1266,16 +1266,4 @@ char *WorldMap_ToggleSelectedUnitModeFlag(void)
 // 5202E8: using guessed type int dword_5202E8;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
-//----- (0040A0A0) --------------------------------------------------------
-int  WorldMap_ComputeBuildMenuActionFromCursor(int widget, int a2)
-{
-  int result; // eax
-
-  UIWidget_PlayPressedReleaseAnimationWithDelay(widget, a2);
-  result = (*(int *)(uintptr_t)(widget + 16) - 15) / 2;
-  g_WorldMapBuilderMenuAction = result;
-  return result;
-}
-// 520308: using guessed type int dword_520308;
-
 CLASH95_INTERNAL void WorldMap_EnsureActionButtonWidgetTable(void);

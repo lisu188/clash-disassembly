@@ -1122,6 +1122,814 @@ public regression from the repository root in Linux/WSL:
 python3 -m unittest discover -s tests/tools -p test_road_path_fallback.py -v
 ```
 
+### Batch 15: Rules_IsQueuedPathTargetBridgeCrossing
+
+Track: Win95 reconstruction, Road/queued-path query orchestration. Reviewed
+`Rules_IsQueuedPathTargetBridgeCrossing` (`0x454A20`) as the eighteenth
+Road-family function. The function now reads the existing typed stack/path,
+copies the target waypoint into a named `PathWaypoint`, and directly normalizes
+the bridge-cost result. Repeated offset expressions and register aliases are
+removed. The empty-path return remains zero with no call or write.
+
+The original reads stable, nonvolatile count/base storage without an intervening
+call or write. The refactor preserves its unsigned 32-bit waypoint-address
+arithmetic, including backed raw counts that wrap to the count word, earlier
+waypoints or adjacent bytes. It does not introduce a capacity clamp. Row and
+column remain the first two unsigned bytes; the cost word is ignored. The
+single bridge-cost call receives those two values, and every nonzero result
+becomes exactly one. State changed by that call is retained without a late
+read, path clear or other caller write.
+
+The probe executes all 128 unchanged original instruction bytes, excluding the
+following 56 bytes of the neighboring caller's switch tables. All 283 scenarios
+match both the unchanged before body and the actual refactored body under GCC
+13 and Clang 18 at O0/O2: 1132 comparisons for each version. They include nine
+empty paths, every conventional count 0..100, 48 backed raw-count cases,
+unsigned coordinate boundaries, cost-word independence and callback mutations.
+The 274 call events record exact arguments and state. Both recorders compare
+their complete game arenas and selected/base globals before and after the
+callback, enforcing no caller writes. Path/arena fingerprints in the traces
+are separate observations; the public fixture stores SHA-256 trace digests.
+
+Twelve compiled negative controls reject incorrect empty returns, clamping,
+waypoint choice, coordinate order/signedness, stack selection, normalization,
+pre-call writes, post-call clearing, late count reads and unwrapped addresses.
+Every control compiles before its runtime or trace rejection is counted.
+
+The real bridge-cost implementation returns only zero or five. Seven scenarios
+with other scripted results test the conditional normalization contract, not
+additional real callee behavior. The source record and resolved four-byte
+waypoint address require valid backing. Raw-count game/save reachability,
+asynchronous mutation, invalid stack indexes and the real map's support for
+every forwarded byte coordinate are not established by this caller fixture.
+Confidence is high within this documented storage/call domain. No public name,
+signature, layout, global or table changes; only the target's canonical body
+hash changes and all 4157 recovered identities remain.
+
+Both supported builds and all eight public asset-free gates pass. Target code
+shrinks from 224 to 175 bytes under GCC and 224 to 143 under Clang. All 61
+neighboring executable sections, the other 145 objects and ordinary allocated
+data/relocations remain exact, including the neighboring caller's Clang switch
+table. Scoped warnings remain 38 GCC / 39 Clang. Linked data classes, sizes and
+order remain unchanged, with zero recovered-library crosscheck errors.
+Manifest, split-source and generated metadata/header/include checks pass.
+Raw link ratchets retain 428 GCC / 680 Clang differences and the header ratchet
+retains its 14 existing failures; no baseline is raised.
+
+The final full tooling suite passes all 263 tests in 79.401 seconds. All 401
+production/tooling inputs, the public test/provenance pair, both executables and
+archives, and all 146 objects per compiler remain frozen through final checks.
+
+Private source/original freezes, exact commands, compiled negative controls and
+validation reports are retained under
+artifacts/readability/road-functions-20260906/batch-15/.
+Its candidate-audit, original-proof/final-review, test-audit, scope-audit,
+metadata and build-validation directories record the respective evidence and
+limits. Private scripts are absent from clean checkouts. The separate first-Road
+runtime baseline and normal turn-7 refresh/continuation frontier remain
+unchanged. No new route or visual-fidelity claim follows. Reproduce the focused
+public regression from the repository root in Linux/WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_queued_path_bridge_query.py -v
+```
+
+### Batch 15 integration with DLX and class recovery
+
+Merged the published DLX/class checkpoint `b2f3764` with the bridge-query commit
+`3ee98b4` at `70ed898`. The two documentation conflicts retain both histories.
+Relative to incoming main, only the seven reviewed bridge-query files differ;
+all other manifest records and schema fields remain identical. The schema-3
+manifest retains 4157 historical identities, 144 ordered source files, 11
+canonical class methods and the existing adapters/aliases.
+
+Both clean combined builds and all eight explicit public CTests pass. Full
+warning totals are 6579 GCC / 6581 Clang, exactly matching incoming categories.
+Strict comparisons against the final incoming snapshots pass without additional
+allowances: linked identities, named storage, data order and initialization
+remain. In strategic002, only the query's code/instructions/relocations differ;
+the 61 neighboring executable sections and ordinary allocated data remain exact,
+including the Clang Road caller's 56-byte table and seven relocations. Unwind
+and nonallocated debug metadata are excluded from that object comparison.
+
+Manifest, split-source, coverage/save metadata, generators and class inventories
+pass. The stricter incoming header limits remain, with their 22 existing
+failures, and raw link differences remain 441 GCC / 693 Clang with zero library
+crosscheck errors. No baseline is raised. The original bridge-query proof and
+public regression bindings remain exact through integration.
+
+All 518 combined tooling tests pass in 183.528 seconds with no skips. All 736
+production/tooling inputs, both executables/archives, all 150 objects per
+compiler and both compile-command files remain unchanged through that run.
+
+Exact commands, source/reference freezes, scope checks and preserved comparison
+reports are under
+artifacts/readability/road-functions-20260906/batch-15/integration-validation/
+and the sibling integration-scope directory. These private scripts are absent
+from clean checkouts. Incoming first-Road replay/frame evidence remains tied to
+its recorded `8e7b694` source checkpoint; this combined build adds no runtime,
+visual-fidelity or campaign milestone claim.
+
+### Batch 16: Move_CommitIfWithinCost
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration. Reviewed
+`Move_CommitIfWithinCost` (`0x454210`) as the nineteenth Road-family function.
+The function now uses existing packed stack/path/unit fields, named coordinates,
+explicit call phases and early exits. Original 32-bit address arithmetic replaces
+signed intermediate addresses, with fresh game-data reads after Execute, the
+bridge/Road phase and integer-node construction. No name, signature, layout or
+shared table changes; only this function's canonical body hash changes, retaining
+all 4157 historical identities and schema-3 method/adapter metadata.
+
+The original forwards incoming EBP to both Execute and Road. The previous caller
+instead passed the stack index as Execute's fourth argument. The recovered
+caller now forwards its existing argument there. This is a defined discrepancy
+at the call boundary; a reached gameplay effect is not established. The real
+Execute implementation has its own register recovery, outside this batch.
+
+The empty path returns zero without a callee call or world-state write. Every
+nonempty path executes before the index check, which accepts 0..500 inclusive,
+followed by the signed16 first-unit-type check accepting 0..40. These bounds
+are preserved exactly; the unit-type registry count is not a substitute.
+Any nonzero bridge result calls
+Road, whose result is ignored. If fresh coordinates still equal the entry
+coordinates, the caller interns zero, calls the PA slot writer and returns one.
+The slot-put result is also ignored. The original 24-byte local value buffer
+initializes only its type and integer-node words; the proven scalar consumer
+chain uses only those words. The saved incoming ECX lies outside that buffer.
+The existing four-byte record tail is copied as an instance argument without
+claiming additional field ownership or structure semantics.
+
+All 288 unchanged original instruction bytes execute in the retained proof.
+The actual production body matches all 140 scenarios and 411 call events under
+GCC 13 and Clang 18 at O0/O2: 560 comparisons. Per compiler profile, the unchanged
+before body has 115 exact matches and 12 defined mismatches confined to Execute's
+fourth argument. Thirteen high-address cases are excluded from before equivalence
+for distinct reasons: ten signed-addition overflows and three negative-int
+addresses sign-extended into invalid native pointers. Retained diagnostic probes
+confirm both classes; the original and recovered caller execute all 13 with
+backed storage. No patched before body serves as an oracle.
+
+Two complete 0x90000-byte arenas at 0x10000000 and 0x7FFE0000 back records -1, 0,
+1, 499, 500 and 501. Full arena byte comparisons and exact checks of gameData
+and selection before every callback and return enforce absence of caller
+world-state writes and preserve scripted mutations.
+Compact path/arena fingerprints are separate observations. Required registers
+and finite floating-point forwarding are checked at the recording boundaries.
+Fifteen compiled negative controls are rejected. An initially surviving stale
+post-query-base control exposed equal-coordinate test data; two appended cases
+change the fresh arena's coordinates and reject it. That failed sensitivity
+result remains preserved. Earlier input case payloads, excluding the changing
+four-byte case-count header, and complete output trace prefixes remain exact.
+
+Confidence is high within the documented backed-storage and caller domain.
+Five recording boundaries replace actual movement, bridge query, Road building,
+CLIPS interning and slot storage. Scripted non-Boolean returns, raw integer-node
+words and mutations test conditional caller behavior, not additional real
+callee behavior. Arbitrary unbacked indices, asynchronous/volatile mutation,
+NaNs, infinities and altered floating-point environments remain outside this
+proof. No runtime route, visual-fidelity or campaign milestone is promoted.
+
+Both production builds and all eight explicit public CTests pass. Only the
+target's code, instructions and relocations change: 433 to 468 bytes under GCC,
+399 to 430 under Clang. The 61 neighboring executable sections, ordinary
+allocated data/relocations, Clang's neighboring 56-byte Road dispatch table and
+its seven relocations remain exact. All 149 other objects per compiler and both
+compile-command files remain unchanged. Unwind and nonallocated debug metadata
+are excluded from the object comparison. Strict linked class/storage/order and
+initialization comparisons pass without allowances. Scoped warnings remain
+38 GCC / 39 Clang; raw link ratchets retain 441 / 693 differences with zero
+library crosscheck errors. Manifest, split-source, metadata, generators and
+class inventories pass. All 22 existing header failures, their complete metrics
+and stricter limits remain unchanged. No baseline is raised.
+
+All 520 tooling tests pass in 172.354 seconds, with no skips. All 738
+production/tooling inputs, both binaries and archives, all 150 objects per
+compiler and both compile-command files remain frozen through the full run.
+
+Private original/source freezes, exact commands, independent trace decoding,
+before-domain diagnostics and compiled negative controls are retained under
+artifacts/readability/road-functions-20260906/batch-16/.
+The original-proof/fresh-coordinate-extension and test-audit directories bind
+the actual source to the reviewed candidate and public fixture. The scope-audit,
+metadata and build-validation directories record integration checks. Private
+scripts are absent from clean checkouts. The public test requires only tracked
+sources and its provenance JSON, with no retail assets or original executable.
+Run it from the repository root in Linux/WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_movement_commit.py -v
+```
+
+### Published CI observation after batch 16
+
+Remote CI remains failed at the inherited header and linked-symbol ratchets.
+The [6126b40 run](https://github.com/lisu188/clash-disassembly/actions/runs/34744304390)
+and [preceding 1ca2457 run](https://github.com/lisu188/clash-disassembly/actions/runs/34743423928)
+fail the same three steps. Both compiler builds, warning gates, all eight public
+CTests, unit-runner policy tests and the separate coverage job pass. The later
+run also passes all 520 tooling tests in 160.539 seconds.
+
+All emitted CI failure rows match between the two runs: 15 printed header rows
+and 80 printed link rows per compiler. Exact published header metadata recovers
+the same complete 22 header failures; retained local binary snapshots reproduce
+all 441 GCC / 693 Clang link differences and agree with the CI totals and every
+printed row, with zero library crosscheck errors. The unprinted link rows are
+local reconstruction evidence, not a complete remote CI log. No baseline or
+workflow was changed for this observation.
+
+The 6126b40 coverage job measures 6163 of 6652 lines (92.65%) across its fixed
+718-function set, with 585 fully covered functions and zero uncovered functions.
+The preceding run measures 6157 lines and 584 fully covered functions. These are
+the coverage harness's scope and thresholds, not coverage of all 4157 recovered
+identities. The complete CI workflow still requires genuine header-dependency
+and linked-surface repairs before it can pass.
+
+Run metadata, job logs, failed logs, normalized comparisons and exact commands
+are retained under artifacts/readability/road-functions-20260906/batch-17/ci-observation/.
+
+### Batch 17: Rules_MarchToTemple
+
+Track: Win95 reconstruction, upstream Road/queued-path orchestration. Reviewed
+`Rules_MarchToTemple` (`0x454330`) as the twentieth Road-family function.
+Its name is the canonical source/manifest name; this address has no public map
+entry. Named stack, waypoint, coordinate and generated-path values replace raw
+accesses and register aliases. The two uninitialized ECX values are recovered
+as the original stack byte offset at the post-Execute type read and PA call.
+Unsigned arithmetic preserves original 32-bit addresses and distance behavior.
+Only this body's canonical hash changes; all 4157 historical identities,
+144 source entries and schema-3 method/adapter metadata remain.
+
+Every nonzero entry count reads the first waypoint, independent of the count's
+magnitude. The original row-first subtraction and absolute value wrap at 32
+bits, with a signed comparison against one. INT_MIN remains negative and is
+accepted by that comparison; widening the distance or saturating it changes
+the recovered behavior. A far waypoint clears only the count DWORD. If a path
+is then needed, a nonnull generated track is copied as exactly 404 bytes into
+the fresh game-data base, followed by the existing free boundary. A null return
+still permits generator changes to be observed by the final count read.
+
+The final count and signed16 coordinates are read after generator/free. Execute
+receives the index, animation flag one, the previous column's low byte, the
+index again and the forwarded double. The index and signed first-type bounds
+remain after Execute, accepting 0..500 and 0..40 respectively. The original
+repeated type==-1 read remains before coordinate comparison, although no stable
+synchronous state can satisfy it after the preceding type check. No invented
+inter-read callback is used to exercise that branch. Unchanged coordinates
+lead to integer-zero construction and a PA slot-writer call using a fresh
+instance tail. Its separate third argument is the byte offset, not scalar type
+one. Only the six-word local buffer's type/node fields are initialized and
+consumed by the proven scalar chain; Put's result is ignored.
+
+The retained probe executes all 604 unchanged original instruction bytes,
+excluding the following four alignment bytes. All 224 scenarios and 514 call
+events match the applied body under GCC 13 and Clang 18 at O0/O2: 896
+comparisons. All 69 defined unchanged-before scenarios also match in those
+profiles, giving 276 before comparisons. The first-defect exclusions partition
+the other 155 cases: 25 signed-address additions, 119 uninitialized-v10 uses,
+four signed absolute-value negations, four signed subtractions and three
+negative-int addresses widened to invalid native pointers. Later overlapping
+defects, including v13, remain recorded separately. A sanitizer's failure to
+report a statically undefined expression does not make that case a valid before
+oracle; the retained diagnostic limitations are explicit in the provenance.
+
+Exact whole-arena comparisons and checks of gameData/selection admit only the
+29 observed four-byte count clears and 50 complete path copies. Both entire
+512-byte source-track regions, including their guards, are checked as well.
+The two game arenas back records -1, 0, 1, 499, 500 and 501 across the signed
+address boundary. Scripted changes distinguish fresh destination/count/type/
+coordinate/instance reads after the relevant callbacks. Twenty-three compiled
+negative controls are rejected with explicit first witnesses. Compact trace
+fingerprints are separate from the literal full-buffer guards.
+
+Original allocation dataflow corroborates a separate 404-byte result that the
+bridge-corner helper returns unchanged or replaces with null. With a valid heap,
+that allocation is disjoint from live game data. The copy proof assumes backed,
+nonoverlapping regions and the original clear direction flag. The original-only
+adapter verifies the returned pointer in EAX at free and the copy registers;
+the common native free call has no arguments and the compatibility thunk is
+inert. This batch therefore does not recover allocation release or claim full
+generator/free equivalence. The actual generator, movement, CLIPS allocation/
+storage, asynchronous state changes and altered floating-point environments
+remain outside the recording boundaries. Finite double forwarding, conditional
+raw node words and scripted mutations establish caller behavior only.
+
+Confidence is high within that documented caller/storage domain. No public
+symbol, signature, shared layout or table is renamed. The instance tail retains
+its unresolved ownership semantics. No temple arrival, Road continuation,
+runtime route, visual-fidelity or campaign milestone is promoted.
+
+Both incremental compiler builds and all eight public CTests pass. Scoped
+strategic warnings fall from 38 to 36 with GCC 13 and from 39 to 37 with Clang 18,
+removing the two uninitialized values. Target code grows from 685 to 774 bytes
+with GCC and from 651 to 722 with Clang. Only the target executable section,
+instructions and relocations change; all 61 neighboring executable sections,
+ordinary allocated data and the Clang Road table's 56 bytes/seven relocations
+remain exact. All 149 other objects per compiler remain unchanged. Strict
+class-aware linked comparisons pass without allowances. The complete inherited
+22 header failures and raw 441 GCC / 693 Clang link differences remain, with
+zero crosscheck errors; no baseline is raised. The earlier CI observation above
+remains failed overall and these local comparisons do not promote it to green.
+
+All 522 tooling tests pass in 161.964 seconds without skips. All 740 production
+and tooling inputs, both binaries/archives, 150 objects per compiler, compile
+commands and the 147-member archive ordering stay frozen through validation.
+
+Private original/source freezes, exact commands, independent before-domain and
+trace reviews, allocation-route corroboration and negative controls are under
+artifacts/readability/road-functions-20260906/batch-17/.
+The candidate-audit, original-proof, test-plan and test-audit directories retain
+their respective proof and limits; scope-audit, metadata and build-validation
+record integration. Private scripts are absent from clean checkouts. The public
+regression uses tracked source and provenance without retail assets:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_temple_march.py -v
+```
+
+### Published CI observation after batch 17
+
+The [4033aa8 CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34746704424)
+completes with the same three inherited failures as 6126b40: header coupling and
+both linked-symbol ratchets. Both builds, all eight public CTests, unit-runner
+policy checks and all 522 tooling tests pass; the tooling run takes 160.771
+seconds. Complete compiler logs show warning totals fall from 6579 to 6577 for
+GCC and 6581 to 6579 for Clang, with no increased warning category.
+
+All 15 emitted header rows match; exact published metadata confirms all 22
+header failures remain. All 80 emitted link rows per compiler and aggregate
+441 GCC / 693 Clang differences match, with zero crosscheck errors. Downloaded
+diagnostic logs agree with the workflow output. Unprinted remote link rows
+remain uninspected. The separate coverage gate remains 6163/6652 lines (92.65%)
+across its selected 718 functions: 585 fully covered, 133 partial, none uncovered.
+This passing coverage job does not make overall CI green or cover all identities.
+
+Full run/job metadata, logs, diagnostic artifacts, exact published inputs and
+comparisons are retained under
+artifacts/readability/road-functions-20260906/batch-17/ci-final-observation/.
+No unexpected regression is found in this observation.
+
+### Bootstrap command-line symbol and state scanner
+
+Track: Win95 reconstruction, repair an inherited linked-symbol regression.
+The private 1024-byte bootstrap command-line buffer now explicitly retains its
+historical host-build assembler name, `g_boot_command_line`. The C++ name,
+static linkage, type, array bound, declaration order and all consumers remain.
+This name comes from the frozen host-build contract; it is not a newly recovered
+retail Win95 public symbol. The existing GNU assembler-label style avoids adding
+a broad recovered-ABI include to the bootstrap.
+
+The first two builds compiled and linked the annotation, then failed their
+embedded split audit: `declared_state_names` no longer recognized the buffer
+when an assembler label followed its declarator. The existing inventory correctly
+recorded its three bootstrap consumers. The scanner now removes explicit GNU
+string-label clauses from its lexical declaration view after masking function
+bodies. It preserves the original declaration matcher, ignores labels inside
+comments/literals, and retains the C++ state name. Macro/expression labels and
+arbitrary C++ declaration parsing remain outside this lexical scanner's scope.
+
+Four new regression methods cover 18 scalar/array label cases across `asm`,
+`__asm` and `__asm__`, function/prototype/local exclusions, direct-state drift,
+and local-static constraints. The unchanged scanner fails the real inventory,
+the direct-state fixture and all 18 supported-label cases. All 34 targeted tests
+pass with the applied repair; every existing test body remains unchanged.
+The actual state-name set gains only the missing buffer and the three inventory
+errors disappear. Both the support inventory and recovered manifest remain
+byte-identical. No identity, class mapping or Road-function count is changed.
+
+Both final incremental builds pass, with no bootstrap diagnostics. Their native
+objects and binaries are exactly those retained from the first attempts; only
+the corrected embedded audit needed to rerun. Raw link differences fall from
+441 to 439 GCC and 693 to 691 Clang, removing exactly the two missing/new buffer
+name rows in each complete local comparison, with zero crosscheck errors.
+The untouched strict checker reports the one expected `linked_data_ordered`
+change at the same sequence position; all other fields compare exactly. This
+raw failure remains recorded, and no data allowance or baseline update is used.
+
+Independent ELF comparison confirms the buffer remains one local 1024-byte BSS
+object at the same address and alignment in each profile, at ordered-data slot
+1015. Literal runtime code/data, unwind/GOT/initializer bytes and all runtime
+relocation tuples match under the single exact buffer/section name correspondence.
+All other symbol tuples retain their sequence, and 26 corruption controls reject
+changes to storage, code, relocations and ordering. Both build-ID descriptors
+change while their note layout remains. Nonallocated symbol/string metadata
+changes; Clang also changes DWARF/debug-string metadata, recorded separately.
+The other 149 objects, complete recovered archive, its 147-member order and
+compile commands remain exact. The first-Road runtime endpoint and campaign
+frontier are unchanged; no new game process or visual milestone is claimed.
+
+All eight public CTests and all 526 tooling tests pass; the full tooling run
+takes 139.034 seconds without skips. All 740 production/tooling inputs and four
+workflow files, both compiler output sets and 150 objects per compiler remain
+frozen through final validation. Metadata and freshness checks pass apart from
+the same complete 22 inherited header failures. The remaining raw link failures
+are still visible; this repair does not make overall CI green.
+
+The initial failed build/metadata attempts, revised freeze, parser regression
+proof and exact commands are retained under
+artifacts/readability/ci-bootstrap-command-line-20260913/.
+The candidate-audit and state-name-parser-audit directories retain their original
+planning states and actual follow-up proofs; build-validation, metadata-02 and
+scope-audit-02 contain the integrated checks. Public regression reproduction:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_support_class_inventory.py -v
+```
+
+### Published CI observation after the bootstrap repair
+
+The [a40417b CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34747910860)
+passes both builds, four asset-free CTests per compiler, the unit-runner policy
+checks and all 526 tooling tests (169.218 seconds). The linked-symbol jobs report
+439 GCC / 691 Clang differences with zero library crosscheck errors, matching
+the complete local measurements. Overall CI still fails the header and both
+linked-symbol ratchets; these passing build/test results do not resolve them.
+
+The separate coverage job measures 6161/6652 lines (92.62%) across the same 718
+selected functions: 584 fully covered, 134 partial and none uncovered. These are
+this run's measurements; the earlier Temple run's 92.65% is retained separately.
+Run metadata and complete job logs are retained under
+artifacts/readability/ci-road-dependency-20260913/build-validation/ci-observation/.
+
+### Road widget ownership and header dependencies
+
+Track: Win95 reconstruction, inherited CI dependency repair. The complete
+`WorldMap_EnsureBuilderWidgetTables` helper and original
+`WorldMap_ComputeBuildMenuActionFromCursor` selector now reside together in
+`src/buildings/0040A0A0_0040A0A0_buildings_001.cpp`. The Road consumers and
+callbacks already belong to buildings. Their table initialization therefore
+no longer exposes three Road callbacks through the buildings public interface
+to world. The world menu still calls the same initializer at the same point.
+
+Both names, signatures, linkage and complete bodies remain. The original
+selector retains address 0x0040A0A0, its world-origin comment and all historical
+manifest fields. The reconstruction helper gains no original identity. The
+trimmed world file now ends at 0x0040A040. The explicit inventory appends the new
+buildings TU and retains the existing order; its count increases 144 to 145.
+Current manifest, declaration, class-registry and three coverage-source paths
+follow the physical move. Historical evidence remains, with both relocations
+recorded in `docs/SOURCE_PATH_MAP.csv`.
+
+Source comparison preserves all 94 definitions in the affected files, all five
+initializer call positions and every original body hash across 4,157 identities.
+The initializer still copies 322 builder bytes and 706 Road bytes, relocates
+42 then 70 pointer fields, and sets its single guard last. Its 19 text objects,
+shared sound-string pointer, null fields, overlapping Road scan and warm-call
+behavior remain. All state definitions stay in the existing state TU.
+
+The full generated surface equals the reviewed transition. Nine of 70 compared
+headers change, preserving the exact declarations and linkage. The existing
+include-policy and visibility checks pass, and frozen limits remain unchanged.
+
+| Metric | Before | After | Frozen limit |
+| --- | ---: | ---: | ---: |
+| World public functions | 53 | 52 | 52 |
+| Buildings public functions | 161 | 159 | 158 |
+| World to buildings function dependencies | 46 | 44 | 43 |
+| Buildings to world function dependencies | 28 | 27 | 27 |
+| Shared globals | 243 | 244 | 244 |
+| Failing header metrics | 22 | 20 | 0 |
+
+There are no new failing metric keys. Shared declaration visibility increases
+11,933 to 12,038: 83 declarations in the new TU, plus one in each of 18 existing
+buildings and four world consumers. This exposure change is retained explicitly.
+The independent raw-source graph has the same inherited macro/alias limitations
+before and after; emitted preprocessed metrics remain authoritative.
+
+Historical emitted metadata at `8e5ff4f568689fe58dd812fc61e1dfefe3682b56`
+attributes both remaining Road-related excess counts to the initializer's
+required world-menu call. The current API and edge sets preserve the historical
+158 and 43 members and add only that helper. Removing the call would violate
+cold initialization. The next bounded review is the builder-menu handler in
+place; moving its whole body merely to reduce counts would add other dependency
+failures. Exact historical membership and rejected options are retained in
+`residual-road-audit` under the batch evidence directory.
+
+Four public fixture modules only change their extraction paths. Existing
+fixtures check the original table bytes, pointer identities, selector/bridge
+results, cold normalizer/highlight/modal entry, and warm mutations. They do not
+execute a direct cold bridge-predicate call or the complete world builder-menu
+handler. Unchanged caller bodies are checked separately. These fixtures provide
+no new menu-runtime or campaign proof. The reviewed Road-function count remains
+twenty, and the mission-05 frontier does not advance.
+
+Source, provenance, complete header deltas and validation commands are retained
+under artifacts/readability/ci-road-dependency-20260913/. The `provenance-plan`
+directory preserves the original candidate; `generated-surface-audit`,
+`move-proof`, `metadata`, and `build-validation` keep the separate proof scopes.
+Both native builds pass with 151 active objects and 148 archive members per
+compiler. Archive order changes only by renaming the trimmed world member and
+inserting the new buildings member at zero-based position 39. Old world objects
+remain as inactive build evidence. Of 149 common object paths, 148 Clang objects
+and 106 GCC objects remain byte-identical; the remaining hashes require the
+separate code/data comparison rather than an assumption of binary equivalence.
+Warning totals remain 6577 GCC / 6579 Clang and pass their frozen ratchets.
+
+Independent object comparison preserves all 148 unaffected objects' runtime
+contents; GCC's 42 additional hash changes affect metadata only. Both moved
+functions and their 21 local read-only objects retain code/data bytes, symbols
+and relocations. The additional TU contributes an equivalent unwind header and
+a GCC property note identical to the existing notes; the linked property note
+is unchanged. Two GCC unwind records exchange four trailing decoded no-op bytes,
+without changing their PC ranges or unwind instructions. The initial raw GCC
+object failure and the explicit structural proof are both retained.
+
+The linked comparison proves the exact 21-object block movement, with every
+other ordered data row unchanged. It checks 203 GCC / 204 Clang relocation
+fields in each before and after binary against actual symbol and PLT targets.
+All 21 local byte extents remain distinct and exact, and all 16 shared sound
+references retain their aliasing. The table and guard addresses and initial
+bytes are unchanged. All 140 unaffected canonical sources remain byte-identical,
+including the separate inventory-only state TU.
+
+Historical raw link totals remain 439 GCC / 691 Clang with zero crosscheck
+errors. Direct before/after comparison reports only read-only data order, with
+the same symbol multiset. The unchanged strict checker records
+`linked_data_ordered: changed`; all other fields compare exactly. This raw
+failure is retained without allowances or baseline changes. All four asset-free
+CTests pass under each compiler. Preprocessing preserves the 94 affected
+definitions and 17 selected declarations in both profiles.
+
+All 526 tooling tests pass in 154.156 seconds, with all 741 inputs and both
+complete native output sets unchanged. All 151 compiler commands retain their
+flags; only the reviewed source/output paths change. Complete warning logs
+cover all 145 canonical TUs. An initial private inventory check incorrectly
+assumed unique source paths for the separately compiled instrumentation
+source; the corrected output-identity check and the failed attempt are retained.
+
+The first isolated coverage build completed, but its CTest wrapper rejected the
+`artifacts/` build location before executing fixtures. The unchanged wrapper
+requires a path under `build/`. That attempt is retained; the replacement uses
+`build/coverage-road-ownership-20260913`. The replacement build, coverage CTest
+and frozen-floor measurement pass: 6161/6652 lines (92.62%), with all 718 selected
+functions present, 584 fully covered, 134 partial and none uncovered. The 89.7%
+floor and zero-uncovered requirement remain unchanged. These results validate
+the bounded source move; they do not establish new game-route or visual proof.
+
+### Published CI observation after Road widget ownership
+
+The [438272e CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34749418188)
+passes both compiler builds, four asset-free CTests per compiler, unit-runner
+policy checks and all 526 tooling tests (158.493 seconds). Overall CI still fails
+the header and both linked-symbol ratchets. The complete logs report 439 GCC /
+691 Clang link differences and zero library crosscheck errors.
+
+This run's separate coverage job measures 6163/6652 lines (92.65%) across all
+718 selected functions: 585 fully covered, 133 partial and none uncovered. The
+local ownership batch's 92.62% and preceding remote results remain separate
+measurements. Run metadata and all four complete job logs are retained under
+artifacts/readability/road-functions-20260906/batch-18-menu/build-validation/ci-observation/.
+
+### Batch 18: WorldMap_HandleBuilderActionMenu
+
+Track: Win95 reconstruction, reached Road builder-menu lifecycle. The handler
+at `0x40A0E0` now separates rejected input from the active menu, names the six
+actions and carried arguments, and uses a structured loop in place of the
+decompiler label. Its signature types and source ownership remain unchanged.
+The physical widget order is Road, Trap, Dig, Keep, Fortress, Castle; their
+action values remain 0, 2, 1, 3, 4, 5 respectively.
+
+The no-builder branch forwards `delayTicks` to the info window instead of
+reading uninitialized `v9`. Original animation, builder-query and button-sound
+callees preserve incoming ECX along this branch. The three copied text DWORDs,
+unsigned language byte, seven-element local backing and one-past-third pointer
+arguments remain. Trap dispatch replaces uninitialized `v7` with zero only in
+the native slot consumed by discarded logging arguments. This normalization
+does not claim that original ECX literally contained zero.
+
+All three construction branches now require `Building_New` to return exactly
+one, matching the original comparison. The inspected real callee returns zero
+or one; noncanonical returns used to distinguish this predicate are boundary
+tests, not evidence of a reached gameplay defect. Stack addresses use explicit
+32-bit wrapping arithmetic, and the existing packed `UnitStackRecord` provides
+the signed row and column after Keep construction. Selection and arena values
+are freshly loaded at their original callback boundaries.
+
+The menu retains friendly-selection and poll/flipping short circuits, the
+special -1 action path that skips the later flipping query, fresh action reads
+after callbacks, and the carried frame argument between iterations. Its guarded
+builder initialization, diagnostic placement, current-primary render-device
+restore, main table initialization and raw final selection-refresh return stay
+in order. No public symbol, global, table, layout or legacy identity is renamed.
+Only this canonical body hash changes; all 26 other definitions in its TU remain
+exact. The original instruction and assembly evidence is `clash95.asm:15044`
+through the handler end, including the separate six-target jump table. Both
+local PE copies agree on the 640-byte function range: 637 instruction bytes
+ending at `0x40A35D`, followed by three alignment bytes. The separate jump table
+contains 24 bytes at `0x40A0C0`.
+
+Private batch evidence is retained under
+artifacts/readability/road-functions-20260906/batch-18-menu/:
+`preparation/` contains the source/assembly contract, `original-proof/` owns
+the original-byte execution evidence, `regression/` owns the actual-source
+comparison and `build-validation/` owns compiler and repository checks.
+The private applied-source.json records the exact source and one-record metadata change.
+The first application script stopped before writing because the scanner's
+required second argument was omitted; its unchanged failed version is retained.
+The corrected script passes the complete neighboring-definition comparison.
+
+Original child-gameplay behavior, callee register outputs, x87 consumption,
+authentic mouse interaction and rendered menu parity remain separate gates.
+This batch does not advance the mission-05 first-Road endpoint or campaign
+completion count. The next runtime frontier remains normal turn refresh and
+Road continuation from `(49,50)` on turn 6.
+
+The original-byte probe executes 62 scenarios and records 743 boundary events.
+Both linked menu and jump-table sections are checked against the captured PE
+bytes before execution. All 62 scenarios match the actual recovered C++ body
+under GCC 13 and Clang 18 at O0/O2: 248 matching scenario executions. The four
+native output hashes equal the original output SHA256
+`2216468bbf0719c94e7096cdc3de8810bba70dff3f6f96f2cbcf483d239edb7c`.
+Native probes use strict warnings and undefined-behavior trapping, excluding
+packed alignment as required by the recovered layout. They execute the real
+builder and main-table initializers, check poisoned cold buffers and preserved
+warm state, and verify the original physical action order and pointer fields.
+
+A separate 16-case original-callee probe verifies preservation of entry ECX
+through the unchanged animation, builder-query and button-sound instructions.
+It covers delay bits 0, 20, `0x80000000`, `0xFFFFFFFF`, audio enabled/disabled,
+builder and no-builder paths, descriptor sounds and pump waiting. Inner recording
+stubs deliberately clobber ECX where the original saves it. This supplements the
+menu's explicit preserving-callee contract; it does not recover arbitrary action
+callees' register outputs or x87 behavior.
+
+The public regression is asset-free:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_builder_menu.py -v
+```
+
+It extracts the actual body and initialization helpers, then checks each trace
+and the aggregate output against the measured original hashes in
+`tests/tools/fixtures/builder_menu/provenance.json`. The main table's unchanged
+initializer supplies its native reference bytes, with independent callback and
+sentinel checks; this establishes initialization timing and preservation, not
+a new original whole-main-table data oracle. Compiler, CTest, metadata and
+private probe commands are retained in the corresponding evidence directories.
+
+Both supported native builds and all eight asset-free CTests pass. Each compiler
+retains 151 active objects and the same ordered 148 archive members; 150 objects
+remain byte-identical. In world002, only the reviewed function's code and its
+own jump-table relocations change. Independent ownership checks place all six
+native table targets inside that function; 27 neighboring executable sections,
+unrelated allocated contents and 26 neighboring unwind records remain exact.
+The raw whole-object comparison remains false for the intentional target change.
+Its narrowed ownership proof is separate; no generic comparison rule is relaxed.
+
+Strict before/after linked comparisons pass without allowances. Historical raw
+link rows remain exactly 439 GCC / 691 Clang with zero crosscheck errors. All
+14 nonratchet metadata checks pass; the complete 20 header-failure rows, limits
+and emitted surface remain unchanged. Incremental world002 warning totals are
+4 GCC / 5 Clang, and both warning checks pass. The changed menu is outside the
+selected 718-function coverage set; its selected neighboring callback and the
+coverage metadata remain unchanged, so this batch does not rerun or substitute
+a new coverage percentage for the existing local and remote measurements.
+
+The untouched parent matches all 42 defined canonical scenarios in all four
+compiler profiles. Its six defined noncanonical constructor-return scenarios
+retain the expected first extra minimap or sound call; they are distinct from
+the 14 excluded no-builder/Trap undefined-argument and wrapping-arithmetic
+cases. The first parent harness builds reject its existing mixed `&&`/`||`
+warning. Those attempts remain, and the corrected before-only compile policy
+downgrades that warning and the existing uninitialized warnings while retaining
+the exact parent body and sanitizer. Candidate builds retain warnings as errors.
+All 18 targeted negative controls compile strictly and are rejected by native
+checks or measured-original trace comparison. They discriminate skipped/eager
+initialization, wrong action mapping, short circuits, stale callback state,
+constructor predicates, missing cleanup and incorrect raw returns.
+
+The full tooling suite passes all 528 tests in 148.633 seconds with no skips.
+All 746 production/tooling inputs and both complete native artifact sets remain
+frozen through validation. The public fixture adds two test methods; no existing
+gate, baseline or coverage floor changes. Markdown links and whitespace checks
+pass. The first link check identified the private applied-source report as an
+unresolved public path; the corrected prose reference and failed log are retained.
+
+### Published CI observation after the builder-menu review
+
+The [ef47584 CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34750672143)
+passes both compiler builds, all eight native CTests and 528 tooling tests
+(175.822 seconds). Its separate coverage job measures 6163/6652 lines (92.65%)
+across all 718 selected functions: 585 fully covered, 133 partial, none uncovered.
+Header and linked-symbol ratchets still fail; raw link rows remain 439 GCC /
+691 Clang with zero library crosscheck errors. These remote measurements remain
+separate from the preceding local batch, which did not rerun coverage.
+
+Complete logs are retained under
+artifacts/readability/road-functions-20260906/batch-19-selection/build-validation/ci-observation/.
+The first GCC log fetch encountered an invalid local ZIP cache; the complete log
+was retrieved through the job-log API. No CI job was restarted.
+
+### Batch 19: WorldMap_SyncSelectionForHumanPlayer
+
+Track: Win95 reconstruction, selection cleanup reached from the Road builder
+menu. The function at `0x40A490` now names its entry context and arena snapshot,
+returns early for a nonhuman controller, and uses the existing packed
+`PlayerRuntimeState.controller_mode` and first `UnitSlotRecord.unit_type_id`.
+The named clearing decision replaces the combined raw-offset expression.
+Original 32-bit player and stack address arithmetic is explicit.
+
+Every nonzero controller DWORD still takes the human path; this is not a
+byte-sized flag test. Selection `-1` skips the unit-record read. Otherwise only
+the first signed unit-type WORD equal to `-1` clears the selection. Other negative
+types and later unit slots do not change this predicate. Clearing precedes the
+action-bar refresh, and synchronization runs once for each human path. The
+function retains its void return and opaque context argument.
+
+The entry arena is intentionally retained across refresh. Original ECX is
+loaded before the controller check and preserved on the refresh helper's
+guaranteed no-selection branch. That branch saves ECX around cursor work, and
+both widget-refresh wrappers save it across their indirect callbacks. A callback
+can change global arena, player and selection state without changing the arena
+argument forwarded to the final helper. The helper can still inspect those
+live globals itself. This conclusion does not cover arbitrary selected-stack
+calls to the refresh helper's different branch.
+
+Evidence: `clash95.asm:15408`–15443 for the caller, 15282–15328 for the action
+bar, 40260–40274 for the widget wrapper, and the existing packed layout/offset
+assertions. Source, captured originals and bounded proof artifacts are retained
+under artifacts/readability/road-functions-20260906/batch-19-selection/.
+The source edit changes only this function, its stale annotations and its
+canonical body hash. All 26 other definitions in world002, public signatures,
+identities, layouts and source ownership remain. No gameplay, rendering or
+campaign milestone is promoted.
+
+The unchanged original caller records 28 callback events across 22 scenarios.
+Its 102 instruction bytes end at `0x40A4F6`; the manifest range retains ten
+following alignment bytes. Both local PE copies agree, and the embedded section
+is verified before execution. The fixture keeps signed-arithmetic exclusions
+separate from the parent's defined pointer-sign-extension difference: converting
+a negative integer to an opaque native pointer is not itself signed overflow.
+
+All 22 original traces match the extracted actual C++ body under GCC 13 and
+Clang 18 at both `-O0` and `-O2`, with strict warnings and undefined-behavior
+sanitization. The untouched parent matches the 18 defined equivalent scenarios
+in all four profiles. Its separate negative-base case retains the expected
+opaque-pointer sign extension; the three wrapping-index cases are excluded from
+parent execution because its signed stride arithmetic overflows. These bounded
+address cases establish original 32-bit semantics, not a reached gameplay bug.
+
+A separate eight-case probe executes the actual original no-selection refresh
+and widget wrapper. Their 151 and 18 instruction bytes and original widget-table
+callback addresses are independently verified. Recording cursor and draw
+callbacks deliberately overwrite ECX and change global arena state. The entry
+arena and context survive every case, including both, neither or just one draw
+callback passing the signed coordinate gate. This substantiates the snapshot
+without assuming that the indirect draw callback preserves ECX.
+
+Nine compiled negative controls are rejected. They distinguish an incorrect
+live arena reload, controller/first-unit access widths, the wrong unit slot,
+late selection clearing, lost context, an eager nonhuman stack read and signed
+stride overflow. Guard pages make the specific rejected nonhuman read fail
+deterministically. The measured caller has two semantic callback boundaries;
+real child selection gameplay remains outside this fixture.
+
+Both native builds pass. Only the reviewed function's executable section and
+its instruction relocations change in world002; ordinary allocated data and
+27 neighboring code sections remain exact. All 150 other objects are
+byte-identical and the ordered 148 archive members remain. The ordinary object
+comparison passes without the preceding menu batch's jump-table exception.
+Strict linked comparisons pass without allowances. Historical raw link rows
+remain 439 GCC / 691 Clang with zero crosscheck errors; all 14 nonratchet metadata
+checks pass and the complete 20 header-failure rows remain unchanged.
+
+All eight asset-free CTests pass. Incremental world002 warning counts remain
+4 GCC / 5 Clang, and both warning gates pass. The reviewed function is outside
+the selected 718-function coverage set; the selected neighboring callback,
+coverage metadata and unit fixtures remain unchanged. No new coverage run or
+percentage is claimed for this batch. The published ef47584 measurement above
+remains separate.
+
+The private validation preparation first rejected an expected source-proof key
+that belonged to an earlier batch. The retained corrected driver consumes this
+batch's exact 26-neighbor proof; the rejection occurred before either build.
+No production repair, baseline update or gate exception was needed.
+
+The public regression is asset-free:
+
+```sh
+python3 -B tests/tools/test_human_selection.py
+```
+
+Both test methods pass, executing the actual function under all four compiler
+profiles. The fixture README and measured trace bindings are in
+`tests/tools/fixtures/human_selection/`. Its readable Python contract has the
+same syntax tree, 22 case records and packed input bytes as the retained private
+measurement contract. Provenance binds both files separately; no expected
+trace was regenerated from the candidate. The private original, regression and
+build-validation directories retain exact commands and raw results.
+
+Confidence is high within the stated caller and backed-address domains.
+Public names and structure layouts remain unchanged; no uncertain field or
+child-callee semantics are promoted by this review.
+
+The full tooling suite passes all 530 tests in 240.450 seconds. All 750
+production/tooling inputs and both complete native artifact sets remain
+unchanged through that run. The four new public fixture/test files add two
+test methods; existing checks, baselines and coverage policy remain. The
+coordinating review verifies 203 original/regression evidence bindings, and
+the Markdown link/path check passes.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

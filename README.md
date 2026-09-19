@@ -6,7 +6,7 @@ Evidence-driven recovery of the original Win95 Clash binary.
 - The 12 manifest-backed subsystem directories directly under `src/` are the
   canonical recovered GNU++20 implementation
   under SDL build, runtime, and campaign-route validation.
-- `data/recovered_sources.json` maps all 4,157 recovered functions to 140
+- `data/recovered_sources.json` maps all 4,157 recovered functions to 147
   independently compiled translation units.
 - `CLASH.DAT` is identified and structurally decoded as a CLIPS 6.00 BSAVE
   strategic-AI image. The tooling now recovers atom/expression tables, 95 rule

@@ -1,8 +1,9 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: UnitStack strength/cargo relocation after
-UnitSlot relocation. Nineteen identities have canonical methods in six
-class-named sources. The ordered manifest contains 146 translation units.
+Track: Win95 reconstruction. Frontier: origin integration after UnitSlot AP and
+UnitStack flag-query relocation. Twenty-three identities have canonical methods
+in six class-named sources. The ordered manifest contains 147 translation units,
+including the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 
@@ -35,7 +36,7 @@ See
 `data/game_class_registry.json` assigns all 4,157 recovered identities:
 1,849 intended game methods across 116 classes, 22 retained utilities/boundaries
 and 2,286 excluded library implementations. Each procedural disposition has a
-rationale. Five declaration-database helpers are tracked separately without
+rationale. Six declaration-database helpers are tracked separately without
 invented addresses. The five rendering helpers historically filed under `clips`
 are game functions; CLIPS implementations filed under `media` remain procedural.
 Assignment is architectural intent, not proof that a family has migrated.

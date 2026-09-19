@@ -5,7 +5,7 @@ This document defines the source-organization rules for the recovered Win95 impl
 ## Invariants
 
 - `data/recovered_sources.json` is the exhaustive recovered-function manifest.
-- The 140 C++ files in 12 recovered subsystem directories directly under `src/`
+- The 147 C++ files in 12 recovered subsystem directories directly under `src/`
   are canonical, independently
   compiled GNU++20 translation units.
 - Function order within each family follows original binary address order, even
@@ -17,7 +17,7 @@ This document defines the source-organization rules for the recovered Win95 impl
 
 Function-family files encode the first and last original address, subsystem,
 and family sequence, for example
-`src/world/00408030_0040A0A0_world_001.cpp`.
+`src/world/00408030_0040A040_world_001.cpp`.
 
 Address comments and historical provenance remain in each file. The removed
 unified/fragments/symlink paths are preserved in `docs/SOURCE_PATH_MAP.csv`.

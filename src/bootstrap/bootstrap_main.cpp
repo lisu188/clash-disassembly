@@ -171,7 +171,7 @@ int j___NTAddFileHandle_(void)
   return 0;
 }
 
-static char g_boot_command_line[1024];
+static char g_boot_command_line[1024] __asm__("g_boot_command_line");
 static int g_boot_trace_menu_probe_enabled;
 
 static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode);

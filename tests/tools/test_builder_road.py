@@ -22,7 +22,7 @@ import unittest
 
 REPO = Path(__file__).resolve().parents[2]
 FIXTURES = Path(__file__).resolve().parent / "fixtures/builder_road"
-WORLD1 = REPO / "src/world/00408030_0040A0A0_world_001.cpp"
+BUILDER_WIDGETS = REPO / "src/buildings/0040A0A0_0040A0A0_buildings_001.cpp"
 WORLD2 = REPO / "src/world/0040A0E0_0040B020_world_002.cpp"
 BUILDINGS = REPO / "src/buildings/00422B50_004254E0_buildings_005.cpp"
 SELECTOR = "WorldMap_ComputeBuildMenuActionFromCursor"
@@ -104,10 +104,10 @@ def harness_source():
             assert int(entry["original_pointer"], 16) == 0
             checks.append(f'check_pointer({field}, 0, "{label}");')
     bodies = "\n\n".join(extract(path, name) for path, name in (
-        (WORLD1, SELECTOR),
+        (BUILDER_WIDGETS, SELECTOR),
         (WORLD2, "WorldMap_WriteActionWidgetRecord"),
         (WORLD2, "WorldMap_EnsureActionButtonWidgetTable"),
-        (WORLD2, "WorldMap_EnsureBuilderWidgetTables"),
+        (BUILDER_WIDGETS, "WorldMap_EnsureBuilderWidgetTables"),
         (BUILDINGS, "MapTile_HasAlignedBridgeApproachRoadOverlay"),
     ))
     source = HARNESS.replace("@BOUNDARIES@", boundaries).replace("@BODIES@", bodies)
