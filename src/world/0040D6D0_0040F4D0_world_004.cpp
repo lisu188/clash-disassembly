@@ -11,6 +11,7 @@
 #include "../runtime/runtime_api.h"
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitSlot.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0040D6D0) --------------------------------------------------------
@@ -1159,26 +1160,33 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F440) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
 {
+  return clash95::UnitSlot((intptr_t)result).UnitSlot_InitFromType(unitType, ownerIndex);
+}
+
+int clash95::UnitSlot::UnitSlot_InitFromType(unit_type unitType, char ownerIndex) const
+{
+  int result = (int)address_;
   char moraleValue; // dl
   char stanceBits; // bh
   char auxFlagsByte; // cl
   char stateBitsByte; // dl
   char flagsByte; // ch
 
-  *(_WORD *)(uintptr_t)(result + 4) = 0;
-  *(_WORD *)(uintptr_t)(result + 6) = 0;
+  *(clash95_unaligned_int16 *)(uintptr_t)(result + 4) = 0;
+  *(clash95_unaligned_int16 *)(uintptr_t)(result + 6) = 0;
   *(_BYTE *)(uintptr_t)(result + 3) = 0;
-  *(_DWORD *)(uintptr_t)(result + 23) = 0;
-  UNIT_SLOT_TYPE(result) = unitType;
+  *(clash95_unaligned_uint32 *)(uintptr_t)(result + 23) = 0;
+  *(clash95_unaligned_int16 *)(uintptr_t)result = unitType;
   UNIT_SLOT_OWNER(result) = ownerIndex;
   if ( unitType != -1 )
-    UNIT_SLOT_ACTION_POINTS(result) = g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unitType];
+    UNIT_SLOT_ACTION_POINTS(result) = UnitSlot_BorrowTypeMetadata()[unitType].base_action_points;
   UNIT_SLOT_HEALTH_PERCENT(result) = 100;
   if ( unitType != -1 )
   {
-    if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * unitType] & 2) != 0 )
+    if ( (UnitSlot_BorrowTypeMetadata()[unitType].flags & 2) != 0 )
       moraleValue = 6;
     else
       moraleValue = 10;
@@ -1186,7 +1194,7 @@ int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
   }
   UNIT_SLOT_FATIGUE(result) = 0;
   stanceBits = UNIT_SLOT_STANCE_BITS(result);
-  UNIT_SLOT_AUX_STATE(result) = 0;
+  *(clash95_unaligned_uint32 *)(uintptr_t)(result + 18) = 0;
   auxFlagsByte = *(_BYTE *)(uintptr_t)(result + 17);
   UNIT_SLOT_STANCE_BITS(result) = stanceBits & 0x80;
   stateBitsByte = UNIT_SLOT_STATE_BITS(result);

@@ -94287,7 +94287,7 @@
       "original_line": 5206,
       "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
       "linkage": "external",
-      "body_sha256": "3dd05556f8bdc4fffbc54c94691e1ad3b280042dabd967ac2ecff751a823bf84",
+      "body_sha256": "09346d53e35f63f848447b6d7edfeaebd695e0d15aee9bf321e89f74511a3fd2",
       "original_address_range": {
         "start": "0x0040F440",
         "end_exclusive": "0x0040F4D0"
@@ -94297,12 +94297,17 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "6b5292c2a1e195c57bd7de317051d1f12bc06667920fa2f36b87e5a6ffc4beef",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitSlot_InitFromType"
+        "kind": "method",
+        "qualified_name": "clash95::UnitSlot::UnitSlot_InitFromType",
+        "header": "src/units/UnitSlot.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitSlot_InitFromType is assigned to the UnitSlot behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitSlot"
+      "class_owner": "clash95::UnitSlot",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "2c36e33a68789cb55c75c76b90a48e9a02791bdd0d4219c2efb18682fa40897c"
+      }
     },
     {
       "name": "UnitStack_ResetRecord",

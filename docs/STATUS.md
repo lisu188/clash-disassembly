@@ -2,6 +2,18 @@
 
 Last consolidated: 2026-09-19.
 
+## UnitSlot Explicit Initializer Extraction
+
+The initializer now has a canonical UnitSlot method in its original world TU
+and a retained original-signature adapter. Construction only binds the record;
+initialization remains explicit. All 2,863,104 differential scenarios per
+compiler/optimization profile pass, as do both production builds, strict
+symbol/storage/initialization comparisons and eight asset-free gates. There are
+24 canonical methods, with this new method awaiting separate relocation.
+All 4,157 identities and 147 TUs remain; the initializer's coverage denominator
+changes explicitly by one line. See
+[UNIT_SLOT_INITIALIZER_CLASS.md](UNIT_SLOT_INITIALIZER_CLASS.md).
+
 ## September Main Integration And Class Validation
 
 Track: Win95 reconstruction, behavior-class migration. Published main `02c00bf`

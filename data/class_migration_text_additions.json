@@ -269,6 +269,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
         }
       ],
       "archive_text": [
@@ -450,16 +457,16 @@
         {
           "name": "_ZN7clash958UnitSlotC1El",
           "class": "W",
-          "count": 3,
+          "count": 4,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling. The explicit initializer adapter in world004 adds one existing constructor COMDAT at O0; the linked count stays one."
         },
         {
           "name": "_ZN7clash958UnitSlotC2El",
           "class": "W",
-          "count": 3,
+          "count": 4,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling. The explicit initializer adapter in world004 adds one existing constructor COMDAT at O0; the linked count stays one."
         },
         {
           "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
@@ -537,6 +544,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
         }
       ]
     },
@@ -765,6 +779,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
         }
       ],
       "archive_text": [
@@ -911,9 +932,9 @@
         {
           "name": "_ZN7clash958UnitSlotC2El",
           "class": "W",
-          "count": 3,
+          "count": 4,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling. The explicit initializer adapter in world004 adds one existing constructor COMDAT at O0; the linked count stays one."
         },
         {
           "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
@@ -991,6 +1012,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
         }
       ]
     }

@@ -12,6 +12,7 @@ class CLASH95_INTERNAL UnitSlot final {
   int UnitSlot_CycleOrderState() const;
   int UnitSlot_CalcActionPointsFromFatigue() const;
   int UnitSlot_GetBaseActionPoints() const;
+  int UnitSlot_InitFromType(unit_type unitType, char ownerIndex) const;
  private:
   intptr_t address_;
 };
