@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "reference_commit": "33a5959820dfcb70902183d9c094221c547b05fc",
+  "functions": [
+    {
+      "name": "UnitStack_GetMaxOrderTier",
+      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "original_address": "0x004100B0",
+      "body_sha256": "3aafb73894bead8ed4c433a626df0d1678a7299986bd718bde28524897aaf4b4",
+      "fixture": "UnitStack_GetMaxOrderTier.cpp",
+      "file_sha256": "842fcacb0b20ee66ebf4c686e2428b0a3bae35a4668dca27c61dd0b19ffe22dd"
+    },
+    {
+      "name": "UnitStack_HasNormalCombatUnits",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x00412100",
+      "body_sha256": "563564e98d5d707792779615c157d85f85508d69acc4974e4f1a4e7b8acf90dc",
+      "fixture": "UnitStack_HasNormalCombatUnits.cpp",
+      "file_sha256": "b7833a52039fff08b7935a3d9f1800d2a91a0c26a6b1715fd86dc082bf928453"
+    },
+    {
+      "name": "UnitStack_HasSpecialPersonageUnits",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x00412B60",
+      "body_sha256": "843e6362ede08465ea3b1ce3c7815a632c52c06ef2798a6dc3e1b8ac727d641a",
+      "fixture": "UnitStack_HasSpecialPersonageUnits.cpp",
+      "file_sha256": "d1acbec17a5fa2dc5af82e8d43f7fc9f167bb617a4cd1f97de2ab072447e86b4"
+    }
+  ],
+  "procedural_dependency": {
+    "name": "Unit_GetSquadCount",
+    "source": "src/compatibility/decomp_runtime_stubs.cpp",
+    "original_address": "0x00422B80",
+    "fixture": "Unit_GetSquadCount.cpp",
+    "body_sha256": "ea6e1604be600cf2565387d249a45f29e22c69367b768629dcb97a2fbd86b804",
+    "file_sha256": "8761181e9c49f61c7e60686369bf64d9156b807fbcf9226e643e7907e74f9b21",
+    "unchanged_contract_debt": "Actual procedural helper retains its existing unaligned short load; alignment instrumentation is disabled only for this unchanged body and frozen references. All canonical methods remain fully instrumented."
+  }
+}

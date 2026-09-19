@@ -137,6 +137,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
         }
       ],
       "archive_text": [
@@ -272,6 +293,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
         }
       ]
     },
@@ -395,6 +437,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
         }
       ],
       "archive_text": [
@@ -516,6 +579,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
         }
       ]
     }

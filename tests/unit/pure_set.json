@@ -796,8 +796,9 @@
    "original_line": 2842,
    "source": "src/units/004115E0_00412BE0_units_002.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitStack_HasSpecialPersonageUnits"
+    "kind": "method",
+    "qualified_name": "clash95::UnitStack::UnitStack_HasSpecialPersonageUnits",
+    "header": "src/units/UnitStack.hpp"
    }
   },
   {

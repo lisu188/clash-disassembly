@@ -504,8 +504,16 @@ int  UnitSlots_AppendEntriesForBuildingAttack(char *destSlots, char *srcSlots)
 }
 
 //----- (00412100) --------------------------------------------------------
-signed int  UnitStack_HasNormalCombatUnits(intptr_t stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasNormalCombatUnits(intptr_t stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_HasNormalCombatUnits();
+}
+
+signed int clash95::UnitStack::UnitStack_HasNormalCombatUnits() const
+{
+  intptr_t stackPtr = address_;
+  typedef __int16 StackTypeWord __attribute__((aligned(1), may_alias));
   signed int result; // eax
   intptr_t slot_record; // edx
   signed int squad_count; // esi
@@ -513,7 +521,7 @@ signed int  UnitStack_HasNormalCombatUnits(intptr_t stackPtr)
   signed int slot_index; // ecx
   int unit_type; // eax
 
-  if ( *(__int16 *)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
+  if ( *(StackTypeWord *)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
     return 0;
   result = Unit_GetSquadCount(stackPtr);
   squad_count = result;
@@ -526,7 +534,7 @@ signed int  UnitStack_HasNormalCombatUnits(intptr_t stackPtr)
     {
       while ( !has_normal_unit )
       {
-        unit_type = *(__int16 *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET);
+        unit_type = *(StackTypeWord *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET);
         if ( unit_type == UNIT_TYPE_GOLD_CARGO
           || unit_type == UNIT_TYPE_PEASANT_CARGO
           || unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
@@ -1140,8 +1148,15 @@ int  UnitStackSelection_BuildSelectedSlotIndexList(int result, int slotCount, in
 }
 
 //----- (00412B60) --------------------------------------------------------
-signed int  UnitStack_HasSpecialPersonageUnits(intptr_t stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasSpecialPersonageUnits(intptr_t stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_HasSpecialPersonageUnits();
+}
+
+signed int clash95::UnitStack::UnitStack_HasSpecialPersonageUnits() const
+{
+  intptr_t stackPtr = address_;
   UnitStackRecord *stack;
   int slotIndex;
 

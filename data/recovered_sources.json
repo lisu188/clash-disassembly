@@ -87800,7 +87800,7 @@
       "original_line": 511,
       "source": "src/units/0040F510_00411560_units_001.cpp",
       "linkage": "external",
-      "body_sha256": "3aafb73894bead8ed4c433a626df0d1678a7299986bd718bde28524897aaf4b4",
+      "body_sha256": "03d053ef54802b5ee9e231527fbd62f31804a29f607b8f9ed765f44ff76bf8db",
       "original_address_range": {
         "start": "0x004100B0",
         "end_exclusive": "0x00410100"
@@ -87810,12 +87810,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "205d76f9c39c9a3e4e410dd6257d04877adf5dcffbbca56a5d2a576645663eef",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_GetMaxOrderTier"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_GetMaxOrderTier",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_GetMaxOrderTier is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "93cfc6823039e2267933bde6e46026b750f656a8459a999b82afecd9137a17cf"
+      }
     },
     {
       "name": "UnitStack_HasPlagueFlag",
@@ -88761,7 +88766,7 @@
       "original_line": 2099,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "563564e98d5d707792779615c157d85f85508d69acc4974e4f1a4e7b8acf90dc",
+      "body_sha256": "df2756d6420f8c8a0d46fc976806b072f3e27a56b767ce949358c5e9e7d84d1e",
       "original_address_range": {
         "start": "0x00412100",
         "end_exclusive": "0x00412170"
@@ -88771,12 +88776,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "6f775eeb572294aa1f9fadc079ce0143f39a80c9164f986c0e04a6d17fb5ef65",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_HasNormalCombatUnits"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_HasNormalCombatUnits",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_HasNormalCombatUnits is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "9c87d2e955a32f2933bbda9b24aa7aa76c84633b6bcb82f0259bf9e6465d812f"
+      }
     },
     {
       "name": "UnitStack_HasGoldCargo",
@@ -89237,7 +89247,7 @@
       "original_line": 2842,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "843e6362ede08465ea3b1ce3c7815a632c52c06ef2798a6dc3e1b8ac727d641a",
+      "body_sha256": "39a6d33b0883cde1d5f152056e414c9995d6fcd132ca0fac15cc57a0f77ed6b6",
       "original_address_range": {
         "start": "0x00412B60",
         "end_exclusive": "0x00412B90"
@@ -89247,12 +89257,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "6c6fd68220b703fbf2756a5e9003423b27d97b889b130be15d30d86d813cf156",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_HasSpecialPersonageUnits"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_HasSpecialPersonageUnits",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_HasSpecialPersonageUnits is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "51a08b4d9879a28bccc2208bc4f63e742c64fe8ea8b0adaf315b6e50b550de8a"
+      }
     },
     {
       "name": "UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck",

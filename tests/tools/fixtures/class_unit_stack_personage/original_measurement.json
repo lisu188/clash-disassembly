@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "measurement_date": "2026-09-19",
+  "original_executable_sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae",
+  "measurement": "Unchanged original instructions at original addresses in a freestanding 32-bit Linux process, including actual internal calls to HasSpecialPersonageUnits and Unit_GetSquadCount.",
+  "functions": [
+    {
+      "name": "UnitStack_GetMaxOrderTier",
+      "address": "0x4100b0",
+      "end_exclusive": "0x4100f8",
+      "bytes": 72,
+      "sha256": "fec2b6f418748ec8b696f80ce23b1c41b542689d96f06eb2dbfadf4d0e19df50"
+    },
+    {
+      "name": "UnitStack_HasNormalCombatUnits",
+      "address": "0x412100",
+      "end_exclusive": "0x412168",
+      "bytes": 104,
+      "sha256": "289d4cf9e2700673b2b2ea0bcef67c230252741c8b5012e8b83d9d2f41983f75"
+    },
+    {
+      "name": "UnitStack_HasSpecialPersonageUnits",
+      "address": "0x412b60",
+      "end_exclusive": "0x412b8f",
+      "bytes": 47,
+      "sha256": "c36517c9e5624677de8b1aa6042ed09ece13ba7a69d400757aac22ce8b95cfdc"
+    },
+    {
+      "name": "Unit_GetSquadCount",
+      "address": "0x422b80",
+      "end_exclusive": "0x422b9b",
+      "bytes": 27,
+      "sha256": "cdc5d1347c3b91a8a1cfa580d29cdcd70a4278dff15f0a2ab27ead01833527f8"
+    }
+  ],
+  "measured_streams": {
+    "case_count": 87184,
+    "input_bytes": 70444672,
+    "input_sha256": "e0e36797cd171ddb04a1eee71fe044c01308fe4dba02819580c411ea145541c8",
+    "output_bytes": 70793408,
+    "output_sha256": "27fbceb574174691525f81fb61ab4121064418190a0ff057ae6efb664b2d51a8"
+  },
+  "input_encoding": "Two little-endian uint32 words (zero, stack address), then 800 bytes beginning 32 bytes before the stack.",
+  "output_encoding": "Three original EAX uint32 returns in max-tier, normal-combat, special-personage order, then all 800 live bytes.",
+  "update_rule": "Stream hashes may change only after fresh original instruction measurement.",
+  "limits": [
+    "Isolated instruction execution; no game startup, visual or campaign claim.",
+    "Public fixture includes hashes and a generated corpus; original executable bytes remain private artifacts."
+  ]
+}

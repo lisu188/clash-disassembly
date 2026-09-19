@@ -13,6 +13,9 @@ class CLASH95_INTERNAL UnitStack final {
   signed int UnitStack_NormalizePeasantCargo(DWORD a2, double a3) const;
   signed int UnitStack_HasPlague() const;
   signed int UnitStack_HasLowMoraleUnit() const;
+  signed int UnitStack_GetMaxOrderTier() const;
+  signed int UnitStack_HasNormalCombatUnits() const;
+  signed int UnitStack_HasSpecialPersonageUnits() const;
  private:
   intptr_t address_;
 };

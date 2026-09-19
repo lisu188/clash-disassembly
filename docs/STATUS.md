@@ -2,6 +2,17 @@
 
 Last consolidated: 2026-09-19.
 
+## UnitStack Personage Query Extraction
+
+Three personage/order queries now have canonical UnitStack methods in their
+original TUs and retained adapters. The max-order query calls its migrated peer
+directly. Eight actual-source compiler profiles, both production builds, strict
+surface comparisons and eight asset-free gates pass. There are 27 canonical
+methods, with 24 already in six class-named files; unchanged-body relocation of
+the three new methods follows separately. All 4,157 identities and 147 TUs remain.
+The special-personage query adds one executable line to the unchanged coverage
+inventory. See [UNIT_STACK_PERSONAGE_CLASSES.md](UNIT_STACK_PERSONAGE_CLASSES.md).
+
 ## UnitSlot Explicit Initializer Extraction And Relocation
 
 The initializer now has a canonical UnitSlot method in its original world TU

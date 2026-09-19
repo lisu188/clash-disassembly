@@ -430,19 +430,27 @@ signed int  UnitStack_GetMinCurrentActionPoints(intptr_t stackPtr)
 }
 
 //----- (004100B0) --------------------------------------------------------
-signed int  UnitStack_GetMaxOrderTier(intptr_t stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_GetMaxOrderTier(intptr_t stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_GetMaxOrderTier();
+}
+
+signed int clash95::UnitStack::UnitStack_GetMaxOrderTier() const
+{
+  intptr_t stackPtr = address_;
+  typedef __int16 StackTypeWord __attribute__((aligned(1), may_alias));
   intptr_t slot_record; // eax
   int max_order_tier; // ebx
   int i; // edx
 
-  if ( UnitStack_HasSpecialPersonageUnits(stackPtr) )
+  if ( this->UnitStack_HasSpecialPersonageUnits() )
     return 3;
   slot_record = stackPtr;
   max_order_tier = 0;
   for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
   {
-    if ( *(__int16 *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
+    if ( *(StackTypeWord *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
       break;
     if ( (*(_BYTE *)(slot_record + 18) & 3) > max_order_tier )
       max_order_tier = *(_BYTE *)(slot_record + 18) & 3;
