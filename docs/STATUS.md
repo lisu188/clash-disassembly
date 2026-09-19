@@ -2,6 +2,16 @@
 
 Last consolidated: 2026-09-19.
 
+## Spent-Turn Address Repair Before Class Extraction
+
+The two spent-turn setters now preserve unsigned low32 entry and return addresses
+without native sign extension or signed overflow. This is a separate behavioral
+repair; both functions remain procedural. All 72,688 original-measured cases pass
+in eight compiler profiles, as do both production builds, strict comparisons and
+eight asset-free gates. The initial GCC source-audit timeout and unchanged passing
+retry remain recorded. Identity, storage and coverage inventories are unchanged.
+See [UNIT_STACK_SPENT_TURN_REPAIR.md](UNIT_STACK_SPENT_TURN_REPAIR.md).
+
 ## UnitStack Personage Query Extraction And Relocation
 
 Three personage/order queries now have canonical UnitStack methods in their

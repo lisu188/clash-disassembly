@@ -1008,7 +1008,7 @@ __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
   UnitSlotRecord *slot;
   int slotIndex;
 
-  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)stackPtr;
   slot = &stack->unit_slots[0];
   for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
@@ -1017,7 +1017,7 @@ __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
     slot->state_flags |= UNIT_SLOT_FLAG_SPENT_TURN;
     ++slot;
   }
-  return (__int16 *)(uintptr_t)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
+  return (__int16 *)(uintptr_t)((uint32_t)stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
 }
 
 //----- (00412A60) --------------------------------------------------------
@@ -1027,7 +1027,7 @@ __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
   UnitSlotRecord *slot;
   int slotIndex;
 
-  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)stackPtr;
   slot = &stack->unit_slots[0];
   for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
@@ -1036,7 +1036,7 @@ __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
     slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_SPENT_TURN;
     ++slot;
   }
-  return (__int16 *)(uintptr_t)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
+  return (__int16 *)(uintptr_t)((uint32_t)stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
 }
 
 //----- (00412A90) --------------------------------------------------------
