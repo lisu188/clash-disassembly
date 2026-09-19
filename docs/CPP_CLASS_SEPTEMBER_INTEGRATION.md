@@ -47,9 +47,9 @@ and logs are retained under `main-02c-integration/metadata/`.
 Main also adds two native AP tests that attempted to write an immutable metadata
 table. The coordinated test-only correction reads its existing base AP and
 checks the fatigue thresholds against that value. The table and production
-behavior remain unchanged. This correction occurred after the tooling retry;
-the native executable and both new cases still require validation on the
-committed integrated source.
+behavior remain unchanged. This correction occurred after the tooling retry.
+Both native executables now compile from the exact committed source and both
+new cases pass in default and strict modes on each compiler.
 
 Main's temporary CI diagnostic commit used update mode for the header and link
 ratchets. This integration restores check mode against the unchanged tracked
@@ -88,17 +88,93 @@ the retained original. Its actual endpoint frame is retained with unmasked
 metrics; the original frame used for that comparison is historical, not a new
 September 19 original capture. No visual-equivalence claim follows.
 
-The current GCC default smoke records 11 passes, two failures and eight skips.
+Both current compiler default smoke runs record 11 passes, two failures and eight skips.
 The playability and attack probes both wait for selection of stack 1 at
 `(31,44)`, while the accepted input selects stack 0 at `(30,44)`. Historical
-reports retain the same failing expectation, but an identical-input run of the
-exact main reference is still needed before attributing this outcome. An earlier
+reports retain the same failing expectation. A fresh identical-input run of the
+exact `02c00bf` GCC reference now reproduces all 21 outcomes and the same accepted
+click/selection marker sequence as both class builds. This bounds the result as
+preserved behavior; the expected-selection contract remains unresolved. An earlier
 artifact-driver path error is retained separately and is not a game result.
 See `artifacts/cpp-classes/20260919/integrated-runtime/` for frozen inputs, exact
 commands, raw archives, screenshots and the failure audit.
 
-Clang runtime, the six completed routes for both compilers and current native
-coverage remain outstanding at this checkpoint. Work is paused at the coordinated
-Ubuntu restart boundary; the prepared native runner requires an exact committed
-revision and a 5 GiB host-disk reserve. Neither this integration nor any first-Road
-endpoint establishes full migration, whole-game equivalence or campaign completion.
+Clang also passes the complete first-Road replay and the same bounded byte
+comparisons. The full GCC/Clang save payloads still differ: 458 bytes before Road
+and 464 afterward. Those complete differences are retained separately; matching
+the named endpoint fields does not establish whole-save equality.
+
+The coordinated Ubuntu restart completed with a writable root filesystem.
+Current native/coverage validation runs from an independent exact archive and
+Git index of `33a5959820dfcb70902183d9c094221c547b05fc`, with a 5 GiB host-disk
+reserve. The first private-index freeze failed because normal Git staging would
+normalize historical CRLF blobs; that pre-build failure is retained. The retry
+stores raw blobs and proves exact source-tree/index-tree equality before building.
+The six completed routes for both compilers remain outstanding. Neither this
+integration nor any first-Road endpoint establishes full migration, whole-game
+equivalence or campaign completion.
+
+The native registration inventory contains all 1,614 prior cases plus the two
+AP cases, with no removals. Per-case outcomes are retained separately for each
+compiler and mode:
+
+| Compiler / mode | Passed | Assertions | Isolated crashes | Wrapper exit |
+| --- | ---: | ---: | ---: | ---: |
+| GCC 13 default | 1,092 | 0 | 524 | 0 |
+| GCC 13 strict | 1,092 | 0 | 524 | 1 |
+| Clang 18 default | 1,092 | 1 | 523 | 1 |
+| Clang 18 strict | 1,092 | 1 | 523 | 1 |
+
+GCC's 1,614 historical case outcomes and Clang's strict outcomes are unchanged
+from the sealed `be837d1` baseline. Four Clang default cases change from crash
+to pass; these are the same four identities that differed between the older
+default and strict runs. They are retained as observed variation, not credited
+as repaired behavior. Clang's assertion remains
+`cov5_01_getallowedattrtoken.allowed_symbols`.
+Clang's strict run also retains 223 parent-path profiler write errors, compared
+with 220 in the prior strict baseline; the current default run has none. Default
+and strict worker shards are archived separately, and coverage reads default
+only. These I/O diagnostics are not asserted to diagnose a filesystem fault.
+
+GCC coverage passes: 6,165 / 6,656 executable lines (92.6231971154%), all 718
+functions covered and zero uncovered. Both covered and executable counts grow
+by four relative to `be837d1`; the inventory and 89.7% floor are unchanged.
+The initial reader could not create filenames exceeding the filesystem limit.
+The retry uses archived, hash-verified notes and default shards without a
+rebuild or another native execution. Only reader output-filename options change;
+the Source headers still resolve to the actual canonical definitions. Clang's
+compatible-reader retry measures 6,812 / 7,345 lines (92.7433628319%), with the
+same 718 identities and eight uncovered CLIPS functions as its earlier baseline.
+Its zero-uncovered gate therefore still fails. Executable lines grow by four
+and covered lines by thirteen; nine of the latter are in `CRT_ToUpperInPlace`,
+`CRT_TzYearStartsInDaylightTime` and `Rules_FirstFunction`, with unchanged
+executable denominators. The four +1 executable/covered changes on both compilers
+are `UnitSlot_CycleOrderState`, `UnitSlot_GetBaseActionPoints`,
+`UnitSlot_HasSevereFatigue` and `UnitStack_CalcMilitaryStrength`.
+
+GCC's filename adapter retains original arguments and adds `-x -s SOURCE_ROOT`.
+LLVM's adapter retains all measurement inputs/options, adds `-x`, and omits only
+the `-p`/`-l` output-filename formatting flags. The failed longer-name variants
+remain recorded. Independent controls reproduce each entire sealed `be837d1`
+coverage JSON exactly with these adapters. All 954 source hashes remain unchanged;
+each successful current measurement records 192 reader calls and 2,176 emitted
+Source headers. There are no zero-executable canonical methods. All failed
+reader attempts and the first source-index freeze failure remain retained under
+`artifacts/cpp-classes/20260919/runtime-native-preparation/`.
+
+The supplementary six-route replay is still in progress. Its first mission-13
+GCC attempt stopped on a dark checkpoint-frame metric at turn 2. An exact-main
+control and unchanged current retry are being retained to classify the capture
+and state evidence. This attempt is not promoted to a route pass or attributed
+to a class regression without the controlled comparison.
+
+A read-only preflight of the next AP-spending family found additional inherited
+boundary debt. On `INT_MIN` amounts, Clang diagnoses signed subtraction overflow
+in both the clamped and floor-zero routines; GCC reaches an existing unaligned
+sentinel load instead. Both compilers diagnose the unchecked routine's signed
+slot-address overflow on a valid mapped record straddling `INT_MAX`. All twelve
+individual build/run outcomes and exact canonical-body hashes are retained in
+`artifacts/cpp-classes/20260919/ap-spending-boundary-audit/`. These three functions
+remain unchanged. Their distinct AP algorithms require separate original-backed
+arithmetic repairs before extraction; the migration does not narrow their public
+input domains to hide the findings.

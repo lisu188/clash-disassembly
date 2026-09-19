@@ -13,12 +13,17 @@ tests and eleven metadata checks pass. The unchanged header and raw link
 ratchets retain their enumerated failures. CI again checks the frozen baselines
 and writes diagnostic metrics separately.
 
-The integrated GCC first-Road replay passes the complete bounded endpoint byte
-comparison. Default smoke records 11 passes, two historical-selection-marker
-failures and eight skips; exact-main attribution, Clang runtime, the completed
-route matrix and current native/coverage validation remain outstanding. The
-two incoming native AP tests receive a test-only immutable-table correction;
-their executable validation is pending. See
+Both integrated first-Road replays pass the complete bounded endpoint byte
+comparison. Both default smoke runs record 11 passes, two selection-marker
+failures and eight skips; the exact-main baseline reproduces all outcomes and
+the same accepted-click trace. The expected-selection contract and completed
+route matrix remain outstanding. Both native builds and the two corrected AP
+tests pass; individual historical crash/assertion outcomes remain reported.
+GCC coverage passes at 92.62%, with all 718 functions covered. Clang measures
+92.74% but retains the same eight uncovered CLIPS functions, so its gate fails.
+Both executable denominators grow by four; the inventory and floor are unchanged.
+The first supplementary mission-13 replay stopped on a dark checkpoint frame;
+controlled baseline/retry evidence is pending. See
 [CPP_CLASS_SEPTEMBER_INTEGRATION.md](CPP_CLASS_SEPTEMBER_INTEGRATION.md).
 
 ## UnitStack Plague And Morale Query Extraction And Relocation
