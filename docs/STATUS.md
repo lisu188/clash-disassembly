@@ -2,6 +2,16 @@
 
 Last consolidated: 2026-09-19.
 
+## Plague Setter Address Repair Before Class Extraction
+
+The plague setter now zero-extends incoming low32 handles and returns the
+original cursor without the reconstruction's extra six-byte offset. All 36,344
+fresh original-measured cases pass eight compiler profiles; both production
+builds, strict comparisons and all eight asset-free gates pass. This separate
+behavioral repair leaves the function procedural and preserves all identity,
+storage and coverage inventories. Earlier failing probes remain recorded.
+See [UNIT_STACK_PLAGUE_REPAIR.md](UNIT_STACK_PLAGUE_REPAIR.md).
+
 ## AP-Spending Arithmetic Repair Before Class Extraction
 
 The clamped, floor-zero and unchecked routines preserve their distinct algorithms

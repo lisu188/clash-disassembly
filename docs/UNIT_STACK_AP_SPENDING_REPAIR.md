@@ -56,7 +56,9 @@ python3 artifacts/cpp-classes/20260919/validate-incremental.py ap-spending-repai
 
 Logs are in the indicated integration directory. Sealed preparation is under
 `artifacts/cpp-classes/20260919/ap-spending-repair/`. Its original evidence seal is
-unchanged; the `compaction-20260919/receipt.json` maps 813 verified members to six
+unchanged; the receipt at
+`artifacts/cpp-classes/20260919/ap-spending-repair/compaction-20260919/receipt.json`
+maps 813 verified members to six
 lossless archives after removal of duplicate loose copies. Original measured
 corpora, provenance, patches and public fixtures remain directly available.
 Public fixtures contain no retail executable bytes. Class extraction follows

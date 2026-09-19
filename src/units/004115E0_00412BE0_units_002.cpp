@@ -1046,7 +1046,7 @@ int  UnitStack_SetPlagueFlag(int result)
   UnitSlotRecord *slot;
   int slotIndex;
 
-  stack = (UnitStackRecord *)(uintptr_t)result;
+  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)result;
   slot = &stack->unit_slots[0];
   for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
@@ -1055,7 +1055,7 @@ int  UnitStack_SetPlagueFlag(int result)
     slot->state_flags |= UNIT_SLOT_FLAG_PLAGUE;
     ++slot;
   }
-  return (int)(intptr_t)slot;
+  return (int)((uint32_t)(uintptr_t)slot - UNIT_STACK_SLOT_BASE_OFFSET);
 }
 
 //----- (00412AC0) --------------------------------------------------------

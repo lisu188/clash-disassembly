@@ -1,0 +1,31 @@
+{
+  "reference_commit": "dbab1d0b4caae7e88ceed0834e3a0b033337a6fe",
+  "original_executable_sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae",
+  "function": {
+    "name": "UnitStack_SetPlagueFlag",
+    "address": "0x412a90",
+    "end_exclusive": "0x412ab4",
+    "bytes": 36,
+    "sha256": "ff7dff787e75bbb04e651326c87eee35e1888f2ac6103d4e0f8fc1ef9023a6fb"
+  },
+  "original_runner_sha256": "6d5c8a81380f01f5ddc05088794eeb07100fb87a84aa957a27e1cf55c82218f4",
+  "previous_corpus_cases": 8448,
+  "previous_replay_identical": true,
+  "case_count": 36344,
+  "input_sha256": "1bf7e0c6db2bf604321471d05092f8c83e842f9039733b42e6091830bcbe517e",
+  "output_sha256": "425e66cc4b7de614f04ad05ffb437c9faad49c753765809a90e219dc53d04ca0",
+  "return_contract": "EAX=(base_low32+31*processed_slots) mod2^32",
+  "high_bit_starts": [
+    "0x80000020 through 0x8000002f",
+    "0x90000020 through 0x9000002f"
+  ],
+  "limits": [
+    "No mapped allocation crossing 4GiB; no live-game or campaign claim."
+  ],
+  "schema_version": 1,
+  "before_body_sha256": "2184eaa5663cb680cc74e6f05544d6a0fa612ac247128b2af70d8eedaa5dce88",
+  "return_only_body_sha256": "64ac5580db2e3d7fbc628721a3e337736925957a2cf536174d88516235b900bc",
+  "after_body_sha256": "5492e589e19f8fac92c723ff178420e170213b341e52568e735519d426da9c05",
+  "older_return_only_patch_sha256": "5d76e0e1f5e4ff8ed931bac933801ff2fedff8255eb8d5aad5b0917508750255",
+  "update_rule": "Measured stream hashes require fresh original instruction measurement."
+}
