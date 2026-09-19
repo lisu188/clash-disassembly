@@ -316,3 +316,174 @@ payload field 8, size field 6 and ownership field 3. This checked
 write source, generated files or provenance. The check used this worktree's
 translated `GIT_DIR`, `GIT_COMMON_DIR` and `GIT_WORK_TREE`, with
 `PYTHONDONTWRITEBYTECODE=1`.
+
+## Integration with published main
+
+The F7 branch integrates published main
+`a0dc2f0e6b88b50d4a989a9a373ad783b67d8efd` at compiled source
+`73db040f1c379e585dafdb03daaadb88ae9cc9c3`. The two additive documentation
+conflicts retain both independent reports. The incoming class and selection
+work remains intact: 147 canonical TUs, six class sources and all 4,157
+historical identities. No campaign status changes.
+
+The exact integration-delta audit reverses the original F7 changes and recovers
+every incoming production byte and manifest value: 23 substitutions, four
+definitions and guards, seven current body hashes, and the separately reviewed
+five CR-byte normalization. Historical identities, hashes and rules remain.
+The paired immutable-Git-blob census covers all 147 sources. Numeric tokens
+decrease from **79,171 to 79,148**, and integers from **78,993 to 78,970**.
+All **178 floats** and **50,920 small integers** remain. Only render 004 changes
+its numeric count. These lexical counts do not assign semantics to unresolved
+values. The script, command, per-file counts and source hashes are retained in
+the private paired-census-147 directory.
+
+Both fresh integrated production builds and all eight public asset-free CTests
+pass. Warnings are **6,569 per compiler** and pass the unchanged limits.
+The inherited raw link differences are **453 GCC / 705 Clang**, with zero
+identity crosscheck errors. The incoming header reference contains 23 ratchet
+rows and one `UnitStack.hpp` parameter-name policy finding (`a2`); no baseline
+or policy is raised. Both compiler binaries, archives, compile commands and
+verified bundles of all 153 stripped objects and their disassemblies are
+retained under validation/integration/final.
+
+The immutable incoming reference binds all 249 production inputs to compiled
+`26c86a9b07e746e3f2a377be003fd137b7aa1a6c` and published `a0dc2f0`; the
+publication difference is exactly three documentation files. An initial
+comparison correctly rejects a subsequently changed live object in the other
+task's build directory. Its continuation uses the published archive's 150
+members, checks every member against the original receipt and requires frozen
+raw references for the three non-archive objects. It does not accept the other
+task's unpublished changes as a baseline.
+
+That final comparison **passes for both compilers**: all 153 objects have exact
+stripped bytes and normalized disassembly; strict symbol, storage, relocation
+and initializer surfaces match with **zero allowances**. Each complete linked
+executable is byte-identical to the incoming reference after removing only
+debug information and the build ID. The final receipt is
+validation/integration/final/incoming-reference-comparison-ram-summary.json,
+SHA-256 `62e385c77a6bc03c4e69d652c188a7202a6ba51fa7c417d3da2869731ba0a1b1`.
+
+The complete integrated tooling suite passes **542 tests in 261.254 seconds**
+on its third attempt. Its guarded command takes 265.228 seconds and does not
+breach the physical reserve. The two earlier resource interruptions remain
+separate failures to complete, without being relabeled as passing runs.
+The unchanged inventory regressions include small selectors, floating literals,
+exact suffix/spelling preservation, comment/string exclusions and equal-valued
+constants from different domains. Full output and exact commands are retained
+under validation/tooling-integrated-retry02.
+
+Split-source, pure metadata, save-format, constant/structure/unit-metadata
+generators, subsystem headers, TU includes and whitespace checks also pass.
+All **802 production/tooling inputs** remain unchanged. The header gate retains
+exit 1 and byte-identical output against the incoming reference. The Markdown
+checker also retains exit 1 for two absent private historical paths:
+`artifacts/cpp-classes/20260913/native-baseline/README.md` referenced by
+`docs/CPP_CLASS_NATIVE_BASELINE.md`, and
+`artifacts/cpp-classes/20260913/validate-stage.py` referenced by
+`docs/CPP_CLASS_ORIGIN_REFRESH.md`. A fresh check using the immutable incoming
+checker and all 71 incoming active Markdown blobs produces exactly the same
+two-line error output as the candidate under the same path-existence view.
+The checker and both implicated documents are unchanged, and neither private
+target is tracked in incoming main. The original overall runner failure remains;
+separate inherited-header and inherited-markdown comparison receipts establish
+unchanged findings without suppressing either gate.
+
+## Integrated native coverage and outcome limits
+
+The integrated native build and canonical headless CTest wrapper pass. The
+executed binary reports **1,090 passes, zero assertion failures and 526 isolated
+crashes among 1,616 registered cases**. GCC coverage is **6,165 / 6,656 lines
+(92.623197%)**, with all **718 selected functions covered and none uncovered**.
+There are no gcov profiling diagnostics. The 456 bound inputs and binary hash
+remain unchanged throughout execution and completion.
+
+All 1,616 registered identities match the retained class reference at
+`33a5959820dfcb70902183d9c094221c547b05fc`. All 524 reference crash identities
+remain; `cov2_01_savereservedslot10.basic` and
+`cov2_06_rules.show_banner_strategic_clash` change from pass to crash. The entire
+718-function coverage JSON is byte-identical to that reference. The compared
+revisions, build roots and explicit game-root environments differ; the cause
+of these two outcome changes is not established. This is not a paired F7
+behavior-regression claim. The earlier `02c00bf` baseline failed compilation
+before any case, as recorded above. Incoming-main CI logs contain only the
+successful CTest wrapper and coverage totals, not individual case outcomes.
+
+An initial private completion driver used unsupported `--jsonout`; its error
+is retained separately. The corrected command uses the public `--json`
+argument against the same executed binary and profiles, without rerunning
+CTest. Resource-stopped measurement attempts are also retained. Successful
+completion stages all derived files in RAM, then verifies the durable copy.
+The profile archive contains **6,366 verified members** and has SHA-256
+`263ca25731df959d6f22ad08580194be5c23f9ffc17993619334af52e11f79b4`.
+The complete added durable evidence is 7,393,137 bytes. See the private
+native/integrated-completion-ram-final/summary.json and
+native/class-reference-comparison.json records.
+
+After the RAM build directory disappearance described below, an unchanged-binary
+repeat restores the sealed binary and 223 hash-verified gcno notes to the original
+build path. The original configure command regenerates CTest metadata without
+compiling source. `ctest -N -V` verifies the resolved canonical wrapper command
+against the first run's log. The missing-directory startup error and an initial
+private preflight assertion about `bash` versus `/usr/bin/bash` remain separate;
+neither attempt executed native cases.
+
+The restored canonical CTest passes in **2.618 seconds**. All **1,616 case
+outcomes exactly reproduce the first integrated run**, including both additional
+crashes versus the older class reference. They are stable across these two runs;
+their cause remains unproven. The coverage JSON is again byte-identical, and all
+456 inputs and the binary hash remain unchanged. The repeat has its own fully
+verified 6,366-member archive, SHA-256
+`facdfc79e0f1c51d5fb781a66dfa52b634bfb3f402963413f47d9266c24a2a08`.
+See native/unchanged-repeat/summary.json. No native source rebuild, test repair,
+floor change or replacement of the first run's evidence is involved.
+
+## Resource interruptions and evidence storage
+
+The two integrated full-tooling attempts stopped at the unchanged 5 GiB
+physical backing-volume reserve after 167.340 and 171.108 seconds. Neither
+interruption is a completed-suite pass or a test assertion failure. All logs,
+runners and source bindings remain. The Linux filesystem's much larger free
+space is not treated as available host capacity. This task issues no WSL
+restart or global core-dump policy change to finish this evidence.
+
+Storage consolidation preserves recoverable evidence. The two original census
+JSONs are now lossless `.json.gz` archives, with decompressed byte counts and
+SHA-256 values checked before removing the duplicate raw JSONs. Restore them
+with `gzip -dk census-before.json.gz census-after.json.gz`. Transparent NTFS
+compression preserves paths and bytes for the historical object and compiler
+snapshot files and the final immutable binaries/archives; separate receipts
+record every hash.
+
+After checking both runtime archive hashes and every selected archive member
+and source file, 409 duplicate periodic `frame-N.bmp` files are consolidated
+into the existing archives. This dated note supersedes the earlier statements
+that every raw periodic frame remains as a loose file. Checkpoint BMPs, logs,
+saves, PNG comparison pairs, indexes and both full archives remain. The separate
+periodic-frame-consolidation-receipt.json records all exact paths, sizes,
+hashes and restore commands. It accounts for 502,629,098 logical bytes and
+504,254,464 native allocated bytes. A subsequent `fstrim` of already-free ext4
+blocks returns 106,233,856 allocated VHDX bytes in the measured interval;
+its reported virtual trim extent is not counted as host storage recovered.
+No unrelated files or retained historical reports are removed.
+
+After the final comparisons and native archival completed, the original owned
+RAM build directories were observed missing. The cause is not established;
+this task did not remove those directories. The durable compiler binaries,
+150-member raw archives, all 153 stripped objects per compiler, native binary
+and verified profile archive remain. The three raw non-archive debug objects
+per compiler and original mission-trace test executable were not copied before
+that disappearance and are explicitly unavailable. Publication references use
+the sealed stripped objects rather than claiming recovery of the missing raw
+bytes. Original passed CTest receipts and completed comparison receipts remain
+unchanged.
+
+For the next integration, the publication reference binds the preserved 150 raw
+archive members and all 153 stripped objects per compiler, both binaries,
+compile commands, source inputs and GNU ar 2.42. The two mission-trace test
+executables are separately relinked from the sealed stripped test objects;
+both derived executables pass. They are explicitly distinguished from the
+missing originals. The bootstrap link recipe is reconstructed from the frozen
+object order and observed Ninja flags/libraries; the original generated recipe
+was not durably captured. Exact derived link commands and hashes are in the
+private publication-reference/provenance.json, SHA-256
+`286b968706c26561ed2d9df3090c3bfd59f10afdd71be980aef3a085c6774016`.

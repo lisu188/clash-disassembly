@@ -12,10 +12,17 @@ producer and consumer instructions support the names; literal spelling,
 arithmetic types, access widths and callback behavior remain intact.
 Both complete canonical preprocessor streams are exactly equal before guard
 regeneration. Four guards and seven current body hashes are refreshed while
-all 4157 identities, 145 TUs, historical hashes and class metadata remain.
-The numeric census decreases by exactly 23; existing unresolved pointer-width,
+all 4157 identities, historical hashes and class metadata remain. After
+integration with main, the paired 147-TU census decreases from 79,171 to 79,148
+numeric tokens; the 178 floats and 50,920 small integers remain unchanged.
+Existing unresolved pointer-width,
 return-register and unrelated literal questions remain documented.
 [Evidence, reviewed rules and validation](archive/literal_rules/F7_dlx_lifecycle_findings.md).
+Integrated GCC 13 and Clang 18 builds, all eight public asset-free gates and
+542 tooling tests pass. All 153 objects per compiler and both stripped
+executables match incoming main exactly. Native GCC coverage passes at 92.62%
+with all 718 functions covered; its 526 isolated harness crashes and inherited
+header/link failures remain explicitly recorded.
 No runtime, visual-fidelity or campaign milestone advances.
 
 ## Current-Selection Integration With Class Main
