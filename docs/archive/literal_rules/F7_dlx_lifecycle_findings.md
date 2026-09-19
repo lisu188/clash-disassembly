@@ -252,6 +252,49 @@ failure was sent to the parallel Road task already validating that fixture;
 F7 makes no unrelated test or gameplay repair. Subsequent integration results
 must retain this baseline failure separately.
 
+## First-Road replay
+
+The first GCC replay reaches the unchanged route's expected turn-6 endpoint
+in **207.334 seconds**: stack 4 at `(49,50)`, 2 AP, no queued path, Road words
+867/879 and 228 visible tiles. It uses the existing calibrated pan hold
+`0.005` and private periodic capture stride 128; actions and assertions are
+unchanged. All raw files remain in persistent private Linux storage and in a
+233-member hash-verified archive. No host game window was opened.
+
+The route wrapper exits zero, but the runner's stricter provenance status is
+retained as **failed**: the five manifest line endings described above changed
+during execution. The entire compiled source, binary, route inputs and retail
+configuration bindings remained equal. A separate reviewed-route-acceptance
+record accepts the route result only after proving the metadata JSON was
+unchanged and reconstructing its original byte hash exactly. It does not
+retroactively claim that the original raw-input freeze passed. The original
+failed record, formatting review, raw captures and archive remain available
+under runtime/results/gcc-13/final-01.
+
+The post-restart Clang replay passes in **192.433 seconds** with its rebound
+source, route, configuration and executable hashes unchanged. All ten decoded
+saved checkpoints match between compilers. Both final saves match the retained
+original world/stack headers, all 310 unit-slot bytes, the 1,300-byte visibility
+bitmap, active path count and six Road words. The original reference is the
+unchanged 2026-09-06 Road capture; no new original process ran in this batch.
+
+Both original/current frame pairs were inspected. Full-frame comparisons record
+285,206 nonmatching pixels and RGB mean absolute difference 11.154106987847221
+for GCC, and 287,763 pixels / 11.421130642361112 for Clang. The two current frames
+differ in 16,840 pixels; 3,996 are outside the variation observed in the final
+wait. Missing labels and unit/status panels, the displaced stack badge,
+fog/water differences and lower-left map/text corruption remain visible.
+Temporal sampling does not explain every difference. These replays establish
+the existing partial route state, not visual parity or campaign advancement.
+
+The exact commands, original reference hashes, compared byte ranges, frame
+metrics and capture paths are retained in runtime/README.md and
+runtime/results/final-summary.json. The GCC and Clang archives contain 233 and
+218 verified members respectively; every raw capture remains retained. Their
+SHA-256 values are
+`093b939c4e26abff7d375832b6300fe8fd2e3fee4877c339b0e25fbec3e83723` and
+`15950198529366fa6c275713ce025cc5d05b1b83ce70bef993286f401dae0662`.
+
 A read-only WSL prospective resolution against the frozen source passed with
 the four proposed definitions supplied only in memory: 23 rules, 23 sites,
 seven functions, no rejected sites and no respellings. Counts were header 6,
