@@ -1,0 +1,50 @@
+[
+  {
+    "name": "DLX_SPRITE_SERIALIZED_HEADER_BYTES",
+    "value": 10,
+    "spelling": "10",
+    "kind": "size",
+    "family": "dlx_sprite",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "behavior-confirmed",
+    "evidence": "Serialized entry construction copies ten bytes before setting the payload address to source+0Ah (clash95.asm:9376-9391); independent serializer writes 0Ah header bytes then serialized size minus 0Ah bytes from the payload (clash95.asm:9624-9631). Existing DLXSpriteView::kSerializedHeaderSize confirms this established naming domain."
+  },
+  {
+    "name": "DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET",
+    "value": 10,
+    "spelling": "10",
+    "kind": "offset",
+    "family": "dlx_sprite",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "behavior-confirmed",
+    "evidence": "Borrowed constructor stores source+0Ah at object+0Ah (clash95.asm:9389-9391); independent destruction reads object+0Ah as the free argument (9494-9508), copy writes the allocation result at object+0Ah (9551-9564), and serializer reads object+0Ah as its payload source (9629). Existing DLXSpriteView::kPayloadHandleOffset and uint32_t access preserve the proven field identity."
+  },
+  {
+    "name": "DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET",
+    "value": 14,
+    "spelling": "14",
+    "kind": "offset",
+    "family": "dlx_sprite",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "behavior-confirmed",
+    "evidence": "Borrowed constructor stores the entry-size argument at object+0Eh (clash95.asm:9380); independent set serializer advances entry directory offsets by each object+0Eh (8917-8921), while sprite serializer subtracts header length from object+0Eh (9628-9630). Existing DLXSpriteView::kSerializedSizeOffset names the full serialized size, not payload-only bytes."
+  },
+  {
+    "name": "DLX_SPRITE_OWNS_PAYLOAD_BYTE_OFFSET",
+    "value": 18,
+    "spelling": "18",
+    "kind": "offset",
+    "family": "dlx_sprite",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "behavior-confirmed",
+    "evidence": "Borrowed constructor sets object+12h to zero (clash95.asm:9378), owning constructor and copy set it to one (9476,9553); independent destructor frees the payload only when that dword is nonzero (9494-9508). Existing DLXSpriteView::kOwnsPayloadOffset/ownsPayload confirms the established role."
+  }
+]

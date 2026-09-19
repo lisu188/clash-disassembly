@@ -75,7 +75,7 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
     do
     {
       g_DlxSpriteSetOffsetTable[entry_index++] = data_offset;
-      data_offset += *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)entry_cursor + 14);
+      data_offset += *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)entry_cursor + DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET);
       entry_cursor += 4;
     }
     while ( entry_index < sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] );
@@ -258,7 +258,7 @@ int  DLXSprite_ConstructFromBuffer(int result, int source_buffer, int data_size)
   sprite.setOwnsPayload(false);
   sprite.setSerializedSize((std::uint32_t)data_size);
   sprite.copySerializedHeaderFrom((const void *)(uintptr_t)source_buffer);
-  sprite.setPayloadHandle((std::uint32_t)(source_buffer + 10));
+  sprite.setPayloadHandle((std::uint32_t)(source_buffer + DLX_SPRITE_SERIALIZED_HEADER_BYTES));
   return result;
 }
 
@@ -267,8 +267,8 @@ int  DLXSprite_ConstructOwningCopy(int sprite, DWORD source_sprite)
 {
   int v2; // ecx
 
-  *(_DWORD *)(uintptr_t)(sprite + 10) = 0;
-  *(_DWORD *)(uintptr_t)(sprite + 18) = 1;
+  *(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET) = 0;
+  *(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_OWNS_PAYLOAD_BYTE_OFFSET) = 1;
   DLXSprite_CopyFrom(sprite, source_sprite);
   return v2;
 }
@@ -279,9 +279,9 @@ int  DLXSprite_Destroy(int result)
 {
   int v2; // ecx
 
-  if ( *(_DWORD *)(uintptr_t)(result + 10) )
+  if ( *(_DWORD *)(uintptr_t)(result + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET) )
   {
-    if ( *(_DWORD *)(uintptr_t)(result + 18) )
+    if ( *(_DWORD *)(uintptr_t)(result + DLX_SPRITE_OWNS_PAYLOAD_BYTE_OFFSET) )
     {
       j__nfree_();
       return v2;
@@ -300,9 +300,9 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
   // 004063A0..004063B7: mov ecx, 0Ah / call sub_406370 / rep movsd / rep movsb.
   // sub_406370 (DLXSprite_Destroy) pushes and pops ecx, so the count survives the call:
   // the fixed 10-byte DLX sprite header (w, h, hotspot, size low word) is copied first.
-  qmemcpy((void *)(uintptr_t)sprite, (const void *)(uintptr_t)source_sprite, 10);
-  *(_DWORD *)(uintptr_t)(sprite + 14) = *(_DWORD *)(uintptr_t)(source_sprite + 14);
-  *(_DWORD *)(uintptr_t)(sprite + 18) = 1;
+  qmemcpy((void *)(uintptr_t)sprite, (const void *)(uintptr_t)source_sprite, DLX_SPRITE_SERIALIZED_HEADER_BYTES);
+  *(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET) = *(_DWORD *)(uintptr_t)(source_sprite + DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET);
+  *(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_OWNS_PAYLOAD_BYTE_OFFSET) = 1;
   // 004063C7..004063EB: mov ecx, 4 / mov esi, esp / lea edi, [ebx+0Ah] /
   //   mov eax, [ebx+0Eh] / sub eax, 0Ah / call _nmalloc_ / mov [esp+var_18], eax /
   //   rep movsd (ecx = 4 -> exactly the one stored dword).
@@ -311,14 +311,14 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
   // argument, which under the size-driven nmalloc_ shim allocated 4 bytes and turned the
   // payload copy into a heap overflow. The second nmalloc_ argument is dead register
   // noise (edx was clobbered by DLXSprite_Destroy and the allocator ignores it).
-  alloc_buffer[0] = nmalloc_(*(_DWORD *)(uintptr_t)(sprite + 14) - 10, 0);
-  qmemcpy((void *)(uintptr_t)(sprite + 10), alloc_buffer, 4);
-  if ( !*(_DWORD *)(uintptr_t)(sprite + 10) )
+  alloc_buffer[0] = nmalloc_(*(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET) - DLX_SPRITE_SERIALIZED_HEADER_BYTES, 0);
+  qmemcpy((void *)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET), alloc_buffer, 4);
+  if ( !*(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET) )
   {
     Debug_Log(0, sprite, source_sprite, (int)(intptr_t)aNotEnoughMe_15);
     App_RequestQuit((int)(intptr_t)aNotEnoughMe_16);
   }
-  qmemcpy(*(void **)(uintptr_t)(sprite + 10), *(const void **)(uintptr_t)(source_sprite + 10), *(_DWORD *)(uintptr_t)(sprite + 14) - 10);
+  qmemcpy(*(void **)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET), *(const void **)(uintptr_t)(source_sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET), *(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET) - DLX_SPRITE_SERIALIZED_HEADER_BYTES);
   return sprite;
 }
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
@@ -326,8 +326,8 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
 //----- (00406460) --------------------------------------------------------
 int  DLXSprite_Save(int sprite, int file_handle)
 {
-  fwrite_((const void *)(uintptr_t)sprite, 10, file_handle, 1);
-  return fwrite_(*(const void **)(uintptr_t)(sprite + 10), *(_DWORD *)(uintptr_t)(sprite + 14) - 10, file_handle, 1);
+  fwrite_((const void *)(uintptr_t)sprite, DLX_SPRITE_SERIALIZED_HEADER_BYTES, file_handle, 1);
+  return fwrite_(*(const void **)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET), *(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET) - DLX_SPRITE_SERIALIZED_HEADER_BYTES, file_handle, 1);
 }
 
 //----- (004064A0) --------------------------------------------------------
@@ -340,7 +340,7 @@ char  DLXSprite_RemapPalette(int sprite, const unsigned __int8 *remap_table)
   int i; // [esp+0h] [ebp-18h]
 
   sprite_header = (unsigned __int16 *)(uintptr_t)sprite;
-  pixel_cursor = (_BYTE *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(sprite + 10);
+  pixel_cursor = (_BYTE *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET);
   if ( *(_WORD *)(uintptr_t)(sprite + 4) )
     App_RequestQuit((int)(intptr_t)aConvertsprUnsu);
   for ( i = 0; sprite_header[1] > i; ++i )

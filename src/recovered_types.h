@@ -259,6 +259,14 @@
 #define DLX_SPRITE_SET_VTABLE_DWORD_INDEX 1027
 /* DLXSpriteSet_Load (0x405AA0) writes DWORD-indexed data pointer[1024], loaded entry count[1025], queried file byte size[1026] and vtable[1027]; Destroy (0x405C60), CopyEntriesFrom (0x405D20) and Save (0x405DB0) independently consume these slots. Save writes a 4096-byte offset directory and starts data there; Load reads/subtracts 4096. GetLastCharIndex (0x405ED0) reads count at byte offset 4100, distinct from DWORD index 1025. */
 #define DLX_SPRITE_SET_ENTRY_COUNT_BYTE_OFFSET 4100
+/* DLX object producer/consumer offsets: constructors at 0x406260/0x406350,
+ * destruction at 0x406370, copy at 0x406390 and serialization at 0x406460.
+ * Exact int literal spellings retain the raw-expression arithmetic types.
+ * Evidence: docs/archive/literal_rules/F7_dlx_lifecycle_findings.md. */
+#define DLX_SPRITE_SERIALIZED_HEADER_BYTES 10
+#define DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET 10
+#define DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET 14
+#define DLX_SPRITE_OWNS_PAYLOAD_BYTE_OFFSET 18
 /* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
 #define CLIPS_SYMBOL_BUCKET_COUNT 1013
 /* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
