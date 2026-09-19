@@ -1,6 +1,38 @@
 # Current Status
 
-Last consolidated: 2026-09-13.
+Last consolidated: 2026-09-19.
+
+## Current-Selection Synchronization Readability
+
+Track: Win95 reconstruction, selection synchronization reached from the Road
+builder menu. `UnitStackSelection_SyncForCurrentSelection` is the twenty-third
+individually reviewed Road-family function. Named query phases and early returns
+replace the decompiler label while preserving three count calls, live global
+reads, signed comparisons and original 32-bit addressing. Original ECX evidence
+also recovers the singleton End argument; the reached callee does not consume
+that receiver, so no gameplay-state defect is claimed.
+All 28 original scenarios and 74 events match four actual-source profiles;
+eight direct Count cases and two real caller paths corroborate the leaf behavior.
+Ten compiled mutations are rejected. Both native builds, eight public CTests
+and all 532 tooling tests pass, with 755 inputs frozen. Coverage reaches 92.62%
+across all 718 selected functions, none uncovered. The native harness separately
+reports 1089 passes and 527 isolated crashes among 1616 cases, with no assertion
+failures. The inherited AP fixture compile error is repaired by reading the
+immutable metadata table; both AP tests pass separately with strict crash handling.
+All 150 other objects and neighboring code/data remain
+exact; strict before/after link checks pass without allowances. Existing 20
+header and 439/691 raw link differences remain. One canonical body hash changes;
+runtime, visual and campaign milestones do not advance.
+[Evidence, validation and limits](HUMAN_READABILITY.md#batch-20-unitstackselection_syncforcurrentselection).
+
+## Published CI At 5f3da7b
+
+Both builds, eight public CTests, 530 tooling tests and the separate coverage
+gate pass. Coverage measures 92.65% across all 718 selected functions, none
+uncovered. Only the inherited header and linked-symbol steps fail; raw link
+differences remain 439 GCC / 691 Clang with zero crosscheck errors. Complete
+logs were retrieved without failures or restarting jobs.
+[Remote measurements](HUMAN_READABILITY.md#published-ci-observation-after-human-player-selection-cleanup).
 
 ## Human-Player Selection Cleanup Readability
 

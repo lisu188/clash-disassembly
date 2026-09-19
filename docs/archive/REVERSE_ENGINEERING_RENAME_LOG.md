@@ -1,5 +1,33 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-19 - Road readability: current-selection synchronization
+
+Track: Win95 reconstruction. Reviewed `UnitStackSelection_SyncForCurrentSelection`
+(`0x40A500`) individually. Named the entry arguments and three query phases,
+replaced the shared label with early returns and retained original 32-bit address
+arithmetic, signed count comparisons, live global reads and callback order.
+Original ECX evidence recovers the singleton End table-base argument; the reached
+callee does not consume that receiver, so this is not a gameplay-state repair
+claim. All 28 original cases and 74 events match four actual-source profiles.
+Eight direct Count cases and two real caller paths corroborate the leaf scan and
+register preservation. Ten compiled negative controls are rejected. The parent
+matches 20 cases, with four defined End-argument differences, one separate
+defined pointer-width diagnostic and three signed-overflow exclusions retained.
+Both native builds, eight public CTests and 532 tooling tests pass with 755
+inputs frozen. Coverage is 92.62% across all 718 selected functions, none
+uncovered; the native runner separately records 1089 passes and 527 isolated
+crashes among 1616 cases, with no assertion failures. The inherited AP test's
+writes to immutable metadata are removed and its expectations derive from the
+existing base AP. All 150 other objects and neighboring code/data remain exact.
+Both new AP cases pass separately with strict crash handling; the prior native
+summary has the same 527 isolated crashes and two fewer passing cases.
+Strict before/after linked checks pass without allowances; the existing 20
+header and 439/691 raw link differences remain. No baseline is reseeded. One
+canonical body hash changes; public symbols, layouts and source ownership stay
+fixed. Confidence is high within the recorded caller and backed-address domains.
+Runtime, visual fidelity and campaign completion do not advance.
+[Evidence and validation](../HUMAN_READABILITY.md#batch-20-unitstackselection_syncforcurrentselection).
+
 ## 2026-09-13 - Road readability: human-player selection cleanup
 
 Track: Win95 reconstruction. Reviewed `WorldMap_SyncSelectionForHumanPlayer`

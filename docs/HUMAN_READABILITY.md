@@ -1930,6 +1930,147 @@ test methods; existing checks, baselines and coverage policy remain. The
 coordinating review verifies 203 original/regression evidence bindings, and
 the Markdown link/path check passes.
 
+### Published CI observation after human-player selection cleanup
+
+The [5f3da7b CI run](https://github.com/lisu188/clash-disassembly/actions/runs/34751914714)
+passes both builds, all eight native CTests and 530 tooling tests (174.539
+seconds). Its separate coverage job measures 6163/6652 lines (92.65%) across
+718 selected functions: 585 fully covered, 133 partial, none uncovered. Warning
+gates pass. Only the inherited header and linked-symbol steps fail; raw link
+differences remain 439 GCC / 691 Clang with zero library crosscheck errors.
+
+Complete terminal metadata and job logs are retained under
+artifacts/readability/road-functions-20260906/batch-20-selection-sync/build-validation/ci-observation/.
+All logs were retrieved through the direct job APIs without a retrieval failure
+or job restart. These remote results are separate from the preceding local
+batch, which did not rerun coverage.
+
+### Batch 20: UnitStackSelection_SyncForCurrentSelection
+
+Track: Win95 reconstruction, selection synchronization reached from the Road
+builder menu. The function at `0x40A500` now names its entry receiver, context,
+query addresses and counts. Early returns replace the shared decompiler label.
+It retains all three original Count calls, their signed comparisons, fresh
+global reads at the later queries and the equality gate before the third call.
+There is no new equality check after that call. Addresses use explicit original
+32-bit arithmetic before widening to the native Count argument.
+
+The two End paths have different original arguments. Missing selection forwards
+entry ECX. A first count of exactly one with an active selection forwards the
+stack-table base loaded before that count, `gameData + 147174` modulo 32 bits.
+The old C++ shared the entry pointer between both calls. The refactor retains
+the first table base across Count and forwards it only on the singleton path.
+This is a defined argument-recovery correction. The reached original End,
+highlight-clear helper and memset wrapper do not consume this receiver, so no
+highlight or gameplay-state defect is claimed from the old argument difference.
+
+The original Count leaf preserves ECX and EDX, scans up to ten signed unit-type
+WORDs at 31-byte strides, and stops only at exact `-1`. It returns 0 through 10
+without calling children or reading globals. A recorded Count boundary that
+mutates caller globals or returns a negative value therefore tests the caller's
+instruction contract beyond the real leaf's behavior. Those cases remain
+separate from real-callee corroboration.
+
+Evidence: `clash95.asm:15450`–15546 for the caller, 53539–53561 for Count,
+55047–55060 for End, and 38800–38812 for highlight clearing. The map identifies
+Count at `0x422B80` and the collapsed memset wrapper at `0x473FD8`. The caller's
+old assembly label remains in the retained evidence; the current manifest
+provides its canonical identity. Source, preparation and bounded proof artifacts
+are retained under artifacts/readability/road-functions-20260906/batch-20-selection-sync/.
+
+Only this function, three stale annotations and its canonical body hash change.
+All 26 neighboring definitions, public signature types, layouts, identities and
+source ownership remain. No field or global rename is inferred, and no runtime,
+visual-fidelity or campaign milestone advances.
+
+The unchanged original caller records 74 events across 28 bounded scenarios.
+Its 247 instruction bytes end at `0x40A5F7`; nine following alignment bytes
+remain in the verified section. Both local PE copies and the embedded linked
+section agree byte-for-byte before execution. The fixture observes four
+boundaries: Count, End, Begin and Refresh. Event records retain arguments,
+scripted Count return and live state; the void caller has no fabricated integer
+return field.
+
+Both supported native builds pass. Only the target's code and instruction
+relocations change in world002; 27 neighboring executable sections and ordinary
+allocated data remain exact. All 150 other objects are byte-identical, and the
+ordered 148 archive members remain. The ordinary object comparison and strict
+before/after linked comparisons pass without exceptions or allowances. Complete
+historical raw link rows remain 439 GCC / 691 Clang with zero crosscheck errors.
+Incremental warnings remain 4 GCC / 5 Clang, with both warning gates passing.
+
+All eight asset-free CTests and 14 nonratchet metadata checks pass. The complete
+20 inherited header-failure rows remain unchanged. The target is outside the
+selected 718-function coverage set. Before the September 19 upstream integration,
+its selected neighboring callback, selected manifest rows and unit fixtures
+were unchanged, so that initial validation did not rebuild coverage or claim
+a new local percentage.
+
+All 28 measured original traces match the actual extracted C++ body under
+GCC 13 and Clang 18 at both `-O0` and `-O2`, with strict warnings and UBSan.
+The unchanged parent matches 20 cases in every profile. Four defined singleton
+cases differ in exactly one End argument word, with all other trace words
+unchanged. A separate defined Count-pointer conversion case exposes sign
+extension when an old signed address widens to native `intptr_t`; that high
+pointer is only observed at the recording boundary. The three excluded parent
+cases overflow signed stride multiplication at the first, second and third
+query respectively. Defined pointer/argument differences are not classified
+as arithmetic undefined behavior or presented as reached gameplay failures.
+
+The separate real-Count supplement executes eight direct leaf cases and two
+actual caller/singleton paths. Slot counts 0, 1, 2 and 10, the exact signed-WORD
+sentinel and preserved ECX/EDX/context are observed, with unchanged arena bytes.
+Both caller paths forward the saved table base to End. The reached End/highlight
+receiver analysis remains a static proof; no new rendering experiment is implied.
+
+Ten strictly compiled negative controls are rejected by an explicit boundary
+assertion or measured trace mismatch. They discriminate cached counts and query
+addresses, the wrong singleton receiver, a receiver recomputed after mutation,
+unsigned count comparisons, an eager third query, a late equality recheck and
+changed context. Compiler failures or process signals are not accepted as proof
+that a control was caught.
+
+On September 19 the worktree fast-forwarded from `5f3da7b` to `02c00bf`, preserving
+this function and its manifest record. Upstream added an action-point contract
+fixture and temporarily changed remote header/link steps to update diagnostic
+baselines. The inherited workflow remains outside this refactor's diff. The
+saved September 13 measurements remain unchanged and are bound to their original
+source state; resumed checks verify that the candidate and retained artifacts
+still match. The new unit fixture requires a fresh coverage measurement.
+Remote CI green under the inherited diagnostic workflow does not establish
+that the existing check-mode header/link differences have been repaired.
+
+The first resumed coverage build rejected the new action-point fixture because
+it writes to the immutable unit-type metadata table. The bounded test repair
+reads the existing base AP and derives the full, three-quarter and half-AP
+expectations from that value. Both writes are removed; fatigue thresholds,
+invalid-type assertions and production behavior remain unchanged. The failed
+build is retained under the batch's build-validation/resume-20260919/coverage/
+directory. A later retry and full tooling run were stopped cleanly for the
+user-authorized Ubuntu restart; their partial logs remain separate from any
+completed validation result.
+
+Ubuntu restarted successfully after the three coordinated tasks stopped their
+active jobs. A fresh temporary write/read/unlink probe passed. The resumed
+coverage build and canonical CTest complete; coverage measures 6161/6652 lines
+(92.62%) across all 718 selected functions, none uncovered. The native runner
+reports 1089 passes, no assertion failures and 527 isolated crashes among 1616
+registered cases. Its successful wrapper exit is not an all-cases-pass claim.
+The retained prior summary is 1087 passes, no assertion failures and 527
+isolated crashes among 1614 cases. A separate strict filter executes exactly
+the two new AP tests: both pass, with no failures or crashes. The initial
+evidence parser expected per-case pass lines that this runner does not print;
+a first focused retry also lacked its private coverage-shard parent directory.
+Those postprocessing/setup failures remain recorded, and the corrected focused
+invocation uses existing private directories without repeating the full suite.
+All 527 crash identities match the retained baseline, and the complete coverage
+report is byte-identical to the preceding local report.
+The full tooling suite passes all 532 tests in 240.053 seconds, with all 755
+production/tooling inputs and both native artifact sets unchanged. The
+coordinating review verifies 274 original/regression artifact bindings.
+The exact commands, coverage shards and interrupted attempts remain under
+artifacts/readability/road-functions-20260906/batch-20-selection-sync/build-validation/resume-20260919/.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

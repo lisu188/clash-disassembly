@@ -92523,7 +92523,7 @@
       "original_line": 1829,
       "source": "src/world/0040A0E0_0040B020_world_002.cpp",
       "linkage": "external",
-      "body_sha256": "535416b06994498f2774bb0eb0771cc3be0d33373385762d4912b04291f1e576",
+      "body_sha256": "7e56f9d2bcbf555a69beac297be3bdcfae01b7e677198fa46352007c36d81b17",
       "original_address_range": {
         "start": "0x0040A500",
         "end_exclusive": "0x0040A600"
