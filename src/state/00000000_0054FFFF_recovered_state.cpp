@@ -8462,6 +8462,13 @@ const UnitTypeRuntimeCoreMetadataRecord g_UnitTypeRuntimeCoreMetadata[UNIT_TYPE_
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x00000000, 0, 0, 0 },
 };
 
+// Address-free read-only binding; original table storage remains above.
+extern "C" CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord *UnitSlot_BorrowTypeMetadata(void)
+{
+  return g_UnitTypeRuntimeCoreMetadata;
+}
+
+
 const unsigned char g_UnitTypeWorldMoveCosts[35][9] = {
   { 3, 4, 6, 5, 0, 7, 0, 8, 0 },
   { 3, 4, 6, 5, 0, 7, 0, 8, 0 },

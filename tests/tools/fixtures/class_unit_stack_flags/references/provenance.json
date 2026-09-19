@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "reference_commit": "f6849c64710fcc150a6be652a098cb5f9f9564bd",
+  "preparation_parent": "Validated strength/cargo extraction and relocation on c65e476; target bodies are unchanged in f6849c6.",
+  "parent_relocation_patch_sha256": "c764a4934c55881f188f2148e6aebe4d6636546297f29735e3b7013719887c8e",
+  "functions": [
+    {
+      "name": "UnitStack_HasPlague",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "body_sha256": "0fa4c92e9e12a96ede0945099d4a2746aeba3e90d0fdf8f4237cecaa311ff7d7",
+      "original_address": "0x00412AC0",
+      "fixture": "UnitStack_HasPlague.cpp",
+      "file_sha256": "ef723604df0d42d5398ce2912907f3dcb8e4362753bc27161b6a3a5ee336c750"
+    },
+    {
+      "name": "UnitStack_HasLowMoraleUnit",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "body_sha256": "055fe45d56c4264aee6eb3d0e04e7e453a74245679d58ab30de8be1513561444",
+      "original_address": "0x00412AF0",
+      "fixture": "UnitStack_HasLowMoraleUnit.cpp",
+      "file_sha256": "45b5086d7215f328d3f4584f3467d5af97b49afabe49507dfd2d8d8d2e31010d"
+    }
+  ]
+}

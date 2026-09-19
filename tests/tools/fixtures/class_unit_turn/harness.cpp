@@ -99,9 +99,11 @@ signed int UnitStack_AdjustMoraleByPredicate(__int16 *p,int delta,BOOL(*f)(int),
 __int16 *UnitStack_ClearSpentTurnFlag(int p) {
   fixture::event("clear_spent",fixture::address(p)); ((unsigned char *)(intptr_t)p)[720]&=0xFE; return (__int16 *)(intptr_t)p;
 }
+#ifndef UNIT_TURN_COMPOSED_SLOT_AP
 int UnitSlot_CalcActionPointsFromFatigue(__int16 *p) {
   fixture::event("calc_ap",fixture::address((intptr_t)p)); return (255-((unsigned char *)p)[10])&255;
 }
+#endif
 signed int Rules_LinkArmyFact(clash95_unaligned_int16 *p,int a,int b,double c,char d,DWORD e) {
   fixture::event("rules_link",fixture::address((intptr_t)p),fixture::address(a),b,(int)(c*8),d,e);
   ((unsigned char *)p)[721]^=0x3C; return 19;
@@ -126,6 +128,16 @@ unsigned int Rng_RandRange(int lo,int hi) {
   static const int values[12]={INT_MIN,-123,-1,0,1,89,99,100,101,255,256,INT_MAX};
   int answer=values[(rng_mode+rng_pos)%12]; event("rng",lo,hi,answer,rng_pos); ++rng_pos; return (unsigned int)answer;
 }
+
+#ifdef UNIT_TURN_CLASS_RANDOM_BOUNDARY
+int g_RngState = 0;
+char aRandom_initSee[29] = "Random_Init(): seed = 0x%08x";
+// Preserve this fixture's arbitrary RNG boundary values, including values outside
+// the requested interval. The GameRandom gate separately compiles its real body.
+unsigned int clash95::GameRandom::Rng_RandRange(int lo, int hi) const {
+  return ::Rng_RandRange(lo, hi);
+}
+#endif
 
 namespace fixture {
 void building_input(int seed,int countdown) {

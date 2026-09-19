@@ -122,12 +122,19 @@ jobs:
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         run: python3 -m unittest discover -s tests/tools -p 'test_*.py'
 
+      - name: Record current header-surface diagnostics
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
+        run: >-
+          PYTHONPATH=tools python3 -c
+          'import json; from audit_header_surface import surface_metrics; print(json.dumps({"schema_version": 1, **surface_metrics()}, indent=1, sort_keys=True))'
+          > header-surface-current.json
+
       - name: Audit header surface and coupling ratchet
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         shell: bash
         run: |
           set -o pipefail
-          python3 tools/audit_header_surface.py --mode update 2>&1 | tee header-surface.log
+          python3 tools/audit_header_surface.py --mode check 2>&1 | tee header-surface.log
 
       - name: Upload header-surface diagnostics
         if: ${{ always() && steps.checkout.outcome == 'success' }}
@@ -136,6 +143,7 @@ jobs:
           name: header-surface-diagnostics
           path: |
             header-surface.log
+            header-surface-current.json
             data/header_surface_baseline.json
           if-no-files-found: warn
 
@@ -216,7 +224,15 @@ jobs:
           set -o pipefail
           python3 tools/check_link_surface.py build/bin/clash95_bootstrap \
             --lib build/lib/libclash95_recovered.a \
-            --compiler ${{ matrix.compiler_id }} --mode update 2>&1 | tee link-surface.log
+            --compiler ${{ matrix.compiler_id }} --mode check 2>&1 | tee link-surface.log
+
+      - name: Record current link-surface diagnostics
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          python3 tools/check_link_surface.py build/bin/clash95_bootstrap \
+            --lib build/lib/libclash95_recovered.a \
+            --compiler ${{ matrix.compiler_id }} \
+            --baseline link-surface-current.json --mode update
 
       - name: Run asset-free CTest gates
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -240,6 +256,7 @@ jobs:
             compiler.log
             warning-ratchet.log
             link-surface.log
+            link-surface-current.json
             data/link_surface_baseline.json
             asset-free-ctest.log
             build/Testing/Temporary/LastTest.log

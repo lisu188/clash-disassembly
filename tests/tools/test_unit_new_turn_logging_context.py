@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Production-resolving regression for Unit_NewTurn's first-stack enemy exit.
 
-Actual Unit_NewTurn, LogAllUnits, Debug_Log and the migrated readiness query
-are compiled separately;
+Actual Unit_NewTurn, LogAllUnits, Debug_Log and the migrated readiness/AP queries
+are compiled separately; the immutable AP-table accessor remains an observed seam;
 linker wrapping observes the boundary without rewriting the recovered body.
 Poisoned automatic locals make an omitted assignment fail deterministically.
 """
@@ -20,13 +20,13 @@ class UnitNewTurnLoggingContextTests(unittest.TestCase):
   if platform.system()!='Linux' or platform.machine() not in ('x86_64','amd64'):
    self.skipTest('supported low32 fixture requires Linux x86-64')
   manifest=json.loads((ROOT/'data/recovered_sources.json').read_text()); records={x['name']:x for x in manifest['functions']}
-  names={'Unit_NewTurn','LogAllUnits','Debug_Log','UnitStack_HasReadyUnits'}
+  names={'Unit_NewTurn','LogAllUnits','Debug_Log','UnitStack_HasReadyUnits','UnitSlot_CalcActionPointsFromFatigue'}
   sources=set()
   for name in names:
    sources.add(records[name]['source'])
    if 'adapter' in records[name]: sources.add(records[name]['adapter']['source'])
   indexed=index_manifest_definitions(manifest,ROOT,sources)
-  includes=['#include "units/units_internal.h"','#include "units/units_state.h"','#include "units/units_shared_state.h"','#include "buildings/buildings_api.h"','#include "strategic/strategic_api.h"','#include "units/UnitStack.hpp"','#include "recovered_structs.h"']
+  includes=['#include "units/units_internal.h"','#include "units/units_state.h"','#include "units/units_shared_state.h"','#include "buildings/buildings_api.h"','#include "strategic/strategic_api.h"','#include "units/UnitStack.hpp"','#include "units/UnitSlot.hpp"','#include "state/state_api.h"','#include "recovered_structs.h"']
   registry=json.loads((ROOT/'data/game_class_registry.json').read_text())
   declarations=json.loads((ROOT/'data/recovered_decls.json').read_text())
   parts={}; inputs={}; sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()

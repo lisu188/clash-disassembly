@@ -188,6 +188,65 @@ The dated local evidence root is `artifacts/cpp-classes/20260908/`:
 This batch does not resolve all family readiness contracts, visual defects,
 mission-05 continuation or campaign progression. Class assignment and byte-view
 helpers are not counted as canonical behavior migration.
+# Resumed origin integration, 2026-09-13
+
+The subsequent merge incorporates published main `b2f3764` after the separate
+regroup repair `f6849c6`. Its production source is identical to validated
+`8e7b694`; the two publication-only changes are documentation. The unsigned DLX
+loader wins the old signed-subtraction variant. Its six focused tests pass,
+as do both production builds and eight asset-free gates.
+
+The comparison against the older `1b8b4b8` snapshot reports exactly one removed
+weak inline `DLXSpriteMutableView::data()` symbol in each linked/archive profile:
+the incoming loader now uses the original raw sprite address. This is an
+explained upstream text change, not a lost recovered identity. That first
+failure remains in `artifacts/cpp-classes/20260913/main-b2f-integration/`.
+The subsequent strict comparison uses the exact published-main snapshots after
+verifying all 144 source inputs and both retained binary/archive hashes. It
+passes with only the separately enumerated GameRandom additions. The reference
+and import provenance are under `artifacts/cpp-classes/20260913/published-main-reference/`;
+`data/class_migration_published_main_text_additions.json` records this comparison.
+All historical ratchets, prior snapshots and failed reports remain unchanged.
+
+Fresh headless gameplay evidence is frozen at the earlier `be837d1` source:
+GCC passes the seven-leg first-Road route with turn 6, `(49,50)`, 2 AP, no path,
+roads 867/879 and all 1,300 visibility bytes matching the September 8 original
+capture. Its unmasked frame comparison has 287,498 differing pixels and mean
+absolute RGB-channel difference 14.44650390625; visual equivalence is not claimed.
+Two Clang attempts fail at input waits (first-path confirmation, then initial
+stack selection). Both complete logs, nonblank frames, saves and verified
+archives remain. Their causes are unresolved; neither is a passing Clang route.
+These runs predate the incoming DLX merge and subsequent unit classes.
+Evidence is `artifacts/cpp-classes/20260913/runtime-before-units/`.
+
+The sealed fresh native reference at `be837d1` records all 1,614 cases for both
+compilers in default and strict modes. GCC coverage passes at 6,161/6,652 lines
+with zero uncovered functions; Clang has eight zero-covered procedural CLIPS
+functions despite 6,799/7,341 lines. Its gate fails and native crashes remain.
+The full inventory, format-reader handling, initial incomplete attempt and
+profiler I/O errors are recorded in [CPP_CLASS_NATIVE_BASELINE.md](CPP_CLASS_NATIVE_BASELINE.md).
+
+The migration branch now incorporates origin `e387a35` after the validated
+`c65e476` class/recovery checkpoint. The two incoming identities are
+`UnitStack_MoveOneTileInDirection` and
+`Rules_BuildRoadOrStepTowardQueuedPath`; their original-backed recovery tests
+remain intact. Thirteen canonical class methods, their separate adapters, both
+registered bindings, all 4,157 historical identities and the ordered 145-source
+inventory remain. The status conflict retains both branches' evidence entries.
+
+Fresh GCC 13 and Clang 18 Debug builds pass warning ratchets, strict cumulative
+migration symbol/storage/initialization comparisons against the retained
+1b8b4b8 snapshot, and all eight asset-free gates. Both incoming focused tests and
+source/generated-header audits pass. No baseline is raised. Exact commands and
+logs are in `artifacts/cpp-classes/20260913/origin-refresh/`; the validator is
+`artifacts/cpp-classes/20260913/validate-stage.py`.
+
+Build directories now live under `build/class-migration-20260913/` in this
+worktree. Old Linux scratch build directories were unavailable on resumption;
+retained workspace evidence is not relabeled as a fresh run. Full native,
+coverage and runtime checks for this checkpoint are recorded separately as they
+complete. Shared main remains under the separately coordinated publication.
+
 
 ## Subsequent combined main validation
 

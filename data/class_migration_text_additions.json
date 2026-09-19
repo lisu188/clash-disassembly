@@ -143,6 +143,132 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC1ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC1El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ],
       "archive_text": [
@@ -285,6 +411,132 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC1ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC1El",
+          "class": "W",
+          "count": 3,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 3,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ]
     },
@@ -401,6 +653,118 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ],
       "archive_text": [
@@ -515,6 +879,118 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash9510GameRandom6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered address-free factory at the original units004 anchor binds only aRandom_initSee[29] and g_RngState by reference; exact source and registry body hash are validated."
+        },
+        {
+          "name": "_ZN7clash9510GameRandomC2ERA29_cRi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial GameRandom constructor binds the exact 29-byte format array and four-byte RNG state word; no allocation, state write, callback or initialization action."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom13Rng_RandRangeEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZNK7clash9510GameRandom14initRandomSeedEcj",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical GameRandom body for one of the two original identities, compared with the separately repaired 79d700c production reference; original adapters and clock/log order remain."
+        },
+        {
+          "name": "_ZN7clash958UnitSlotC2El",
+          "class": "W",
+          "count": 3,
+          "kind": "accessor",
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot25UnitSlot_HasSevereFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot26UnitSlot_CanRecoverFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot45UnitSlot_ShouldGainFatigueFromLowActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot record operation; exhaustive actual-body and callback parity over all relevant byte values and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_CalcMilitaryStrengthEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack31UnitStack_NormalizePeasantCargoEjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack register-contract method; borrows the original packed record and preserves the separately repaired c65e476 implementation and legacy adapter."
+        },
+        {
+          "name": "UnitSlot_BorrowTypeMetadata",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Narrow read-only borrowing accessor anchored immediately after the unchanged immutable 40-row unit metadata table."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot36UnitSlot_CalcActionPointsFromFatigueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot28UnitSlot_GetBaseActionPointsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitSlot AP query; exact actual-source differential tests, explicit getter domain, both pointer widths, full slot/table bytes and 16 alignments."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack19UnitStack_HasPlagueEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_HasLowMoraleUnitEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
         }
       ]
     }
