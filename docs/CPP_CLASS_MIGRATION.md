@@ -1,8 +1,9 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: origin integration after unit queries,
-world geometry and unit-turn relocation. Eleven canonical methods now reside in
-four class-named sources; the ordered manifest contains 145 translation units.
+Track: Win95 reconstruction. Frontier: origin integration after UnitSlot AP and
+UnitStack flag-query relocation. Twenty-three identities have canonical methods
+in six class-named sources. The ordered manifest contains 147 translation units,
+including the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 
@@ -14,12 +15,28 @@ lifecycles remain authoritative. Classes describe the reconstruction's
 organization, not proven original C++ object layouts. The migration does not
 advance campaign or visual-fidelity claims.
 
+The four UnitSlot predicates/order methods pass exhaustive actual-source tests,
+both production builds, strict storage/initialization/symbol comparisons and
+eight asset-free gates. The initial source-order failure and unchanged-body
+placement correction remain recorded in [UNIT_SLOT_CLASS_MIGRATION.md](UNIT_SLOT_CLASS_MIGRATION.md).
+
+The two separately repaired UnitStack strength/cargo methods pass both focused
+comparisons in eight compiler profiles, both production builds, strict surface
+checks and eight asset-free gates. See [UNIT_STACK_REGISTER_CLASSES.md](UNIT_STACK_REGISTER_CLASSES.md).
+
+The two GameRandom methods and the direct UnitTurn caller pass focused
+before/after comparisons, both production builds, exact symbol/storage and
+initialization checks, and all eight asset-free gates. The RNG behavioral repairs
+were committed separately before extraction; relocation passes the same gates.
+See
+[GAME_RANDOM_CLASSES.md](GAME_RANDOM_CLASSES.md) for evidence and limits.
+
 ## Inventory and implementation rules
 
 `data/game_class_registry.json` assigns all 4,157 recovered identities:
 1,849 intended game methods across 116 classes, 22 retained utilities/boundaries
 and 2,286 excluded library implementations. Each procedural disposition has a
-rationale. Five declaration-database helpers are tracked separately without
+rationale. Six declaration-database helpers are tracked separately without
 invented addresses. The five rendering helpers historically filed under `clips`
 are game functions; CLIPS implementations filed under `media` remain procedural.
 Assignment is architectural intent, not proof that a family has migrated.

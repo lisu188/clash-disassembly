@@ -34,6 +34,140 @@ differences remain 439 GCC / 691 Clang with zero crosscheck errors. Complete
 logs were retrieved without failures or restarting jobs.
 [Remote measurements](HUMAN_READABILITY.md#published-ci-observation-after-human-player-selection-cleanup).
 
+## September Main Integration And Class Validation
+
+Track: Win95 reconstruction, behavior-class migration. Published main `02c00bf`
+is integrated with the 23-method class checkpoint. Its independent Road widget
+ownership move brings the manifest to 147 recovered TUs; six are canonical class
+sources and all 4,157 identities remain. Both clean supported builds, warning
+checks, eight asset-free gates, strict migration comparisons, all 540 tooling
+tests and eleven metadata checks pass. The unchanged header and raw link
+ratchets retain their enumerated failures. CI again checks the frozen baselines
+and writes diagnostic metrics separately.
+
+Both integrated first-Road replays pass the complete bounded endpoint byte
+comparison. Both default smoke runs record 11 passes, two selection-marker
+failures and eight skips; the exact-main baseline reproduces all outcomes and
+the same accepted-click trace. The expected-selection contract and completed
+route matrix remain outstanding. Both native builds and the two corrected AP
+tests pass; individual historical crash/assertion outcomes remain reported.
+GCC coverage passes at 92.62%, with all 718 functions covered. Clang measures
+92.74% but retains the same eight uncovered CLIPS functions, so its gate fails.
+Both executable denominators grow by four; the inventory and floor are unchanged.
+The first supplementary mission-13 replay stopped on a dark checkpoint frame;
+controlled baseline/retry evidence is pending. See
+[CPP_CLASS_SEPTEMBER_INTEGRATION.md](CPP_CLASS_SEPTEMBER_INTEGRATION.md).
+
+## UnitStack Plague And Morale Query Extraction And Relocation
+
+Two packed-record queries now use canonical UnitStack methods and retained
+adapters. Eight focused compiler profiles, both production builds, strict
+storage/symbol/initialization checks and eight asset-free gates pass. There are
+23 canonical methods in six class-named files after separately validated,
+unchanged-body relocation. The September 13 disk-space stop and September 19
+successful retry are both recorded; no TU or storage is added. Nearby setter
+repairs remain separate. See
+[UNIT_STACK_QUERY_CLASSES.md](UNIT_STACK_QUERY_CLASSES.md).
+
+## UnitSlot Action-Point Class Extraction And Relocation
+
+The two AP queries now use canonical UnitSlot methods and retained adapters;
+UnitTurn calls the method directly. The immutable metadata table remains in
+its original storage owner behind one narrow accessor. Actual-source AP and
+composed-turn comparisons, both production builds, strict surface checks and
+eight asset-free gates pass. Separate unchanged-body relocation passes the same
+checks. There are now 21 methods in six class-named files and 146 recovered TUs.
+See [UNIT_SLOT_AP_CLASSES.md](UNIT_SLOT_AP_CLASSES.md).
+The preceding 19-method checkpoint passes all 523 tooling tests and eleven
+metadata checks; the unchanged header and raw link ratchets still fail as
+enumerated in [CPP_CLASS_RESUMED_VALIDATION.md](CPP_CLASS_RESUMED_VALIDATION.md).
+
+## UnitStack Strength And Cargo Class Extraction And Relocation
+
+The two repaired identities now use `UnitStack` methods with retained adapters;
+cargo calls the canonical AP query directly. Original-measured and independently
+frozen production comparisons pass all eight compiler profiles, and both
+production builds, strict surface comparisons and eight asset-free gates pass.
+The separate relocation passes the same gates with unchanged method hashes.
+Nineteen methods are now in six class-named sources; the 146-TU inventory and
+historical ratchets remain. See [UNIT_STACK_REGISTER_CLASSES.md](UNIT_STACK_REGISTER_CLASSES.md).
+
+## UnitSlot Class Extraction And Relocation
+
+Four fatigue/order identities now have canonical `UnitSlot` methods and retained
+ordinary callback adapters. Every compiler/optimization profile passes 1,048,576
+byte scenarios; both builds, strict storage/symbol/initialization comparisons and
+eight asset-free gates pass after an unchanged-body source-order correction.
+The separately validated relocation moves the exact four definitions into
+`src/units/UnitSlot.cpp`. Seventeen methods are now in six class-named sources; the ordered
+inventory has 146 TUs. See [UNIT_SLOT_CLASS_MIGRATION.md](UNIT_SLOT_CLASS_MIGRATION.md).
+
+Published main `b2f3764` is integrated into the class branch. The unsigned DLX
+gate, both builds, current-main strict comparisons and eight asset-free gates
+pass. The older comparison's one removed unused inline accessor stays reported.
+Fresh earlier `be837d1` GCC first-Road evidence passes; two Clang input-wait
+failures remain unresolved and retained. See
+[CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md) for precise scope.
+
+## Unit Regroup Recovery Before Class Extraction
+
+The original saved stack index, signed health comparison and packed word access
+are recovered in `UnitStack_RegroupWithOtherStackByHealth`; two proven-unused
+movement contexts receive defined zero values. All 4,096 original-measured
+scenarios pass in four compiler profiles. Both production builds, strict
+symbol/storage/initialization comparisons and eight asset-free gates pass.
+The independent copy-descriptor contract remains unresolved and its proposed
+repair is unapplied. No class or campaign count changes. See
+[UNIT_REGROUP_RECOVERY.md](UNIT_REGROUP_RECOVERY.md).
+
+## Resumed Class Migration And Origin Integration
+
+Track: Win95 reconstruction, requested behavior-class migration. Origin e387a35
+adds the single-tile movement and queued-path Road caller recoveries to the
+validated 13-method class checkpoint. Both clean supported builds, warning
+checks, strict cumulative symbol/storage/initialization comparisons and eight
+asset-free gates pass; both incoming focused regressions also pass. The 145-TU
+inventory, all 4,157 identities and existing ratchets remain. Further UnitSlot
+and UnitStack extraction is underway; full migration remains incomplete.
+See [CPP_CLASS_ORIGIN_REFRESH.md](CPP_CLASS_ORIGIN_REFRESH.md).
+
+## UnitStack Register Recovery Before Class Extraction
+
+Track: Win95 reconstruction, requested behavior-class migration. Military
+strength now forwards the preserved stack address with original low32 wrapping;
+peasant-cargo normalization retains its threshold and uses defined values for
+two proven-unused sync contexts. Signed quantities and packed access match the
+reviewed original instructions. All 5,001 original-measured cases pass in eight
+compiler profiles; both production builds, strict storage/symbol/initialization
+checks and eight asset-free gates pass. Compaction and player-total recovery
+remain separate debt, with no campaign promotion. The class count stays 13.
+See [UNIT_STACK_REGISTER_RECOVERY.md](UNIT_STACK_REGISTER_RECOVERY.md).
+
+## GameRandom Class Extraction And Relocation
+
+Track: Win95 reconstruction, requested behavior-class migration. The two repaired
+RNG routines are canonical `GameRandom` methods with a registered borrowing
+factory and retained ABI adapters. `UnitTurn` calls the RNG method directly.
+All three focused differential families, both production builds, exact
+symbol/storage/initialization checks and eight asset-free gates pass. Thirteen
+identities now have methods in five class-named sources. The two RNG bodies
+move unchanged in the separately validated relocation stage; the ordered
+inventory has 145 TUs. All 4,157 identities and frozen ratchets
+remain; full migration and campaign completion are not claimed. See
+[GAME_RANDOM_CLASSES.md](GAME_RANDOM_CLASSES.md).
+
+## GameRandom Recovery Before Class Extraction
+
+Track: Win95 reconstruction, requested behavior-class migration. The RNG seed
+initializer now passes a defined zero for a proven unused logging context, and
+range results use unsigned addition matching the original DIV/LEA wrap. The two
+clock reads, state updates and existing zero-range compatibility behavior remain.
+Actual production bodies pass 68,932 scenarios and 4,096 sequence steps in each
+GCC/Clang O0/O2 profile; reverted repairs fail the intended checks. Both production
+builds, exact storage/initialization/symbol comparisons and eight asset-free gates
+pass. This is a separate behavior-repair batch; no new class method or campaign
+milestone is claimed. See [GAME_RANDOM_RECOVERY.md](GAME_RANDOM_RECOVERY.md).
+
 ## Human-Player Selection Cleanup Readability
 
 Track: Win95 reconstruction, selection cleanup reached from the Road menu.

@@ -9,6 +9,7 @@
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitSlot.hpp"
 #include "../units/UnitStack.hpp"
 #include "../units/UnitTurn.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
@@ -151,24 +152,24 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
 // 411887: variable 'v11' is possibly undefined
 
 //----- (004118A0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  UnitSlot_ShouldGainFatigueFromLowActionPoints(int slotPtr)
 {
-  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
-  return slot->current_action_points <= 3u && (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_ShouldGainFatigueFromLowActionPoints();
 }
 
 //----- (004118C0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  UnitSlot_CanRecoverFatigue(int slotPtr)
 {
-  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
-  return (slot->state_flags & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_CanRecoverFatigue();
 }
 
 //----- (004118D0) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  UnitSlot_HasSevereFatigue(int slotPtr)
 {
-  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
-  return (int8_t)slot->fatigue >= 80;
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_HasSevereFatigue();
 }
 
 //----- (004118E0) --------------------------------------------------------
@@ -596,89 +597,13 @@ signed int  UnitStack_HasPeasantCargo(int stackPtr)
 }
 
 //----- (004121D0) --------------------------------------------------------
-signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double a3)
+__attribute__((used, retain))
+signed int UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double a3)
 {
-  __int16 *slotPtr; // ecx
-  int totalPeasantQuantity; // esi
-  int peasantSlotCount; // edx
-  int i; // ebx
-  int slotType; // eax
-  __int16 *v8; // edx
-  int j; // ecx
-  __int16 *clearCursor; // ecx
-  int clearIndex; // eax
-  __int16 *clearSlotPtr; // ebx
-  signed int squadCount; // edi
-  int v14 CLASH95_UNUSED; // edx
-  int fullCargoUnits; // eax
-  __int64 v16 CLASH95_UNUSED; // rtt
-  int addedIndex; // ebx
-  int v18; // ebp
-  char minActionPoints; // [esp+4h] [ebp-18h]
-
-  slotPtr = stackPtr + 3;
-  totalPeasantQuantity = 0;
-  peasantSlotCount = 0;
-  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
-  {
-    slotType = *slotPtr;
-    if ( slotType == -1 )
-      break;
-    if ( slotType == UNIT_TYPE_PEASANT_CARGO )
-    {
-      ++peasantSlotCount;
-      totalPeasantQuantity += *((char *)slotPtr + 9);
-    }
-    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
-  }
-  minActionPoints = UnitStack_GetMinCurrentActionPoints((intptr_t)stackPtr);
-  if ( (int)(intptr_t)v8 > totalPeasantQuantity )
-  {
-    clearCursor = stackPtr;
-    clearIndex = 0;
-    clearSlotPtr = stackPtr + 3;
-    do
-    {
-      if ( *clearSlotPtr == -1 )
-        break;
-      if ( clearCursor[3] == UNIT_TYPE_PEASANT_CARGO )
-        clearCursor[3] = -1;
-      clearCursor = (__int16 *)((char *)clearCursor + UNIT_SLOT_RECORD_BYTES);
-      ++clearIndex;
-      clearSlotPtr = (__int16 *)((char *)clearSlotPtr + UNIT_SLOT_RECORD_BYTES);
-    }
-    while ( clearIndex < UNIT_STACK_SLOT_COUNT );
-    Unit_CompactSquad(stackPtr, (int)(intptr_t)clearCursor, a3);
-    squadCount = Unit_GetSquadCount((int)(intptr_t)stackPtr);
-    fullCargoUnits = totalPeasantQuantity / 100;
-    addedIndex = 0;
-    for ( j = (int)(intptr_t)stackPtr + UNIT_SLOT_RECORD_BYTES * squadCount; ; *(_BYTE *)(uintptr_t)(j - 17) = minActionPoints )
-    {
-      v18 = addedIndex + squadCount;
-      if ( addedIndex >= fullCargoUnits )
-        break;
-      j += UNIT_SLOT_RECORD_BYTES;
-      *(_WORD *)(uintptr_t)(j - 25) = UNIT_TYPE_PEASANT_CARGO;
-      *(_BYTE *)(uintptr_t)(j - 16) = 100;
-      *(_BYTE *)(uintptr_t)(j - 15) = 0;
-      *(_BYTE *)(uintptr_t)(j - 14) = 10;
-      ++addedIndex;
-    }
-    LOBYTE(i) = 100;
-    *(_BYTE *)(uintptr_t)(j + 14) = minActionPoints;
-    *(_WORD *)(uintptr_t)(j + 6) = UNIT_TYPE_PEASANT_CARGO;
-    *(_BYTE *)(uintptr_t)(j + 15) = totalPeasantQuantity % 100;
-    v8 = stackPtr;
-    *(_BYTE *)(uintptr_t)(j + 16) = 0;
-    a2 = (DWORD)(intptr_t)stackPtr + UNIT_SLOT_RECORD_BYTES * v18 + UNIT_SLOT_RECORD_BYTES;
-    *(_BYTE *)(uintptr_t)(j + 17) = 10;
-    *(_WORD *)(uintptr_t)(a2 + 6) = -1;
-  }
-  return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)v8, j, i, a2, a3);
+  return clash95::UnitStack((intptr_t)stackPtr).UnitStack_NormalizePeasantCargo(a2, a3);
 }
-// 412213: variable 'v8' is possibly undefined
-// 41224F: variable 'v14' is possibly undefined
-// 4122E3: variable 'j' is possibly undefined
+
+
 
 //----- (00412300) --------------------------------------------------------
 __int16 * UnitStack_CaptureDefeatedStack(
@@ -1088,29 +1013,10 @@ signed int  UnitStack_AdjustMoraleByPredicate(
 }
 
 //----- (00412970) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_CycleOrderState(int result)
 {
-  UnitSlotRecord *slot;
-  char nextOrderState;
-  char clearedFlags;
-  char updatedFlags;
-
-  slot = (UnitSlotRecord *)(uintptr_t)result;
-  nextOrderState = ((slot->stance_bits >> 2) + 1) & 3;
-  clearedFlags = slot->stance_bits & 0xF3;
-  slot->stance_bits = clearedFlags;
-  updatedFlags = (4 * nextOrderState) | clearedFlags;
-  slot->stance_bits = updatedFlags;
-  if ( (unsigned __int8)((unsigned __int8)(16 * updatedFlags) >> 6) > 2u )
-  {
-    slot->stance_bits = updatedFlags & 0xF3;
-    if ( (clearedFlags & 3u) < 3 )
-    {
-      slot->stance_bits = updatedFlags & 0xF0;
-      slot->stance_bits = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
-    }
-  }
-  return result;
+  return clash95::UnitSlot((intptr_t)result).UnitSlot_CycleOrderState();
 }
 
 //----- (004129E0) --------------------------------------------------------
@@ -1195,40 +1101,22 @@ int  UnitStack_SetPlagueFlag(int result)
 }
 
 //----- (00412AC0) --------------------------------------------------------
-signed int  UnitStack_HasPlague(int stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasPlague(int stackPtr)
 {
-  UnitStackRecord *stack;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
-    if ( slot->unit_type_id == -1 )
-      return 0;
-    if ( (slot->state_flags & UNIT_SLOT_FLAG_PLAGUE) != 0 )
-      return 1;
-  }
-  return 0;
+  return clash95::UnitStack(stackPtr).UnitStack_HasPlague();
 }
+
+
 
 //----- (00412AF0) --------------------------------------------------------
-signed int  UnitStack_HasLowMoraleUnit(int stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasLowMoraleUnit(int stackPtr)
 {
-  UnitStackRecord *stack;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
-    if ( slot->unit_type_id == -1 )
-      return 0;
-    if ( (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) != 0 )
-      return 1;
-  }
-  return 0;
+  return clash95::UnitStack(stackPtr).UnitStack_HasLowMoraleUnit();
 }
+
+
 
 //----- (00412B20) --------------------------------------------------------
 int  UnitStackSelection_BuildSelectedSlotIndexList(int result, int slotCount, int *selectedOut)
@@ -1299,12 +1187,8 @@ int  UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck(char *slotArray,
 // 412B90: could not find valid save-restore pair for ebx
 
 //----- (00412BE0) --------------------------------------------------------
-int  UnitStack_CalcMilitaryStrength(int stackPtr)
+__attribute__((used, retain))
+int UnitStack_CalcMilitaryStrength(int stackPtr)
 {
-  signed int squadCount; // eax
-  int v2; // edx
-
-  squadCount = Unit_GetSquadCount(stackPtr);
-  return UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck((char *)(uintptr_t)(v2 + 6), squadCount, 0);
+  return clash95::UnitStack(stackPtr).UnitStack_CalcMilitaryStrength();
 }
-// 412BEA: variable 'v2' is possibly undefined

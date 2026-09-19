@@ -11,6 +11,7 @@
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitSlot.hpp"
 #include "../units/UnitStack.hpp"
 #include "../world/WorldGeometry.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
@@ -306,32 +307,17 @@ int  Camera_CenterOnUnit(int stackIndex)
 }
 
 //----- (0040FDB0) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_CalcActionPointsFromFatigue(__int16 *slotPtr)
 {
-  UnitSlotRecord *slot;
-  int unitType;
-  int fatigueLevel;
-  int result;
-
-  slot = (UnitSlotRecord *)slotPtr;
-  unitType = slot->unit_type_id;
-  if ( unitType < 0 || unitType >= UNIT_TYPE_COUNT )
-    return 0;
-  fatigueLevel = slot->fatigue;
-  result = (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unitType];
-  if ( fatigueLevel >= 80 && fatigueLevel <= 89 )
-    return (192 * result - (__CFSHL__((192 * result) >> 31, 8) + ((192 * result) >> 31 << 8))) >> 8;
-  if ( fatigueLevel >= 90 && fatigueLevel <= 99 )
-    return ((result << 7) - (__CFSHL__(result << 7 >> 31, 8) + (result << 7 >> 31 << 8))) >> 8;
-  if ( fatigueLevel == 100 )
-    return 0;
-  return result;
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_CalcActionPointsFromFatigue();
 }
 
 //----- (0040FE60) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_GetBaseActionPoints(__int16 *slotPtr)
 {
-  return (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * *slotPtr];
+  return clash95::UnitSlot((intptr_t)slotPtr).UnitSlot_GetBaseActionPoints();
 }
 
 //----- (0040FE80) --------------------------------------------------------

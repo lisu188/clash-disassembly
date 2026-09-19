@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "reference_commit": "c65e476273c96fe86b2e4a308798cea89c8696bc",
+  "origin": "Exact pre-migration production definitions at the pinned commit. This fixture establishes migration parity, not independent whole-game equivalence. Only reference entrypoint names are changed at compilation.",
+  "functions": [
+    {
+      "name": "UnitSlot_ShouldGainFatigueFromLowActionPoints",
+      "fixture": "UnitSlot_ShouldGainFatigueFromLowActionPoints.cpp",
+      "file_sha256": "fb51566ccaa2646d29b851c20d236c9dd59286ed7337d3e209fe676e7c0f0548",
+      "body_sha256": "255cdc543b5fa8b906faf363936ad2ec17eaafa9bf5c706c87859157f0593d53",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x004118A0"
+    },
+    {
+      "name": "UnitSlot_CanRecoverFatigue",
+      "fixture": "UnitSlot_CanRecoverFatigue.cpp",
+      "file_sha256": "826edc07914b3fbd892fd710d04d5fa75f5e01ac94133e7eaa532615e7c204c9",
+      "body_sha256": "6c479026f57c58c8558785e85c043e74b352cd0a3e0c003be7f9c0ff35c2f986",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x004118C0"
+    },
+    {
+      "name": "UnitSlot_HasSevereFatigue",
+      "fixture": "UnitSlot_HasSevereFatigue.cpp",
+      "file_sha256": "9ace9364a5f63e4701bbacd13d6b2a65daf6998971eef840abb1f1a0c09f9b96",
+      "body_sha256": "bbab6066305a2df823074b8ef3282957bf5fd2cc7a66dcaa5e691e69092fc62c",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x004118D0"
+    },
+    {
+      "name": "UnitSlot_CycleOrderState",
+      "fixture": "UnitSlot_CycleOrderState.cpp",
+      "file_sha256": "3a1fcc862ff0e866b3884293afc248f95ea1de8e250cd27293cea3241eb9f367",
+      "body_sha256": "edfd669e721a3eef7794a9d420a7f7dcf1bad8361ea2477028833687bb2f8536",
+      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "original_address": "0x00412970"
+    }
+  ]
+}

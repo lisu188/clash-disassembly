@@ -581,10 +581,11 @@
    "original_address": "0x0040FE60",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 380,
-   "source": "src/units/0040F510_00411560_units_001.cpp",
+   "source": "src/units/UnitSlot.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitSlot_GetBaseActionPoints"
+    "kind": "method",
+    "qualified_name": "clash95::UnitSlot::UnitSlot_GetBaseActionPoints",
+    "header": "src/units/UnitSlot.hpp"
    }
   },
   {
@@ -691,10 +692,11 @@
    "original_address": "0x004118D0",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 1597,
-   "source": "src/units/004115E0_00412BE0_units_002.cpp",
+   "source": "src/units/UnitSlot.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitSlot_HasSevereFatigue"
+    "kind": "method",
+    "qualified_name": "clash95::UnitSlot::UnitSlot_HasSevereFatigue",
+    "header": "src/units/UnitSlot.hpp"
    }
   },
   {
@@ -768,10 +770,11 @@
    "original_address": "0x00412970",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 2676,
-   "source": "src/units/004115E0_00412BE0_units_002.cpp",
+   "source": "src/units/UnitSlot.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitSlot_CycleOrderState"
+    "kind": "method",
+    "qualified_name": "clash95::UnitSlot::UnitSlot_CycleOrderState",
+    "header": "src/units/UnitSlot.hpp"
    }
   },
   {
@@ -812,10 +815,11 @@
    "original_address": "0x00412BE0",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 2893,
-   "source": "src/units/004115E0_00412BE0_units_002.cpp",
+   "source": "src/units/UnitStack.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitStack_CalcMilitaryStrength"
+    "kind": "method",
+    "qualified_name": "clash95::UnitStack::UnitStack_CalcMilitaryStrength",
+    "header": "src/units/UnitStack.hpp"
    }
   },
   {

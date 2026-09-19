@@ -1149,8 +1149,8 @@ LABEL_6:
 //----- (004582B0) --------------------------------------------------------
 int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, double a5)
 {
-  int stack_index_reg; // edx
-  int v6; // ecx
+  typedef __int16 RegroupShort __attribute__((aligned(1), may_alias));
+  typedef _WORD RegroupWord __attribute__((aligned(1), may_alias));
   int dx; // ebp
   __int64 dy; // rax
   int result; // eax
@@ -1162,16 +1162,16 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
   int copy_count_first; // ebp
   int first_stack_record; // edx
   _BYTE *copy_dest; // ebx
-  __int16 *first_src_slot; // edx
-  __int16 *second_src_slot; // edx
+  RegroupShort *first_src_slot; // edx
+  RegroupShort *second_src_slot; // edx
   int copy_count_second; // ebp
   _BYTE *copy_dest_second; // ebx
   int healthy_scan_offset; // ebx
   _BYTE *writeback_src; // ebp
   int writeback_index; // ebx
-  _WORD *first_dest_slot; // edx
+  RegroupWord *first_dest_slot; // edx
   signed int writeback_index_second; // ebp
-  _WORD *second_dest_slot; // edx
+  RegroupWord *second_dest_slot; // edx
   _BYTE *writeback_src_second; // ebx
   int compare_index; // ebp
   _BYTE *slot_a_ptr; // ebx
@@ -1194,16 +1194,16 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
   stack_index = a1;
   other_stack_index = a2;
   Debug_Log(a1, a3, a4, (int)(intptr_t)aPrzegrupujar_0);
-  dx = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_reg + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
+  dx = *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
   if ( (int)abs32(dx) > 1
-    || (dy = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index_reg + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
+    || (dy = *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(RegroupShort *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
         (int)((HIDWORD(dy) ^ dy) - HIDWORD(dy)) > 1) )
   {
     result = (int)(intptr_t)Unit_MoveTrackNearTile(
                     stack_index,
-                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET),
-                    v6,
-                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
+                    *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET),
+                    0,
+                    *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
                     dx);
     if ( !result )
       return result;
@@ -1211,16 +1211,16 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     j__nfree_();
     UnitStack_ExecuteQueuedPath(stack_index, 1, -43 * stack_index, dx, a5);
   }
-  dx_second = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
+  dx_second = *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
   if ( (int)abs32(dx_second) > 1
-    || (dy_second = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
+    || (dy_second = *(RegroupShort *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(RegroupShort *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
         (int)((HIDWORD(dy_second) ^ dy_second) - HIDWORD(dy_second)) > 1) )
   {
     result = (int)(intptr_t)Unit_MoveTrackNearTile(
                     other_stack_index,
-                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
-                    v6,
-                    *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
+                    *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
+                    0,
+                    *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
                     dx_second);
     if ( !result )
       return result;
@@ -1229,17 +1229,17 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     UnitStack_ExecuteQueuedPath(other_stack_index, 1, -111 * other_stack_index, dx_second, a5);
   }
   first_stack_offset = UNIT_STACK_STRIDE * stack_index;
-  dx_recheck = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
+  dx_recheck = *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(dx_recheck) ^ dx_recheck) - HIDWORD(dx_recheck)) > 1 )
     return 0;
-  dy_recheck = *(__int16 *)(uintptr_t)(gameData + first_stack_offset + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
+  dy_recheck = *(RegroupShort *)(uintptr_t)(gameData + first_stack_offset + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) - *(RegroupShort *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET);
   if ( (int)((HIDWORD(dy_recheck) ^ dy_recheck) - HIDWORD(dy_recheck)) > 1 )
     return 0;
   copy_count_first = 0;
   total_units = 0;
   first_stack_record = gameData + UNIT_STACK_TABLE_OFFSET + first_stack_offset;
   copy_dest = merged_units;
-  first_src_slot = (__int16 *)(uintptr_t)(first_stack_record + 6);
+  first_src_slot = (RegroupShort *)(uintptr_t)(first_stack_record + 6);
   do
   {
     if ( *first_src_slot == -1 )
@@ -1247,12 +1247,12 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     qmemcpy(copy_dest, first_src_slot, 0x1Cu);
     qmemcpy(copy_dest + 28, first_src_slot + 14, 3u);
     ++copy_count_first;
-    first_src_slot = (__int16 *)((char *)first_src_slot + UNIT_SLOT_RECORD_BYTES);
+    first_src_slot = (RegroupShort *)((char *)first_src_slot + UNIT_SLOT_RECORD_BYTES);
     copy_dest += UNIT_SLOT_RECORD_BYTES;
     ++total_units;
   }
   while ( copy_count_first < 10 );
-  second_src_slot = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * other_stack_index + 6);
+  second_src_slot = (RegroupShort *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * other_stack_index + 6);
   copy_count_second = 0;
   copy_dest_second = &merged_units[UNIT_SLOT_RECORD_BYTES * total_units];
   do
@@ -1262,7 +1262,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     qmemcpy(copy_dest_second, second_src_slot, 0x1Cu);
     qmemcpy(copy_dest_second + 28, second_src_slot + 14, 3u);
     ++copy_count_second;
-    second_src_slot = (__int16 *)((char *)second_src_slot + UNIT_SLOT_RECORD_BYTES);
+    second_src_slot = (RegroupShort *)((char *)second_src_slot + UNIT_SLOT_RECORD_BYTES);
     copy_dest_second += UNIT_SLOT_RECORD_BYTES;
     ++total_units;
   }
@@ -1285,7 +1285,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
         compare_base_offset = sort_pass_offset;
         do
         {
-          if ( merged_units[UNIT_SLOT_RECORD_BYTES * compare_base_index + 9] > merged_units[compare_base_offset + 9] )
+          if ( (signed char)merged_units[UNIT_SLOT_RECORD_BYTES * compare_base_index + 9] > (signed char)merged_units[compare_base_offset + 9] )
           {
             sort_done = 0;
             slot_a_ptr = &merged_units[UNIT_SLOT_RECORD_BYTES * compare_base_index];
@@ -1324,7 +1324,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     units_kept_first = total_units - 10;
   writeback_src = merged_units;
   writeback_index = 0;
-  first_dest_slot = (_WORD *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6);
+  first_dest_slot = (RegroupWord *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6);
   do
   {
     if ( writeback_index >= units_kept_first )
@@ -1338,12 +1338,12 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     }
     writeback_src += UNIT_SLOT_RECORD_BYTES;
     ++writeback_index;
-    first_dest_slot = (_WORD *)((char *)first_dest_slot + UNIT_SLOT_RECORD_BYTES);
+    first_dest_slot = (RegroupWord *)((char *)first_dest_slot + UNIT_SLOT_RECORD_BYTES);
   }
   while ( writeback_index < 10 );
   units_kept_second = total_units - units_kept_first;
   writeback_index_second = 0;
-  second_dest_slot = (_WORD *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6);
+  second_dest_slot = (RegroupWord *)(uintptr_t)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6);
   writeback_src_second = &merged_units[UNIT_SLOT_RECORD_BYTES * units_kept_first];
   do
   {
@@ -1358,7 +1358,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
     }
     writeback_src_second += UNIT_SLOT_RECORD_BYTES;
     ++writeback_index_second;
-    second_dest_slot = (_WORD *)((char *)second_dest_slot + UNIT_SLOT_RECORD_BYTES);
+    second_dest_slot = (RegroupWord *)((char *)second_dest_slot + UNIT_SLOT_RECORD_BYTES);
   }
   while ( writeback_index_second < 10 );
   if ( !units_kept_first )

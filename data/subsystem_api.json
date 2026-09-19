@@ -22,11 +22,13 @@
   "clips->media": 96,
   "clips->runtime": 77,
   "clips->state": 3,
+  "core->buildings": 1,
   "core->media": 5,
   "core->persistence": 1,
   "core->render": 1,
   "core->runtime": 1,
   "core->strategic": 1,
+  "core->units": 1,
   "media->buildings": 1,
   "media->clips": 178,
   "media->core": 3,
@@ -83,7 +85,7 @@
   "units->persistence": 6,
   "units->render": 15,
   "units->runtime": 4,
-  "units->state": 6,
+  "units->state": 7,
   "units->strategic": 21,
   "units->world": 26,
   "world->battle": 6,
@@ -2167,7 +2169,8 @@
     "UnitType_GetLocalizedName",
     "UnitType_GetWorldMoveCost",
     "UnitType_GetRoadMoveCost",
-    "Rules_EnsureObjectPatternVTable"
+    "Rules_EnsureObjectPatternVTable",
+    "UnitSlot_BorrowTypeMetadata"
    ],
    "internal_function_count": 0,
    "state_globals": 0
@@ -11934,6 +11937,23 @@
     "gameData"
    ]
   },
+  "src/core/GameRandom.cpp": {
+   "referenced": [
+    "a1",
+    "a2"
+   ],
+   "visible": [
+    "a1",
+    "a2",
+    "g_CompatStringHolder_Vtable",
+    "g_MainRenderDevice",
+    "g_PathEntryArray_Vtable",
+    "g_PathEntry_Vtable",
+    "g_RenderState",
+    "g_WorldMapBackgroundSpriteSet",
+    "gameData"
+   ]
+  },
   "src/media/004637B0_00465D30_media_001.cpp": {
    "referenced": [],
    "visible": []
@@ -16584,9 +16604,69 @@
    "referenced": [],
    "visible": []
   },
-  "src/units/UnitStack.cpp": {
+  "src/units/UnitSlot.cpp": {
    "referenced": [],
    "visible": []
+  },
+  "src/units/UnitStack.cpp": {
+   "referenced": [
+    "a2"
+   ],
+   "visible": [
+    "BuildingGarrisonDialogActions",
+    "Map_NeighborDX",
+    "Map_NeighborDY",
+    "a1",
+    "a2",
+    "g_ActiveCursorDescriptor",
+    "g_ActiveCursorDescriptorPtr",
+    "g_ActiveDialogAnimationTickHook",
+    "g_ActiveTextSpriteSlot",
+    "g_ActiveUiSpriteSet",
+    "g_ActiveUnitAnimSpriteSet",
+    "g_ActiveUnitMoveTileIndex",
+    "g_ActiveWidgetSpriteTableIndex",
+    "g_BuildingNewOverrideActive",
+    "g_BuildingNewOverrideColumn",
+    "g_BuildingNewOverrideRow",
+    "g_BuildingTypeMaxHitPoints",
+    "g_CurrentPlayerIndex",
+    "g_CursorCoordShift",
+    "g_CursorDesc_Busy",
+    "g_CursorDesc_Default",
+    "g_CursorOverlayPresented",
+    "g_FlagSpriteSet",
+    "g_FogOverlaySpriteSet",
+    "g_LanguageIndex",
+    "g_MainRenderDevice",
+    "g_MapPalettePtr",
+    "g_MarksSpriteSet",
+    "g_MovePathStepSpriteSet",
+    "g_PrimaryRenderSurface",
+    "g_QueenMarriageProposalWidgetTableBase",
+    "g_RenderDevice",
+    "g_RenderHook",
+    "g_RenderState",
+    "g_Render_AnimatedFrameTable",
+    "g_Render_BackgroundColorIndex",
+    "g_SavedCursorDescriptor",
+    "g_SelectedUnitIndex",
+    "g_TreeSpriteSet",
+    "g_UnitAnimFrameIndex",
+    "g_UnitBattleActionWidgetTable",
+    "g_UnitMoveAnimOffsetX",
+    "g_UnitMoveAnimOffsetY",
+    "g_UnitStackSelectionModeActive",
+    "g_UnitTypeRuntimeCoreMetadata",
+    "g_UnitTypeRuntimePointers",
+    "g_WallKindDefenseFactor",
+    "g_WhirlSpriteSet",
+    "g_WorldMapActionButtonWidgetTable",
+    "g_WorldMapBackgroundSpriteSet",
+    "g_WorldMapTileOverlayDrawHook",
+    "g_WorldMapViewportScrolledFlag",
+    "gameData"
+   ]
   },
   "src/units/UnitTurn.cpp": {
    "referenced": [

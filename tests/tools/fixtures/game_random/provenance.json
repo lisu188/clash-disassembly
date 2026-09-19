@@ -1,0 +1,50 @@
+{
+  "reference_commit": "e13abc0266707de6291be39fdea28dca4f3e7e2b",
+  "functions": [
+    {
+      "name": "initRandomSeed",
+      "source": "src/units/00414390_00416750_units_004.cpp",
+      "original_address": "0x00415DD0",
+      "line": 1079,
+      "fixture": "initRandomSeed.before.cpp",
+      "body_sha256": "0a79a04517f8c901ed065e84194b780efe135128583073c16de8e0064a86c899",
+      "file_sha256": "197d81d2ecaa663960adcadf93244237603fa6088274dbeba2457b8886903935"
+    },
+    {
+      "name": "Rng_RandRange",
+      "source": "src/units/00414390_00416750_units_004.cpp",
+      "original_address": "0x00415DF0",
+      "line": 1091,
+      "fixture": "Rng_RandRange.before.cpp",
+      "body_sha256": "2ead959e141293c39027aeaaa14912d3230e2049d2b37cd179430fc3d30430a2",
+      "file_sha256": "dd7d4856dc50048affc455bd62ee3f4e4dcc1aa8e6acbef31a949d27bee68ed8"
+    }
+  ],
+  "reviewed_origin": "1b8b4b8",
+  "original_instruction_ranges": {
+    "initRandomSeed": {
+      "start": "0x415dd0",
+      "end": "0x415df0",
+      "length": 32,
+      "sha256": "4b51d97bc3e9b60cd251791c9f6abfc3b445641485b83f19fb4ef731af172811"
+    },
+    "Rng_RandRange": {
+      "start": "0x415df0",
+      "end": "0x415e40",
+      "length": 80,
+      "sha256": "e78ef4bec341c0c51580a70c534d8adab16ec4136d41e117ab34c8ef882590e7"
+    },
+    "Debug_Log": {
+      "start": "0x419120",
+      "end": "0x4191ef",
+      "length": 207,
+      "sha256": "6667ca46da9c01e8a621f177cff2424db0842ec05e81806c56eef23670812979"
+    },
+    "Time_Now": {
+      "start": "0x4207b0",
+      "end": "0x4207fe",
+      "length": 78,
+      "sha256": "f1f04397e0b82c76535f5ff3b65812da9160ac101935c267b18ad6044270ec9c"
+    }
+  }
+}
