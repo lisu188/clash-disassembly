@@ -2071,6 +2071,61 @@ coordinating review verifies 274 original/regression artifact bindings.
 The exact commands, coverage shards and interrupted attempts remain under
 artifacts/readability/road-functions-20260906/batch-20-selection-sync/build-validation/resume-20260919/.
 
+### Batch 20 integration with class main
+
+The local merge `26c86a9` integrates the selection checkpoint `cdc6d07` with
+published main `dd9bd1a`. Its production class reference is the immutable
+`33a5959` snapshot; the later main commit adds documentation only. The combined
+manifest retains 147 canonical TUs and all 4,157 identities, with exactly this
+selection function's canonical body hash different from the class reference.
+The shared AP fixture already equals main. No public symbol, layout, state
+owner, neighboring function or additional gameplay behavior changes.
+
+Both fresh GCC 13 and Clang 18 builds pass, each with 153 objects and 150 archive
+members in unchanged order. Both warning gates pass with 6,569 recovered
+warnings each. Strict linked-surface comparisons against the class reference
+pass without allowances. Eight asset-free CTests and all 542 tooling tests pass;
+the tooling run takes 398.998 seconds. Manifest, generated-header and TU-include
+checks pass. All 807 production/tooling inputs and four workflow files remain
+unchanged through validation; the coordinating review independently hashes all
+807 inputs again.
+
+Public baseline gates remain failed. The header report has 23 ratchet rows and
+one include-policy error for the `DWORD a2` parameter in `UnitStack.hpp`.
+The unchanged scanner treats that token as the recovered global `a2`; the
+complete error lists reproduce against the frozen class source, with no
+shared-state errors. Both the full raw link profiles and their difference rows
+match the class reference: 453 GCC / 705 Clang, with zero archive crosscheck
+errors. No baseline is reseeded and no policy is relaxed. The earlier 20-header
+and 439/691-link measurements above belong to the pre-class checkpoint.
+
+Coverage is explicitly reused from the sealed class default-worker shards.
+All 718 selected implementations and their policy, fixture, runner and compiler
+inputs are unchanged. The changed synchronization function has zero calls and
+executed lines in every retained worker observation: 16 GCC and 16 Clang.
+The selected neighbor retains its source location and reproduces 2/2 covered
+lines with both pinned readers. Historical GCC coverage remains 6165/6656
+lines (92.62%), no selected function uncovered, gate passing. Historical Clang
+remains 6812/7345 (92.74%), eight functions uncovered, gate failing. This is a
+bounded reuse proof, not a fresh coverage percentage or full native-suite run
+for the merged tree. The historical native outcomes remain 1092 passes, zero
+assertion failures and 524 crashes for GCC; 1092 passes, one assertion failure
+and 523 crashes for Clang, out of 1616 cases each. Strict native outcomes are
+carried as historical evidence only.
+
+Commands, logs, exact input and output hashes, coverage attribution and the final
+freeze are retained under
+artifacts/readability/road-functions-20260906/batch-20-selection-sync/integration-validation/.
+Its published-reference directory contains immutable compiler binaries,
+archives, compile commands, manifest and input inventories for the next
+integration. The initial preparation assertion, snapshot/report filename
+collisions and stronger private empty-policy expectation remain in their failed
+attempt directories; reporting recovery did not repeat the successful native
+builds or CTests. Final documentation updates are recorded separately from the
+validated production commit. Confidence is high for the bounded assembly-backed
+refactor and measured integration comparisons. No new runtime, visual or
+campaign milestone is claimed.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

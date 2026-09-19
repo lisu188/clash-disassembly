@@ -2,7 +2,27 @@
 
 Last consolidated: 2026-09-19.
 
-## Current-Selection Synchronization Readability
+## Current-Selection Integration With Class Main
+
+Track: Win95 reconstruction, Road-family selection readability. The selection
+refactor is integrated with published class main `dd9bd1a`, retaining 147
+canonical TUs, six class sources and all 4,157 identities. Both fresh compiler
+builds, warning gates, strict surface comparisons without allowances, eight
+asset-free CTests and all 542 tooling tests pass. The 807 production/tooling
+inputs are frozen. The public header gate still fails with 23 ratchet rows and
+one inherited `UnitStack.hpp` parameter-name finding; raw link gates still fail
+with 453 GCC / 705 Clang differences. Complete error lists and measured profiles
+match the immutable class reference; no baseline or policy changes.
+
+Coverage uses the sealed class measurements with an input and execution-counter
+proof: GCC 6165/6656 lines, all 718 functions covered, gate passing; Clang
+6812/7345 lines, eight uncovered functions, gate failing. These are historical
+measurements, not fresh merged-tree coverage or native-suite runs. The changed
+function has zero calls in all 32 retained default-worker observations. Runtime,
+visual and campaign milestones remain unchanged.
+[Integrated evidence and limits](HUMAN_READABILITY.md#batch-20-integration-with-class-main).
+
+## Current-Selection Synchronization Before Class Integration
 
 Track: Win95 reconstruction, selection synchronization reached from the Road
 builder menu. `UnitStackSelection_SyncForCurrentSelection` is the twenty-third

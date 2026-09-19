@@ -1,5 +1,22 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-19 - Selection readability integration with class main
+
+Track: Win95 reconstruction. Integrated the current-selection refactor with
+published class main `dd9bd1a`, preserving 147 canonical TUs and all 4,157
+identities. Both fresh compiler builds and warning gates, strict surface
+comparisons without allowances, eight asset-free CTests and all 542 tooling
+tests pass. The 807 production/tooling inputs are frozen. Public header and
+raw-link gates retain exactly the class reference's failures: 23 header rows,
+one `a2` parameter-name policy finding, and 453 GCC / 705 Clang link differences.
+No baseline or policy changes. Sealed class default-worker coverage is reused
+with unchanged selected implementations and zero target calls in all 32 worker
+observations: GCC gate passes; Clang retains eight uncovered functions and a
+failed gate. Native case outcomes remain historical, not rerun for this merge.
+No additional function, global, field or structure is renamed. Confidence is
+high within the recorded comparisons; no runtime or campaign milestone advances.
+[Integrated evidence and validation](../HUMAN_READABILITY.md#batch-20-integration-with-class-main).
+
 ## 2026-09-19 - Road readability: current-selection synchronization
 
 Track: Win95 reconstruction. Reviewed `UnitStackSelection_SyncForCurrentSelection`
