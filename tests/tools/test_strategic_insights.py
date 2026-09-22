@@ -132,6 +132,48 @@ class MatcherEvidenceTests(unittest.TestCase):
             "(eq (nth$ 1 $?f2_fields) (nth$ 2 $?f1_fields))",
         )
 
+    def test_nested_compiled_fact_primitives_are_lowered_in_place(self):
+        alpha = constraints.translate_test(
+            "(and fact-slot-length(slot=0,exact=2) "
+            "fact-pn-constant(slot=0,begin+0 == <arg>) args=(armie))",
+            1,
+            [{"order": 1, "kind": "fact", "negated": False}],
+        )
+        self.assertEqual(
+            alpha.translated,
+            "(and (= (length$ $?f1_fields) 2) (eq (nth$ 1 $?f1_fields) armie))",
+        )
+        joined = constraints.translate_test(
+            "(and fact-join-compare(slot1=0,offset1=0,pattern2=1,slot2=0,offset2=1,pass=1,fail=0) "
+            "(> 3 2))",
+            2,
+            [
+                {"order": 1, "kind": "fact", "negated": False},
+                {"order": 2, "kind": "fact", "negated": False},
+            ],
+        )
+        self.assertEqual(
+            joined.translated,
+            "(and (eq (nth$ 1 $?f2_fields) (nth$ 2 $?f1_fields)) (> 3 2))",
+        )
+
+    def test_nested_compiled_object_compare_is_lowered_in_place(self):
+        conditions = [
+            {"order": 2, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+            {"order": 3, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+        ]
+        translated = object_constraints.translate_object_test(
+            "(and object-join-compare(p3.slot[7],p2.slot[7],pass=1,fail=0) "
+            "(neq object[p2].id object[p3].id))",
+            3,
+            conditions,
+            {"slot_name_by_id": {7: "gracz"}},
+        )
+        self.assertEqual(
+            translated.translated,
+            "(and (eq ?o3_gracz ?o2_gracz) (neq ?o2_id ?o3_id))",
+        )
+
     def test_gate_rejects_positive_and_negative_incomplete_tests(self):
         for negated in (False, True):
             with self.subTest(negated=negated), self.assertRaisesRegex(ValueError, "remain unresolved"):
@@ -191,6 +233,7 @@ class RetailMatcherEvidenceTests(unittest.TestCase):
         self.assertFalse(any(reason.startswith("ambiguous object accessor ") for reason in self.report["by_reason"]))
         self.assertNotIn("object compare pattern mapping ambiguous", self.report["by_reason"])
         self.assertNotIn("fact compare pattern/slot mapping ambiguous", self.report["by_reason"])
+        self.assertNotIn("contains unresolved compiled primitive", self.report["by_reason"])
         self.assertTrue(self.report["by_nested_primitive"])
         self.assertTrue(self.report["by_primitive_payload"])
         self.assertEqual(sum(self.report["by_primitive_family"].values()), self.report["unresolved_test_count"])
