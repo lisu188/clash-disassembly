@@ -130,6 +130,8 @@ def _render_rule(
         "original_name": rule["name"],
         "output_name": output_name,
         "terminal_join": rule["last_join"],
+        "salience": rule["salience"],
+        "dynamic_salience_expr": rule["dynamic_salience_expr"],
         "condition_count": len(rule["conditions"]),
         "conditions": condition_manifest,
         "compiled_test_count": sum(item["compiled_test_count"] for item in condition_manifest),
