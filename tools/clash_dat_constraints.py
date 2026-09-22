@@ -62,18 +62,22 @@ def _fact_binding(order: int, conditions: list[dict]) -> dict | None:
 
 def _object_binding(raw_pattern: int, slot: str | None, conditions: list[dict]) -> int | None:
     by_order = _condition_map(conditions)
-    candidates = []
-    for order in (raw_pattern, raw_pattern + 1):
+
+    def matches(order: int) -> bool:
         item = by_order.get(order)
         if item is None or item["kind"] != "object" or item["negated"]:
-            continue
+            return False
         if slot is not None:
             tested = set(item.get("tested_slots") or ())
             if tested and slot not in tested:
-                continue
-        candidates.append(order)
-    unique = sorted(set(candidates))
-    return unique[0] if len(unique) == 1 else None
+                return False
+        return True
+
+    if matches(raw_pattern):
+        return raw_pattern
+    if matches(raw_pattern + 1):
+        return raw_pattern + 1
+    return None
 
 
 def _fact_pattern_binding(raw_pattern: int, conditions: list[dict]) -> int | None:
