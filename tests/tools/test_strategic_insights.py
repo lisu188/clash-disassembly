@@ -93,14 +93,30 @@ class MatcherEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "provenance mismatch"):
             inventory.inventory_from_manifest(Path("sample.dat"), sample_ir(), manifest)
 
-    def test_binding_blocked_candidate_is_still_unresolved(self):
+    def test_field_dependent_binding_free_candidate_is_still_unresolved(self):
         manifest = sample_manifest()
         condition = manifest["rules_manifest"][0]["conditions"][0]
         condition["binding"] = {"kind": "fact", "fields": None}
-        condition["translations"][0].update(translated="(eq ?f1 7)", reason=None)
+        condition["translations"][0].update(translated="(eq (length$ $?f2_fields) 7)", reason=None)
         report = inventory.inventory_from_manifest(Path("sample.dat"), sample_ir(), manifest)
         self.assertEqual(report["unresolved_test_count"], 1)
-        self.assertEqual(report["entries"][0]["reason"], "source form lacks a legal binding")
+        self.assertEqual(
+            report["entries"][0]["reason"],
+            "source form requires unavailable ordered-fact fields",
+        )
+
+    def test_binding_free_test_without_field_access_is_translated(self):
+        manifest = sample_manifest()
+        condition = manifest["rules_manifest"][0]["conditions"][0]
+        condition["binding"] = {"kind": "fact", "fields": None}
+        condition["translations"][0].update(translated="(not (pelny_port))", reason=None)
+        condition["unresolved_test_count"] = 0
+        manifest["rules_manifest"][0]["unresolved_test_count"] = 0
+        manifest["translated_test_count"] = 1
+        manifest["unresolved_test_count"] = 0
+        report = inventory.inventory_from_manifest(Path("sample.dat"), sample_ir(), manifest)
+        self.assertEqual(report["unresolved_test_count"], 0)
+        self.assertEqual(report["translated_test_count"], 1)
 
     def test_object_pattern_ordinals_prefer_direct_one_based_binding(self):
         conditions = [
@@ -131,6 +147,25 @@ class MatcherEvidenceTests(unittest.TestCase):
             translated.translated,
             "(eq (nth$ 1 $?f2_fields) (nth$ 2 $?f1_fields))",
         )
+
+    def test_current_negated_fact_fields_are_scoped_but_prior_negated_fields_are_rejected(self):
+        current = constraints.translate_test(
+            "(eq fact[p3].slot[0].field[2] 7)",
+            3,
+            [{"order": 3, "kind": "fact", "negated": True}],
+        )
+        self.assertEqual(current.translated, "(eq (nth$ 3 $?f3_fields) 7)")
+
+        prior = constraints.translate_test(
+            "(eq fact[p3].slot[0].field[2] 7)",
+            4,
+            [
+                {"order": 3, "kind": "fact", "negated": True},
+                {"order": 4, "kind": "fact", "negated": False},
+            ],
+        )
+        self.assertIsNone(prior.translated)
+        self.assertEqual(prior.reason, "unresolved fact field accessor p3/slot0")
 
     def test_nested_compiled_fact_primitives_are_lowered_in_place(self):
         alpha = constraints.translate_test(
@@ -228,14 +263,14 @@ class RetailMatcherEvidenceTests(unittest.TestCase):
 
     def test_no_blank_families_and_no_coverage_regression(self):
         self.assertNotIn("", self.report["by_primitive_family"])
-        self.assertLess(self.report["unresolved_test_count"], 333)
-        self.assertGreater(self.report["translated_test_count"], 420)
-        self.assertFalse(any(reason.startswith("ambiguous object accessor ") for reason in self.report["by_reason"]))
-        self.assertNotIn("object compare pattern mapping ambiguous", self.report["by_reason"])
-        self.assertNotIn("fact compare pattern/slot mapping ambiguous", self.report["by_reason"])
-        self.assertNotIn("contains unresolved compiled primitive", self.report["by_reason"])
-        self.assertTrue(self.report["by_nested_primitive"])
-        self.assertTrue(self.report["by_primitive_payload"])
+        self.assertEqual(self.report["unresolved_test_count"], 0)
+        self.assertEqual(self.report["translated_test_count"], 753)
+        self.assertEqual(self.report["fully_translated_rule_count"], 95)
+        self.assertEqual(self.report["unresolved_negated_test_count"], 0)
+        self.assertEqual(self.report["by_reason"], {})
+        self.assertEqual(self.report["by_primitive_family"], {})
+        self.assertEqual(self.report["by_nested_primitive"], {})
+        self.assertEqual(self.report["by_primitive_payload"], {})
         self.assertEqual(sum(self.report["by_primitive_family"].values()), self.report["unresolved_test_count"])
         for entry in self.report["entries"]:
             self.assertIn(entry["phase"], ("alpha", "join"))
