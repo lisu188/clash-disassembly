@@ -49,6 +49,21 @@ jobs:
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         run: python3 tools/check_clash_dat_primitives.py
 
+      - name: Validate direct matcher oracle primitive coverage
+        id: matcher-oracle-coverage
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
+        run: |
+          python3 tools/check_clash_matcher_eval_coverage.py --json clash_matcher_eval_coverage.json
+          python3 -m json.tool clash_matcher_eval_coverage.json >/dev/null
+
+      - name: Upload matcher oracle coverage report
+        if: ${{ always() && steps.matcher-oracle-coverage.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-matcher-eval-coverage
+          path: clash_matcher_eval_coverage.json
+          if-no-files-found: error
+
       - name: Validate strategic AI defclass recovery
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         run: python3 tools/check_clash_dat_classes.py
