@@ -60,9 +60,11 @@ def _condition_map(conditions: list[dict]) -> dict[int, dict]:
     return {int(item["order"]): item for item in conditions}
 
 
-def _fact_binding(order: int, conditions: list[dict]) -> dict | None:
+def _fact_binding(order: int, conditions: list[dict], current_order: int | None = None) -> dict | None:
     item = _condition_map(conditions).get(order)
-    if item is None or item["kind"] != "fact" or item["negated"]:
+    if item is None or item["kind"] != "fact":
+        return None
+    if item["negated"] and order != current_order:
         return None
     return item
 
@@ -192,7 +194,7 @@ def _replace_accessors(text: str, current_order: int, conditions: list[dict]) ->
 
     def fact_multi(match: re.Match[str]) -> str:
         order, slot, begin, end = map(int, match.groups())
-        if slot != 0 or _fact_binding(order, conditions) is None:
+        if slot != 0 or _fact_binding(order, conditions, current_order) is None:
             fail(f"unresolved fact multifield accessor p{order}/slot{slot}")
             return match.group(0)
         return _slice(f"$?f{order}_fields", begin, end)
@@ -211,7 +213,7 @@ def _replace_accessors(text: str, current_order: int, conditions: list[dict]) ->
 
     def fact_field_end(match: re.Match[str]) -> str:
         order, slot, field = map(int, match.groups())
-        if slot != 0 or _fact_binding(order, conditions) is None:
+        if slot != 0 or _fact_binding(order, conditions, current_order) is None:
             fail(f"unresolved fact field-from-end accessor p{order}/slot{slot}")
             return match.group(0)
         return _nth_from_end(f"$?f{order}_fields", field)
@@ -220,7 +222,7 @@ def _replace_accessors(text: str, current_order: int, conditions: list[dict]) ->
 
     def fact_field(match: re.Match[str]) -> str:
         order, slot, field = map(int, match.groups())
-        if slot != 0 or _fact_binding(order, conditions) is None:
+        if slot != 0 or _fact_binding(order, conditions, current_order) is None:
             fail(f"unresolved fact field accessor p{order}/slot{slot}")
             return match.group(0)
         return _nth(f"$?f{order}_fields", field)
@@ -249,7 +251,7 @@ def _replace_accessors(text: str, current_order: int, conditions: list[dict]) ->
 
     def fact_all(match: re.Match[str]) -> str:
         order, slot = map(int, match.groups())
-        if slot != 0 or _fact_binding(order, conditions) is None:
+        if slot != 0 or _fact_binding(order, conditions, current_order) is None:
             fail(f"unresolved fact slot accessor p{order}/slot{slot}")
             return match.group(0)
         return f"$?f{order}_fields"
