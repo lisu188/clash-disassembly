@@ -105,11 +105,17 @@ class SourceExpressionRenderer:
                 name = self.functions[value] if 0 <= value < len(self.functions) else f"<function:{value}>"
                 if name == "if":
                     return self._render_if(args)
-                if name == "assert" and len(args) >= 2 and self.expressions[args[0]][0] == 35 and self.expressions[args[1]][0] == 34:
+                if name == "assert" and args and self.expressions[args[0]][0] == 35:
                     template_index = self.expressions[args[0]][1]
                     template_name = self.templates[template_index] if 0 <= template_index < len(self.templates) else f"template#{template_index}"
-                    fields = [self.node(item) for item in self.siblings(self.expressions[args[1]][2])]
-                    return "(assert (" + " ".join([template_name] + fields) + "))"
+                    if len(args) == 1:
+                        fields = []
+                    elif len(args) >= 2 and self.expressions[args[1]][0] == 34:
+                        fields = [self.node(item) for item in self.siblings(self.expressions[args[1]][2])]
+                    else:
+                        fields = None
+                    if fields is not None:
+                        return "(assert (" + " ".join([template_name] + fields) + "))"
                 return "(" + " ".join([name] + [self.node(item) for item in args]) + ")"
             if type_id == 12:
                 name = self.deffunctions[value] if 0 <= value < len(self.deffunctions) else f"deffunction#{value}"
