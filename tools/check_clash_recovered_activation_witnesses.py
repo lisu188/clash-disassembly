@@ -11,8 +11,9 @@ import tempfile
 from pathlib import Path
 
 from check_clash_recovered_clips_load import ERROR_MARKERS, _clips_string, _render_host_stubs
+from clash_dat_classes import parse_defclass
 from clash_dat_lhs import recover_rule_lhs
-from clash_dat_matcher_eval import FactMatcherContext, evaluate_fact_condition
+from clash_dat_matcher_eval import FactMatcherContext, evaluate_condition
 from decompile_clash_dat import parse_bsave
 from generate_clash_recovered_constraints import render_recovered_program
 
@@ -132,6 +133,34 @@ SCENARIOS = [
             "kasuj_fakt_usunieto_armie",
         ],
     },
+    {
+        "name": "ustaw_pa_object_match",
+        "facts": [{"template": "gracz", "fields": [1]}],
+        "objects": [
+            {"name": "unit-pa-match", "class": "oddzial", "slots": {"gracz": 1, "PA": 1}},
+        ],
+        "globals": {},
+        "commands": [
+            "(reset)",
+            "(assert (gracz 1))",
+            "(make-instance [unit-pa-match] of oddzial (gracz 1) (PA 1))",
+        ],
+        "candidate_rules": ["ustaw_PA_0"],
+    },
+    {
+        "name": "ustaw_pa_object_zero",
+        "facts": [{"template": "gracz", "fields": [1]}],
+        "objects": [
+            {"name": "unit-pa-zero", "class": "oddzial", "slots": {"gracz": 1, "PA": 0}},
+        ],
+        "globals": {},
+        "commands": [
+            "(reset)",
+            "(assert (gracz 1))",
+            "(make-instance [unit-pa-zero] of oddzial (gracz 1) (PA 0))",
+        ],
+        "candidate_rules": ["ustaw_PA_0"],
+    },
 ]
 
 
@@ -168,12 +197,27 @@ def _scenario_facts(scenario: dict) -> list[dict]:
     return [{"template": scenario["template"], "fields": scenario["fields"]}]
 
 
-def build_bsave_oracle(ir: dict, lhs: dict, scenario: dict) -> tuple[list[dict], list[dict]]:
+def _scenario_objects(scenario: dict) -> list[dict]:
+    return list(scenario.get("objects", ()))
+
+
+def build_bsave_oracle(
+    ir: dict,
+    lhs: dict,
+    class_report: dict,
+    scenario: dict,
+) -> tuple[list[dict], list[dict]]:
     facts = _scenario_facts(scenario)
     facts_by_template = {
         item["template"]: tuple(item["fields"])
         for item in facts
     }
+    objects = _scenario_objects(scenario)
+    slot_id_by_name = {
+        name: int(slot_id)
+        for slot_id, name in class_report["slot_name_by_id"].items()
+    }
+
     expected = []
     checks = []
     for name in scenario["candidate_rules"]:
@@ -182,44 +226,115 @@ def build_bsave_oracle(ir: dict, lhs: dict, scenario: dict) -> tuple[list[dict],
             raise AssertionError(f"witness candidate {name} unexpectedly has dynamic salience")
 
         pattern_fields: dict[int, tuple] = {}
+        object_pattern_slots: dict[int, dict[int, object]] = {}
+        object_pattern_addresses: dict[int, str] = {}
         condition_checks = []
         matched = True
+
         for order, condition in enumerate(rule["conditions"], start=1):
-            template = _template_name(condition)
-            fields = facts_by_template.get(template)
-            if fields is None:
-                matched = False
+            if condition["kind"] == "fact":
+                template = _template_name(condition)
+                fields = facts_by_template.get(template)
+                if fields is None:
+                    matched = False
+                    condition_checks.append(
+                        {
+                            "order": order,
+                            "kind": "fact",
+                            "template": template,
+                            "matched": False,
+                            "reason": "scenario has no fact for this template",
+                        }
+                    )
+                    break
+                current_object_slots = dict(object_pattern_slots)
+                current_object_addresses = dict(object_pattern_addresses)
+                context = FactMatcherContext(
+                    fields=fields,
+                    globals=dict(scenario["globals"]),
+                    pattern_fields={**pattern_fields, order: fields},
+                    object_pattern_slots=current_object_slots,
+                    object_pattern_addresses=current_object_addresses,
+                )
+                condition_matched = evaluate_condition(ir, condition, context)
                 condition_checks.append(
                     {
                         "order": order,
+                        "kind": "fact",
                         "template": template,
-                        "matched": False,
-                        "reason": "scenario has no fact for this template",
+                        "fields": list(fields),
+                        "alpha_test_indices": list(condition["alpha_test_indices"]),
+                        "join_test_index": condition["join_test_index"],
+                        "matched": condition_matched,
                     }
                 )
-                break
+                if condition_matched and not condition["negated"]:
+                    pattern_fields[order] = fields
+            elif condition["kind"] == "object":
+                allowed = set(condition.get("classes") or ())
+                object_spec = next(
+                    (
+                        item
+                        for item in objects
+                        if not allowed or item["class"] in allowed
+                    ),
+                    None,
+                )
+                if object_spec is None:
+                    matched = False
+                    condition_checks.append(
+                        {
+                            "order": order,
+                            "kind": "object",
+                            "classes": sorted(allowed),
+                            "matched": False,
+                            "reason": "scenario has no object for the recovered class bitmap",
+                        }
+                    )
+                    break
 
-            context = FactMatcherContext(
-                fields=fields,
-                globals=dict(scenario["globals"]),
-                pattern_fields={**pattern_fields, order: fields},
-            )
-            condition_matched = evaluate_fact_condition(ir, condition, context)
-            condition_checks.append(
-                {
-                    "order": order,
-                    "template": template,
-                    "fields": list(fields),
-                    "alpha_test_indices": list(condition["alpha_test_indices"]),
-                    "join_test_index": condition["join_test_index"],
-                    "matched": condition_matched,
+                slots_by_id = {}
+                for slot_name, value in object_spec.get("slots", {}).items():
+                    if slot_name not in slot_id_by_name:
+                        raise AssertionError(f"unknown recovered object slot name: {slot_name}")
+                    slots_by_id[slot_id_by_name[slot_name]] = value
+
+                current_slots = {**object_pattern_slots, order: slots_by_id}
+                current_addresses = {
+                    **object_pattern_addresses,
+                    order: object_spec["name"],
                 }
-            )
+                context = FactMatcherContext(
+                    fields=tuple(),
+                    globals=dict(scenario["globals"]),
+                    pattern_fields=dict(pattern_fields),
+                    object_pattern_slots=current_slots,
+                    object_pattern_addresses=current_addresses,
+                )
+                condition_matched = evaluate_condition(ir, condition, context)
+                condition_checks.append(
+                    {
+                        "order": order,
+                        "kind": "object",
+                        "class": object_spec["class"],
+                        "name": object_spec["name"],
+                        "slots": object_spec.get("slots", {}),
+                        "classes": list(condition.get("classes") or ()),
+                        "tested_slots": list(condition.get("tested_slots") or ()),
+                        "alpha_test_indices": list(condition["alpha_test_indices"]),
+                        "join_test_index": condition["join_test_index"],
+                        "matched": condition_matched,
+                    }
+                )
+                if condition_matched and not condition["negated"]:
+                    object_pattern_slots[order] = slots_by_id
+                    object_pattern_addresses[order] = object_spec["name"]
+            else:
+                raise AssertionError(f"unsupported recovered condition kind: {condition['kind']}")
+
             if not condition_matched:
                 matched = False
                 break
-            if not condition["negated"]:
-                pattern_fields[order] = fields
 
         checks.append(
             {
@@ -232,6 +347,7 @@ def build_bsave_oracle(ir: dict, lhs: dict, scenario: dict) -> tuple[list[dict],
         )
         if matched:
             expected.append({"salience": rule["salience"], "name": name})
+
     expected.sort(key=lambda item: item["salience"], reverse=True)
     return expected, checks
 
@@ -239,12 +355,13 @@ def build_bsave_oracle(ir: dict, lhs: dict, scenario: dict) -> tuple[list[dict],
 def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
     ir = parse_bsave(source)
     lhs = recover_rule_lhs(source, ir)
+    class_report = parse_defclass(source, ir)
     program, _manifest = render_recovered_program(source, ir)
     stub_source, _ = _render_host_stubs(ir)
 
     scenario_oracles = {}
     for scenario in SCENARIOS:
-        expected, checks = build_bsave_oracle(ir, lhs, scenario)
+        expected, checks = build_bsave_oracle(ir, lhs, class_report, scenario)
         scenario_oracles[scenario["name"]] = {
             "expected": expected,
             "checks": checks,
@@ -309,6 +426,7 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
         detail = {
             "name": scenario["name"],
             "facts": _scenario_facts(scenario),
+            "objects": _scenario_objects(scenario),
             "globals": scenario["globals"],
             "commands": scenario["commands"],
             "bsave_oracle": oracle["checks"],
@@ -328,7 +446,7 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
         "scenarios": details,
         "oracle": "direct evaluation of recovered BSAVE matcher expressions",
         "behavioral_equivalence_verified": False,
-        "equivalence_scope": "eleven controlled fact-only activation witnesses including FACT_JN_CMP2 and FACT_JN_VAR3",
+        "equivalence_scope": "thirteen controlled activation witnesses spanning fact joins and OBJ_GET_SLOT_JNVAR1",
     }
     if failures:
         raise AssertionError("activation witness mismatch: " + json.dumps(failures, sort_keys=True))

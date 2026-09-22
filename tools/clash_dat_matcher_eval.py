@@ -8,6 +8,7 @@ from clash_dat_primitives import decode_primitive
 
 
 SUPPORTED_FACT_MATCHER_PRIMITIVE_TYPES = frozenset({24, 25, 28, 31, 33})
+SUPPORTED_OBJECT_MATCHER_PRIMITIVE_TYPES = frozenset({47})
 
 
 @dataclass(frozen=True)
@@ -15,6 +16,8 @@ class FactMatcherContext:
     fields: tuple[Any, ...]
     globals: dict[str, Any] = field(default_factory=dict)
     pattern_fields: dict[int, tuple[Any, ...]] = field(default_factory=dict)
+    object_pattern_slots: dict[int, dict[int, Any]] = field(default_factory=dict)
+    object_pattern_addresses: dict[int, Any] = field(default_factory=dict)
 
 
 def clips_truth(value: Any) -> bool:
@@ -68,6 +71,22 @@ def _joined_fact_fields(context: FactMatcherContext, raw_pattern: int) -> tuple[
     if raw_pattern + 1 in context.pattern_fields:
         return context.pattern_fields[raw_pattern + 1]
     raise KeyError(f"missing joined fact fields for pattern {raw_pattern}")
+
+
+def _joined_object_slots(context: FactMatcherContext, raw_pattern: int) -> dict[int, Any]:
+    if raw_pattern in context.object_pattern_slots:
+        return context.object_pattern_slots[raw_pattern]
+    if raw_pattern + 1 in context.object_pattern_slots:
+        return context.object_pattern_slots[raw_pattern + 1]
+    raise KeyError(f"missing object slots for pattern {raw_pattern}")
+
+
+def _joined_object_address(context: FactMatcherContext, raw_pattern: int) -> Any:
+    if raw_pattern in context.object_pattern_addresses:
+        return context.object_pattern_addresses[raw_pattern]
+    if raw_pattern + 1 in context.object_pattern_addresses:
+        return context.object_pattern_addresses[raw_pattern + 1]
+    raise KeyError(f"missing object address for pattern {raw_pattern}")
 
 
 def _eval_function(name: str, values: list[Any]) -> Any:
@@ -156,6 +175,24 @@ def evaluate_expression(ir: dict, expression_index: int, context: FactMatcherCon
         raise NotImplementedError(f"compiled matcher primitive type {type_id} is not decoded")
 
     fields = decoded.fields
+    if type_id == 47:
+        raw_pattern = int(fields["which_pattern"])
+        if bool(fields["object_address"]):
+            return _joined_object_address(context, raw_pattern)
+        slots = _joined_object_slots(context, raw_pattern)
+        slot_id = int(fields["which_slot"])
+        if slot_id not in slots:
+            raise KeyError(f"missing object slot {slot_id} for pattern {raw_pattern}")
+        value = slots[slot_id]
+        if bool(fields["all_fields"]):
+            return value
+        field_index = int(fields["which_field"])
+        if field_index == 0 and not isinstance(value, (tuple, list)):
+            return value
+        if not isinstance(value, (tuple, list)):
+            raise TypeError(f"object slot {slot_id} is scalar but field {field_index} was requested")
+        return value[field_index]
+
     if type_id == 24:
         if int(fields["slot1"]) != 0 or int(fields["slot2"]) != 0:
             raise NotImplementedError("fact join oracle currently supports ordered slot 0 only")
@@ -210,12 +247,16 @@ def evaluate_expression(ir: dict, expression_index: int, context: FactMatcherCon
     raise NotImplementedError(f"compiled matcher primitive not supported by fact oracle: {decoded.type_name}")
 
 
-def evaluate_fact_condition(ir: dict, condition: dict, context: FactMatcherContext) -> bool:
-    if condition["kind"] != "fact":
-        raise ValueError("fact matcher oracle received a non-fact condition")
+def evaluate_condition(ir: dict, condition: dict, context: FactMatcherContext) -> bool:
     tests = [int(index) for index in condition.get("alpha_test_indices", ())]
     join_test = int(condition.get("join_test_index", -1))
     if join_test != -1:
         tests.append(join_test)
     matched = all(clips_truth(evaluate_expression(ir, index, context)) for index in tests)
     return not matched if bool(condition.get("negated")) else matched
+
+
+def evaluate_fact_condition(ir: dict, condition: dict, context: FactMatcherContext) -> bool:
+    if condition["kind"] != "fact":
+        raise ValueError("fact matcher oracle received a non-fact condition")
+    return evaluate_condition(ir, condition, context)
