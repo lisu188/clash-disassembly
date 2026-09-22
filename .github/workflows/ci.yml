@@ -89,6 +89,21 @@ jobs:
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
         run: python3 tools/check_clash_recovered_clips_load.py
 
+      - name: Validate recompiled strategic AI RETE path depth
+        id: recovered-rete
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
+        run: |
+          python3 tools/check_clash_recovered_rete_runtime.py --json clash_recovered_rete_runtime.json
+          python3 -m json.tool clash_recovered_rete_runtime.json >/dev/null
+
+      - name: Upload recompiled RETE path report
+        if: ${{ always() && steps.recovered-rete.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-recovered-rete-runtime
+          path: clash_recovered_rete_runtime.json
+          if-no-files-found: error
+
       - name: Validate JSON files
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         shell: bash
