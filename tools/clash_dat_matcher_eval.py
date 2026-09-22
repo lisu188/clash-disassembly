@@ -7,6 +7,9 @@ from typing import Any
 from clash_dat_primitives import decode_primitive
 
 
+SUPPORTED_FACT_MATCHER_PRIMITIVE_TYPES = frozenset({24, 25, 28, 31, 33})
+
+
 @dataclass(frozen=True)
 class FactMatcherContext:
     fields: tuple[Any, ...]
