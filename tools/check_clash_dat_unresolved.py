@@ -77,11 +77,25 @@ def inventory_from_manifest(path: Path, ir: dict, manifest: dict) -> dict:
                 roots.append((condition["join_test_index"], "join"))
             if len(roots) != len(translations):
                 raise ValueError(f"matcher provenance mismatch in {rule['output_name']} CE{condition['condition']}")
+            unavailable = (
+                f"$?f{condition['condition']}_fields"
+                if binding["kind"] == "fact" and binding.get("fields") is None
+                else None
+            )
             condition_entries = []
             for item, (root, phase) in zip(translations, roots):
-                if item["translated"] is not None:
+                binding_blocks_test = (
+                    item["translated"] is not None
+                    and unavailable is not None
+                    and unavailable in item["translated"]
+                )
+                if item["translated"] is not None and not binding_blocks_test:
                     continue
-                reason = item["reason"] or "source form lacks a legal binding"
+                reason = item["reason"] or (
+                    "source form requires unavailable ordered-fact fields"
+                    if binding_blocks_test
+                    else "source form lacks a legal binding"
+                )
                 condition_entries.append({
                     "rule_record": rule["record_index"],
                     "rule": rule["original_name"],
