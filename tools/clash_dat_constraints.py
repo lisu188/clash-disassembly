@@ -44,6 +44,13 @@ _FACT_CONST = re.compile(
 _FACT_JOIN_CMP = re.compile(
     r"^fact-join-compare\(slot1=(\d+),offset1=(\d+),pattern2=(\d+),slot2=(\d+),offset2=(\d+),pass=(\d+),fail=(\d+)\)$"
 )
+_FACT_LENGTH_INLINE = re.compile(r"fact-slot-length\(slot=(\d+),(exact|minimum)=(\d+)\)")
+_FACT_CONST_INLINE = re.compile(
+    r"fact-pn-constant\(slot=(\d+),(begin|end)\+(\d+) (==|!=) <arg>\) args=\(([^()]*)\)"
+)
+_FACT_JOIN_CMP_INLINE = re.compile(
+    r"fact-join-compare\(slot1=(\d+),offset1=(\d+),pattern2=(\d+),slot2=(\d+),offset2=(\d+),pass=(\d+),fail=(\d+)\)"
+)
 _OBJ_JOIN_CMP = re.compile(
     r"^object-join-compare\(p(\d+)\.slot\[(\d+)\],p(\d+)\.slot\[(\d+)\],pass=(\d+),fail=(\d+)\)$"
 )
@@ -114,6 +121,65 @@ def _comparison(pass_flag: int, fail_flag: int) -> str | None:
     if pass_flag == 0 and fail_flag == 1:
         return "neq"
     return None
+
+
+def _replace_inline_fact_primitives(
+    text: str,
+    current_order: int,
+    conditions: list[dict],
+) -> tuple[str | None, str | None]:
+    failure: str | None = None
+    current = _condition_map(conditions).get(current_order)
+
+    def fail(reason: str, original: str) -> str:
+        nonlocal failure
+        if failure is None:
+            failure = reason
+        return original
+
+    def length_test(match: re.Match[str]) -> str:
+        slot = int(match.group(1))
+        mode = match.group(2)
+        length = int(match.group(3))
+        if slot != 0 or current is None or current["kind"] != "fact":
+            return fail("fact length test is not ordered slot 0", match.group(0))
+        op = "=" if mode == "exact" else ">="
+        return f"({op} (length$ $?f{current_order}_fields) {length})"
+
+    text = _FACT_LENGTH_INLINE.sub(length_test, text)
+
+    def constant_test(match: re.Match[str]) -> str:
+        slot = int(match.group(1))
+        direction = match.group(2)
+        offset = int(match.group(3))
+        op = match.group(4)
+        argument = match.group(5).strip()
+        if slot != 0 or current is None or current["kind"] != "fact":
+            return fail("fact constant test is not ordered slot 0", match.group(0))
+        fields = f"$?f{current_order}_fields"
+        lhs = _nth(fields, offset) if direction == "begin" else _nth_from_end(fields, offset)
+        replaced_arg, reason = _replace_accessors(argument, current_order, conditions)
+        if replaced_arg is None:
+            return fail(reason or "fact constant argument unresolved", match.group(0))
+        clips_op = "eq" if op == "==" else "neq"
+        return f"({clips_op} {lhs} {replaced_arg})"
+
+    text = _FACT_CONST_INLINE.sub(constant_test, text)
+
+    def join_compare(match: re.Match[str]) -> str:
+        slot1, offset1, pattern2, slot2, offset2, passed, failed = map(int, match.groups())
+        op = _comparison(passed, failed)
+        previous = _fact_pattern_binding(pattern2, conditions)
+        if op is None:
+            return fail("fact compare pass/fail mode unresolved", match.group(0))
+        if slot1 != 0 or slot2 != 0 or current is None or current["kind"] != "fact" or previous is None:
+            return fail("fact compare pattern/slot mapping ambiguous", match.group(0))
+        lhs = _nth(f"$?f{current_order}_fields", offset1)
+        rhs = _nth(f"$?f{previous}_fields", offset2)
+        return f"({op} {lhs} {rhs})"
+
+    text = _FACT_JOIN_CMP_INLINE.sub(join_compare, text)
+    return (None, failure) if failure is not None else (text, None)
 
 
 def _replace_accessors(text: str, current_order: int, conditions: list[dict]) -> tuple[str | None, str | None]:
@@ -280,7 +346,10 @@ def translate_test(source: str, current_order: int, conditions: list[dict]) -> C
             return ConstraintTranslation(source, None, "object compare pass/fail mode unresolved")
         return ConstraintTranslation(source, None, f"object compare needs slot-id mapping ({slot1},{slot2})")
 
-    replaced, reason = _replace_accessors(source, current_order, conditions)
+    inlined, reason = _replace_inline_fact_primitives(source, current_order, conditions)
+    if inlined is None:
+        return ConstraintTranslation(source, None, reason)
+    replaced, reason = _replace_accessors(inlined, current_order, conditions)
     if replaced is None:
         return ConstraintTranslation(source, None, reason)
     opaque_markers = (
