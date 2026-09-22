@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 import check_clash_dat_unresolved as inventory
+import clash_dat_constraints as constraints
+import clash_dat_object_constraints as object_constraints
 import generate_clash_recovered_constraints as generator
 from decompile_clash_dat import parse_bsave
 from literal_common import parse_prelude_macros
@@ -91,14 +93,121 @@ class MatcherEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "provenance mismatch"):
             inventory.inventory_from_manifest(Path("sample.dat"), sample_ir(), manifest)
 
-    def test_binding_blocked_candidate_is_still_unresolved(self):
+    def test_field_dependent_binding_free_candidate_is_still_unresolved(self):
         manifest = sample_manifest()
         condition = manifest["rules_manifest"][0]["conditions"][0]
         condition["binding"] = {"kind": "fact", "fields": None}
-        condition["translations"][0].update(translated="(eq ?f1 7)", reason=None)
+        condition["translations"][0].update(translated="(eq (length$ $?f2_fields) 7)", reason=None)
         report = inventory.inventory_from_manifest(Path("sample.dat"), sample_ir(), manifest)
         self.assertEqual(report["unresolved_test_count"], 1)
-        self.assertEqual(report["entries"][0]["reason"], "source form lacks a legal binding")
+        self.assertEqual(
+            report["entries"][0]["reason"],
+            "source form requires unavailable ordered-fact fields",
+        )
+
+    def test_binding_free_test_without_field_access_is_translated(self):
+        manifest = sample_manifest()
+        condition = manifest["rules_manifest"][0]["conditions"][0]
+        condition["binding"] = {"kind": "fact", "fields": None}
+        condition["translations"][0].update(translated="(not (pelny_port))", reason=None)
+        condition["unresolved_test_count"] = 0
+        manifest["rules_manifest"][0]["unresolved_test_count"] = 0
+        manifest["translated_test_count"] = 1
+        manifest["unresolved_test_count"] = 0
+        report = inventory.inventory_from_manifest(Path("sample.dat"), sample_ir(), manifest)
+        self.assertEqual(report["unresolved_test_count"], 0)
+        self.assertEqual(report["translated_test_count"], 1)
+
+    def test_object_pattern_ordinals_prefer_direct_one_based_binding(self):
+        conditions = [
+            {"order": 2, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+            {"order": 3, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+        ]
+        translated = constraints.translate_test("(neq object[p2].id object[p3].id)", 3, conditions)
+        self.assertEqual(translated.translated, "(neq ?o2_id ?o3_id)")
+        joined = object_constraints.translate_object_test(
+            "object-join-compare(p3.slot[7],p2.slot[7],pass=1,fail=0)",
+            3,
+            conditions,
+            {"slot_name_by_id": {7: "gracz"}},
+        )
+        self.assertEqual(joined.translated, "(eq ?o3_gracz ?o2_gracz)")
+
+    def test_fact_join_compare_pattern_is_direct_one_based_binding(self):
+        conditions = [
+            {"order": 1, "kind": "fact", "negated": False},
+            {"order": 2, "kind": "fact", "negated": False},
+        ]
+        translated = constraints.translate_test(
+            "fact-join-compare(slot1=0,offset1=0,pattern2=1,slot2=0,offset2=1,pass=1,fail=0)",
+            2,
+            conditions,
+        )
+        self.assertEqual(
+            translated.translated,
+            "(eq (nth$ 1 $?f2_fields) (nth$ 2 $?f1_fields))",
+        )
+
+    def test_current_negated_fact_fields_are_scoped_but_prior_negated_fields_are_rejected(self):
+        current = constraints.translate_test(
+            "(eq fact[p3].slot[0].field[2] 7)",
+            3,
+            [{"order": 3, "kind": "fact", "negated": True}],
+        )
+        self.assertEqual(current.translated, "(eq (nth$ 3 $?f3_fields) 7)")
+
+        prior = constraints.translate_test(
+            "(eq fact[p3].slot[0].field[2] 7)",
+            4,
+            [
+                {"order": 3, "kind": "fact", "negated": True},
+                {"order": 4, "kind": "fact", "negated": False},
+            ],
+        )
+        self.assertIsNone(prior.translated)
+        self.assertEqual(prior.reason, "unresolved fact field accessor p3/slot0")
+
+    def test_nested_compiled_fact_primitives_are_lowered_in_place(self):
+        alpha = constraints.translate_test(
+            "(and fact-slot-length(slot=0,exact=2) "
+            "fact-pn-constant(slot=0,begin+0 == <arg>) args=(armie))",
+            1,
+            [{"order": 1, "kind": "fact", "negated": False}],
+        )
+        self.assertEqual(
+            alpha.translated,
+            "(and (= (length$ $?f1_fields) 2) (eq (nth$ 1 $?f1_fields) armie))",
+        )
+        joined = constraints.translate_test(
+            "(and fact-join-compare(slot1=0,offset1=0,pattern2=1,slot2=0,offset2=1,pass=1,fail=0) "
+            "(> 3 2))",
+            2,
+            [
+                {"order": 1, "kind": "fact", "negated": False},
+                {"order": 2, "kind": "fact", "negated": False},
+            ],
+        )
+        self.assertEqual(
+            joined.translated,
+            "(and (eq (nth$ 1 $?f2_fields) (nth$ 2 $?f1_fields)) (> 3 2))",
+        )
+
+    def test_nested_compiled_object_compare_is_lowered_in_place(self):
+        conditions = [
+            {"order": 2, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+            {"order": 3, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+        ]
+        translated = object_constraints.translate_object_test(
+            "(and object-join-compare(p3.slot[7],p2.slot[7],pass=1,fail=0) "
+            "(neq object[p2].id object[p3].id))",
+            3,
+            conditions,
+            {"slot_name_by_id": {7: "gracz"}},
+        )
+        self.assertEqual(
+            translated.translated,
+            "(and (eq ?o3_gracz ?o2_gracz) (neq ?o2_id ?o3_id))",
+        )
 
     def test_gate_rejects_positive_and_negative_incomplete_tests(self):
         for negated in (False, True):
@@ -154,10 +263,14 @@ class RetailMatcherEvidenceTests(unittest.TestCase):
 
     def test_no_blank_families_and_no_coverage_regression(self):
         self.assertNotIn("", self.report["by_primitive_family"])
-        self.assertLessEqual(self.report["unresolved_test_count"], 333)
-        self.assertGreaterEqual(self.report["translated_test_count"], 420)
-        self.assertTrue(self.report["by_nested_primitive"])
-        self.assertTrue(self.report["by_primitive_payload"])
+        self.assertEqual(self.report["unresolved_test_count"], 0)
+        self.assertEqual(self.report["translated_test_count"], 753)
+        self.assertEqual(self.report["fully_translated_rule_count"], 95)
+        self.assertEqual(self.report["unresolved_negated_test_count"], 0)
+        self.assertEqual(self.report["by_reason"], {})
+        self.assertEqual(self.report["by_primitive_family"], {})
+        self.assertEqual(self.report["by_nested_primitive"], {})
+        self.assertEqual(self.report["by_primitive_payload"], {})
         self.assertEqual(sum(self.report["by_primitive_family"].values()), self.report["unresolved_test_count"])
         for entry in self.report["entries"]:
             self.assertIn(entry["phase"], ("alpha", "join"))

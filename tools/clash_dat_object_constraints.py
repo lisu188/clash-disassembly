@@ -15,6 +15,9 @@ from clash_dat_constraints import ConstraintTranslation, _comparison, _replace_a
 _OBJ_JOIN_CMP = re.compile(
     r"^object-join-compare\(p(\d+)\.slot\[(\d+)\],p(\d+)\.slot\[(\d+)\],pass=(\d+),fail=(\d+)\)$"
 )
+_OBJ_JOIN_CMP_INLINE = re.compile(
+    r"object-join-compare\(p(\d+)\.slot\[(\d+)\],p(\d+)\.slot\[(\d+)\],pass=(\d+),fail=(\d+)\)"
+)
 _OBJ_PN_CONST = re.compile(
     r"^object-pn-constant\(offset=(\d+),from_beginning=(\d+),general=(\d+),pass=(\d+),fail=(\d+),value=<arg>\)(?: args=\((.*)\))?$"
 )
@@ -69,25 +72,27 @@ def _condition_map(conditions: list[dict]) -> dict[int, dict]:
 
 
 def _object_binding(raw_pattern: int, slot_name: str, current_order: int, conditions: list[dict]) -> int | None:
-    """Resolve zero/one based compiled object pattern ids by unique evidence.
+    """Resolve the retail one-based object pattern ordinal, with a compatibility fallback.
 
     A negated object CE can be referenced only while translating its own join test;
     variables from earlier negated CEs are out of scope and are rejected.
     """
     by_order = _condition_map(conditions)
-    candidates = []
-    for order in (raw_pattern, raw_pattern + 1):
+
+    def matches(order: int) -> bool:
         item = by_order.get(order)
         if item is None or item["kind"] != "object":
-            continue
+            return False
         if item["negated"] and order != current_order:
-            continue
+            return False
         tested = set(item.get("tested_slots") or ())
-        if tested and slot_name not in tested:
-            continue
-        candidates.append(order)
-    unique = sorted(set(candidates))
-    return unique[0] if len(unique) == 1 else None
+        return not tested or slot_name in tested
+
+    if matches(raw_pattern):
+        return raw_pattern
+    if matches(raw_pattern + 1):
+        return raw_pattern + 1
+    return None
 
 
 def translate_object_test(
@@ -144,7 +149,32 @@ def translate_object_test(
             return ConstraintTranslation(source, None, reason)
         return ConstraintTranslation(source, f"({op} ?o{current_order}_{alpha_context.slot_name} {replaced})", None)
 
-    return translate_test(source, current_order, conditions)
+    failure: str | None = None
+
+    def inline_compare(item: re.Match[str]) -> str:
+        nonlocal failure
+        p1, slot1_id, p2, slot2_id, passed, failed = map(int, item.groups())
+        op = _comparison(passed, failed)
+        if op is None:
+            failure = failure or "object compare pass/fail mode unresolved"
+            return item.group(0)
+        slot1 = class_report["slot_name_by_id"].get(slot1_id)
+        slot2 = class_report["slot_name_by_id"].get(slot2_id)
+        if slot1 is None or slot2 is None:
+            failure = failure or f"object compare uses system/unknown slot ids ({slot1_id},{slot2_id})"
+            return item.group(0)
+        order1 = _object_binding(p1, slot1, current_order, conditions)
+        order2 = _object_binding(p2, slot2, current_order, conditions)
+        if order1 is None or order2 is None:
+            failure = failure or "object compare pattern mapping ambiguous"
+            return item.group(0)
+        return f"({op} ?o{order1}_{slot1} ?o{order2}_{slot2})"
+
+    inlined = _OBJ_JOIN_CMP_INLINE.sub(inline_compare, source)
+    if failure is not None:
+        return ConstraintTranslation(source, None, failure)
+    translated = translate_test(inlined, current_order, conditions)
+    return ConstraintTranslation(source, translated.translated, translated.reason)
 
 
 def translate_condition_tests(

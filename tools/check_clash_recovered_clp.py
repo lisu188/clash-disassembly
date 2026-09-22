@@ -73,8 +73,12 @@ def main() -> int:
     compiled = manifest["compiled_test_count"]
     translated = manifest["translated_test_count"]
     unresolved = manifest["unresolved_test_count"]
-    assert compiled > 0
-    assert translated > 0
+    assert compiled == 753
+    assert translated == 753
+    assert unresolved == 0
+    assert manifest["matcher_complete"] is True
+    assert manifest["fully_translated_rule_count"] == 95
+    assert manifest["unresolved_negated_test_count"] == 0
     assert translated + unresolved == compiled
     assert manifest["class_bitmap_tests_emitted"] > 0
     assert manifest["object_join_translated_count"] > 0
@@ -139,7 +143,7 @@ def main() -> int:
     assert duplicate_names, "expected BSAVE disjunct records sharing source rule names"
     assert manifest["synthetic_rule_renames"], "duplicate rule/disjunct names must be made unique"
 
-    assert program.count(";;; unresolved compiled-test") == unresolved
+    assert ";;; unresolved compiled-test" not in program
     assert_balanced_clips(program)
 
     print("CLASH_recovered.clp source-projection contract: PASS")

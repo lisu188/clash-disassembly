@@ -147,7 +147,11 @@ bits 33..39   offset2
 ```
 
 The record spans two 32-bit bitfield allocation units, matching the eight-byte
-bitmap present in the Win32 image.
+bitmap present in the Win32 image. Unlike `FACT_JN_VAR1`/`FACT_JN_VAR3`,
+which store `pattern - 1` for partial-match retrieval, `FACT_JN_CMP2.pattern2`
+stores the referenced LHS pattern ordinal directly. This follows the CLIPS
+generator assignment `hack2.pattern2 = referringNode->pattern` and is reflected
+by the retail matcher translation.
 
 ## Object primitive layouts
 
