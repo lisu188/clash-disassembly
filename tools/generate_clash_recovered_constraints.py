@@ -48,6 +48,12 @@ def _render_condition(
     resolved = [item.translated for item in translated if item.translated is not None]
     unresolved = [item for item in translated if item.translated is None]
 
+    if binding["kind"] == "fact" and binding.get("fields") is None and resolved:
+        unavailable = f"$?f{condition['order']}_fields"
+        blocked = [item for item in translated if item.translated is not None and unavailable in item.translated]
+        unresolved.extend(blocked)
+        resolved = [item for item in resolved if unavailable not in item]
+
     classes = list(condition.get("classes") or [])
     class_test = None
     if condition["kind"] == "object" and len(classes) > 1:
