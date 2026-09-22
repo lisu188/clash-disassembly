@@ -53,6 +53,11 @@ jobs:
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         run: python3 tools/check_clash_dat_classes.py
 
+      - name: Validate strategic AI deffacts recovery
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
+        run: python3 tools/check_clash_dat_deffacts.py
+
+
       - name: Validate strategic AI slot facet recovery
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         run: python3 tools/check_clash_dat_slot_facets.py
