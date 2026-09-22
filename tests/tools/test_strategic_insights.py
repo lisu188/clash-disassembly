@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 import check_clash_dat_unresolved as inventory
+import clash_dat_constraints as constraints
+import clash_dat_object_constraints as object_constraints
 import generate_clash_recovered_constraints as generator
 from decompile_clash_dat import parse_bsave
 from literal_common import parse_prelude_macros
@@ -100,6 +102,21 @@ class MatcherEvidenceTests(unittest.TestCase):
         self.assertEqual(report["unresolved_test_count"], 1)
         self.assertEqual(report["entries"][0]["reason"], "source form lacks a legal binding")
 
+    def test_object_pattern_ordinals_prefer_direct_one_based_binding(self):
+        conditions = [
+            {"order": 2, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+            {"order": 3, "kind": "object", "negated": False, "tested_slots": ("id", "gracz")},
+        ]
+        translated = constraints.translate_test("(neq object[p2].id object[p3].id)", 3, conditions)
+        self.assertEqual(translated.translated, "(neq ?o2_id ?o3_id)")
+        joined = object_constraints.translate_object_test(
+            "object-join-compare(p3.slot[7],p2.slot[7],pass=1,fail=0)",
+            3,
+            conditions,
+            {"slot_name_by_id": {7: "gracz"}},
+        )
+        self.assertEqual(joined.translated, "(eq ?o3_gracz ?o2_gracz)")
+
     def test_gate_rejects_positive_and_negative_incomplete_tests(self):
         for negated in (False, True):
             with self.subTest(negated=negated), self.assertRaisesRegex(ValueError, "remain unresolved"):
@@ -154,8 +171,10 @@ class RetailMatcherEvidenceTests(unittest.TestCase):
 
     def test_no_blank_families_and_no_coverage_regression(self):
         self.assertNotIn("", self.report["by_primitive_family"])
-        self.assertLessEqual(self.report["unresolved_test_count"], 333)
-        self.assertGreaterEqual(self.report["translated_test_count"], 420)
+        self.assertLess(self.report["unresolved_test_count"], 333)
+        self.assertGreater(self.report["translated_test_count"], 420)
+        self.assertFalse(any(reason.startswith("ambiguous object accessor ") for reason in self.report["by_reason"]))
+        self.assertNotIn("object compare pattern mapping ambiguous", self.report["by_reason"])
         self.assertTrue(self.report["by_nested_primitive"])
         self.assertTrue(self.report["by_primitive_payload"])
         self.assertEqual(sum(self.report["by_primitive_family"].values()), self.report["unresolved_test_count"])
