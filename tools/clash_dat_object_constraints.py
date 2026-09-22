@@ -69,25 +69,27 @@ def _condition_map(conditions: list[dict]) -> dict[int, dict]:
 
 
 def _object_binding(raw_pattern: int, slot_name: str, current_order: int, conditions: list[dict]) -> int | None:
-    """Resolve zero/one based compiled object pattern ids by unique evidence.
+    """Resolve the retail one-based object pattern ordinal, with a compatibility fallback.
 
     A negated object CE can be referenced only while translating its own join test;
     variables from earlier negated CEs are out of scope and are rejected.
     """
     by_order = _condition_map(conditions)
-    candidates = []
-    for order in (raw_pattern, raw_pattern + 1):
+
+    def matches(order: int) -> bool:
         item = by_order.get(order)
         if item is None or item["kind"] != "object":
-            continue
+            return False
         if item["negated"] and order != current_order:
-            continue
+            return False
         tested = set(item.get("tested_slots") or ())
-        if tested and slot_name not in tested:
-            continue
-        candidates.append(order)
-    unique = sorted(set(candidates))
-    return unique[0] if len(unique) == 1 else None
+        return not tested or slot_name in tested
+
+    if matches(raw_pattern):
+        return raw_pattern
+    if matches(raw_pattern + 1):
+        return raw_pattern + 1
+    return None
 
 
 def translate_object_test(
