@@ -76,6 +76,34 @@ SCENARIOS = [
         "commands": ["(reset)", "(assert (kasuj nie_swiatynie 0 0))"],
         "candidate_rules": ["kasuj_kasuj_swiatynie"],
     },
+    {
+        "name": "usunieto_armie_oddz_join_match",
+        "facts": [
+            {"template": "usunieto", "fields": ["armie", 42]},
+            {"template": "oddz", "fields": [42]},
+        ],
+        "globals": {},
+        "commands": ["(reset)", "(assert (usunieto armie 42))", "(assert (oddz 42))"],
+        "candidate_rules": [
+            "kasuj_fakty_dla_usunietej_armii_oddz",
+            "kasuj_fakt_usunieto_armie",
+            "kasuj_oddz",
+        ],
+    },
+    {
+        "name": "usunieto_armie_oddz_join_mismatch",
+        "facts": [
+            {"template": "usunieto", "fields": ["armie", 42]},
+            {"template": "oddz", "fields": [43]},
+        ],
+        "globals": {},
+        "commands": ["(reset)", "(assert (usunieto armie 42))", "(assert (oddz 43))"],
+        "candidate_rules": [
+            "kasuj_fakty_dla_usunietej_armii_oddz",
+            "kasuj_fakt_usunieto_armie",
+            "kasuj_oddz",
+        ],
+    },
 ]
 
 
@@ -106,33 +134,71 @@ def _template_name(condition: dict) -> str:
     return condition["pattern"].split("(", 1)[1].split(None, 1)[0]
 
 
+def _scenario_facts(scenario: dict) -> list[dict]:
+    if "facts" in scenario:
+        return list(scenario["facts"])
+    return [{"template": scenario["template"], "fields": scenario["fields"]}]
+
+
 def build_bsave_oracle(ir: dict, lhs: dict, scenario: dict) -> tuple[list[dict], list[dict]]:
-    context = FactMatcherContext(
-        fields=tuple(scenario["fields"]),
-        globals=dict(scenario["globals"]),
-    )
+    facts = _scenario_facts(scenario)
+    facts_by_template = {
+        item["template"]: tuple(item["fields"])
+        for item in facts
+    }
     expected = []
     checks = []
     for name in scenario["candidate_rules"]:
         rule = _rule_by_name(lhs, name)
-        if len(rule["conditions"]) != 1:
-            raise AssertionError(f"witness candidate {name} is no longer a one-condition rule")
         if rule["dynamic_salience_expr"] != -1:
             raise AssertionError(f"witness candidate {name} unexpectedly has dynamic salience")
-        condition = rule["conditions"][0]
-        template = _template_name(condition)
-        if template != scenario["template"]:
-            raise AssertionError(
-                f"witness candidate {name} template {template} != {scenario['template']}"
+
+        pattern_fields: dict[int, tuple] = {}
+        condition_checks = []
+        matched = True
+        for order, condition in enumerate(rule["conditions"], start=1):
+            template = _template_name(condition)
+            fields = facts_by_template.get(template)
+            if fields is None:
+                matched = False
+                condition_checks.append(
+                    {
+                        "order": order,
+                        "template": template,
+                        "matched": False,
+                        "reason": "scenario has no fact for this template",
+                    }
+                )
+                break
+
+            context = FactMatcherContext(
+                fields=fields,
+                globals=dict(scenario["globals"]),
+                pattern_fields=dict(pattern_fields),
             )
-        matched = evaluate_fact_condition(ir, condition, context)
+            condition_matched = evaluate_fact_condition(ir, condition, context)
+            condition_checks.append(
+                {
+                    "order": order,
+                    "template": template,
+                    "fields": list(fields),
+                    "alpha_test_indices": list(condition["alpha_test_indices"]),
+                    "join_test_index": condition["join_test_index"],
+                    "matched": condition_matched,
+                }
+            )
+            if not condition_matched:
+                matched = False
+                break
+            if not condition["negated"]:
+                pattern_fields[order] = fields
+
         checks.append(
             {
                 "rule": name,
                 "record_index": rule["index"],
                 "salience": rule["salience"],
-                "alpha_test_indices": list(condition["alpha_test_indices"]),
-                "join_test_index": condition["join_test_index"],
+                "conditions": condition_checks,
                 "matched": matched,
             }
         )
@@ -214,8 +280,7 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
         actual = parse_scenario_agenda(output, scenario["name"])
         detail = {
             "name": scenario["name"],
-            "template": scenario["template"],
-            "fields": scenario["fields"],
+            "facts": _scenario_facts(scenario),
             "globals": scenario["globals"],
             "commands": scenario["commands"],
             "bsave_oracle": oracle["checks"],
@@ -235,7 +300,7 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
         "scenarios": details,
         "oracle": "direct evaluation of recovered BSAVE matcher expressions",
         "behavioral_equivalence_verified": False,
-        "equivalence_scope": "seven controlled fact-only activation witnesses",
+        "equivalence_scope": "nine controlled fact-only activation witnesses including FACT_JN_CMP2",
     }
     if failures:
         raise AssertionError("activation witness mismatch: " + json.dumps(failures, sort_keys=True))
