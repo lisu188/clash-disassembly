@@ -31,11 +31,11 @@ The generated file contains:
 - all 23 serialized game slot descriptors rendered with recovered slot/multislot
   form, defaults, storage, access, propagation, source, pattern-match,
   visibility, create-accessor, and override-message facets;
-- all 69 recovered `defmessage-handler` constructs;
+- all 16 user-authored `defmessage-handler` constructs; the 53 implicit/system handlers remain binary evidence and are recreated by CLIPS from the class declarations;
 - all 95 BSAVE rule/disjunct records;
 - all 425 recovered LHS condition occurrences in RETE source order;
 - `not` conditions recovered from join flags;
-- translated alpha/join tests where compiled accessors are unambiguous;
+- all 753 compiled alpha/join matcher-test occurrences translated to legal source constraints or `(test ...)` CEs;
 - recovered RHS action expression trees.
 
 The rule records remain one-for-one with the binary image. CLIPS can serialize
@@ -71,10 +71,12 @@ The retail image contains zero serialized constraint records, so original
 
 ## Message handlers
 
-All 69 serialized handlers are rendered as `defmessage-handler` constructs with
-recovered class, message name, handler type, arity, local-variable count, and
-action expression root. Direct slot operations are restored as source forms such
-as:
+The retail image contains 69 serialized handlers: 16 user-authored handlers and
+53 system/implicit handlers. The source projection emits the 16 user handlers;
+stock CLIPS recreates the system handlers from the class declarations. Recovered
+user handlers retain class, message name, handler type, arity,
+local-variable count, and action expression root. Direct slot operations are
+restored as source forms such as:
 
 ```clips
 ?self:x
@@ -106,19 +108,19 @@ Negative patterns do not export an address binding.
 
 ## Compiled matcher constraints
 
-A growing subset of alpha/join primitive expressions is emitted as real CLIPS
-`(test ...)` conditions. This includes fact field accessors and selected named
-object slot comparisons/constants.
+All 753 compiled alpha/join matcher-test occurrences are now emitted as legal
+source expressions. Recovery covers ordered-fact field and multifield access,
+fact length and constant tests, fact join comparisons, named object-slot
+accessors/constants, object join comparisons, and tests scoped inside negated
+conditions.
 
-Operations that are still ambiguous remain explicit comments:
+CI requires `compiled_test_count == translated_test_count == 753`,
+`unresolved_test_count == 0`, all 95 rule/disjunct records to be fully
+translated, and zero unresolved tests under `not`.
 
-```clips
-;;; unresolved compiled-test (...): ...
-```
-
-The manifest tracks `compiled_test_count`, `translated_test_count`, and
-`unresolved_test_count`; CI requires translated + unresolved to equal the exact
-compiled count.
+This is a source-completeness contract, not a behavioral-equivalence claim.
+Generated RETE topology and gameplay firing traces still need independent
+comparison with the retail engine.
 
 ## Validation contract
 
@@ -129,10 +131,10 @@ compiled count.
 - 6 globals and 7 deffunctions;
 - 7 recovered game classes and 23 recovered slot descriptors;
 - all normalized slot facets and the zero-constraint boundary;
-- 69 recovered message handlers;
+- 69 recovered message-handler records, with 16 user-authored handlers emitted as source;
 - unique generated rule/disjunct names;
 - preservation of known RHS calls such as `Buduj-Zamek`;
-- exact accounting for translated/unresolved compiled matcher tests;
+- exact 753/753 compiled matcher translation with zero unresolved tests;
 - balanced source-level parentheses outside comments and strings.
 
 ## Evidence policy
