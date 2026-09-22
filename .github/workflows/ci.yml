@@ -119,6 +119,21 @@ jobs:
           path: clash_recovered_reset_agenda.json
           if-no-files-found: error
 
+      - name: Validate strategic AI activation witnesses
+        id: recovered-activation-witnesses
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
+        run: |
+          python3 tools/check_clash_recovered_activation_witnesses.py --json clash_recovered_activation_witnesses.json
+          python3 -m json.tool clash_recovered_activation_witnesses.json >/dev/null
+
+      - name: Upload activation witness report
+        if: ${{ always() && steps.recovered-activation-witnesses.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-recovered-activation-witnesses
+          path: clash_recovered_activation_witnesses.json
+          if-no-files-found: error
+
       - name: Validate JSON files
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         shell: bash
