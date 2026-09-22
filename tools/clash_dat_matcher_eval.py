@@ -185,6 +185,13 @@ def evaluate_expression(ir: dict, expression_index: int, context: FactMatcherCon
     if type_id == 28:
         return _field_from_selector(context.fields, fields)
 
+    if type_id == 31:
+        order = int(fields["source_pattern_ordinal"])
+        selected = context.pattern_fields.get(order)
+        if selected is None:
+            raise KeyError(f"missing FACT_JN_VAR3 fields for pattern {order}")
+        return _field_from_selector(selected, fields)
+
     if type_id == 33:
         if int(fields["which_slot"]) != 0:
             raise NotImplementedError("fact constant oracle supports ordered slot 0 only")
