@@ -178,6 +178,30 @@ def parse_bsave(path: Path) -> dict:
             }
         )
 
+    deffacts_count, deffacts_module_count = struct.unpack_from("<2i", data, storage_by_name["deffacts"]["payload"])
+    deffacts_payload = data_by_name["deffacts"]["payload"]
+    expected_deffacts_bytes = 12 * deffacts_module_count + 16 * deffacts_count
+    if data_by_name["deffacts"]["size"] != expected_deffacts_bytes:
+        raise ValueError(
+            f"deffacts payload size {data_by_name['deffacts']['size']} != "
+            f"12*{deffacts_module_count} + 16*{deffacts_count}"
+        )
+    deffacts_records_start = deffacts_payload + 12 * deffacts_module_count
+    deffacts = []
+    for index in range(deffacts_count):
+        values = struct.unpack_from("<4i", data, deffacts_records_start + index * 16)
+        name_symbol = values[0]
+        deffacts.append(
+            {
+                "index": index,
+                "name_symbol": name_symbol,
+                "name": symbols[name_symbol],
+                "module": values[1],
+                "next": values[2],
+                "assert_list_expr": values[3],
+            }
+        )
+
     return {
         "source": path.name,
         "file_size": len(data),
@@ -200,6 +224,8 @@ def parse_bsave(path: Path) -> dict:
         "templates": templates,
         "globals": globals_,
         "deffunctions": deffunctions,
+        "deffacts_module_count": deffacts_module_count,
+        "deffacts": deffacts,
     }
 
 
