@@ -11,6 +11,7 @@ from clash_dat_primitives import decode_primitive
 class FactMatcherContext:
     fields: tuple[Any, ...]
     globals: dict[str, Any] = field(default_factory=dict)
+    pattern_fields: dict[int, tuple[Any, ...]] = field(default_factory=dict)
 
 
 def clips_truth(value: Any) -> bool:
@@ -52,6 +53,18 @@ def _field_from_selector(fields: tuple[Any, ...], decoded: dict[str, Any]) -> An
     if from_end:
         return fields[len(fields) - 1 - end]
     raise ValueError("invalid compiled fact selector with neither direction bit set")
+
+
+def _field_at(fields: tuple[Any, ...], from_beginning: bool, offset: int) -> Any:
+    return fields[offset] if from_beginning else fields[len(fields) - 1 - offset]
+
+
+def _joined_fact_fields(context: FactMatcherContext, raw_pattern: int) -> tuple[Any, ...]:
+    if raw_pattern in context.pattern_fields:
+        return context.pattern_fields[raw_pattern]
+    if raw_pattern + 1 in context.pattern_fields:
+        return context.pattern_fields[raw_pattern + 1]
+    raise KeyError(f"missing joined fact fields for pattern {raw_pattern}")
 
 
 def _eval_function(name: str, values: list[Any]) -> Any:
@@ -140,6 +153,28 @@ def evaluate_expression(ir: dict, expression_index: int, context: FactMatcherCon
         raise NotImplementedError(f"compiled matcher primitive type {type_id} is not decoded")
 
     fields = decoded.fields
+    if type_id == 24:
+        if int(fields["slot1"]) != 0 or int(fields["slot2"]) != 0:
+            raise NotImplementedError("fact join oracle currently supports ordered slot 0 only")
+        left = _field_at(
+            context.fields,
+            bool(fields["from_beginning1"]),
+            int(fields["offset1"]),
+        )
+        previous = _joined_fact_fields(context, int(fields["pattern2"]))
+        right = _field_at(
+            previous,
+            bool(fields["from_beginning2"]),
+            int(fields["offset2"]),
+        )
+        passed = bool(fields["pass"])
+        failed = bool(fields["fail"])
+        if passed and not failed:
+            return left == right
+        if failed and not passed:
+            return left != right
+        raise NotImplementedError("FACT_JN_CMP2 pass/fail mode is not a simple equality test")
+
     if type_id == 25:
         if int(fields["which_slot"]) != 0:
             raise NotImplementedError("fact slot-length oracle supports ordered slot 0 only")
