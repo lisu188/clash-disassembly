@@ -195,6 +195,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         f";;; compiled-tests={compiled} translated={translated} unresolved={unresolved} class-bitmap-tests={class_tests}",
         f";;; object-join-tests={object_join_translations} object-constant-tests={object_constant_translations}",
         f";;; message-handlers-bsave={handler_report['count']} system-omitted={handler_report['system_count']} user-emitted={handler_report['user_count']} variadic={handler_report['variadic_count']}",
+        f";;; deffacts-bsave={len(ir['deffacts'])} system-initial-fact={sum(item['name'] == 'initial-fact' for item in ir['deffacts'])}",
         "",
     ])
     program = (
@@ -213,6 +214,8 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "conditions": lhs["condition_occurrence_count"],
         "defglobals": len(ir["globals"]),
         "deffunctions": len(ir["deffunctions"]),
+        "deffacts": len(ir["deffacts"]),
+        "deffacts_manifest": ir["deffacts"],
         "defclass_slots": slot_report["slot_count"],
         "defclass_slot_facets": slot_report,
         "defmessage_handlers": handler_report["count"],
