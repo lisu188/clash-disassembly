@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Exercise recovered strategic-AI matchers with non-empty working-memory witnesses."""
 from __future__ import annotations
 
 import argparse
@@ -12,6 +11,8 @@ import tempfile
 from pathlib import Path
 
 from check_clash_recovered_clips_load import ERROR_MARKERS, _clips_string, _render_host_stubs
+from clash_dat_lhs import recover_rule_lhs
+from clash_dat_matcher_eval import FactMatcherContext, evaluate_fact_condition
 from decompile_clash_dat import parse_bsave
 from generate_clash_recovered_constraints import render_recovered_program
 
@@ -21,26 +22,43 @@ DONE_RE = re.compile(r"^CLASH_ACTIVATION_WITNESSES_DONE$", re.MULTILINE)
 SCENARIOS = [
     {
         "name": "misja_1",
+        "template": "misja",
+        "fields": [1],
+        "globals": {"zasieg_dzialan": 10},
         "commands": ["(reset)", "(assert (misja 1))"],
-        "expected": [{"salience": 9900, "name": "zmiana_zasiegu_misja_1"}],
+        "candidate_rules": ["zmiana_zasiegu_misja_1", "zmiana_zasiegu_misja_11"],
     },
     {
         "name": "misja_11",
+        "template": "misja",
+        "fields": [11],
+        "globals": {"zasieg_dzialan": 10},
         "commands": ["(reset)", "(assert (misja 11))"],
-        "expected": [{"salience": 9900, "name": "zmiana_zasiegu_misja_11"}],
+        "candidate_rules": ["zmiana_zasiegu_misja_1", "zmiana_zasiegu_misja_11"],
     },
     {
         "name": "misja_1_wrong_global",
+        "template": "misja",
+        "fields": [1],
+        "globals": {"zasieg_dzialan": 9},
         "commands": ["(reset)", "(bind ?*zasieg_dzialan* 9)", "(assert (misja 1))"],
-        "expected": [],
+        "candidate_rules": ["zmiana_zasiegu_misja_1", "zmiana_zasiegu_misja_11"],
     },
     {
         "name": "najblizej_six_fields",
+        "template": "najblizej",
+        "fields": [0, 0, 0, 0, 0, 0],
+        "globals": {},
         "commands": ["(reset)", "(assert (najblizej 0 0 0 0 0 0))"],
-        "expected": [
-            {"salience": 801, "name": "ustaw_odleglosc_waga"},
-            {"salience": -9000, "name": "kasuj_najblizej"},
-        ],
+        "candidate_rules": ["ustaw_odleglosc_waga", "kasuj_najblizej"],
+    },
+    {
+        "name": "najblizej_five_fields",
+        "template": "najblizej",
+        "fields": [0, 0, 0, 0, 0],
+        "globals": {},
+        "commands": ["(reset)", "(assert (najblizej 0 0 0 0 0))"],
+        "candidate_rules": ["ustaw_odleglosc_waga", "kasuj_najblizej"],
     },
 ]
 
@@ -59,53 +77,68 @@ def parse_scenario_agenda(output: str, name: str) -> list[dict]:
     ]
 
 
-def _rule_by_name(manifest: dict, name: str) -> dict:
-    matches = [rule for rule in manifest["rules_manifest"] if rule["output_name"] == name]
+def _rule_by_name(lhs: dict, name: str) -> dict:
+    matches = [rule for rule in lhs["rules"] if rule["name"] == name]
     if len(matches) != 1:
         raise AssertionError(f"expected exactly one recovered rule named {name}, found {len(matches)}")
     return matches[0]
 
 
-def validate_witness_evidence(manifest: dict) -> None:
-    mission_1 = _rule_by_name(manifest, "zmiana_zasiegu_misja_1")
-    mission_11 = _rule_by_name(manifest, "zmiana_zasiegu_misja_11")
-    nearest_weight = _rule_by_name(manifest, "ustaw_odleglosc_waga")
-    nearest_cleanup = _rule_by_name(manifest, "kasuj_najblizej")
+def _template_name(condition: dict) -> str:
+    if condition["kind"] != "fact":
+        raise AssertionError("activation witness candidate is not a fact condition")
+    return condition["pattern"].split("(", 1)[1].split(None, 1)[0]
 
-    for rule, value in ((mission_1, 1), (mission_11, 11)):
-        assert rule["salience"] == 9900
-        assert rule["condition_count"] == 1
+
+def build_bsave_oracle(ir: dict, lhs: dict, scenario: dict) -> tuple[list[dict], list[dict]]:
+    context = FactMatcherContext(
+        fields=tuple(scenario["fields"]),
+        globals=dict(scenario["globals"]),
+    )
+    expected = []
+    checks = []
+    for name in scenario["candidate_rules"]:
+        rule = _rule_by_name(lhs, name)
+        if len(rule["conditions"]) != 1:
+            raise AssertionError(f"witness candidate {name} is no longer a one-condition rule")
+        if rule["dynamic_salience_expr"] != -1:
+            raise AssertionError(f"witness candidate {name} unexpectedly has dynamic salience")
         condition = rule["conditions"][0]
-        assert condition["binding"]["kind"] == "fact"
-        assert condition["binding"]["template"] == "misja"
-        assert condition["compiled_test_count"] == 2
-        assert condition["translated_test_count"] == 2
-        translations = [item["translated"] for item in condition["translations"]]
-        assert translations == [
-            f"(and (= (length$ $?f1_fields) 1) (= (nth$ 1 $?f1_fields) {value}))",
-            "(= ?*zasieg_dzialan* 10)",
-        ]
-
-    assert nearest_weight["salience"] == 801
-    assert nearest_weight["condition_count"] == 1
-    nearest_condition = nearest_weight["conditions"][0]
-    assert nearest_condition["binding"]["template"] == "najblizej"
-    assert [item["translated"] for item in nearest_condition["translations"]] == [
-        "(= (length$ $?f1_fields) 6)"
-    ]
-
-    assert nearest_cleanup["salience"] == -9000
-    assert nearest_cleanup["condition_count"] == 1
-    cleanup_condition = nearest_cleanup["conditions"][0]
-    assert cleanup_condition["binding"]["template"] == "najblizej"
-    assert cleanup_condition["compiled_test_count"] == 0
+        template = _template_name(condition)
+        if template != scenario["template"]:
+            raise AssertionError(
+                f"witness candidate {name} template {template} != {scenario['template']}"
+            )
+        matched = evaluate_fact_condition(ir, condition, context)
+        checks.append(
+            {
+                "rule": name,
+                "record_index": rule["index"],
+                "salience": rule["salience"],
+                "alpha_test_indices": list(condition["alpha_test_indices"]),
+                "join_test_index": condition["join_test_index"],
+                "matched": matched,
+            }
+        )
+        if matched:
+            expected.append({"salience": rule["salience"], "name": name})
+    expected.sort(key=lambda item: item["salience"], reverse=True)
+    return expected, checks
 
 
 def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
     ir = parse_bsave(source)
-    program, manifest = render_recovered_program(source, ir)
-    validate_witness_evidence(manifest)
+    lhs = recover_rule_lhs(source, ir)
+    program, _manifest = render_recovered_program(source, ir)
     stub_source, _ = _render_host_stubs(ir)
+
+    scenario_oracles = {}
+    for scenario in SCENARIOS:
+        expected, checks = build_bsave_oracle(ir, lhs, scenario)
+        scenario_oracles[scenario["name"]] = {
+            "expected": expected,
+            "checks": checks,
+        }
 
     with tempfile.TemporaryDirectory(prefix="clash-clips-activation-witnesses-") as tmp_name:
         tmp = Path(tmp_name)
@@ -161,13 +194,18 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
     details = []
     failures = []
     for scenario in SCENARIOS:
+        oracle = scenario_oracles[scenario["name"]]
         actual = parse_scenario_agenda(output, scenario["name"])
         detail = {
             "name": scenario["name"],
+            "template": scenario["template"],
+            "fields": scenario["fields"],
+            "globals": scenario["globals"],
             "commands": scenario["commands"],
-            "expected": scenario["expected"],
+            "bsave_oracle": oracle["checks"],
+            "expected": oracle["expected"],
             "actual": actual,
-            "matches": actual == scenario["expected"],
+            "matches": actual == oracle["expected"],
         }
         details.append(detail)
         if not detail["matches"]:
@@ -179,8 +217,9 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
         "matching_scenario_count": len(details) - len(failures),
         "mismatch_count": len(failures),
         "scenarios": details,
+        "oracle": "direct evaluation of recovered BSAVE matcher expressions",
         "behavioral_equivalence_verified": False,
-        "equivalence_scope": "four controlled fact-only activation witnesses",
+        "equivalence_scope": "five controlled fact-only activation witnesses",
     }
     if failures:
         raise AssertionError("activation witness mismatch: " + json.dumps(failures, sort_keys=True))
