@@ -138,6 +138,16 @@ def run_reset_agenda_test(source: Path, clips_exe: str) -> tuple[str, dict]:
         and actual_by_name[name][0] != expected_by_name[name]["salience"]
     }
 
+    single_condition_candidates = [
+        {
+            "name": rule["output_name"],
+            "salience": rule["salience"],
+            "condition": rule["conditions"][0],
+        }
+        for rule in manifest["rules_manifest"]
+        if rule["condition_count"] == 1
+    ]
+
     report = {
         "source": source.name,
         "working_memory": "stock CLIPS reset with only system initial-fact and no emitted game instances",
@@ -146,6 +156,7 @@ def run_reset_agenda_test(source: Path, clips_exe: str) -> tuple[str, dict]:
         "actual_activation_count": len(actual),
         "expected": expected,
         "actual": actual,
+        "single_condition_candidates": single_condition_candidates,
         "missing": missing,
         "unexpected": unexpected,
         "duplicate": duplicate,
