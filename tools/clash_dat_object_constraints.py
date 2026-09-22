@@ -15,6 +15,9 @@ from clash_dat_constraints import ConstraintTranslation, _comparison, _replace_a
 _OBJ_JOIN_CMP = re.compile(
     r"^object-join-compare\(p(\d+)\.slot\[(\d+)\],p(\d+)\.slot\[(\d+)\],pass=(\d+),fail=(\d+)\)$"
 )
+_OBJ_JOIN_CMP_INLINE = re.compile(
+    r"object-join-compare\(p(\d+)\.slot\[(\d+)\],p(\d+)\.slot\[(\d+)\],pass=(\d+),fail=(\d+)\)"
+)
 _OBJ_PN_CONST = re.compile(
     r"^object-pn-constant\(offset=(\d+),from_beginning=(\d+),general=(\d+),pass=(\d+),fail=(\d+),value=<arg>\)(?: args=\((.*)\))?$"
 )
@@ -146,7 +149,32 @@ def translate_object_test(
             return ConstraintTranslation(source, None, reason)
         return ConstraintTranslation(source, f"({op} ?o{current_order}_{alpha_context.slot_name} {replaced})", None)
 
-    return translate_test(source, current_order, conditions)
+    failure: str | None = None
+
+    def inline_compare(item: re.Match[str]) -> str:
+        nonlocal failure
+        p1, slot1_id, p2, slot2_id, passed, failed = map(int, item.groups())
+        op = _comparison(passed, failed)
+        if op is None:
+            failure = failure or "object compare pass/fail mode unresolved"
+            return item.group(0)
+        slot1 = class_report["slot_name_by_id"].get(slot1_id)
+        slot2 = class_report["slot_name_by_id"].get(slot2_id)
+        if slot1 is None or slot2 is None:
+            failure = failure or f"object compare uses system/unknown slot ids ({slot1_id},{slot2_id})"
+            return item.group(0)
+        order1 = _object_binding(p1, slot1, current_order, conditions)
+        order2 = _object_binding(p2, slot2, current_order, conditions)
+        if order1 is None or order2 is None:
+            failure = failure or "object compare pattern mapping ambiguous"
+            return item.group(0)
+        return f"({op} ?o{order1}_{slot1} ?o{order2}_{slot2})"
+
+    inlined = _OBJ_JOIN_CMP_INLINE.sub(inline_compare, source)
+    if failure is not None:
+        return ConstraintTranslation(source, None, failure)
+    translated = translate_test(inlined, current_order, conditions)
+    return ConstraintTranslation(source, translated.translated, translated.reason)
 
 
 def translate_condition_tests(
