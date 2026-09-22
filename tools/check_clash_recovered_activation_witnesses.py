@@ -60,6 +60,22 @@ SCENARIOS = [
         "commands": ["(reset)", "(assert (najblizej 0 0 0 0 0))"],
         "candidate_rules": ["ustaw_odleglosc_waga", "kasuj_najblizej"],
     },
+    {
+        "name": "kasuj_swiatynie",
+        "template": "kasuj",
+        "fields": ["swiatynie", 0, 0],
+        "globals": {},
+        "commands": ["(reset)", "(assert (kasuj swiatynie 0 0))"],
+        "candidate_rules": ["kasuj_kasuj_swiatynie"],
+    },
+    {
+        "name": "kasuj_wrong_constant",
+        "template": "kasuj",
+        "fields": ["nie_swiatynie", 0, 0],
+        "globals": {},
+        "commands": ["(reset)", "(assert (kasuj nie_swiatynie 0 0))"],
+        "candidate_rules": ["kasuj_kasuj_swiatynie"],
+    },
 ]
 
 
@@ -219,7 +235,7 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
         "scenarios": details,
         "oracle": "direct evaluation of recovered BSAVE matcher expressions",
         "behavioral_equivalence_verified": False,
-        "equivalence_scope": "five controlled fact-only activation witnesses",
+        "equivalence_scope": "seven controlled fact-only activation witnesses",
     }
     if failures:
         raise AssertionError("activation witness mismatch: " + json.dumps(failures, sort_keys=True))
