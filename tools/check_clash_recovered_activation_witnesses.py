@@ -104,6 +104,34 @@ SCENARIOS = [
             "kasuj_oddz",
         ],
     },
+    {
+        "name": "usunieto_armie_transfer_match",
+        "facts": [
+            {"template": "usunieto", "fields": ["armie", 42]},
+            {"template": "budowanie", "fields": ["transfer", 0, 0, 42]},
+        ],
+        "globals": {},
+        "commands": ["(reset)", "(assert (usunieto armie 42))", "(assert (budowanie transfer 0 0 42))"],
+        "candidate_rules": [
+            "kasuj_fakty_dla_transferu",
+            "kasuj_fakty_dla_usunietej_armii_budowanie",
+            "kasuj_fakt_usunieto_armie",
+        ],
+    },
+    {
+        "name": "usunieto_armie_transfer_kind_mismatch",
+        "facts": [
+            {"template": "usunieto", "fields": ["armie", 42]},
+            {"template": "budowanie", "fields": ["inne", 0, 0, 42]},
+        ],
+        "globals": {},
+        "commands": ["(reset)", "(assert (usunieto armie 42))", "(assert (budowanie inne 0 0 42))"],
+        "candidate_rules": [
+            "kasuj_fakty_dla_transferu",
+            "kasuj_fakty_dla_usunietej_armii_budowanie",
+            "kasuj_fakt_usunieto_armie",
+        ],
+    },
 ]
 
 
@@ -174,7 +202,7 @@ def build_bsave_oracle(ir: dict, lhs: dict, scenario: dict) -> tuple[list[dict],
             context = FactMatcherContext(
                 fields=fields,
                 globals=dict(scenario["globals"]),
-                pattern_fields=dict(pattern_fields),
+                pattern_fields={**pattern_fields, order: fields},
             )
             condition_matched = evaluate_fact_condition(ir, condition, context)
             condition_checks.append(
@@ -300,7 +328,7 @@ def run_activation_witnesses(source: Path, clips_exe: str) -> tuple[str, dict]:
         "scenarios": details,
         "oracle": "direct evaluation of recovered BSAVE matcher expressions",
         "behavioral_equivalence_verified": False,
-        "equivalence_scope": "nine controlled fact-only activation witnesses including FACT_JN_CMP2",
+        "equivalence_scope": "eleven controlled fact-only activation witnesses including FACT_JN_CMP2 and FACT_JN_VAR3",
     }
     if failures:
         raise AssertionError("activation witness mismatch: " + json.dumps(failures, sort_keys=True))
