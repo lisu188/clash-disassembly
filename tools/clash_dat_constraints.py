@@ -82,13 +82,16 @@ def _object_binding(raw_pattern: int, slot: str | None, conditions: list[dict]) 
 
 def _fact_pattern_binding(raw_pattern: int, conditions: list[dict]) -> int | None:
     by_order = _condition_map(conditions)
-    candidates = []
-    for order in (raw_pattern, raw_pattern + 1):
+
+    def matches(order: int) -> bool:
         item = by_order.get(order)
-        if item is not None and item["kind"] == "fact" and not item["negated"]:
-            candidates.append(order)
-    unique = sorted(set(candidates))
-    return unique[0] if len(unique) == 1 else None
+        return item is not None and item["kind"] == "fact" and not item["negated"]
+
+    if matches(raw_pattern):
+        return raw_pattern
+    if matches(raw_pattern + 1):
+        return raw_pattern + 1
+    return None
 
 
 def _nth(fields: str, zero_based: int) -> str:
