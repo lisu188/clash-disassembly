@@ -117,6 +117,21 @@ class MatcherEvidenceTests(unittest.TestCase):
         )
         self.assertEqual(joined.translated, "(eq ?o3_gracz ?o2_gracz)")
 
+    def test_fact_join_compare_pattern_is_direct_one_based_binding(self):
+        conditions = [
+            {"order": 1, "kind": "fact", "negated": False},
+            {"order": 2, "kind": "fact", "negated": False},
+        ]
+        translated = constraints.translate_test(
+            "fact-join-compare(slot1=0,offset1=0,pattern2=1,slot2=0,offset2=1,pass=1,fail=0)",
+            2,
+            conditions,
+        )
+        self.assertEqual(
+            translated.translated,
+            "(eq (nth$ 1 $?f2_fields) (nth$ 2 $?f1_fields))",
+        )
+
     def test_gate_rejects_positive_and_negative_incomplete_tests(self):
         for negated in (False, True):
             with self.subTest(negated=negated), self.assertRaisesRegex(ValueError, "remain unresolved"):
@@ -175,6 +190,7 @@ class RetailMatcherEvidenceTests(unittest.TestCase):
         self.assertGreater(self.report["translated_test_count"], 420)
         self.assertFalse(any(reason.startswith("ambiguous object accessor ") for reason in self.report["by_reason"]))
         self.assertNotIn("object compare pattern mapping ambiguous", self.report["by_reason"])
+        self.assertNotIn("fact compare pattern/slot mapping ambiguous", self.report["by_reason"])
         self.assertTrue(self.report["by_nested_primitive"])
         self.assertTrue(self.report["by_primitive_payload"])
         self.assertEqual(sum(self.report["by_primitive_family"].values()), self.report["unresolved_test_count"])
