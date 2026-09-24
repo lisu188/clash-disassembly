@@ -1,0 +1,250 @@
+diff --git a/docs/CLASH_DAT_RECOVERED_CLP.md b/docs/CLASH_DAT_RECOVERED_CLP.md
+index 526725a..864fe81 100644
+--- a/docs/CLASH_DAT_RECOVERED_CLP.md
++++ b/docs/CLASH_DAT_RECOVERED_CLP.md
+@@ -58,7 +58,7 @@ source projection now has the full normalized shape:
+   (pattern-match reactive)
+   (visibility private)
+   (create-accessor NONE)
+-  (override-message DEFAULT)
++  (override-message put-x)
+ )
+ ```
+ 
+ diff --git a/docs/CLASH_DAT_SLOT_FACETS.md b/docs/CLASH_DAT_SLOT_FACETS.md
+index bf4e17b..306fc50 100644
+--- a/docs/CLASH_DAT_SLOT_FACETS.md
++++ b/docs/CLASH_DAT_SLOT_FACETS.md
+@@ -88,13 +88,19 @@ Every recovered game slot now emits explicit normalized facets:
+   (pattern-match reactive)
+   (visibility private)
+   (create-accessor NONE)
+-  (override-message DEFAULT)
++  (override-message put-x)
+ )
+ ```
+ 
+-`override-message DEFAULT` is emitted when the descriptor's override symbol is
+-the slot-name table's ordinary `put-<slot>` message. A different recovered
+-symbol is emitted by name.
++The descriptor's resolved override-message symbol is always emitted by name,
++including the ordinary `put-<slot>` message. `DEFAULT` is not a placeholder in
++this source facet: stock CLIPS treats it as a literal message name. The previous
++projection parsed successfully but failed to create instances with slot
++overrides, reporting `[MSGFUN1] No applicable primary message-handlers found
++for DEFAULT.` The original loader at `0x4C6990` resolves the serialized symbol
++index at descriptor offset `+0x14` into live slot offset `+0x0C`; it does not
++replace ordinary handlers with a sentinel. All 23 retail descriptors store
++ordinary `put-<slot>` names.
+ 
+ ## Constraint boundary
+ 
+ diff --git a/docs/STATUS.md b/docs/STATUS.md
+index 87b3d21..257be3d 100644
+--- a/docs/STATUS.md
++++ b/docs/STATUS.md
+@@ -2,6 +2,24 @@
+ 
+ Last consolidated: 2026-09-24.
+ 
++## Recovered AI Slot Override Dispatch
++
++Track: strategic-AI validation prerequisite (Definition of Done items 8-10).
++The source projection now emits each serialized slot override handler by name
++instead of replacing ordinary `put-<slot>` handlers with literal `DEFAULT`.
++All 23 descriptor symbols and the original loader at `0x4C6990` support the
++repair. The old projection parsed but failed instance creation with `MSGFUN1`;
++the shared stock-CLIPS check now rejects that diagnostic. All 13 activation
++witnesses pass locally, including the previously failing nonzero-AP object.
++Five focused regressions include a mutation proving a failed object cannot
++silently pass the empty-agenda negative witness. The nine workflow tests also
++pass after recognizing the actual CLIPS prerequisites of all four runtime
++checks; the workflow and frozen baselines are unchanged.
++Slot-facet, source-projection, load, RETE-depth and reset-agenda checks pass
++with stock CLIPS 6.30. These are validation-tool repairs, not production C++
++or full strategic-AI parity claims. Mission 05, runtime and frame milestones
++remain unchanged. See [CLASH_DAT_SLOT_FACETS.md](CLASH_DAT_SLOT_FACETS.md).
++
+ ## Selected-Slot Predicate Readability
+ 
+ Track: Win95 reconstruction, Road-family selection helpers.
+ diff --git a/tests/tools/test_ci_workflow.py b/tests/tools/test_ci_workflow.py
+index 556d58d..a708f47 100644
+--- a/tests/tools/test_ci_workflow.py
++++ b/tests/tools/test_ci_workflow.py
+@@ -11,6 +11,12 @@ import unittest
+ ROOT = Path(__file__).resolve().parents[2]
+ WORKFLOW = ROOT / ".github/workflows/ci.yml"
+ REPO_READY = "${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}"
++CLIPS_STEPS = (
++    "Load unified recovered CLP in CLIPS",
++    "Validate recompiled strategic AI RETE path depth",
++    "Validate reset-time strategic AI agenda",
++    "Validate strategic AI activation witnesses",
++)
+ BUILD_READY = "${{ !cancelled() && steps.build.outcome == 'success' }}"
+ 
+ 
+@@ -46,7 +52,7 @@ class CIWorkflowTests(unittest.TestCase):
+     def test_repo_checks_only_require_their_inputs(self):
+         for name, step in steps_for("repo-checks").items():
+             if field(step, "run") is None or name in (
+-                "Install CLIPS runtime", "Load unified recovered CLP in CLIPS", "Check whitespace errors"
++                "Install CLIPS runtime", "Check whitespace errors", *CLIPS_STEPS
+             ):
+                 continue
+             with self.subTest(step=name):
+@@ -58,10 +64,12 @@ class CIWorkflowTests(unittest.TestCase):
+         self.assertEqual(field(steps["Check whitespace errors"], "if"),
+                          "${{ !cancelled() && steps.checkout.outcome == 'success' }}")
+ 
+-    def test_clips_load_has_its_additional_runtime_prerequisite(self):
+-        step = steps_for("repo-checks")["Load unified recovered CLP in CLIPS"]
+-        self.assertEqual(field(step, "if"),
+-                         REPO_READY[:-3] + " && steps.clips.outcome == 'success' }}")
++    def test_clips_checks_have_their_additional_runtime_prerequisite(self):
++        steps = steps_for("repo-checks")
++        for name in CLIPS_STEPS:
++            with self.subTest(step=name):
++                self.assertEqual(field(steps[name], "if"),
++                                 REPO_READY[:-3] + " && steps.clips.outcome == 'success' }}")
+ 
+     def test_inventory_validation_and_upload_follow_generation(self):
+         steps = steps_for("repo-checks")
+ diff --git a/tests/tools/test_clash_slot_overrides.py b/tests/tools/test_clash_slot_overrides.py
+new file mode 100644
+index 0000000..fb91ca3
+--- /dev/null
++++ b/tests/tools/test_clash_slot_overrides.py
+@@ -0,0 +1,86 @@
++"""BSAVE-derived slot message names and live CLIPS activation regressions."""
++from __future__ import annotations
++
++import copy
++import os
++from pathlib import Path
++import re
++import shutil
++import sys
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / "tools"))
++
++import check_clash_recovered_activation_witnesses as witnesses
++from check_clash_recovered_clips_load import ERROR_MARKERS
++from clash_dat_classes import parse_defclass
++from clash_dat_slot_facets import _render_slot, recover_slot_facets, render_recovered_classes
++from decompile_clash_dat import parse_bsave
++from generate_clash_recovered_clp import GAME_CLASS_NAMES
++
++
++class SlotOverrideTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.source = ROOT / "CLASH.DAT"
++        cls.ir = parse_bsave(cls.source)
++        cls.classes = parse_defclass(cls.source, cls.ir)
++        cls.report = recover_slot_facets(cls.ir, cls.classes)
++
++    def test_all_serialized_handler_names_are_emitted_exactly(self):
++        rendered, report = render_recovered_classes(self.ir, self.classes, GAME_CLASS_NAMES)
++        expected = [slot["override_message_name"] for slot in self.classes["slot_descriptors"]]
++        self.assertEqual(len(expected), 23)
++        self.assertEqual(re.findall(r"\(override-message ([^()\s]+)\)", rendered), expected)
++        self.assertEqual(report, self.report)
++        self.assertEqual(report["custom_override_message_count"], 0)
++        self.assertIn("(override-message put-PA)", rendered)
++        self.assertNotIn("(override-message DEFAULT)", rendered)
++
++    def test_custom_handler_is_not_replaced_by_a_default(self):
++        slot = copy.deepcopy(self.report["slots"][0])
++        slot.update(override_message="assign-custom", override_message_is_default=False)
++        rendered = "\n".join(_render_slot(slot))
++        self.assertIn("(override-message assign-custom)", rendered)
++        self.assertNotIn("(override-message put-id)", rendered)
++
++    def test_message_dispatch_errors_are_not_parser_success(self):
++        output = "[MSGFUN1] No applicable primary message-handlers found for DEFAULT."
++        self.assertTrue(any(marker in output for marker in ERROR_MARKERS))
++
++    def clips(self):
++        executable = shutil.which(os.environ.get("CLIPS", "clips"))
++        if not executable:
++            self.skipTest("stock CLIPS is required for the live activation regression")
++        return executable
++
++    def test_all_thirteen_activation_witnesses_match_bsave(self):
++        output, report = witnesses.run_activation_witnesses(self.source, self.clips())
++        self.assertEqual(report["scenario_count"], 13)
++        self.assertEqual(report["matching_scenario_count"], 13)
++        self.assertEqual(report["mismatch_count"], 0)
++        cases = {case["name"]: case for case in report["scenarios"]}
++        self.assertEqual(cases["ustaw_pa_object_match"]["actual"],
++                         [{"name": "ustaw_PA_0", "salience": -8900}])
++        self.assertEqual(cases["ustaw_pa_object_zero"]["actual"], [])
++        self.assertFalse(any(marker in output for marker in ERROR_MARKERS))
++
++    def test_failed_object_creation_cannot_pass_negative_witness(self):
++        # On the old projection the PA=0 case falsely passed: both an absent
++        # object and a successfully created zero-AP object give an empty agenda.
++        executable = self.clips()
++        program, manifest = witnesses.render_recovered_program(self.source, self.ir)
++        broken = re.sub(r"\(override-message put-[^()\s]+\)",
++                        "(override-message DEFAULT)", program)
++        self.assertNotEqual(program, broken)
++        zero_case = [case for case in witnesses.SCENARIOS if case["name"] == "ustaw_pa_object_zero"]
++        with patch.object(witnesses, "render_recovered_program", return_value=(broken, manifest)), \
++                patch.object(witnesses, "SCENARIOS", zero_case):
++            with self.assertRaisesRegex(AssertionError, "CLIPS reported parser/runtime diagnostics"):
++                witnesses.run_activation_witnesses(self.source, executable)
++
++
++if __name__ == "__main__":
++    unittest.main()
+ diff --git a/tools/check_clash_dat_slot_facets.py b/tools/check_clash_dat_slot_facets.py
+index 2d3e2a6..5c918b5 100644
+--- a/tools/check_clash_dat_slot_facets.py
++++ b/tools/check_clash_dat_slot_facets.py
+@@ -57,6 +57,9 @@ def main() -> int:
+     assert rendered.count("    (visibility ") == 23
+     assert rendered.count("    (create-accessor ") == 23
+     assert rendered.count("    (override-message ") == 23
++    assert "(override-message DEFAULT)" not in rendered
++    for item in report["slots"]:
++        assert f"(override-message {item['override_message']})" in rendered
+     assert "No constraint records were serialized" in rendered
+     assert "(defclass oddzial" in rendered
+     assert "(defclass gracz" in rendered
+ diff --git a/tools/check_clash_recovered_clips_load.py b/tools/check_clash_recovered_clips_load.py
+index e013542..50c3f31 100644
+--- a/tools/check_clash_recovered_clips_load.py
++++ b/tools/check_clash_recovered_clips_load.py
+@@ -35,6 +35,7 @@ ERROR_MARKERS = (
+     "[OBJRTBLD",
+     "[ARGACCES",
+     "[MSGPSR",
++    "[MSGFUN",  # Includes missing primary handlers during make-instance.
+     "[CSTRCPSR",
+     "[RULEPSR",
+ )
+ diff --git a/tools/clash_dat_slot_facets.py b/tools/clash_dat_slot_facets.py
+index 7bf64ce..1549aa5 100644
+--- a/tools/clash_dat_slot_facets.py
++++ b/tools/clash_dat_slot_facets.py
+@@ -231,10 +231,10 @@ def _render_slot(slot: dict) -> list[str]:
+     lines.append("    (pattern-match " + ("reactive" if facets["reactive"] else "non-reactive") + ")")
+     lines.append("    (visibility " + ("public" if facets["public_visibility"] else "private") + ")")
+     lines.append("    (create-accessor " + _create_accessor_value(SlotFacets(**facets)) + ")")
+-    if slot["override_message_is_default"]:
+-        lines.append("    (override-message DEFAULT)")
+-    else:
+-        lines.append(f"    (override-message {slot['override_message']})")
++    # BSAVE stores the resolved message symbol, including ordinary put-<slot>
++    # handlers. DEFAULT is a literal message name in stock CLIPS, not a request
++    # to resolve the default handler; emitting it breaks make-instance overrides.
++    lines.append(f"    (override-message {slot['override_message']})")
+     if slot["constraint_serialized"]:
+         lines.append(f"    ;;; serialized constraint record #{slot['constraint_index']} requires constraint facet rendering")
+     lines.append("  )")
