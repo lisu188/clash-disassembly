@@ -462,87 +462,16 @@ signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmoun
   return clash95::UnitStack((intptr_t)stackPtr).UnitStack_SpendActionPointsClamped(spendAmount, a3, a4);
 }
 
-signed int clash95::UnitStack::UnitStack_SpendActionPointsClamped(int spendAmount, DWORD a3, double a4) const
-{
-  __int16 *stackPtr = (__int16 *)(uintptr_t)address_;
-  __int16 *slotPtr; // eax
-  int i; // ecx
-  int slotType; // ebx
-  char currentActionPoints; // bl
-
-  slotPtr = stackPtr + 3;
-  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
-  {
-    slotType = *(clash95_unaligned_int16 *)slotPtr;
-    if ( slotType == -1 )
-      break;
-    if ( *((unsigned __int8 *)slotPtr + 8) < spendAmount )
-      spendAmount = *((unsigned __int8 *)slotPtr + 8);
-    currentActionPoints = *((_BYTE *)slotPtr + 8);
-    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
-    LOBYTE(slotType) = (unsigned int)(unsigned __int8)currentActionPoints - (unsigned int)spendAmount;
-    *((_BYTE *)slotPtr - 23) = slotType;
-  }
-  return Rules_LinkArmyFact(stackPtr, spendAmount, i, a4, slotType, a3);
-}
-
 //----- (00410170) --------------------------------------------------------
 int  UnitStack_SpendActionPointsUnchecked(int stackPtr, char spendAmount)
 {
   return clash95::UnitStack(stackPtr).UnitStack_SpendActionPointsUnchecked(spendAmount);
 }
 
-int clash95::UnitStack::UnitStack_SpendActionPointsUnchecked(char spendAmount) const
-{
-  int stackPtr = (int)address_;
-  unsigned int slotPtr; // eax
-  int slotIndex; // edx
-
-  slotPtr = (unsigned int)stackPtr + 6u;
-  slotIndex = 0;
-  while ( slotIndex < UNIT_STACK_SLOT_COUNT )
-  {
-    if ( *(clash95_unaligned_int16 *)(uintptr_t)slotPtr == -1 )
-      break;
-    UNIT_SLOT_ACTION_POINTS(slotPtr) -= spendAmount;
-    slotPtr += UNIT_SLOT_RECORD_BYTES;
-    ++slotIndex;
-  }
-  return (int)slotPtr;
-}
-
 //----- (004101A0) --------------------------------------------------------
 signed int  UnitStack_SubtractActionPointsFloorZero(__int16 *stackPtr, int subtractAmount, DWORD a3, double a4)
 {
   return clash95::UnitStack((intptr_t)stackPtr).UnitStack_SubtractActionPointsFloorZero(subtractAmount, a3, a4);
-}
-
-signed int clash95::UnitStack::UnitStack_SubtractActionPointsFloorZero(int subtractAmount, DWORD a3, double a4) const
-{
-  __int16 *stackPtr = (__int16 *)(uintptr_t)address_;
-  __int16 *slotPtr; // eax
-  int i; // edx
-  int currentActionPoints; // ebx
-
-  slotPtr = stackPtr + 3;
-  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
-  {
-    currentActionPoints = *(clash95_unaligned_int16 *)slotPtr;
-    if ( currentActionPoints == -1 )
-      break;
-    currentActionPoints = *((unsigned __int8 *)slotPtr + 8);
-    if ( currentActionPoints <= subtractAmount )
-    {
-      *((_BYTE *)slotPtr + 8) = 0;
-    }
-    else
-    {
-      LOBYTE(currentActionPoints) = (unsigned int)currentActionPoints - (unsigned int)subtractAmount;
-      *((_BYTE *)slotPtr + 8) = currentActionPoints;
-    }
-    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
-  }
-  return Rules_LinkArmyFact(stackPtr, i, subtractAmount, a4, currentActionPoints, a3);
 }
 
 //----- (004101E0) --------------------------------------------------------

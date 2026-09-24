@@ -1,4 +1,4 @@
-# UnitStack AP-spending class extraction
+# UnitStack AP-spending class extraction and relocation
 
 Track: Win95 reconstruction. The three separately
 [repaired AP operations](UNIT_STACK_AP_SPENDING_REPAIR.md) become explicit
@@ -41,7 +41,7 @@ equivalence claim for the optimized caller. The production checker is unchanged.
 
 Both integrated production builds, strict symbol/storage/initialization
 comparisons and all eight asset-free extraction gates pass. There are 31 canonical
-methods, with these three still in their original TU pending relocation. All
+methods. All
 4,157 identities, 147 translation units and six class sources remain. All five
 comparison inventories enumerate only the three new method symbols; historical
 ratchet baselines remain unchanged.
@@ -70,3 +70,14 @@ Its evidence seal SHA256 is
 Earlier raw comparison failures and corrected evidence-script stops remain
 recorded. The incoming rendering constants and rules-validation tooling from
 main `35f3adb` are included in the integrated extraction.
+
+The separately validated relocation moves all three unchanged method bodies
+into `src/units/UnitStack.cpp`, in manifest order. Original adapters remain in
+the original units TU. The same eight actual-source differential profiles pass,
+as do both production builds and strict comparisons. All eight asset-free gates
+pass with one explicitly retained retry: the first GCC source audit timed out
+at 60.21 seconds, and the unchanged audit passed in 56.25 seconds. The other
+seven gates passed on their first attempt. Both outcomes remain in the
+integration directory; validation limits and baselines were not changed. Run
+the command above with stage `ap-relocation` for its separate production logs.
+All 31 methods now reside in six class-named sources.

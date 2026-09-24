@@ -2,13 +2,16 @@
 
 Last consolidated: 2026-09-24.
 
-## UnitStack AP-Spending Extraction
+## UnitStack AP-Spending Extraction And Relocation
 
 The three repaired AP operations now have canonical UnitStack methods in the
 original TU and thin adapters. All 36,432 original cases match frozen repaired,
 adapter and direct-method lanes across eight compiler profiles. Both production
 builds, strict comparisons and eight asset-free gates pass on integrated main
-`35f3adb`. There are 31 methods, with these three awaiting relocation. One new
+`35f3adb`. Separately validated relocation preserves all three hashes; all 31
+methods now reside in six class-named files. Both builds, strict comparisons and
+eight gates pass, retaining the initial GCC audit timeout and unchanged passing
+retry. One new
 canonical receiver-binding line enters the unchanged 718-function coverage set.
 The exact Clang O2 compiler jump-table address changes are explained without
 changing the production checker or data baseline. See
