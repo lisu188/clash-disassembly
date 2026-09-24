@@ -27,7 +27,7 @@ def norm(raw):
     return urlunparse(("http",h,re.sub(r"/{2,}","/",p.path or "/"),"",urlencode(sorted(q)),""))
 
 def archive(ts,raw):
-    return f"https://web.archive.org/web/{ts}id_/{quote(raw,safe=\":/?&=%+#;,~@!$()*[]\")}"
+    return f"https://web.archive.org/web/{ts}id_/{quote(raw,safe=':/?&=%+#;,~@!$()*[]')}"
 
 def rows():
     params=[("url",HOST),("matchType","domain"),("output","json"),("fl","timestamp,original,mimetype,statuscode,digest,length"),("filter","statuscode:200")]
