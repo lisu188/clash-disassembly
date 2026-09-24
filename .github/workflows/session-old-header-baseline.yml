@@ -1,0 +1,28 @@
+name: Session old header baseline snapshot
+on:
+  push:
+    branches: [diagnostics/cpp-source-snapshot-20260924]
+    paths: [.github/workflows/session-old-header-baseline.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 8e5ff4f568689fe58dd812fc61e1dfefe3682b56
+          persist-credentials: false
+      - name: Archive tracked source
+        run: |
+          git rev-parse HEAD > /tmp/commit.txt
+          git archive --format=tar.gz HEAD > /tmp/source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clash-source-header-baseline-8e5ff4f
+          path: |
+            /tmp/source.tar.gz
+            /tmp/commit.txt
+          retention-days: 1
+          if-no-files-found: error
