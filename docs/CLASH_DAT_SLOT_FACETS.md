@@ -88,13 +88,19 @@ Every recovered game slot now emits explicit normalized facets:
   (pattern-match reactive)
   (visibility private)
   (create-accessor NONE)
-  (override-message DEFAULT)
+  (override-message put-x)
 )
 ```
 
-`override-message DEFAULT` is emitted when the descriptor's override symbol is
-the slot-name table's ordinary `put-<slot>` message. A different recovered
-symbol is emitted by name.
+The descriptor's resolved override-message symbol is always emitted by name,
+including the ordinary `put-<slot>` message. `DEFAULT` is not a placeholder in
+this source facet: stock CLIPS treats it as a literal message name. The previous
+projection parsed successfully but failed to create instances with slot
+overrides, reporting `[MSGFUN1] No applicable primary message-handlers found
+for DEFAULT.` The original loader at `0x4C6990` resolves the serialized symbol
+index at descriptor offset `+0x14` into live slot offset `+0x0C`; it does not
+replace ordinary handlers with a sentinel. All 23 retail descriptors store
+ordinary `put-<slot>` names.
 
 ## Constraint boundary
 

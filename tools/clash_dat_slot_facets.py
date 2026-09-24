@@ -231,10 +231,10 @@ def _render_slot(slot: dict) -> list[str]:
     lines.append("    (pattern-match " + ("reactive" if facets["reactive"] else "non-reactive") + ")")
     lines.append("    (visibility " + ("public" if facets["public_visibility"] else "private") + ")")
     lines.append("    (create-accessor " + _create_accessor_value(SlotFacets(**facets)) + ")")
-    if slot["override_message_is_default"]:
-        lines.append("    (override-message DEFAULT)")
-    else:
-        lines.append(f"    (override-message {slot['override_message']})")
+    # BSAVE stores the resolved message symbol, including ordinary put-<slot>
+    # handlers. DEFAULT is a literal message name in stock CLIPS, not a request
+    # to resolve the default handler; emitting it breaks make-instance overrides.
+    lines.append(f"    (override-message {slot['override_message']})")
     if slot["constraint_serialized"]:
         lines.append(f"    ;;; serialized constraint record #{slot['constraint_index']} requires constraint facet rendering")
     lines.append("  )")
