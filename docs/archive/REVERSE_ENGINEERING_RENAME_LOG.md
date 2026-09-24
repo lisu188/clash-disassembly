@@ -1,5 +1,22 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-24 - Selected-slot predicate integration
+
+Track: Win95 reconstruction. Integrated the selected-slot readability checkpoint
+with rules-engine main `35f3adb`; fresh GCC 13 and Clang 18 builds, warning gates,
+strict surface comparisons without allowances and eight public CTests pass.
+All 836 nondocumentation inputs remain stable. Original assembly and independent
+review confirm the single-function contract with high confidence; no additional
+function, global, field or layout is renamed. All 34 neighboring bodies remain.
+The inherited 23 header rows, one parameter-name finding and 453/705 raw-link
+rows are unchanged. The 548-test tooling run reproduces main's three workflow
+failures; five environment-affected methods pass a focused Linux-native retry,
+with the initial failures retained. Four new strategic gates pass; the fifth
+retains main's activation-witness mismatch. Remote CI also reproduces these
+failures and the two private Markdown paths while its coverage job succeeds.
+No local coverage, runtime, visual or campaign milestone is added.
+[Commands, evidence and limits](../HUMAN_READABILITY.md#batch-21-integration-with-rules-engine-main).
+
 ## 2026-09-19 - Selected-slot predicate readability checkpoint
 
 Track: Win95 reconstruction. Replaced the byte-offset scan in

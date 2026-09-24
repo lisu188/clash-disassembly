@@ -1,6 +1,6 @@
 # Current Status
 
-Last consolidated: 2026-09-19.
+Last consolidated: 2026-09-24.
 
 ## Selected-Slot Predicate Readability
 
@@ -8,15 +8,19 @@ Track: Win95 reconstruction, Road-family selection helpers.
 `UnitStackSelection_HasSelectedSlots` now scans the existing ten-DWORD array
 directly, with the original exact `-1` inactive guard and full-DWORD nonzero
 tests. Assembly and independent source review agree; 34 neighbors are unchanged
-and exactly one canonical body hash changes. Manifest and generated-header
-checks, both incremental builds and warning gates, strict surface comparisons
-without allowances and eight existing CTests pass. Each compiler preserves the
-other 152 objects. Header rows and raw-link failures remain unchanged; no full
-tooling or coverage run is repeated. This validated task-branch checkpoint uses
-`a0dc2f0` as its reference; the next main integration remains separate. Four
-adjacent selection helpers were reviewed and retained unchanged. No runtime,
-visual or campaign milestone advances.
-[Predicate evidence and validation scope](HUMAN_READABILITY.md#batch-21-unitstackselection_hasselectedslots).
+and exactly one canonical body hash changes. After integrating main `35f3adb`,
+both fresh compiler builds and warning gates, strict surface comparisons
+without allowances and eight existing CTests pass; 836 nondocumentation inputs
+remain stable. Complete raw profiles and the inherited 453 GCC / 705 Clang link
+rows remain exact; header metrics retain 23 rows and one parameter-name finding.
+The current 548-test tooling run retains three workflow-condition failures also
+present on incoming main. Five additional methods affected by Windows-backed
+temporary storage or timeouts pass on a focused Linux-native retry. The new
+strategic activation-witness mismatch and two private Markdown-path failures
+also reproduce main. CI coverage succeeds; no local coverage run is repeated.
+Four adjacent selection helpers were reviewed and retained unchanged. No
+runtime, visual or campaign milestone advances.
+[Predicate evidence and integration limits](HUMAN_READABILITY.md#batch-21-integration-with-rules-engine-main).
 
 ## DLX Lifecycle Literal Names
 

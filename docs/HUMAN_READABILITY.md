@@ -2199,6 +2199,62 @@ whereas Begin, End and Refresh return the viewport redraw result. Refresh
 must not gain Begin's flag clear or mode writes. The bounded review is retained
 under artifacts/readability/road-functions-20260906/selection-family-next-review/.
 
+### Batch 21 integration with rules-engine main
+
+On 2026-09-24, `8b8ccbe` integrates incoming main `35f3adb` with the selected-slot
+predicate checkpoint. The incoming changes since the immutable F7 reference
+are confined to rules-engine tooling, tests, CI and documentation; production
+source, layouts, native fixtures and build definitions are unchanged. Original
+assembly and a second source review still confirm the exact `-1` guard, ten
+full-DWORD reads and 0/1 return. The production diff remains one function and
+one current manifest hash, with all 34 neighboring definitions unchanged.
+
+Fresh Debug builds with GCC 13 and Clang 18, both warning gates, strict surface
+comparisons without allowances and all eight existing public CTests pass.
+All 836 tracked nondocumentation inputs remain stable. Each build retains 153
+objects. Complete raw executable profiles equal the immutable F7 reference;
+the public link gates still fail with the same 453 GCC / 705 Clang rows and
+zero library crosscheck errors. Header profiles equal exact incoming main:
+23 ratchet rows, one `UnitStack.hpp` parameter-name policy finding, and no
+visibility errors. No baseline, policy or allowed-difference list changes.
+
+The current tooling suite runs 548 tests, reflecting six incoming strategic
+test methods absent from the historical 542-test suite. Its first local run
+finishes with five failures and four errors: three are the inherited workflow
+condition subtests; the remainder affect five distinct methods because the
+temporary directory was on the Windows-backed filesystem inside the source
+root, or because existing time limits expired. All five methods pass when
+rerun with a private Linux-native temporary directory, including both affected
+Clang radix profiles. The original failed run is retained, not relabeled as
+a passing full-suite run. All 273 tracked tooling/test files and the route/CI
+inputs in the retry binding match incoming main byte for byte.
+
+Source audit, frozen metadata, save contract, generated constants/structures/
+unit metadata, generated headers and TU include checks pass. Four new strategic
+gates pass: deffacts, matcher coverage, RETE path depth and reset agenda. The
+activation-witness gate still fails at `ustaw_pa_object_match`, with no actual
+activation where `ustaw_PA_0` is expected. The three workflow subtest failures
+are the RETE, reset-agenda and activation-witness steps' CLIPS prerequisites
+missing from the test's expected condition. Both these failures and the two
+private Markdown-path failures reproduce incoming main.
+
+[Incoming-main CI](https://github.com/lisu188/clash-disassembly/actions/runs/35779937637)
+and [PR CI at the compiled head](https://github.com/lisu188/clash-disassembly/actions/runs/35963432266)
+finish with the same failed steps. Each remote tooling run has exactly the
+three workflow failures, and each separate split-unit coverage job succeeds.
+These remote results do not establish fresh local coverage. No test is added
+for the direct predicate loop, and no runtime, visual or campaign milestone
+advances.
+
+Exact commands, initial failed attempts, focused retries, full logs and input
+bindings are retained under
+artifacts/readability/road-functions-20260906/batch-21-selected-slots/integration-20260924/.
+Its immutable native reference includes all raw objects, binaries, archives,
+actual compiler/link recipes and source-input bytes; later documentation and
+publication are bound separately to the compiled head. This integration
+supersedes the preceding checkpoint's pending-main status without replacing
+its historical measurements.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in
