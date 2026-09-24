@@ -1,4 +1,4 @@
-# UnitStack plague setter extraction
+# UnitStack plague setter extraction and relocation
 
 Track: Win95 reconstruction. The separately original-backed
 [address repair](UNIT_STACK_PLAGUE_REPAIR.md) is now an explicit
@@ -24,8 +24,8 @@ not a second production implementation.
 Both production builds, strict symbol/storage/initialization comparisons and
 all eight asset-free gates pass. All five comparison inventories enumerate
 exactly the new method symbol. The 4,157 recovered identities, 147 translation
-units and six class sources remain; there are now 28 canonical methods, with
-this extraction awaiting relocation. No historical ratchet baseline changes.
+units and six class sources remain; there are now 28 canonical methods.
+No historical ratchet baseline changes.
 
 GCC executable-line measurement reports nine lines for the frozen repaired
 function, ten for the canonical method and two for the adapter. The one-line
@@ -51,3 +51,12 @@ measurement reports. The initial line-measurement command was not executed
 because automatic approval review hit a usage limit on September 19; the
 unchanged command passed on September 24. Existing runtime and campaign
 milestones remain unchanged.
+
+The separately validated relocation moves only the canonical body into
+`src/units/UnitStack.cpp`, in manifest order. Its body hash remains
+`5283767eb76452f7a3b716feb1a19c956d67a300b1121e4bda22b859d8530e2c`, and the
+original adapter remains in its storage-anchor TU. The same eight focused
+profiles, both production builds, strict comparisons and all eight asset-free
+gates pass after the move. Run the validation command above with stage
+`plague-relocation`; its separate logs and step records are retained alongside
+the extraction evidence. All 28 methods now reside in six class-named sources.
