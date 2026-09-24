@@ -1,0 +1,30 @@
+name: Session source snapshot
+on:
+  push:
+    branches: [diagnostics/cpp-source-snapshot-20260924]
+    paths: [.github/workflows/session-source-snapshot.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3aa2094242d798912fef568cbd0bb7946b835882
+          persist-credentials: false
+      - name: Archive tracked public source only
+        run: |
+          git rev-parse HEAD > /tmp/source-commit.txt
+          git archive --format=tar.gz HEAD > /tmp/clash-source.tar.gz
+          sha256sum /tmp/clash-source.tar.gz > /tmp/source-sha256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clash-source-3aa2094
+          path: |
+            /tmp/clash-source.tar.gz
+            /tmp/source-commit.txt
+            /tmp/source-sha256.txt
+          retention-days: 1
+          if-no-files-found: error
