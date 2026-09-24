@@ -1,5 +1,23 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-24 - Player-info sprite loader readability
+
+Track: Win95 reconstruction. Reviewed `UI_LoadCurrentPlayerInfoSpriteSet`
+(`0x423370`) against original `UI_SetCurrentPlayer`. Named the filename,
+allocation address, sprite pointer and logging inputs; removed ghost copies,
+an uninitialized ignored allocator argument and stale annotations. Explicit
+32-bit increment and handle conversions preserve the original register width.
+Call/write order, allocation size, public types and existing free policy remain;
+34 neighboring definitions are unchanged and one current body hash changes.
+Confidence is high within the recorded source/helper contract. Forty focused
+case executions pass under GCC/Clang O0/O2; five mutations are rejected.
+The first production build stops with `Cannot allocate memory` on unchanged
+`src/units/UnitSlot.cpp`; the failure is retained and retry awaits shared build
+capacity.
+Production-build validation and main integration are pending. No original
+failure-path, leak-freedom, visual or campaign claim is added.
+[Evidence and deferred caller work](../HUMAN_READABILITY.md#batch-22-ui_loadcurrentplayerinfospriteset).
+
 ## 2026-09-24 - Selected-slot predicate integration
 
 Track: Win95 reconstruction. Integrated the selected-slot readability checkpoint

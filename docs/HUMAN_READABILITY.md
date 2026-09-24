@@ -2255,6 +2255,59 @@ publication are bound separately to the compiled head. This integration
 supersedes the preceding checkpoint's pending-main status without replacing
 its historical measurements.
 
+### Batch 22: UI_LoadCurrentPlayerInfoSpriteSet
+
+Track: Win95 reconstruction, Road-family selection-panel prerequisites. The
+loader at `0x423370` now names its filename, allocation address, sprite-set
+pointer and retained logging inputs. It removes ghost copies and an
+uninitialized allocator argument, while keeping the public types, 24-byte
+filename buffer, 4112-byte allocation and existing outer-block free policy.
+The original free, clear, format, allocate, conditional load, publish and return
+order remains intact. The actual loader return value is still published and
+returned; no destructor, retry or fallback is introduced.
+
+Original `UI_SetCurrentPlayer` instructions at `clash95.asm:54311` through
+54361 and the current allocator/loader implementations support the change.
+Entry ECX is saved and overwritten; it is distinct from the allocator-call
+register. Zero is used because the current `Mem_Alloc` discards that argument,
+not because original ECX was proven zero. Unsigned 32-bit addition recovers the
+original wrapping increment before signed filename formatting. Decoding the
+allocation bits before widening and explicitly publishing the returned
+pointer's low 32 bits remove implicit address conversions. These are bounded
+arithmetic/address repairs, not claims that the old C++ had defined behavior
+at every boundary. Ordinary current allocations remain in the signed-safe
+low32 domain.
+
+Independent review confirms the applied definition equals the reviewed
+candidate. All 34 neighboring definitions and the public declaration remain
+unchanged; only the selected current manifest hash changes. Confidence is high
+for these source contracts. The original CRT's complete failure behavior and
+nested allocation cleanup remain unproven. Two panel callers still evaluate
+uninitialized context locals; those caller defects require the separate panel
+repair. The neighboring free helper's empty-path return is also deferred.
+
+The actual-source regression passes ten cases with GCC 13 and Clang 18 at O0
+and O2: 40 executions with warnings as errors and undefined-behavior checking.
+It observes helper order and global state, filename boundaries, allocation
+size, conditional loading, forwarded logging arguments, returned pointer and
+low32 publication. The old body is rejected for its uninitialized local under
+all four compiler profiles. Five compiled mutations fail for the intended
+reasons. Synthetic addresses are never dereferenced; wide synthetic return
+values test truncation outside the production allocator's domain. This is
+source/helper contract evidence, not original-executable or rendering proof.
+
+The first fresh GCC production build stops with `Cannot allocate memory` while
+compiling unchanged `src/units/UnitSlot.cpp`; there is no C++ diagnostic
+identifying the loader as the failure. The failed log and completed objects
+are retained.
+The local retry is held while the coordinated compiler batch releases capacity;
+the Clang production build and final native gates have not run. Production
+validation and main integration remain pending for this draft checkpoint.
+Exact commands, source bindings, failed old-source builds and mutation
+diagnostics are retained under
+artifacts/readability/road-functions-20260906/batch-22-player-info-loader/.
+No runtime, visual or campaign milestone advances.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

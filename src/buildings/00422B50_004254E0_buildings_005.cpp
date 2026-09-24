@@ -271,39 +271,29 @@ BOOL  Unit_MoveSelectionFromGroupToTile(int unitIndex, _DWORD *selectedSlots, in
 // 5202E4: using guessed type int gameData;
 
 //----- (00423370) --------------------------------------------------------
-_DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int playerIndex, int a2, char a3, DWORD a4)
+_DWORD *UI_LoadCurrentPlayerInfoSpriteSet(
+    int playerIndex, int unusedContext CLASH95_UNUSED, char logByte, DWORD logContext)
 {
-  int playerIndexCopy; // edx
-  int v5; // ecx
-  _DWORD *result; // eax
-  _BYTE fileName[24]; // [esp+0h] [ebp-1Ch] BYREF
-  int v8 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
-
-  v8 = a2;
-  playerIndexCopy = playerIndex;
   if ( g_CurrentPlayerInfoSpriteSet )
   {
     nfree_(g_CurrentPlayerInfoSpriteSet);
     g_CurrentPlayerInfoSpriteSet = 0;
   }
-  sprintf_((char*)(fileName), "info%d.s32", playerIndexCopy + 1);
-  result = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v5, a3, a4);
-  if ( result )
-  {
-    result = DLXSpriteSet_Load(result, fileName);
-    g_CurrentPlayerInfoSpriteSet = (int)(intptr_t)result;
-  }
-  else
-  {
-    g_CurrentPlayerInfoSpriteSet = 0;
-  }
-  return result;
+
+  const int filePlayerNumber = static_cast<int32_t>(static_cast<uint32_t>(playerIndex) + 1u);
+  char fileName[24];
+  sprintf_(fileName, "info%d.s32", filePlayerNumber);
+
+  // Mem_Alloc ignores its recovered ECX argument; use a defined value.
+  const uint32_t allocationAddress = static_cast<uint32_t>(Mem_Alloc(4112, 0, logByte, logContext));
+  _DWORD *spriteSet = reinterpret_cast<_DWORD *>(static_cast<uintptr_t>(allocationAddress));
+  if ( spriteSet )
+    spriteSet = DLXSpriteSet_Load(spriteSet, fileName);
+
+  g_CurrentPlayerInfoSpriteSet = static_cast<int32_t>(
+      static_cast<uint32_t>(reinterpret_cast<uintptr_t>(spriteSet)));
+  return spriteSet;
 }
-// 423393: variable 'v4' is possibly undefined
-// 4233AB: variable 'v5' is possibly undefined
-// 4740DD: using guessed type int __thiscall nfree_(_DWORD);
-// 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
-// 527C24: using guessed type int dword_527C24;
 
 //----- (004233E0) --------------------------------------------------------
 int UI_FreeCurrentPlayerInfoSpriteSet(void)

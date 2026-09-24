@@ -3789,7 +3789,7 @@
       "original_line": 5415,
       "source": "src/buildings/00422B50_004254E0_buildings_005.cpp",
       "linkage": "external",
-      "body_sha256": "f2c64354b585bc1522c5082e7a7f6e28f1fe924f31d4fa72dba8155ce2e5ed63",
+      "body_sha256": "2fef4208596147f55f889c735bb42fd0e9857fba26574f8e344fb8ac2d85248b",
       "original_address_range": {
         "start": "0x00423370",
         "end_exclusive": "0x004233E0"

@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-24.
 
+## Player-Info Sprite Loader Readability
+
+Track: Win95 reconstruction, Road-family selection-panel prerequisites.
+`UI_LoadCurrentPlayerInfoSpriteSet` now uses named values and an explicit
+allocation/load sequence, removes an uninitialized ignored allocator argument,
+and preserves original 32-bit filename wrap and pointer-handle representation.
+The public declaration and all 34 neighboring definitions remain unchanged.
+Actual-source contracts pass 40 cases across four supported compiler profiles;
+five deliberate mutations are rejected. The first production build stops on
+an unchanged file with `Cannot allocate memory`; its retained failure and the
+coordinated retry remain separate from the focused passes. Production-build
+validation and main integration are pending. Panel caller defects remain a
+separate repair, and no runtime, visual or campaign milestone advances.
+[Loader evidence and limits](HUMAN_READABILITY.md#batch-22-ui_loadcurrentplayerinfospriteset).
+
 ## Selected-Slot Predicate Readability
 
 Track: Win95 reconstruction, Road-family selection helpers.
