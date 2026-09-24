@@ -57,6 +57,9 @@ def main() -> int:
     assert rendered.count("    (visibility ") == 23
     assert rendered.count("    (create-accessor ") == 23
     assert rendered.count("    (override-message ") == 23
+    assert "(override-message DEFAULT)" not in rendered
+    for item in report["slots"]:
+        assert f"(override-message {item['override_message']})" in rendered
     assert "No constraint records were serialized" in rendered
     assert "(defclass oddzial" in rendered
     assert "(defclass gracz" in rendered
