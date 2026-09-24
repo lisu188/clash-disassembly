@@ -9,6 +9,7 @@ from urllib.request import Request,urlopen
 
 UA="clash-disassembly-research/1.0 (+https://github.com/lisu188/clash-disassembly)"
 HOST="clash.y0.pl"
+HOSTS=("clash.y0.pl","forum.clash.y0.pl","www.clash.y0.pl")
 CDX="https://web.archive.org/cdx/search/cdx"
 HIGH={".7z",".arj",".bat",".bin",".cfg",".com",".dat",".diff",".doc",".docx",".exe",".ini",".ips",".map",".msi",".patch",".pdf",".rar",".rtf",".txt",".xdelta",".xdelta3",".zip"}
 
@@ -31,20 +32,25 @@ def archive(ts,raw):
     return f"https://web.archive.org/web/{ts}id_/{quote(raw,safe=':/?&=%+#;,~@!$()*[]')}"
 
 def rows():
-    params=[("url",HOST),("matchType","domain"),("output","json"),("fl","timestamp,original,mimetype,statuscode,digest,length"),("filter","statuscode:200"),("collapse","urlkey"),("showSkipCount","true"),("lastSkipTimestamp","true")]
-    with get(CDX+"?"+urlencode(params)) as r:data=json.loads(r.read().decode())
-    if len(data)<2:return []
-    head={k:i for i,k in enumerate(data[0])}; grouped={}
-    for x in data[1:]:
+    data=[]
+    for host in HOSTS:
+        params=[("url",host),("matchType","host"),("output","json"),("fl","timestamp,original,mimetype,statuscode,digest,length"),("filter","statuscode:200"),("collapse","urlkey"),("showSkipCount","true"),("lastSkipTimestamp","true")]
+        with get(CDX+"?"+urlencode(params),30,2) as r:
+            part=json.loads(r.read().decode())
+        if len(part)<2:continue
+        head={k:i for i,k in enumerate(part[0])}
+        for x in part[1:]:data.append((head,x))
+    grouped={}
+    for head,x in data:
         try:
-            key=norm(x[head["original"]]); grouped.setdefault(key,[]).append(x)
+            key=norm(x[head["original"]]); grouped.setdefault(key,[]).append((head,x))
         except Exception:pass
     out=[]
     for key,xs in grouped.items():
-        xs.sort(key=lambda x:x[head["timestamp"]]); a=xs[0]
+        xs.sort(key=lambda hx:hx[1][hx[0]["timestamp"]]); head,a=xs[0]
         raw=a[head["original"]]; length=a[head["length"]]
-        capture_count=sum(1+(int(x[head["skipcount"]]) if "skipcount" in head and str(x[head["skipcount"]]).isdigit() else 0) for x in xs)
-        latest=max((x[head["endtimestamp"]] if "endtimestamp" in head and x[head["endtimestamp"]] else x[head["timestamp"]]) for x in xs)
+        capture_count=sum(1+(int(x[h["skipcount"]]) if "skipcount" in h and str(x[h["skipcount"]]).isdigit() else 0) for h,x in xs)
+        latest=max((x[h["endtimestamp"]] if "endtimestamp" in h and x[h["endtimestamp"]] else x[h["timestamp"]]) for h,x in xs)
         out.append({"canonical_url":key,"original_url":raw,"first_capture":a[head["timestamp"]],"latest_capture":latest,"capture_count":capture_count,"representative_mimetype":a[head["mimetype"]],"representative_digest":a[head["digest"]],"representative_cdx_length":int(length) if str(length).isdigit() else "","archive_url":archive(a[head["timestamp"]],raw)})
     return sorted(out,key=lambda x:x["canonical_url"])
 
