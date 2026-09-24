@@ -2300,13 +2300,44 @@ The first fresh GCC production build stops with `Cannot allocate memory` while
 compiling unchanged `src/units/UnitSlot.cpp`; there is no C++ diagnostic
 identifying the loader as the failure. The failed log and completed objects
 are retained.
-The local retry is held while the coordinated compiler batch releases capacity;
-the Clang production build and final native gates have not run. Production
-validation and main integration remain pending for this draft checkpoint.
+The local retry is held while the coordinated runtime probes release capacity
+and physical disk space recovers above the unchanged 8 GiB reserve. The local
+Clang production build and final native comparisons have not run; main
+integration remains pending for this draft checkpoint.
 Exact commands, source bindings, failed old-source builds and mutation
 diagnostics are retained under
 artifacts/readability/road-functions-20260906/batch-22-player-info-loader/.
 No runtime, visual or campaign milestone advances.
+
+#### Remote CI for the player-info loader
+
+[PR #145 validation run](https://github.com/lisu188/clash-disassembly/actions/runs/35969219707)
+is terminal at source commit `959803b`. Both GCC 13 and Clang 18 production
+builds, warning checks, eight public asset-free CTests and runner-policy checks
+pass. The separate GCC coverage gate passes with 6167/6656 executable lines
+(92.65%): 585 functions fully covered, 133 partially covered and none uncovered
+among the 718 selected functions. Successful CTest output suppresses the unit
+harness's individual results, so no isolated-case pass/crash count is inferred.
+
+The full tooling run executes 550 tests in 257.437 seconds and retains the
+three workflow-condition subtest failures present on published main `c9c0fa7`.
+The activation-witness payload and two missing private Markdown paths also
+match that main run. Both remote header logs contain 15 ratchet rows plus the
+same parameter-name policy finding; these remote measurements are distinct
+from the previously recorded 23 local ratchet rows. The overall CI result
+remains failed. Frozen baselines and policies are unchanged.
+
+The downloaded complete current link profiles, frozen link baselines and link
+diagnostic logs are byte-identical to main for both compilers. Complete header
+profiles, baselines and diagnostic logs are likewise byte-identical. Comparing
+compiler diagnostic messages after normalizing line/column locations and order
+finds only the removed loader `v5` uninitialized warning in each compiler;
+each total decreases from 6569 to 6568. This separates the loader improvement
+from the inherited surface failures.
+
+Full logs and downloaded diagnostics for both runs are retained under the
+batch-22 evidence directory. These remote measurements do not replace the
+pending local strict symbol/data comparison or establish runtime/visual parity.
 
 ## Next migration batches
 

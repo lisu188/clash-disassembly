@@ -14,7 +14,10 @@ case executions pass under GCC/Clang O0/O2; five mutations are rejected.
 The first production build stops with `Cannot allocate memory` on unchanged
 `src/units/UnitSlot.cpp`; the failure is retained and retry awaits shared build
 capacity.
-Production-build validation and main integration are pending. No original
+PR #145 CI completes both production builds, warning gates, eight public CTests
+and coverage at 6167/6656 lines across all 718 selected functions. The remote
+550-test tooling run retains three workflow-condition failures. Local strict
+comparisons and main integration remain pending. No original
 failure-path, leak-freedom, visual or campaign claim is added.
 [Evidence and deferred caller work](../HUMAN_READABILITY.md#batch-22-ui_loadcurrentplayerinfospriteset).
 
