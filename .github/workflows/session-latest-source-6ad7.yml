@@ -1,0 +1,27 @@
+name: Session latest source 6ad7
+on:
+  push:
+    branches: [diagnostics/cpp-source-snapshot-20260924]
+    paths: [.github/workflows/session-latest-source-6ad7.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 6ad7f2d92379256b0d6076b44fac7bb845d7176d
+          persist-credentials: false
+      - run: |
+          git archive --format=tar.gz HEAD > /tmp/source.tar.gz
+          git rev-parse HEAD > /tmp/commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-6ad7
+          path: |
+            /tmp/source.tar.gz
+            /tmp/commit.txt
+          retention-days: 1
+          if-no-files-found: error
