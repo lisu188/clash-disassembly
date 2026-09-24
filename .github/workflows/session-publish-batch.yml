@@ -1,0 +1,68 @@
+name: Session verified patch
+on:
+  push:
+    branches: [diagnostics/cpp-source-snapshot-20260924]
+    paths: [.github/workflows/session-publish-batch.yml]
+permissions:
+  contents: write
+concurrency:
+  group: clash-session-verified-patch
+  cancel-in-progress: false
+jobs:
+  validate-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply the locally verified patch to its exact upstream parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed 's/^ diff --git /diff --git /' session-batch.patch > "$RUNNER_TEMP/batch.patch"
+          echo "d7d45dc28ee96add36e19d17c4c06e3d8ffc651996540f98da2e00a91937f3ae  $RUNNER_TEMP/batch.patch" | sha256sum -c -
+          git fetch --no-tags origin 3aa2094242d798912fef568cbd0bb7946b835882
+          git checkout -b fix/ai-slot-override-dispatch-20260924 3aa2094242d798912fef568cbd0bb7946b835882
+          git apply --check "$RUNNER_TEMP/batch.patch"
+          git apply "$RUNNER_TEMP/batch.patch"
+          git diff --check
+          git diff --quiet -- src data CMakeLists.txt .github/workflows
+      - name: Install exact supported validation compilers and CLIPS
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends g++-13 clang-18 libclang-rt-18-dev clips
+      - name: Verify all tooling and recovered AI semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests/tools -p 'test_*.py' 2>&1 | tee "$RUNNER_TEMP/batch-tooling.log"
+          python3 tools/check_clash_dat_slot_facets.py
+          python3 tools/check_clash_recovered_clp.py
+          python3 tools/check_clash_recovered_clips_load.py
+          python3 tools/check_clash_recovered_rete_runtime.py
+          python3 tools/check_clash_recovered_reset_agenda.py
+          python3 tools/check_clash_recovered_activation_witnesses.py --json "$RUNNER_TEMP/activation-witnesses.json"
+          python3 tools/audit_split_sources.py
+      - name: Publish only the verified repair, without changing main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add docs/CLASH_DAT_RECOVERED_CLP.md docs/CLASH_DAT_SLOT_FACETS.md docs/STATUS.md tests/tools/test_ci_workflow.py tests/tools/test_clash_slot_overrides.py tools/check_clash_dat_slot_facets.py tools/check_clash_recovered_clips_load.py tools/clash_dat_slot_facets.py
+          test "$(git diff --cached --name-only | wc -l)" -eq 8
+          git diff --cached --check
+          git config user.name 'Clash validation'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(ai): preserve serialized slot override dispatch and reject failed witnesses'
+          git push origin HEAD:refs/heads/fix/ai-slot-override-dispatch-20260924
+          git rev-parse HEAD > "$RUNNER_TEMP/published-commit.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-slot-override-verification
+          path: |
+            ${{ runner.temp }}/batch-tooling.log
+            ${{ runner.temp }}/activation-witnesses.json
+            ${{ runner.temp }}/published-commit.txt
+          if-no-files-found: warn
+          retention-days: 30
