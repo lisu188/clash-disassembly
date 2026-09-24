@@ -1,0 +1,29 @@
+name: Session native tools
+on:
+  push:
+    branches: [diagnostics/cpp-source-snapshot-20260924]
+    paths: [.github/workflows/session-native-tools.yml]
+permissions:
+  contents: read
+jobs:
+  tools:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Install validation dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends clips libsdl2-dev
+          mkdir -p /tmp/clash-native-tools/bin /tmp/clash-native-tools/lib /tmp/clash-native-tools/include
+          cp /usr/bin/clips /tmp/clash-native-tools/bin/
+          dpkg -L libclips | grep -E '/libclips\.so' | while read -r path; do cp -L "$path" /tmp/clash-native-tools/lib/; done
+          cp -a /usr/include/SDL2 /tmp/clash-native-tools/include/
+          ldd /usr/bin/clips > /tmp/clash-native-tools/ldd.txt
+          dpkg-query -W clips libclips libsdl2-dev > /tmp/clash-native-tools/package-versions.txt
+          tar -czf /tmp/clash-native-tools.tar.gz -C /tmp clash-native-tools
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clash-native-tools
+          path: /tmp/clash-native-tools.tar.gz
+          retention-days: 1
+          if-no-files-found: error
