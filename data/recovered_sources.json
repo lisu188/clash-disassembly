@@ -9017,7 +9017,7 @@
       "original_line": 8037,
       "source": "src/buildings/0043E500_0043FDE0_buildings_006.cpp",
       "linkage": "external",
-      "body_sha256": "591234c14c31dfaadf28af2f3d5b0b0512e55f8e72b430bec1f65b5ae823e0f6",
+      "body_sha256": "8bb3a4f8335c88826e4d032463a969ddbc9b73eef3adc4c507fcb64cc2e22b0d",
       "original_address_range": {
         "start": "0x0043F630",
         "end_exclusive": "0x0043F880"
@@ -31052,7 +31052,7 @@
       "original_line": 3583,
       "source": "src/render/004046D0_00405D20_render_003.cpp",
       "linkage": "external",
-      "body_sha256": "02dca1fa1fc51ad628e23012fcc0f30e1d7de546c7c67bbcaa4db7c5abf344e6",
+      "body_sha256": "c1fc550c86387be7d01f3275cae8892c1e4a58bcd3636c2f91fb33069374d871",
       "original_address_range": {
         "start": "0x00405A90",
         "end_exclusive": "0x00405C60"
@@ -31124,7 +31124,7 @@
       "original_line": 3697,
       "source": "src/render/004046D0_00405D20_render_003.cpp",
       "linkage": "external",
-      "body_sha256": "2c8c34bc27ed615744f7e4919cc8660cc4a6ac2128c68d58d3efdc4a68b7a2ee",
+      "body_sha256": "4f9a0d23dd4a3b949d0e2ff3765ebc88e25aaf3402af33ca8b0ace15fe1f80e1",
       "original_address_range": {
         "start": "0x00405D20",
         "end_exclusive": "0x00405DB0"
@@ -31412,7 +31412,7 @@
       "original_line": 3998,
       "source": "src/render/00405DB0_00407D20_render_004.cpp",
       "linkage": "external",
-      "body_sha256": "1d182fc1f5742639475c8d343d28c8c77d337a358de18154f19cb4fc0d5204ce",
+      "body_sha256": "8b8a48c918cece51208923a27508e88688d370da5a71b9812122cdeb8a006afa",
       "original_address_range": {
         "start": "0x00406390",
         "end_exclusive": "0x00406460"
@@ -89506,7 +89506,7 @@
       "original_line": 3090,
       "source": "src/units/00412C00_00414350_units_003.cpp",
       "linkage": "external",
-      "body_sha256": "ccfe7a716b0500544c55ea66b5042c82353e528e19dd2510784753d2a9b1be6b",
+      "body_sha256": "2394b404d1dfadd8279b46c6efb59fd53d0f4c7dd9c471075ad05ae82f4bfc59",
       "original_address_range": {
         "start": "0x00412F30",
         "end_exclusive": "0x00413080"
