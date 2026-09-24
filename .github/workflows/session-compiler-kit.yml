@@ -1,0 +1,45 @@
+name: Session compiler kit
+on:
+  push:
+    branches: [diagnostics/cpp-source-snapshot-20260924]
+    paths: [.github/workflows/session-compiler-kit.yml]
+permissions:
+  contents: read
+jobs:
+  kit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Install supported public toolchain packages
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends g++-13 clang-18 libclang-rt-18-dev libsdl2-dev
+      - name: Assemble relocatable compiler and SDL header kit
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=/tmp/clash-compiler-kit
+          mkdir -p "$root/usr/bin" "$root/usr/lib/x86_64-linux-gnu" "$root/usr/include"
+          for binary in g++-13 gcc-13 cpp-13 clang-18 clang++-18; do
+            cp -L "$(command -v "$binary")" "$root/usr/bin/$binary"
+          done
+          cp -a --parents /usr/lib/gcc/x86_64-linux-gnu/13 /usr/include/c++/13 /usr/include/x86_64-linux-gnu/c++/13 /usr/include/SDL2 /usr/include/x86_64-linux-gnu/SDL2 "$root"
+          cp -a --parents /usr/lib/llvm-18/lib/clang/18 "$root"
+          for binary in "$(command -v clang-18)" /usr/lib/gcc/x86_64-linux-gnu/13/cc1plus; do
+            ldd "$binary" | awk '/=> \/.*(libLLVM|libclang|libisl|libmpc|libmpfr|libgmp|libedit|libtinfo)/ { print $3 }' | while read -r library; do
+              cp -L "$library" "$root/usr/lib/x86_64-linux-gnu/"
+            done
+          done
+          dpkg-query -W g++-13 gcc-13 clang-18 libclang-rt-18-dev libsdl2-dev > "$root/package-versions.txt"
+          g++-13 --version > "$root/gcc-version.txt"
+          clang++-18 --version > "$root/clang-version.txt"
+          tar -czf /tmp/clash-compiler-kit.tar.gz -C /tmp clash-compiler-kit
+          sha256sum /tmp/clash-compiler-kit.tar.gz > /tmp/clash-compiler-kit.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clash-supported-compiler-kit
+          path: |
+            /tmp/clash-compiler-kit.tar.gz
+            /tmp/clash-compiler-kit.sha256
+          if-no-files-found: error
+          retention-days: 1
