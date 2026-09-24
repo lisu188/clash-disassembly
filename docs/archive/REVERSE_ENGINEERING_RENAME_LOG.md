@@ -1,5 +1,39 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-24 - Selected-slot predicate integration
+
+Track: Win95 reconstruction. Integrated the selected-slot readability checkpoint
+with rules-engine main `35f3adb`; fresh GCC 13 and Clang 18 builds, warning gates,
+strict surface comparisons without allowances and eight public CTests pass.
+All 836 nondocumentation inputs remain stable. Original assembly and independent
+review confirm the single-function contract with high confidence; no additional
+function, global, field or layout is renamed. All 34 neighboring bodies remain.
+The inherited 23 header rows, one parameter-name finding and 453/705 raw-link
+rows are unchanged. The 548-test tooling run reproduces main's three workflow
+failures; five environment-affected methods pass a focused Linux-native retry,
+with the initial failures retained. Four new strategic gates pass; the fifth
+retains main's activation-witness mismatch. Remote CI also reproduces these
+failures and the two private Markdown paths while its coverage job succeeds.
+No local coverage, runtime, visual or campaign milestone is added.
+[Commands, evidence and limits](../HUMAN_READABILITY.md#batch-21-integration-with-rules-engine-main).
+
+## 2026-09-19 - Selected-slot predicate readability checkpoint
+
+Track: Win95 reconstruction. Replaced the byte-offset scan in
+`UnitStackSelection_HasSelectedSlots` (`0x423AC0`) with an indexed loop over the
+existing ten-DWORD array and an early inactive-selection return. Original
+assembly confirms the exact `-1` guard, full-DWORD tests and 0/1 return. No public
+identity, state, type or layout changes; 34 neighboring definitions remain exact.
+One stale annotation is removed and one canonical body hash changes. Independent
+review, static manifest/header checks, both incremental builds and warning
+gates, strict surface comparisons without allowances and eight existing CTests
+pass against `a0dc2f0`. Each compiler preserves 152 other objects. Existing
+header/link failures remain; no full tooling or coverage run is repeated. This
+is a task-branch checkpoint pending main integration. Begin, End, ClearMask and
+Refresh were separately reviewed and retained unchanged. Confidence is high
+within these bounded contracts; no runtime or campaign milestone advances.
+[Evidence and validation](../HUMAN_READABILITY.md#batch-21-unitstackselection_hasselectedslots).
+
 ## 2026-09-19 - F7 DLX lifecycle literal names
 
 Track: Win95 reconstruction. Replaced 23 unsuffixed literals in seven functions
