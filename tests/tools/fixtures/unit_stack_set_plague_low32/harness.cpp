@@ -16,11 +16,24 @@ int main() {
   uint32_t row[2];unsigned char input[800];
   while(fread(row,8,1,stdin)==1) {
     if(fread(input,800,1,stdin)!=1 || row[0]!=0)return 3;
-    auto *image=(unsigned char*)uintptr_t(row[1]-32);memcpy(image,input,800);
+    auto *image=(unsigned char*)uintptr_t(row[1]-32);
     int address;memcpy(&address,&row[1],4);
-    int signed_result=UnitStack_SetPlagueFlag(address);
-    uint32_t result;memcpy(&result,&signed_result,4);
-    if(fwrite(&result,4,1,stdout)!=1 || fwrite(image,800,1,stdout)!=1)return 4;
+    unsigned char reference[804],actual[804];
+    for(int lane=0;lane<3;++lane) {
+      memcpy(image,input,800);
+      int signed_result;
+      if(lane==0)signed_result=Reference_UnitStack_SetPlagueFlag(address);
+      else if(lane==1)signed_result=UnitStack_SetPlagueFlag(address);
+      else {
+        clash95::UnitStack stack((intptr_t)row[1]);
+        if(memcmp(image,input,800))return 7;
+        signed_result=stack.UnitStack_SetPlagueFlag();
+      }
+      memcpy(actual,&signed_result,4);memcpy(actual+4,image,800);
+      if(lane==0)memcpy(reference,actual,804);
+      else if(memcmp(reference,actual,804))return 10+lane;
+    }
+    if(fwrite(actual,804,1,stdout)!=1)return 4;
   }
   if(ferror(stdin)||fflush(stdout))return 5;
   for(int i=0;i<3;++i)if(munmap((void*)starts[i],lengths[i]))return 6;

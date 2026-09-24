@@ -1,7 +1,8 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: UnitStack personage query relocation.
-Twenty-seven identities have canonical methods in six class-named sources.
+Track: Win95 reconstruction. Frontier: UnitStack plague setter extraction.
+Twenty-eight identities have canonical methods: 27 in six class-named sources
+and the plague setter in its original TU pending relocation.
 The ordered manifest contains 147 translation units,
 including the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
@@ -14,6 +15,11 @@ records, globals, low32 handles, callback tables, save bytes and explicit
 lifecycles remain authoritative. Classes describe the reconstruction's
 organization, not proven original C++ object layouts. The migration does not
 advance campaign or visual-fidelity claims.
+
+The plague setter extraction passes eight actual-source compiler profiles,
+both production builds, strict surface comparisons and eight asset-free gates.
+Its original adapter and direct method match the frozen repaired implementation
+and original measurements. See [UNIT_STACK_PLAGUE_CLASS.md](UNIT_STACK_PLAGUE_CLASS.md).
 
 The three personage/order queries pass eight actual-source compiler profiles,
 both production builds, strict surface comparisons and eight asset-free gates.

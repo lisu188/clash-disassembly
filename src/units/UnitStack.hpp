@@ -16,6 +16,7 @@ class CLASH95_INTERNAL UnitStack final {
   signed int UnitStack_GetMaxOrderTier() const;
   signed int UnitStack_HasNormalCombatUnits() const;
   signed int UnitStack_HasSpecialPersonageUnits() const;
+  int UnitStack_SetPlagueFlag() const;
  private:
   intptr_t address_;
 };

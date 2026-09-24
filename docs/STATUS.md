@@ -1,6 +1,16 @@
 # Current Status
 
-Last consolidated: 2026-09-19.
+Last consolidated: 2026-09-24.
+
+## UnitStack Plague Setter Extraction
+
+The repaired plague setter now has a canonical explicit UnitStack method in
+its original TU and a thin original-signature adapter. Frozen repaired,
+adapter and direct-method lanes match all 36,344 original cases in eight
+compiler profiles. Both production builds, strict comparisons and eight
+asset-free gates pass. There are 28 canonical methods; relocation is pending.
+The canonical receiver binding adds one executable line outside the unchanged
+718-function coverage inventory. See [UNIT_STACK_PLAGUE_CLASS.md](UNIT_STACK_PLAGUE_CLASS.md).
 
 ## Plague Setter Address Repair Before Class Extraction
 

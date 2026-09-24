@@ -17,6 +17,7 @@ ROOT = Path(os.environ.get('CLASH95_SOURCE_ROOT', Path(__file__).resolve().paren
 FIXTURE = Path(__file__).parent / 'fixtures/unit_stack_set_plague_low32'
 sys.path.insert(0, str(ROOT / 'tools'))
 from recovered_implementation import index_manifest_definitions
+from split_source_index import scan_definitions, body_sha256
 
 spec = importlib.util.spec_from_file_location('plague_low32_contract', FIXTURE / 'contract.py')
 contract = importlib.util.module_from_spec(spec)
@@ -26,20 +27,25 @@ spec.loader.exec_module(contract)
 class PlagueLow32RepairTests(unittest.TestCase):
     @unittest.skipUnless(sys.platform == 'linux' and platform.machine() == 'x86_64',
                          'requires Linux low32 mappings')
-    def test_actual_canonical_implementation_matches_original(self):
+    def test_methods_adapters_and_frozen_repair_match_original(self):
         name = 'UnitStack_SetPlagueFlag'
         proof = json.loads((FIXTURE / 'provenance.json').read_text())
         manifest = json.loads((ROOT / 'data/recovered_sources.json').read_text())
         row = next(r for r in manifest['functions'] if r['name'] == name)
         self.assertEqual(row['original_address'], '0x00412A90')
-        if row['implementation']['kind'] == 'free':
-            self.assertEqual(row['body_sha256'], proof['after_body_sha256'])
-        sources = {row['source']}
-        if 'adapter' in row:
-            sources.add(row['adapter']['source'])
+        self.assertEqual(row['implementation']['kind'], 'method')
+        sources = {row['source'], row['adapter']['source']}
         definitions = index_manifest_definitions(manifest, ROOT, sources)
-        bodies = []
-        for role in ['canonical'] + (['adapter'] if 'adapter' in row else []):
+        reference_proof = json.loads((FIXTURE / 'reference-provenance.json').read_text())
+        reference = (FIXTURE / 'reference.cpp').read_text()
+        self.assertEqual(hashlib.sha256(reference.encode()).hexdigest(), reference_proof['file_sha256'])
+        reference_definition, = scan_definitions(reference, {name})
+        self.assertEqual(body_sha256(reference, reference_definition), proof['after_body_sha256'])
+        self.assertEqual(reference_proof['body_sha256'], proof['after_body_sha256'])
+        self.assertEqual(reference_proof['original_address'], row['original_address'])
+        self.assertEqual(reference_proof['legacy_body_sha256'], row['legacy_body_sha256'])
+        bodies = [reference.replace(name + '(', 'Reference_' + name + '(', 1)]
+        for role in ['canonical', 'adapter']:
             resolved = definitions[name, role]
             expected_hash = row['body_sha256'] if role == 'canonical' else row['adapter']['body_sha256']
             self.assertEqual(resolved.body_sha256, expected_hash)
@@ -89,7 +95,9 @@ class PlagueLow32RepairTests(unittest.TestCase):
                         self.assertEqual(ran.returncode, 0, result['stderr'])
                         self.assertEqual(len(ran.stdout), len(expected))
                         self.assertEqual(hashlib.sha256(ran.stdout).digest(), hashlib.sha256(expected).digest())
-        print(json.dumps({'case_count': proof['case_count'], 'profiles': results}))
+        print(json.dumps({'case_count': proof['case_count'],
+                          'lanes': ['frozen-repaired', 'adapter', 'direct-method'],
+                          'profiles': results}))
 
 
 if __name__ == '__main__':

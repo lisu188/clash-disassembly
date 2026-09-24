@@ -1042,6 +1042,12 @@ __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
 //----- (00412A90) --------------------------------------------------------
 int  UnitStack_SetPlagueFlag(int result)
 {
+  return clash95::UnitStack(result).UnitStack_SetPlagueFlag();
+}
+
+int clash95::UnitStack::UnitStack_SetPlagueFlag() const
+{
+  int result = (int)address_;
   UnitStackRecord *stack;
   UnitSlotRecord *slot;
   int slotIndex;

@@ -158,6 +158,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
         }
       ],
       "archive_text": [
@@ -314,6 +321,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
         }
       ]
     },
@@ -458,6 +472,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
         }
       ],
       "archive_text": [
@@ -600,6 +621,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
         }
       ]
     }
