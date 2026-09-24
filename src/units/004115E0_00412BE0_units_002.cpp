@@ -1002,55 +1002,21 @@ signed int  UnitStack_CycleAllSlotOrders(__int16 *stackPtr, DWORD a2, double a3)
 }
 
 //----- (00412A30) --------------------------------------------------------
+
+
 __attribute__((used, retain))
 __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
 {
   return clash95::UnitStack(stackPtr).UnitStack_SetSpentTurnFlag();
 }
 
-__int16 * clash95::UnitStack::UnitStack_SetSpentTurnFlag() const
-{
-  int stackPtr = (int)address_;
-  UnitStackRecord *stack;
-  UnitSlotRecord *slot;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)stackPtr;
-  slot = &stack->unit_slots[0];
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    if ( slot->unit_type_id == -1 )
-      break;
-    slot->state_flags |= UNIT_SLOT_FLAG_SPENT_TURN;
-    ++slot;
-  }
-  return (__int16 *)(uintptr_t)((uint32_t)stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
-}
-
 //----- (00412A60) --------------------------------------------------------
+
+
 __attribute__((used, retain))
 __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
 {
   return clash95::UnitStack(stackPtr).UnitStack_ClearSpentTurnFlag();
-}
-
-__int16 * clash95::UnitStack::UnitStack_ClearSpentTurnFlag() const
-{
-  int stackPtr = (int)address_;
-  UnitStackRecord *stack;
-  UnitSlotRecord *slot;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)stackPtr;
-  slot = &stack->unit_slots[0];
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    if ( slot->unit_type_id == -1 )
-      break;
-    slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_SPENT_TURN;
-    ++slot;
-  }
-  return (__int16 *)(uintptr_t)((uint32_t)stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
 }
 
 //----- (00412A90) --------------------------------------------------------

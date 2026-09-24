@@ -1,8 +1,7 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: UnitStack spent-turn extraction.
-Thirty-three identities have canonical methods; 31 reside in six class-named
-sources and two remain in their original TU pending separate relocation.
+Track: Win95 reconstruction. Frontier: UnitStack spent-turn relocation validation.
+Thirty-three identities have canonical methods in six class-named sources.
 The ordered manifest contains 147 translation units,
 including the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
@@ -20,6 +19,9 @@ The two spent-turn methods pass all focused suites, both production builds,
 strict surface comparisons and eight asset-free gates. UnitTurn calls the real
 clear method directly, with callback/RNG order and complete affected bytes
 checked. See [UNIT_STACK_SPENT_TURN_CLASSES.md](UNIT_STACK_SPENT_TURN_CLASSES.md).
+Their relocation preserves both method hashes and passes the focused suites,
+both builds and strict comparisons. Six gates pass; both source audits and
+their unchanged retries time out. Those outcomes remain failed pending follow-up.
 
 The three AP-spending operations pass eight actual-source profiles, both
 production builds, strict surface comparisons and eight asset-free gates.

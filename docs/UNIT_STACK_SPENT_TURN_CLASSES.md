@@ -1,4 +1,4 @@
-# UnitStack spent-turn class extraction
+# UnitStack spent-turn class extraction and relocation
 
 Track: Win95 reconstruction. The separately
 [repaired spent-turn operations](UNIT_STACK_SPENT_TURN_REPAIR.md) become explicit
@@ -43,7 +43,14 @@ symbols; historical baselines remain unchanged.
 
 Integrated extraction passes all three focused suites, both production builds,
 strict symbol/storage comparisons and all eight asset-free gates. The two methods
-remain in the original TU for separate extraction validation. Measured canonical
+were then moved unchanged into `src/units/UnitStack.cpp`. The relocation passes
+the same three focused suites, both production builds and both strict surface
+comparisons. Six asset-free gates pass; each compiler's source audit reaches its
+unchanged 60-second timeout. Sequential unchanged retries also time out. All four
+failed attempts remain recorded; the relocation's remaining validation is pending
+under concurrent filesystem/resource pressure. No timeout or baseline is raised.
+
+All 33 current canonical methods reside in six class-named files. Measured canonical
 executable lines change from nine to ten for each method and remain 94 for
 `Unit_NewTurn`. All three identities are outside the fixed 718-function set, so
 its executable-line denominator is unchanged. Full native coverage and runtime
@@ -59,6 +66,11 @@ python3 artifacts/cpp-classes/20260919/validate-incremental.py spent-extraction 
   --reference-dir artifacts/cpp-classes/20260919/published-main-reference \
   --evidence-dir artifacts/cpp-classes/20260924/spent-class-integration \
   --allowances data/class_migration_september_main_text_additions.json
+python3 artifacts/cpp-classes/20260919/validate-incremental.py spent-relocation \
+  --reference-dir artifacts/cpp-classes/20260919/published-main-reference \
+  --evidence-dir artifacts/cpp-classes/20260924/spent-class-integration \
+  --allowances data/class_migration_september_main_text_additions.json
+python3 artifacts/cpp-classes/20260924/spent-class-integration/retry-source-audits.py
 ```
 
 The integrated directory retains individual focused and production outcomes.
