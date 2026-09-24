@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse,csv,hashlib,json,re,time
+from pathlib import Path
+from urllib.error import HTTPError,URLError
+from urllib.parse import parse_qsl,quote,urlencode,urlparse,urlunparse
+from urllib.request import Request,urlopen
+
+UA="clash-disassembly-research/1.0 (+https://github.com/lisu188/clash-disassembly)"
+HOST="clash.y0.pl"
+CDX="https://web.archive.org/cdx/search/cdx"
+HIGH={".7z",".arj",".bat",".bin",".cfg",".com",".dat",".diff",".doc",".docx",".exe",".ini",".ips",".map",".msi",".patch",".pdf",".rar",".rtf",".txt",".xdelta",".xdelta3",".zip"}
+
+def get(url,timeout=90,retries=3):
+    err=None
+    for n in range(retries):
+        try:return urlopen(Request(url,headers={"User-Agent":UA,"Accept-Encoding":"identity"}),timeout=timeout)
+        except (HTTPError,URLError,TimeoutError) as e:
+            err=e
+            if n+1<retries:time.sleep(2**n)
+    raise err
+
+def norm(raw):
+    p=urlparse(raw); h=(p.hostname or "").lower()
+    if h=="www."+HOST:h=HOST
+    q=[(k,v) for k,v in parse_qsl(p.query,keep_blank_values=True) if k.lower() not in {"sid","phpsessid"} and not k.lower().startswith("utm_")]
+    return urlunparse(("http",h,re.sub(r"/{2,}","/",p.path or "/"),"",urlencode(sorted(q)),""))
+
+def archive(ts,raw):
+    return f"https://web.archive.org/web/{ts}id_/{quote(raw,safe=\":/?&=%+#;,~@!$'()*[]\")}"
+
+def rows():
+    params=[("url",HOST),("matchType","domain"),("output","json"),("fl","timestamp,original,mimetype,statuscode,digest,length"),("filter","statuscode:200")]
+    with get(CDX+"?"+urlencode(params)) as r:data=json.loads(r.read().decode())
+    if len(data)<2:return []
+    head={k:i for i,k in enumerate(data[0])}; grouped={}
+    for x in data[1:]:
+        try:
+            key=norm(x[head["original"]]); grouped.setdefault(key,[]).append(x)
+        except Exception:pass
+    out=[]
+    for key,xs in grouped.items():
+        xs.sort(key=lambda x:x[head["timestamp"]]); a,b=xs[0],xs[-1]
+        raw=b[head["original"]]; length=b[head["length"]]
+        out.append({"canonical_url":key,"original_url":raw,"first_capture":a[head["timestamp"]],"latest_capture":b[head["timestamp"]],"capture_count":len(xs),"latest_mimetype":b[head["mimetype"]],"latest_digest":b[head["digest"]],"latest_cdx_length":int(length) if str(length).isdigit() else "","archive_url":archive(b[head["timestamp"]],raw)})
+    return sorted(out,key=lambda x:x["canonical_url"])
+
+def candidate(r):
+    u=r["canonical_url"].lower(); ext=Path(urlparse(u).path).suffix.lower()
+    return ext in HIGH or "deluxe" in u or "/download" in u
+
+def local_path(r,root):
+    p=urlparse(r["canonical_url"]); rel=p.path.lstrip("/")
+    if not rel or rel.endswith("/"):rel+=("" if not rel or rel.endswith("/") else "/")+"index.html"
+    path=Path(rel)
+    if p.query:
+        q=hashlib.sha1(p.query.encode()).hexdigest()[:10]; path=path.with_name(f"{path.stem}__q_{q}{path.suffix}")
+    return root/(p.hostname or HOST)/path
+
+def fetch(r,dst,limit):
+    z={"canonical_url":r["canonical_url"],"archive_url":r["archive_url"],"status":"error","bytes":0,"sha256":"","content_type":"","error":""}; tmp=None
+    try:
+        with get(r["archive_url"],120) as h:
+            z["content_type"]=h.headers.get("Content-Type",""); cl=h.headers.get("Content-Length","")
+            if cl.isdigit() and int(cl)>limit:z["status"]="too_large";return z
+            dst.parent.mkdir(parents=True,exist_ok=True); tmp=dst.with_name(dst.name+".part"); dig=hashlib.sha256()
+            with tmp.open("wb") as f:
+                while True:
+                    b=h.read(1024*1024)
+                    if not b:break
+                    z["bytes"]+=len(b)
+                    if z["bytes"]>limit:z["status"]="too_large";return z
+                    dig.update(b);f.write(b)
+            tmp.replace(dst);tmp=None;z["status"]="downloaded";z["sha256"]=dig.hexdigest();return z
+    except Exception as e:z["error"]=f"{type(e).__name__}: {e}";return z
+    finally:
+        if tmp and tmp.exists():tmp.unlink()
+
+def writecsv(path,data,fields):
+    with path.open("w",encoding="utf-8",newline="") as f:
+        w=csv.DictWriter(f,fieldnames=fields,extrasaction="ignore");w.writeheader();w.writerows(data)
+
+def main():
+    p=argparse.ArgumentParser();p.add_argument("--output",default="research/clash_y0");p.add_argument("--mirror-dir");p.add_argument("--max-file-mib",type=int,default=128);p.add_argument("--max-total-mib",type=int,default=512);a=p.parse_args()
+    out=Path(a.output);out.mkdir(parents=True,exist_ok=True); inv=rows(); fields=list(inv[0]) if inv else ["canonical_url","original_url","first_capture","latest_capture","capture_count","latest_mimetype","latest_digest","latest_cdx_length","archive_url"]
+    cand=[r for r in inv if candidate(r)];writecsv(out/"inventory.csv",inv,fields);writecsv(out/"download_candidates.csv",cand,fields)
+    live=[]
+    for u in ["http://clash.y0.pl/","http://clash.y0.pl/download/","http://forum.clash.y0.pl/"]:
+        x={"url":u,"status":"","final_url":"","content_type":"","error":""}
+        try:
+            with get(u,20,2) as h:x.update(status=getattr(h,"status",""),final_url=h.geturl(),content_type=h.headers.get("Content-Type",""))
+        except Exception as e:x["error"]=f"{type(e).__name__}: {e}"
+        live.append(x)
+    (out/"live_status.json").write_text(json.dumps(live,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    results=[];total=0
+    if a.mirror_dir:
+        root=Path(a.mirror_dir); maxf=a.max_file_mib*1048576; maxt=a.max_total_mib*1048576
+        order=sorted(inv,key=lambda r:(0 if candidate(r) else 1,r["canonical_url"]))
+        for r in order:
+            if total>=maxt:results.append({"canonical_url":r["canonical_url"],"archive_url":r["archive_url"],"status":"total_limit","bytes":0,"sha256":"","content_type":"","error":""});continue
+            x=fetch(r,local_path(r,root),min(maxf,maxt-total));results.append(x)
+            if x["status"]=="downloaded":total+=x["bytes"]
+        writecsv(out/"fetch_results.csv",results,["canonical_url","archive_url","status","bytes","sha256","content_type","error"])
+    summary={"generated_utc":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),"unique_url_count":len(inv),"high_value_candidate_count":len(cand),"downloaded_count":sum(x.get("status")=="downloaded" for x in results),"downloaded_bytes":total,"error_count":sum(x.get("status")=="error" for x in results),"deluxe_related_urls":[r["canonical_url"] for r in inv if "deluxe" in r["canonical_url"].lower()],"download_related_urls":[r["canonical_url"] for r in inv if "/download" in r["canonical_url"].lower()]}
+    (out/"summary.json").write_text(json.dumps(summary,indent=2,ensure_ascii=False)+"\n",encoding="utf-8");print(json.dumps(summary,ensure_ascii=False));return 0 if inv else 2
+if __name__=="__main__":raise SystemExit(main())
