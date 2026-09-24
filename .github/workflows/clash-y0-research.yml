@@ -32,7 +32,7 @@ jobs:
       - name: Commit refreshed metadata
         shell: bash
         run: |
-          if git diff --quiet -- research/clash_y0; then
+          if ! git status --porcelain -- research/clash_y0 | grep -q .; then
             exit 0
           fi
           git config user.name github-actions[bot]
