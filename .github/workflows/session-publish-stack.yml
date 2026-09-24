@@ -1,0 +1,109 @@
+name: Session typed stack queries
+on:
+  push:
+    branches: [diagnostics/cpp-source-snapshot-20260924]
+    paths: [.github/workflows/session-publish-stack.yml]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: clash-session-typed-stack
+  cancel-in-progress: false
+jobs:
+  verify-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Decode and verify the exact locally tested patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, hashlib, os, pathlib, zlib
+          packed = b''.join(pathlib.Path(f'session-stack-patch/part-{i:02}').read_bytes() for i in range(4))
+          patch = zlib.decompress(base64.b64decode(packed))
+          assert len(patch) == 27956
+          assert hashlib.sha256(patch).hexdigest() == '0bc8b960279d67bd70774c97bcacbe31fea62e54da9b3fc790eb3fc4f6008fdd'
+          pathlib.Path(os.environ['RUNNER_TEMP'], 'stack.patch').write_bytes(patch)
+          PY
+          git fetch --no-tags origin 5ef9e24c4919358a887fa46a1222f00e09ebcae5
+          git checkout -b refactor/typed-stack-queries-20260924 5ef9e24c4919358a887fa46a1222f00e09ebcae5
+          git apply --check "$RUNNER_TEMP/stack.patch"
+          git apply "$RUNNER_TEMP/stack.patch"
+          git diff --check
+          git diff --quiet -- .github/workflows data/link_surface_baseline.json data/recovered_warning_baseline.json
+          mkdir -p "$RUNNER_TEMP/stack-evidence"
+      - name: Install the supported public verification dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends g++-13 clang-18 libclang-rt-18-dev clips libsdl2-dev libx11-dev ninja-build
+      - name: Verify all tooling and retain differential query evidence
+        shell: bash
+        env:
+          CLASH95_UNIT_QUERY_EVIDENCE: ${{ runner.temp }}/stack-evidence/query
+          CLASH95_UNIT_STACK_FLAGS_EVIDENCE: ${{ runner.temp }}/stack-evidence/flags
+          CLASH95_UNIT_STACK_CLASS_EVIDENCE: ${{ runner.temp }}/stack-evidence/registers
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests/tools -p 'test_*.py' 2>&1 | tee "$RUNNER_TEMP/stack-evidence/tooling.log"
+          python3 tools/update_split_manifest_hashes.py
+          python3 tools/gen_subsystem_headers.py --check
+          python3 tools/gen_subsystem_headers.py --check-tu-includes
+          python3 tools/audit_split_sources.py
+      - name: Retrieve immutable pre-batch link profiles without changing frozen baselines
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/lisu188/clash-disassembly/actions/artifacts/10799910025/zip > "$RUNNER_TEMP/parent-gcc.zip"
+          gh api repos/lisu188/clash-disassembly/actions/artifacts/10799850041/zip > "$RUNNER_TEMP/parent-clang.zip"
+          python3 - <<'PY'
+          import hashlib, os, pathlib, zipfile
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])
+          expected = {'gcc': '35e59f1e82d8265e3f5f217a2e6af654fb5e73e1d5b496a79481d966bb66cdeb', 'clang': '9565aeeaf7b5836192ca25340dc51d919493f6ebdbde2e428ad18b5f874f8f8e'}
+          for compiler, digest in expected.items():
+              archive = root / f'parent-{compiler}.zip'
+              assert hashlib.sha256(archive.read_bytes()).hexdigest() == digest
+              with zipfile.ZipFile(archive) as z:
+                  names = [n for n in z.namelist() if n.endswith('link-surface-current.json')]
+                  assert len(names) == 1
+                  (root / f'parent-{compiler}.json').write_bytes(z.read(names[0]))
+          PY
+      - name: Build both native products and verify behavior and unchanged link surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          for compiler in gcc clang; do
+            if [ "$compiler" = gcc ]; then cxx=g++-13; else cxx=clang++-18; fi
+            dir="build/session-$compiler"
+            CXX="$cxx" cmake -S . -B "$dir" -G Ninja -DCMAKE_BUILD_TYPE=Debug
+            cmake --build "$dir" --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 2>&1 | tee "$RUNNER_TEMP/stack-evidence/$compiler-build.log"
+            python3 tools/check_recovered_warnings.py "$RUNNER_TEMP/stack-evidence/$compiler-build.log" --compiler "$compiler" --mode check | tee "$RUNNER_TEMP/stack-evidence/$compiler-warnings.log"
+            ctest --test-dir "$dir" -R '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' --output-on-failure --no-tests=error | tee "$RUNNER_TEMP/stack-evidence/$compiler-ctest.log"
+            python3 tools/check_link_surface.py "$dir/clash95_bootstrap" --lib "$dir/libclash95_recovered.a" --compiler "$compiler" --baseline "$RUNNER_TEMP/parent-$compiler.json" --mode check | tee "$RUNNER_TEMP/stack-evidence/$compiler-parent-link.log"
+            python3 tools/check_link_surface.py "$dir/clash95_bootstrap" --lib "$dir/libclash95_recovered.a" --compiler "$compiler" --mode report > "$RUNNER_TEMP/stack-evidence/$compiler-frozen-link-report.log"
+          done
+      - name: Publish only the tested eight-file batch to an isolated branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add data/recovered_sources.json docs/CPP_UNIT_STACK_QUERIES.md docs/STATUS.md src/units/UnitStack.cpp src/units/UnitStack.hpp tests/tools/fixtures/class_unit_pilot/harness.cpp tests/tools/test_class_unit_pilot.py tests/tools/test_class_unit_stack_registers.py
+          test "$(git diff --cached --name-only | wc -l)" -eq 8
+          git diff --cached --check
+          git diff --quiet
+          git config user.name 'Clash validation'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'refactor(units): use typed read-only stack queries with original read contracts'
+          git push origin HEAD:refs/heads/refactor/typed-stack-queries-20260924
+          git rev-parse HEAD > "$RUNNER_TEMP/stack-evidence/published-commit.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: typed-stack-query-verification
+          path: ${{ runner.temp }}/stack-evidence
+          retention-days: 30
+          if-no-files-found: warn
