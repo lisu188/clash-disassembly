@@ -31,7 +31,7 @@ def archive(ts,raw):
     return f"https://web.archive.org/web/{ts}id_/{quote(raw,safe=':/?&=%+#;,~@!$()*[]')}"
 
 def rows():
-    params=[("url",HOST),("matchType","domain"),("output","json"),("fl","timestamp,original,mimetype,statuscode,digest,length"),("filter","statuscode:200")]
+    params=[("url",HOST),("matchType","domain"),("output","json"),("fl","timestamp,original,mimetype,statuscode,digest,length"),("filter","statuscode:200"),("collapse","urlkey"),("showSkipCount","true"),("lastSkipTimestamp","true")]
     with get(CDX+"?"+urlencode(params)) as r:data=json.loads(r.read().decode())
     if len(data)<2:return []
     head={k:i for i,k in enumerate(data[0])}; grouped={}
@@ -41,9 +41,11 @@ def rows():
         except Exception:pass
     out=[]
     for key,xs in grouped.items():
-        xs.sort(key=lambda x:x[head["timestamp"]]); a,b=xs[0],xs[-1]
-        raw=b[head["original"]]; length=b[head["length"]]
-        out.append({"canonical_url":key,"original_url":raw,"first_capture":a[head["timestamp"]],"latest_capture":b[head["timestamp"]],"capture_count":len(xs),"latest_mimetype":b[head["mimetype"]],"latest_digest":b[head["digest"]],"latest_cdx_length":int(length) if str(length).isdigit() else "","archive_url":archive(b[head["timestamp"]],raw)})
+        xs.sort(key=lambda x:x[head["timestamp"]]); a=xs[0]
+        raw=a[head["original"]]; length=a[head["length"]]
+        capture_count=sum(1+(int(x[head["skipcount"]]) if "skipcount" in head and str(x[head["skipcount"]]).isdigit() else 0) for x in xs)
+        latest=max((x[head["endtimestamp"]] if "endtimestamp" in head and x[head["endtimestamp"]] else x[head["timestamp"]]) for x in xs)
+        out.append({"canonical_url":key,"original_url":raw,"first_capture":a[head["timestamp"]],"latest_capture":latest,"capture_count":capture_count,"representative_mimetype":a[head["mimetype"]],"representative_digest":a[head["digest"]],"representative_cdx_length":int(length) if str(length).isdigit() else "","archive_url":archive(a[head["timestamp"]],raw)})
     return sorted(out,key=lambda x:x["canonical_url"])
 
 def candidate(r):
@@ -84,7 +86,7 @@ def writecsv(path,data,fields):
 def plan(inv,maxf,maxt):
     selected=[];skipped=[];reserved=0
     for r in sorted(inv,key=lambda x:(0 if candidate(x) else 1,x["canonical_url"])):
-        n=r["latest_cdx_length"] if isinstance(r["latest_cdx_length"],int) else maxf
+        n=r["representative_cdx_length"] if isinstance(r["representative_cdx_length"],int) else maxf
         if n>maxf:
             skipped.append({"canonical_url":r["canonical_url"],"archive_url":r["archive_url"],"status":"too_large","bytes":0,"sha256":"","content_type":"","error":"CDX length exceeds per-file limit"});continue
         estimate=max(1,n)
@@ -95,7 +97,7 @@ def plan(inv,maxf,maxt):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument("--output",default="research/clash_y0");p.add_argument("--mirror-dir");p.add_argument("--max-file-mib",type=int,default=128);p.add_argument("--max-total-mib",type=int,default=512);p.add_argument("--workers",type=int,default=12);a=p.parse_args()
-    out=Path(a.output);out.mkdir(parents=True,exist_ok=True); inv=rows(); fields=list(inv[0]) if inv else ["canonical_url","original_url","first_capture","latest_capture","capture_count","latest_mimetype","latest_digest","latest_cdx_length","archive_url"]
+    out=Path(a.output);out.mkdir(parents=True,exist_ok=True); inv=rows(); fields=list(inv[0]) if inv else ["canonical_url","original_url","first_capture","latest_capture","capture_count","representative_mimetype","representative_digest","representative_cdx_length","archive_url"]
     cand=[r for r in inv if candidate(r)];writecsv(out/"inventory.csv",inv,fields);writecsv(out/"download_candidates.csv",cand,fields)
     live=[]
     for u in ["http://clash.y0.pl/","http://clash.y0.pl/download/","http://forum.clash.y0.pl/"]:
