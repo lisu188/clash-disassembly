@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: clash-y0-research-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   crawl:
     runs-on: ubuntu-latest
