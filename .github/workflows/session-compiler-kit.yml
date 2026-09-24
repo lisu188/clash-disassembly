@@ -25,7 +25,12 @@ jobs:
           done
           cp -a --parents /usr/lib/gcc/x86_64-linux-gnu/13 /usr/include/c++/13 /usr/include/x86_64-linux-gnu/c++/13 /usr/include/SDL2 /usr/include/x86_64-linux-gnu/SDL2 "$root"
           cp -a --parents /usr/lib/llvm-18/lib/clang/18 "$root"
-          for binary in "$(command -v clang-18)" /usr/lib/gcc/x86_64-linux-gnu/13/cc1plus; do
+          cc1plus=$(g++-13 -print-prog-name=cc1plus)
+          cc1=$(gcc-13 -print-prog-name=cc1)
+          test -x "$cc1plus"
+          test -x "$cc1"
+          cp -a --parents "$(dirname "$cc1plus")" "$root"
+          for binary in "$(command -v clang-18)" "$cc1plus" "$cc1"; do
             ldd "$binary" | awk '/=> \/.*(libLLVM|libclang|libisl|libmpc|libmpfr|libgmp|libedit|libtinfo)/ { print $3 }' | while read -r library; do
               cp -L "$library" "$root/usr/lib/x86_64-linux-gnu/"
             done
