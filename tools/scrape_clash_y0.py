@@ -69,7 +69,7 @@ def local_path(r,root):
 def fetch(r,dst,limit):
     z={"canonical_url":r["canonical_url"],"archive_url":r["archive_url"],"status":"error","bytes":0,"sha256":"","content_type":"","error":""}; tmp=None
     try:
-        with get(r["archive_url"],25,2) as h:
+        with get(r["archive_url"],10,1) as h:
             z["content_type"]=h.headers.get("Content-Type",""); cl=h.headers.get("Content-Length","")
             if cl.isdigit() and int(cl)>limit:z["status"]="too_large";return z
             dst.parent.mkdir(parents=True,exist_ok=True); tmp=dst.with_name(dst.name+".part"); dig=hashlib.sha256()
@@ -102,7 +102,7 @@ def plan(inv,maxf,maxt):
     return selected,skipped
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument("--output",default="research/clash_y0");p.add_argument("--mirror-dir");p.add_argument("--max-file-mib",type=int,default=128);p.add_argument("--max-total-mib",type=int,default=512);p.add_argument("--workers",type=int,default=12);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument("--output",default="research/clash_y0");p.add_argument("--mirror-dir");p.add_argument("--max-file-mib",type=int,default=128);p.add_argument("--max-total-mib",type=int,default=512);p.add_argument("--workers",type=int,default=16);a=p.parse_args()
     out=Path(a.output);out.mkdir(parents=True,exist_ok=True); inv=rows(); fields=list(inv[0]) if inv else ["canonical_url","original_url","first_capture","latest_capture","capture_count","representative_mimetype","representative_digest","representative_cdx_length","archive_url"]
     cand=[r for r in inv if candidate(r)];writecsv(out/"inventory.csv",inv,fields);writecsv(out/"download_candidates.csv",cand,fields)
     live=[]
