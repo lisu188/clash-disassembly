@@ -607,8 +607,9 @@
    "original_line": 596,
    "source": "src/units/0040F510_00411560_units_001.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitStack_SubtractActionPointsFloorZero"
+    "kind": "method",
+    "qualified_name": "clash95::UnitStack::UnitStack_SubtractActionPointsFloorZero",
+    "header": "src/units/UnitStack.hpp"
    }
   },
   {

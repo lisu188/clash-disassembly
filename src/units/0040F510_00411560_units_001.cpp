@@ -459,6 +459,12 @@ signed int  UnitStack_HasPlagueFlag(int stackPtr)
 //----- (00410130) --------------------------------------------------------
 signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmount, DWORD a3, double a4)
 {
+  return clash95::UnitStack((intptr_t)stackPtr).UnitStack_SpendActionPointsClamped(spendAmount, a3, a4);
+}
+
+signed int clash95::UnitStack::UnitStack_SpendActionPointsClamped(int spendAmount, DWORD a3, double a4) const
+{
+  __int16 *stackPtr = (__int16 *)(uintptr_t)address_;
   __int16 *slotPtr; // eax
   int i; // ecx
   int slotType; // ebx
@@ -483,6 +489,12 @@ signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmoun
 //----- (00410170) --------------------------------------------------------
 int  UnitStack_SpendActionPointsUnchecked(int stackPtr, char spendAmount)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_SpendActionPointsUnchecked(spendAmount);
+}
+
+int clash95::UnitStack::UnitStack_SpendActionPointsUnchecked(char spendAmount) const
+{
+  int stackPtr = (int)address_;
   unsigned int slotPtr; // eax
   int slotIndex; // edx
 
@@ -502,6 +514,12 @@ int  UnitStack_SpendActionPointsUnchecked(int stackPtr, char spendAmount)
 //----- (004101A0) --------------------------------------------------------
 signed int  UnitStack_SubtractActionPointsFloorZero(__int16 *stackPtr, int subtractAmount, DWORD a3, double a4)
 {
+  return clash95::UnitStack((intptr_t)stackPtr).UnitStack_SubtractActionPointsFloorZero(subtractAmount, a3, a4);
+}
+
+signed int clash95::UnitStack::UnitStack_SubtractActionPointsFloorZero(int subtractAmount, DWORD a3, double a4) const
+{
+  __int16 *stackPtr = (__int16 *)(uintptr_t)address_;
   __int16 *slotPtr; // eax
   int i; // edx
   int currentActionPoints; // ebx

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Actual AP-spending bodies against pinned original-instruction observations.
 
+The actual canonical methods, adapters and frozen repaired functions are compared.
 The original fact-link call is an explicitly controlled external boundary. This
 checks its input registers, call count, callback-time bytes, return propagation,
 and final bytes; it does not claim to validate the CLIPS implementation.
 """
 from pathlib import Path
 import hashlib,json,os,platform,random,shutil,struct,subprocess,sys,tempfile,unittest
+sys.dont_write_bytecode=True
 
 ROOT=Path(os.environ.get('CLASH95_SOURCE_ROOT',Path(__file__).resolve().parents[2])).resolve()
 PROVENANCE=Path(os.environ.get('CLASH95_AP_SPENDING_PROVENANCE',Path(__file__).parent/'fixtures/unit_stack_ap_spending/provenance.json'))
@@ -107,6 +109,7 @@ HARNESS=r'''
 #include "recovered_layout.h"
 #include "units/units_api.h"
 #include "strategic/strategic_api.h"
+#include "units/UnitStack.hpp"
 #include <sys/mman.h>
 static uint32_t header[8], observed[9];
 static unsigned char before[800];
@@ -125,15 +128,30 @@ int main() {
  unsigned char input[800];
  while(fread(header,sizeof(header),1,stdin)==1) {
   if(header[0]>2||fread(input,800,1,stdin)!=1)return 3;
-  auto *image=(unsigned char*)uintptr_t(header[1]-32);memcpy(image,input,800);
-  memset(observed,0,sizeof(observed));memset(before,0,800);
-  double value;memcpy(&value,header+4,8);int result;
-  auto *stack=(__int16*)uintptr_t(header[1]);
-  if(header[0]==0)result=UnitStack_SpendActionPointsClamped(stack,int(header[2]),header[3],value);
-  else if(header[0]==1)result=UnitStack_SubtractActionPointsFloorZero(stack,int(header[2]),header[3],value);
-  else result=UnitStack_SpendActionPointsUnchecked(int(header[1]),char(header[2]));
-  observed[0]=uint32_t(result);
-  if(fwrite(observed,sizeof(observed),1,stdout)!=1||fwrite(before,800,1,stdout)!=1||fwrite(image,800,1,stdout)!=1)return 4;
+  auto *image=(unsigned char*)uintptr_t(header[1]-32);
+  unsigned char reference[1636],actual[1636];
+  for(int lane=0;lane<3;++lane) {
+   memcpy(image,input,800);memset(observed,0,sizeof(observed));memset(before,0,800);
+   double value;memcpy(&value,header+4,8);int result;
+   auto *stack=(__int16*)uintptr_t(header[1]);
+   if(lane==0) {
+    if(header[0]==0)result=Reference_UnitStack_SpendActionPointsClamped(stack,int(header[2]),header[3],value);
+    else if(header[0]==1)result=Reference_UnitStack_SubtractActionPointsFloorZero(stack,int(header[2]),header[3],value);
+    else result=Reference_UnitStack_SpendActionPointsUnchecked(int(header[1]),char(header[2]));
+   } else if(lane==1) {
+    if(header[0]==0)result=UnitStack_SpendActionPointsClamped(stack,int(header[2]),header[3],value);
+    else if(header[0]==1)result=UnitStack_SubtractActionPointsFloorZero(stack,int(header[2]),header[3],value);
+    else result=UnitStack_SpendActionPointsUnchecked(int(header[1]),char(header[2]));
+   } else {
+    if(header[0]==0)result=clash95::UnitStack((intptr_t)stack).UnitStack_SpendActionPointsClamped(int(header[2]),header[3],value);
+    else if(header[0]==1)result=clash95::UnitStack((intptr_t)stack).UnitStack_SubtractActionPointsFloorZero(int(header[2]),header[3],value);
+    else result=clash95::UnitStack((intptr_t)header[1]).UnitStack_SpendActionPointsUnchecked(char(header[2]));
+   }
+   observed[0]=uint32_t(result);memcpy(actual,observed,36);memcpy(actual+36,before,800);memcpy(actual+836,image,800);
+   if(lane==0)memcpy(reference,actual,1636);
+   else if(memcmp(reference,actual,1636))return 10+int(header[0])*3+lane;
+  }
+  if(fwrite(actual,1636,1,stdout)!=1)return 4;
  }
  if(ferror(stdin)||fflush(stdout))return 5;
  return munmap(normal,4096)||munmap(edge,8192)?6:0;
@@ -143,27 +161,33 @@ int main() {
 def source_fixture():
  sys.path.insert(0,str(ROOT/'tools'))
  from recovered_implementation import index_manifest_definitions
- from split_source_index import scan_definitions
- override=os.environ.get('CLASH95_AP_SPENDING_SOURCE')
- if override:
-  text=Path(override).read_text();found={d.name:d for d in scan_definitions(text,set(NAMES))}
-  assert set(found)==set(NAMES)
-  bodies=[text[found[n].start:found[n].end] for n in NAMES]
- else:
-  manifest=json.loads((ROOT/'data/recovered_sources.json').read_text())
-  records={r['name']:r for r in manifest['functions'] if r['name'] in NAMES}
-  assert all(r['implementation']['kind']=='free' for r in records.values()), 'Adapt this fixture to canonical methods before migration'
-  indexed=index_manifest_definitions(manifest,ROOT,{r['source'] for r in records.values()})
-  bodies=[]
-  for name in NAMES:
-   item=indexed[(name,'canonical')]
-   assert item.body_sha256==records[name]['body_sha256']
-   text=(ROOT/item.target.source).read_text();d=item.definition;bodies.append(text[d.start:d.end])
- return HARNESS.replace('__TARGET__','\n\n'.join(bodies))
+ from split_source_index import scan_definitions,body_sha256
+ fixture=Path(__file__).parent/'fixtures/unit_stack_ap_spending/references'
+ proof=json.loads((fixture/'provenance.json').read_text())
+ manifest=json.loads((ROOT/'data/recovered_sources.json').read_text())
+ records={r['name']:r for r in manifest['functions'] if r['name'] in NAMES}
+ assert set(records)==set(NAMES)
+ sources={r['source'] for r in records.values()}|{r['adapter']['source'] for r in records.values()}
+ indexed=index_manifest_definitions(manifest,ROOT,sources)
+ references=[];methods=[];adapters=[]
+ for name in NAMES:
+  record=records[name];assert record['implementation']['kind']=='method'
+  original=next(r for r in proof['functions'] if r['name']==name)
+  assert record['original_address']==original['original_address']
+  assert record['legacy_body_sha256']==original['legacy_body_sha256']
+  frozen=(fixture/original['fixture']).read_text()
+  assert hashlib.sha256(frozen.encode()).hexdigest()==original['file_sha256']
+  fd,=scan_definitions(frozen,{name});assert body_sha256(frozen,fd)==original['repaired_body_sha256']
+  references.append(frozen.replace(name+'(','Reference_'+name+'(',1))
+  for role,destination in (('canonical',methods),('adapter',adapters)):
+   item=indexed[(name,role)];text=(ROOT/item.target.source).read_text();d=item.definition
+   assert item.body_sha256==(record['body_sha256'] if role=='canonical' else record['adapter']['body_sha256'])
+   destination.append(text[d.start:d.end])
+ return HARNESS.replace('__TARGET__','\n\n'.join(references+methods+adapters))
 
 class APSpendingTests(unittest.TestCase):
  @unittest.skipUnless(sys.platform=='linux' and platform.machine()=='x86_64','requires Linux low32 mappings')
- def test_actual_bodies_match_original_bytes_and_callback_boundary(self):
+ def test_actual_methods_adapters_and_frozen_repair_match_original(self):
   inputs,expected_output=streams()
   evidence=os.environ.get('CLASH95_AP_SPENDING_EVIDENCE')
   with tempfile.TemporaryDirectory(prefix='clash95-ap-spending-') as temporary:
@@ -187,7 +211,7 @@ class APSpendingTests(unittest.TestCase):
        ran=subprocess.run([str(out/label)],input=inputs,capture_output=True,timeout=60)
        (out/(label+'.run.log')).write_bytes(ran.stderr)
        row.update(run=ran.returncode,output_sha256=hashlib.sha256(ran.stdout).hexdigest(),output_bytes=len(ran.stdout))
-       (out/'summary.json').write_text(json.dumps({'case_count':len(inputs)//INPUT_BYTES,'profiles':rows},indent=2)+'\n')
+       (out/'summary.json').write_text(json.dumps({'case_count':len(inputs)//INPUT_BYTES,'lanes':['frozen-repaired','adapter','direct-method'],'profiles':rows},indent=2)+'\n')
        self.assertEqual(ran.returncode,0,ran.stderr.decode(errors='replace'))
        self.assertEqual(len(ran.stdout),len(expected_output))
        if ran.stdout!=expected_output:

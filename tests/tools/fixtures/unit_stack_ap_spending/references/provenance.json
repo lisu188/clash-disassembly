@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "reference_commit": "dbab1d0b4caae7e88ceed0834e3a0b033337a6fe",
+  "repair_source_revision": "33a5959820dfcb70902183d9c094221c547b05fc",
+  "repair_patch_sha256": "49db377e19baa12aaa51c4dcf7ad379ea5885e2db7f6cf37ff0ff08a61415c08",
+  "original_measurement_provenance_sha256": "6f5927156bbd7b74fee542da6478abc1a1d5a2110ab6746509edcd46daecd71e",
+  "functions": [
+    {
+      "name": "UnitStack_SpendActionPointsClamped",
+      "original_address": "0x00410130",
+      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "original_signature": "signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmount, DWORD a3, double a4)",
+      "pre_repair_body_sha256": "16acffc728bbabdfa366c2fc313fc2ea7d7ff95b7323012f1464cdac0e30dc1c",
+      "repaired_body_sha256": "711f3c85643c63ef4911110c034e4d274642d1950abc464a86c6b3523dde943f",
+      "legacy_body_sha256": "a3137a67a53e819552600cc46625c3f86c904a672859c4624ab493adcdf539e4",
+      "fixture": "UnitStack_SpendActionPointsClamped.cpp",
+      "file_sha256": "939aa318d3530ae409ee969c5f46ae8eaf99b7bb64c194aac25a606b026d41c4"
+    },
+    {
+      "name": "UnitStack_SubtractActionPointsFloorZero",
+      "original_address": "0x004101A0",
+      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "original_signature": "signed int  UnitStack_SubtractActionPointsFloorZero(__int16 *stackPtr, int subtractAmount, DWORD a3, double a4)",
+      "pre_repair_body_sha256": "5f6487556b53a89c8780de0ea07680e2b8e846995cb1a98d7b6a1dfa326d23c5",
+      "repaired_body_sha256": "8c859fdef8d45d58bfe0636bcfde29b27030032ee19e972ba8de608dea843d7d",
+      "legacy_body_sha256": "e71c344ac53cd8144fddd0d228b3aea80784e3816c3e5de3005779ad91860d21",
+      "fixture": "UnitStack_SubtractActionPointsFloorZero.cpp",
+      "file_sha256": "df2289adcfe700f3a64f0e56607acbc092261e459d05658d7b5888ebd7e42e14"
+    },
+    {
+      "name": "UnitStack_SpendActionPointsUnchecked",
+      "original_address": "0x00410170",
+      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "original_signature": "int  UnitStack_SpendActionPointsUnchecked(int stackPtr, char spendAmount)",
+      "pre_repair_body_sha256": "b26ac74cc2d1d28fd1f9fd3ab7643e58ce90bb06f65768273ddbbe05de7b3931",
+      "repaired_body_sha256": "62fef8b1a998904faa410bfeb54adab5678645dbd6729b2a424558d5e37811cf",
+      "legacy_body_sha256": "13d36556b2ec2832b14d32cad71727d15b32538e60eb944075b86804d8f3af70",
+      "fixture": "UnitStack_SpendActionPointsUnchecked.cpp",
+      "file_sha256": "d71cd17972ce98b351d53f0f39cce25472b97ecae40b8dbf8a4f7c0148d11283"
+    }
+  ]
+}

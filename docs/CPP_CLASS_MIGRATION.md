@@ -1,7 +1,8 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: UnitStack plague setter relocation.
-Twenty-eight identities have canonical methods in six class-named sources.
+Track: Win95 reconstruction. Frontier: UnitStack AP-spending extraction.
+Thirty-one identities have canonical methods: 28 in six class-named sources
+and three AP operations in their original TU pending relocation.
 The ordered manifest contains 147 translation units,
 including the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
@@ -14,6 +15,12 @@ records, globals, low32 handles, callback tables, save bytes and explicit
 lifecycles remain authoritative. Classes describe the reconstruction's
 organization, not proven original C++ object layouts. The migration does not
 advance campaign or visual-fidelity claims.
+
+The three AP-spending operations pass eight actual-source profiles, both
+production builds, strict surface comparisons and eight asset-free gates.
+Distinct algorithms and callback contexts remain; the original adapters and
+direct methods match the frozen repaired functions and original measurements.
+See [UNIT_STACK_AP_CLASSES.md](UNIT_STACK_AP_CLASSES.md).
 
 The plague setter extraction passes eight actual-source compiler profiles,
 both production builds, strict surface comparisons and eight asset-free gates.

@@ -304,6 +304,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
         }
       ],
       "archive_text": [
@@ -607,6 +628,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
         }
       ]
     },
@@ -870,6 +912,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
         }
       ],
       "archive_text": [
@@ -1131,6 +1194,27 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
         }
       ]
     }
