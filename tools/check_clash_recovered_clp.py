@@ -49,6 +49,9 @@ def main() -> int:
     assert manifest["conditions"] == 425
     assert manifest["defglobals"] == 6
     assert manifest["deffunctions"] == 7
+    assert manifest["deffacts"] == 1
+    assert manifest["deffacts_manifest"][0]["name"] == "initial-fact"
+    assert manifest["deffacts_manifest"][0]["assert_list_expr"] == 5235
     assert manifest["defclass_slots"] == 23
     slot_report = manifest["defclass_slot_facets"]
     assert slot_report["slot_count"] == 23
@@ -73,8 +76,12 @@ def main() -> int:
     compiled = manifest["compiled_test_count"]
     translated = manifest["translated_test_count"]
     unresolved = manifest["unresolved_test_count"]
-    assert compiled > 0
-    assert translated > 0
+    assert compiled == 753
+    assert translated == 753
+    assert unresolved == 0
+    assert manifest["matcher_complete"] is True
+    assert manifest["fully_translated_rule_count"] == 95
+    assert manifest["unresolved_negated_test_count"] == 0
     assert translated + unresolved == compiled
     assert manifest["class_bitmap_tests_emitted"] > 0
     assert manifest["object_join_translated_count"] > 0
@@ -89,6 +96,7 @@ def main() -> int:
     assert program.count("(defclass ") == 7
     assert program.count("  =>") == 95
     assert ";;; DEFMESSAGE-HANDLERS" in program
+    assert ";;; deffacts-bsave=1 system-initial-fact=1" in program
     assert "system-omitted=53 user-emitted=16" in program
     assert ";;; LHS unavailable as original source" not in program
     assert ";;; DEFRULES — recovered constraints + RHS" in program
@@ -139,7 +147,7 @@ def main() -> int:
     assert duplicate_names, "expected BSAVE disjunct records sharing source rule names"
     assert manifest["synthetic_rule_renames"], "duplicate rule/disjunct names must be made unique"
 
-    assert program.count(";;; unresolved compiled-test") == unresolved
+    assert ";;; unresolved compiled-test" not in program
     assert_balanced_clips(program)
 
     print("CLASH_recovered.clp source-projection contract: PASS")

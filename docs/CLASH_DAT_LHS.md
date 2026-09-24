@@ -229,19 +229,28 @@ rather than numeric `?prim47_*` forms. Fact accessors remain positional where
 appropriate because the strategic `deftemplate` records are implied/ordered
 facts and do not contain named slots.
 
-## Remaining gap to a recompilable `CLASH.CLP`
+## Current recompilation boundary
 
-The reconstructed LHS is semantically much closer to source but is deliberately
-not advertised as byte-for-byte original CLIPS text. The remaining work is:
+The normalized source projection now translates all 753 compiled matcher-test
+occurrences across all 95 rule/disjunct records. This includes nested fact
+length/constant tests, fact join comparisons, object join comparisons, and tests
+inside negated fact conditions. The recovered program loads successfully in a
+stock CLIPS 6.x runtime with the game's 82 native functions represented by
+standalone test stubs.
 
-1. unify repeated fact/object accessors into stable synthetic variables;
-2. turn alpha/join primitive expressions into ordinary CLIPS field constraints
-   and `(test ...)` forms;
-3. decode the 70 six-byte `HANDLER_GET`/`HANDLER_PUT` references;
-4. combine the recovered LHS with the already reconstructed RHS/deffunction
-   renderer in one generated source file;
-5. load/compile that normalized source in a compatible CLIPS runtime and compare
-   the resulting RETE topology and gameplay rule-firing traces.
+The source is deliberately not advertised as byte-for-byte original CLIPS text.
+BSAVE does not preserve original pattern-variable spelling, and the retail image
+contains no serialized fact-slot constraint records. Stable synthetic variables
+are used where the binary preserves binding position but not the original name.
 
-Original source variable names should not be invented. A synthetic stable name
-is preferable whenever BSAVE contains only the compiled binding location.
+The remaining rules-engine proof is behavioral rather than syntactic:
+
+1. recompile the normalized source and compare the generated RETE topology with
+   the retail 295-join / fact-pattern / object-pattern network;
+2. compare rule activations and firing order for deterministic strategic-AI
+   fixtures;
+3. run the recovered source against the game's native host-function surface and
+   compare gameplay state transitions with the retail engine.
+
+Complete matcher translation does not by itself establish those equivalence
+claims.

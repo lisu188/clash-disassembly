@@ -49,9 +49,29 @@ jobs:
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         run: python3 tools/check_clash_dat_primitives.py
 
+      - name: Validate direct matcher oracle primitive coverage
+        id: matcher-oracle-coverage
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
+        run: |
+          python3 tools/check_clash_matcher_eval_coverage.py --json clash_matcher_eval_coverage.json
+          python3 -m json.tool clash_matcher_eval_coverage.json >/dev/null
+
+      - name: Upload matcher oracle coverage report
+        if: ${{ always() && steps.matcher-oracle-coverage.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-matcher-eval-coverage
+          path: clash_matcher_eval_coverage.json
+          if-no-files-found: error
+
       - name: Validate strategic AI defclass recovery
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
         run: python3 tools/check_clash_dat_classes.py
+
+      - name: Validate strategic AI deffacts recovery
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
+        run: python3 tools/check_clash_dat_deffacts.py
+
 
       - name: Validate strategic AI slot facet recovery
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
@@ -83,6 +103,51 @@ jobs:
       - name: Load unified recovered CLP in CLIPS
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
         run: python3 tools/check_clash_recovered_clips_load.py
+
+      - name: Validate recompiled strategic AI RETE path depth
+        id: recovered-rete
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
+        run: |
+          python3 tools/check_clash_recovered_rete_runtime.py --json clash_recovered_rete_runtime.json
+          python3 -m json.tool clash_recovered_rete_runtime.json >/dev/null
+
+      - name: Upload recompiled RETE path report
+        if: ${{ always() && steps.recovered-rete.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-recovered-rete-runtime
+          path: clash_recovered_rete_runtime.json
+          if-no-files-found: error
+
+      - name: Validate reset-time strategic AI agenda
+        id: recovered-reset-agenda
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
+        run: |
+          python3 tools/check_clash_recovered_reset_agenda.py --json clash_recovered_reset_agenda.json
+          python3 -m json.tool clash_recovered_reset_agenda.json >/dev/null
+
+      - name: Upload reset-time agenda report
+        if: ${{ always() && steps.recovered-reset-agenda.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-recovered-reset-agenda
+          path: clash_recovered_reset_agenda.json
+          if-no-files-found: error
+
+      - name: Validate strategic AI activation witnesses
+        id: recovered-activation-witnesses
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
+        run: |
+          python3 tools/check_clash_recovered_activation_witnesses.py --json clash_recovered_activation_witnesses.json
+          python3 -m json.tool clash_recovered_activation_witnesses.json >/dev/null
+
+      - name: Upload activation witness report
+        if: ${{ always() && steps.recovered-activation-witnesses.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-recovered-activation-witnesses
+          path: clash_recovered_activation_witnesses.json
+          if-no-files-found: error
 
       - name: Validate JSON files
         if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}

@@ -22,8 +22,9 @@ from decompile_clash_dat import parse_bsave
 from generate_clash_recovered_constraints import render_recovered_program
 
 DONE_RE = re.compile(r"^CLASH_LOAD_DONE$", re.MULTILINE)
+RESET_RE = re.compile(r"^CLASH_RESET_DONE$", re.MULTILINE)
 COUNT_RE = re.compile(
-    r"^CLASH_(STUB_DEFFUNCTIONS|DEFRULES|DEFGLOBALS|DEFFUNCTIONS|DEFCLASSES)=([0-9]+)$",
+    r"^CLASH_(STUB_DEFFUNCTIONS|DEFRULES|DEFGLOBALS|DEFFUNCTIONS|DEFCLASSES|DEFFACTS)=([0-9]+)$",
     re.MULTILINE,
 )
 ERROR_MARKERS = (
@@ -104,10 +105,13 @@ def run_load_test(source: Path, clips_exe: str) -> tuple[str, dict[str, int]]:
                 '(printout t "CLASH_LOAD_BEGIN" crlf)',
                 f'(load "{recovered_arg}")',
                 '(printout t "CLASH_LOAD_DONE" crlf)',
+                "(reset)",
+                '(printout t "CLASH_RESET_DONE" crlf)',
                 '(printout t "CLASH_DEFRULES=" (length$ (get-defrule-list)) crlf)',
                 '(printout t "CLASH_DEFGLOBALS=" (length$ (get-defglobal-list)) crlf)',
                 '(printout t "CLASH_DEFFUNCTIONS=" (length$ (get-deffunction-list)) crlf)',
                 '(printout t "CLASH_DEFCLASSES=" (length$ (get-defclass-list)) crlf)',
+                '(printout t "CLASH_DEFFACTS=" (length$ (get-deffacts-list)) crlf)',
                 "(exit)",
                 "",
             ]),
@@ -129,6 +133,8 @@ def run_load_test(source: Path, clips_exe: str) -> tuple[str, dict[str, int]]:
             raise AssertionError(f"CLIPS exited with {proc.returncode}\n{output}")
         if not DONE_RE.search(output):
             raise AssertionError(f"CLIPS did not finish the recovered-source load command\n{output}")
+        if not RESET_RE.search(output):
+            raise AssertionError(f"CLIPS did not finish reset after recovered-source load\n{output}")
         if any(marker in output for marker in ERROR_MARKERS):
             raise AssertionError(f"CLIPS reported parser/construct diagnostics\n{output}")
 
@@ -141,6 +147,7 @@ def run_load_test(source: Path, clips_exe: str) -> tuple[str, dict[str, int]]:
             "defrules": manifest["rules"],
             "defglobals": manifest["defglobals"],
             "deffunctions": len(stub_names) + manifest["deffunctions"],
+            "deffacts": manifest["deffacts"],
         }
         for key, value in expected.items():
             if counts.get(key) != value:
@@ -166,6 +173,7 @@ def main() -> int:
         f"defglobals={counts.get('defglobals')}",
         f"deffunctions-total={counts.get('deffunctions')}",
         f"defclasses={counts.get('defclasses')}",
+        f"deffacts={counts.get('deffacts')}",
     ]))
     parser_lines = [line for line in output.splitlines() if line.startswith("[")]
     if parser_lines:
