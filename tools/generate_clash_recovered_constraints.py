@@ -49,8 +49,10 @@ def _render_condition(
     unresolved = [item for item in translated if item.translated is None]
 
     if binding["kind"] == "fact" and binding.get("fields") is None and resolved:
-        unresolved.extend(item for item in translated if item.translated is not None)
-        resolved = []
+        unavailable = f"$?f{condition['order']}_fields"
+        blocked = [item for item in translated if item.translated is not None and unavailable in item.translated]
+        unresolved.extend(blocked)
+        resolved = [item for item in resolved if unavailable not in item]
 
     classes = list(condition.get("classes") or [])
     class_test = None
@@ -128,6 +130,8 @@ def _render_rule(
         "original_name": rule["name"],
         "output_name": output_name,
         "terminal_join": rule["last_join"],
+        "salience": rule["salience"],
+        "dynamic_salience_expr": rule["dynamic_salience_expr"],
         "condition_count": len(rule["conditions"]),
         "conditions": condition_manifest,
         "compiled_test_count": sum(item["compiled_test_count"] for item in condition_manifest),
@@ -193,6 +197,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         f";;; compiled-tests={compiled} translated={translated} unresolved={unresolved} class-bitmap-tests={class_tests}",
         f";;; object-join-tests={object_join_translations} object-constant-tests={object_constant_translations}",
         f";;; message-handlers-bsave={handler_report['count']} system-omitted={handler_report['system_count']} user-emitted={handler_report['user_count']} variadic={handler_report['variadic_count']}",
+        f";;; deffacts-bsave={len(ir['deffacts'])} system-initial-fact={sum(item['name'] == 'initial-fact' for item in ir['deffacts'])}",
         "",
     ])
     program = (
@@ -211,6 +216,8 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "conditions": lhs["condition_occurrence_count"],
         "defglobals": len(ir["globals"]),
         "deffunctions": len(ir["deffunctions"]),
+        "deffacts": len(ir["deffacts"]),
+        "deffacts_manifest": ir["deffacts"],
         "defclass_slots": slot_report["slot_count"],
         "defclass_slot_facets": slot_report,
         "defmessage_handlers": handler_report["count"],

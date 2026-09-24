@@ -1,5 +1,35 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-19 - F7 DLX lifecycle literal names
+
+Track: Win95 reconstruction. Replaced 23 unsuffixed literals in seven functions
+of canonical render 004 with four private macros. Serialized-header length and
+payload-handle displacement each retain decimal `10` in separate domains;
+serialized-size and ownership displacements retain `14` and `18`. Constructor,
+destructor, copy and serialization instructions independently support the names.
+No pointer expression, cast, access width, control flow or stored data changes.
+
+The reviewed literal plan applies with zero rejections or respellings. Both
+compiler preprocessor streams match exactly before four new constant guards;
+the final streams differ only by those four assertions. Seven current hashes
+change, preserving all original identities, historical hashes and class metadata.
+The initial 145-TU census decreases from 79,160 to 79,137 numeric tokens; after
+main integration the paired 147-TU census decreases from 79,171 to 79,148.
+Both comparisons remove exactly the same 23 integer occurrences. Raw return
+locals, native pointer-width reads and unrelated format/codec values remain
+explicitly deferred. F1-F6 rules and historical view-migration specifications
+remain unchanged. No function/global renames or campaign promotion are claimed.
+
+After integrating published main, both builds, all eight public gates and 542
+tooling tests pass. All 153 objects per compiler and both stripped executables
+match incoming main; strict surfaces pass with zero allowances. GCC coverage
+passes at 92.62% across all 718 selected functions. Individual native crash
+outcomes, inherited header/link failures and interrupted attempts remain
+separately documented; no ratchet is raised.
+
+Full evidence, commands, compiled/runtime gates and inherited failure records:
+[F7 DLX lifecycle findings](literal_rules/F7_dlx_lifecycle_findings.md).
+
 ## 2026-09-19 - Selection readability integration with class main
 
 Track: Win95 reconstruction. Integrated the current-selection refactor with
