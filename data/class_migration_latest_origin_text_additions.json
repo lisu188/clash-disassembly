@@ -332,6 +332,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
         }
       ],
       "archive_text": [
@@ -663,6 +677,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
         }
       ]
     },
@@ -954,6 +982,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
         }
       ],
       "archive_text": [
@@ -1243,6 +1285,20 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
         }
       ]
     }

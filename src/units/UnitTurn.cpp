@@ -132,7 +132,7 @@ signed int clash95::UnitTurn::Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       *(PackedInt16 *)(uintptr_t)stackPtr,
       *(PackedInt16 *)(uintptr_t)(stackPtr + 2),
       *(PackedDword *)(uintptr_t)(stackPtr + UNIT_STACK_PATH_OFFSET));
-    ::UnitStack_ClearSpentTurnFlag(stackPtr);
+    clash95::UnitStack(stackPtr).UnitStack_ClearSpentTurnFlag();
     ::Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_clear_spent",
       (int)stackIndex,

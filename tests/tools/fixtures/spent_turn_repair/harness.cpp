@@ -16,10 +16,23 @@ int main() {
   uint32_t row[2];unsigned char input[800];
   while(fread(row,8,1,stdin)==1) {
     if(fread(input,800,1,stdin)!=1 || row[0]<1 || row[0]>2)return 3;
-    auto *image=(unsigned char*)uintptr_t(row[1]-32);memcpy(image,input,800);
+    auto *image=(unsigned char*)uintptr_t(row[1]-32);
     int address;memcpy(&address,&row[1],4);
-    uint64_t result=uintptr_t(row[0]==1?UnitStack_SetSpentTurnFlag(address):UnitStack_ClearSpentTurnFlag(address));
-    if(fwrite(&result,8,1,stdout)!=1 || fwrite(image,800,1,stdout)!=1)return 4;
+    unsigned char reference[808],actual[808];
+    for(int lane=0;lane<3;lane++) {
+      memcpy(image,input,800);uint64_t result;
+      if(lane==0)result=uintptr_t(row[0]==1?Reference_UnitStack_SetSpentTurnFlag(address):Reference_UnitStack_ClearSpentTurnFlag(address));
+      else if(lane==1)result=uintptr_t(row[0]==1?UnitStack_SetSpentTurnFlag(address):UnitStack_ClearSpentTurnFlag(address));
+      else {
+        clash95::UnitStack stack(address);
+        if(memcmp(image,input,800))return 7;
+        result=uintptr_t(row[0]==1?stack.UnitStack_SetSpentTurnFlag():stack.UnitStack_ClearSpentTurnFlag());
+      }
+      memcpy(actual,&result,8);memcpy(actual+8,image,800);
+      if(lane==0)memcpy(reference,actual,808);
+      else if(memcmp(reference,actual,808))return 10+lane;
+    }
+    if(fwrite(actual,808,1,stdout)!=1)return 4;
   }
   if(ferror(stdin)||fflush(stdout))return 5;
   for(int i=0;i<3;++i)if(munmap((void*)starts[i],lengths[i]))return 6;

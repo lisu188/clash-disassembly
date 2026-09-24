@@ -88483,7 +88483,7 @@
       "original_line": 1603,
       "source": "src/units/UnitTurn.cpp",
       "linkage": "external",
-      "body_sha256": "8a26d94ae3470cdd2037c56e5fc5282673d381594b56fc4e61f51a31a0e71cdc",
+      "body_sha256": "26744d3f2ac4b53269008badf44c085bfd4ffc6f19c969dfed060ad8cb25eaf4",
       "original_address_range": {
         "start": "0x004118E0",
         "end_exclusive": "0x00411AB0"
@@ -89108,7 +89108,7 @@
       "original_line": 2724,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "b921b4e7c36388a50cf00d58f48d8bdbfbb51e6f217ad837574d9715a1d84398",
+      "body_sha256": "e72bdbb6d9d7080fe051458eb81c4e702907c8671716e0bf9f20e845c541f033",
       "original_address_range": {
         "start": "0x00412A30",
         "end_exclusive": "0x00412A60"
@@ -89118,12 +89118,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "c9cb3477d69064174233195d64288a68ab55b00e16813471006ea36e470e3d98",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_SetSpentTurnFlag"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_SetSpentTurnFlag",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_SetSpentTurnFlag is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "e508d8adf401206a1ee5bd8e7d01327b56147602e31feb3112a81e0a70caf753"
+      }
     },
     {
       "name": "UnitStack_ClearSpentTurnFlag",
@@ -89132,7 +89137,7 @@
       "original_line": 2743,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "51eded4c240eb2f8733a3301070a9ea695495009a383721ce7ca512c3cc7d5d0",
+      "body_sha256": "12cf1dd4e2294648cb0ef22abd1cf2d13dd9a65c58b5ae029c3060e8acf85e27",
       "original_address_range": {
         "start": "0x00412A60",
         "end_exclusive": "0x00412A90"
@@ -89142,12 +89147,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "4909259cf2a3979ea467c15964db5805d1cfc18119565333b0948111718f9624",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_ClearSpentTurnFlag"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_ClearSpentTurnFlag",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_ClearSpentTurnFlag is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "cf98d3370eda0261eb085929a735629948b5dc378124b0402f8851c49af42967"
+      }
     },
     {
       "name": "UnitStack_SetPlagueFlag",

@@ -1,0 +1,22 @@
+{
+  "reference_commit": "e1b3b50817c7591dde06bd3746c4d845b9d4837f",
+  "repair_commit": "c2aec1f4bc5903025f598608800a6a60feed52cb",
+  "functions": [
+    {
+      "name": "UnitStack_SetSpentTurnFlag",
+      "original_address": "0x00412A30",
+      "legacy_body_sha256": "c9cb3477d69064174233195d64288a68ab55b00e16813471006ea36e470e3d98",
+      "body_sha256": "b921b4e7c36388a50cf00d58f48d8bdbfbb51e6f217ad837574d9715a1d84398",
+      "file_sha256": "bffa7d610f8d6d43d01d878cbc0714af0c05e3f55b5efe569117246fc6dea69d",
+      "fixture": "UnitStack_SetSpentTurnFlag.cpp"
+    },
+    {
+      "name": "UnitStack_ClearSpentTurnFlag",
+      "original_address": "0x00412A60",
+      "legacy_body_sha256": "4909259cf2a3979ea467c15964db5805d1cfc18119565333b0948111718f9624",
+      "body_sha256": "51eded4c240eb2f8733a3301070a9ea695495009a383721ce7ca512c3cc7d5d0",
+      "file_sha256": "a49a0a1d55ad14a2d1ba98fbabefc31dfa18672c5486db996804eb3f1ce61966",
+      "fixture": "UnitStack_ClearSpentTurnFlag.cpp"
+    }
+  ]
+}

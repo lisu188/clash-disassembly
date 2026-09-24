@@ -1002,8 +1002,15 @@ signed int  UnitStack_CycleAllSlotOrders(__int16 *stackPtr, DWORD a2, double a3)
 }
 
 //----- (00412A30) --------------------------------------------------------
+__attribute__((used, retain))
 __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_SetSpentTurnFlag();
+}
+
+__int16 * clash95::UnitStack::UnitStack_SetSpentTurnFlag() const
+{
+  int stackPtr = (int)address_;
   UnitStackRecord *stack;
   UnitSlotRecord *slot;
   int slotIndex;
@@ -1021,8 +1028,15 @@ __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
 }
 
 //----- (00412A60) --------------------------------------------------------
+__attribute__((used, retain))
 __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
 {
+  return clash95::UnitStack(stackPtr).UnitStack_ClearSpentTurnFlag();
+}
+
+__int16 * clash95::UnitStack::UnitStack_ClearSpentTurnFlag() const
+{
+  int stackPtr = (int)address_;
   UnitStackRecord *stack;
   UnitSlotRecord *slot;
   int slotIndex;

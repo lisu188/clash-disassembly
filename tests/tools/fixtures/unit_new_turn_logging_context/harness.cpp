@@ -27,13 +27,16 @@ static void prepare() {
   memset(world,0,BYTES);
   for(int i=0;i<500;i++) p16(world+UNIT_STACK_TABLE_OFFSET+725*i+6,-1);
   auto *stack=stack0(); p16(stack,2); p16(stack+2,2); p16(stack+6,1); p16(stack+37,-1);
-  p32(stack+316,1); stack[320]=4; stack[321]=5; stack[19]=1;
+  p32(stack+316,1); stack[320]=4; stack[321]=5; stack[19]=3;
   p16(world+TILE_MAP_OFFSET+TILE_ROW_STRIDE*4+2*5,TILE_OCCUPANT_BUILDING_INDEX_BASE);
   auto *building=world+509674; building[2]=1; building[4]=0; p16(building+16,1);
   p16(world+140022,1);
   calls.clear(); wrapped_calls=0;
 }
-void Diagnostics_TraceWorldMapActionEvent(const char *stage,int,int,int,int) { calls.push_back(stage); }
+void Diagnostics_TraceWorldMapActionEvent(const char *stage,int,int,int,int) {
+  if(!strcmp(stage,"unit_new_turn_after_clear_spent"))require(stack0()[19]==1,"actual spent-turn clear precedes diagnostic and AP recalculation");
+  calls.push_back(stage);
+}
 BOOL UnitSlot_CanRecoverFatigue(int) { return 1; }
 BOOL UnitSlot_ShouldGainFatigueFromLowActionPoints(int) { return 1; }
 BOOL UnitSlot_HasSevereFatigue(int) { return 1; }
@@ -42,7 +45,6 @@ signed int UnitStack_AdjustFatigueByPredicate(__int16 *p,int delta,BOOL(*predica
   calls.push_back("fatigue"); return 0;
 }
 signed int UnitStack_AdjustMoraleByPredicate(__int16 *,int,BOOL(*)(int),DWORD,double) { require(false,"unexpected morale callback"); return 0; }
-__int16 *UnitStack_ClearSpentTurnFlag(int p) { require(p==(int)(intptr_t)stack0(),"spent receiver"); calls.push_back("clear_spent"); return (__int16 *)(intptr_t)p; }
 const UnitTypeRuntimeCoreMetadataRecord *UnitSlot_BorrowTypeMetadata(void) { calls.push_back("calc_ap"); return apMetadata; }
 signed int Rules_LinkArmyFact(clash95_unaligned_int16 *p,int,int,double context,char,DWORD) { require((unsigned char *)p==stack0() && context==1.25,"rule receiver/context"); calls.push_back("rules_link"); return 0; }
 void Unit_CheckLowMorale(_BYTE *p,double context) { require(p==stack0() && context==1.25,"morale receiver/context"); calls.push_back("low_morale"); }
@@ -61,7 +63,7 @@ int main() {
   apMetadata[1].base_action_points=17;
   world=(unsigned char *)mmap(nullptr,BYTES,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT,-1,0);
   require(world!=MAP_FAILED && (uintptr_t)world+BYTES<INT_MAX,"low32 allocation"); gameData=(int)(intptr_t)world;
-  const std::vector<std::string> expected_calls={"unit_new_turn_enter","unit_new_turn_stack","fatigue","unit_new_turn_after_recover_fatigue","unit_new_turn_after_human_fatigue","clear_spent","unit_new_turn_after_clear_spent","calc_ap","unit_new_turn_after_ap","rules_link","unit_new_turn_after_rules_fact","low_morale","unit_new_turn_after_low_morale","plague","unit_new_turn_after_plague","unit_new_turn_after_ready_check","clear_ready","unit_new_turn_done_enemy_contact","log_all","formation"};
+  const std::vector<std::string> expected_calls={"unit_new_turn_enter","unit_new_turn_stack","fatigue","unit_new_turn_after_recover_fatigue","unit_new_turn_after_human_fatigue","unit_new_turn_after_clear_spent","calc_ap","unit_new_turn_after_ap","rules_link","unit_new_turn_after_rules_fact","low_morale","unit_new_turn_after_low_morale","plague","unit_new_turn_after_plague","unit_new_turn_after_ready_check","clear_ready","unit_new_turn_done_enemy_contact","log_all","formation"};
   int cases=0;
   for(int flags=0;flags<4;flags++) {
     logEnabled=flags&1; battleLogEnabled=(flags>>1)&1;

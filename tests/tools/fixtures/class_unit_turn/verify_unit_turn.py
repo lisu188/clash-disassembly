@@ -72,6 +72,20 @@ def main():
   parts.append(helper)
   for path in [ap_path,ap_fixture/'provenance.json',state,root/'src/units/UnitSlot.hpp']:
    ap_inputs[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
+ # Compose the actual spent-turn clear operation and a separately pinned
+ # repaired free reference. No replacement algorithm or event stub is compiled.
+ spent_name='UnitStack_ClearSpentTurnFlag'
+ spent_fixture=root/'tests/tools/fixtures/spent_turn_repair/repaired-references'
+ spent_proof=json.loads((spent_fixture/'provenance.json').read_text())
+ spent_row=next(x for x in spent_proof['functions'] if x['name']==spent_name)
+ spent_path=spent_fixture/spent_row['fixture'];spent_reference=spent_path.read_text()
+ assert hashlib.sha256(spent_path.read_bytes()).hexdigest()==spent_row['file_sha256']
+ spent_definition,=scan_definitions(spent_reference,{spent_name})
+ assert body_sha256(spent_reference,spent_definition)==spent_row['body_sha256']
+ assert records[spent_name]['original_address']==spent_row['original_address']
+ parts.append(spent_reference.replace(spent_name+'(', 'Reference_'+spent_name+'(',1))
+ for path in [spent_path,spent_fixture/'provenance.json']:
+  ap_inputs[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
  # The production factory retains exact declarations at its original anchor;
  # generated consumer headers can legitimately stop exposing these globals.
  parts.extend(declarations['globals'][name]['decl'] for name in binding['referenced_globals'])
@@ -86,9 +100,10 @@ def main():
   assert body_sha256(text,definitions[0])==record['body_sha256'],name+' reference body hash'
   assert records[name]['original_address']==record['original_address'],name+' original identity'
   if ap_composed: text=text.replace('UnitSlot_CalcActionPointsFromFatigue(', 'Reference_UnitSlot_CalcActionPointsFromFatigue(')
+  text=text.replace('UnitStack_ClearSpentTurnFlag(', 'Reference_UnitStack_ClearSpentTurnFlag(')
   parts.append('__attribute__((no_sanitize("alignment")))\n'+re.sub(r'\b'+name+r'(?=\s*\()','Reference_'+name,text,count=1))
  sources=set()
- dependencies={'UnitStack_HasReadyUnits'}
+ dependencies={'UnitStack_HasReadyUnits',spent_name}
  if ap_composed: dependencies.add(ap_name)
  for dependency in dependencies:
   sources.update([records[dependency]['source'],records[dependency]['adapter']['source']])
@@ -128,7 +143,7 @@ def main():
     item.update(run=executed.returncode,stdout=executed.stdout,stderr=executed.stderr,binary_sha256=sha(binary))
    results.append(item); print(json.dumps(item),flush=True)
  unchanged=all(Path(p).exists() and sha(Path(p))==v for p,v in inputs.items())
- report={'root':str(root),'inputs_unchanged':unchanged,'input_sha256':inputs,'profiles':results,'expected_cases_per_profile':{'regen':4096,'damage':6144,'turn':336},'composed_ap_dependency':ap_composed,'limitations':['instrumented external service boundaries, not full game runtime','zero max HP and invalid building type are outside source preconditions','frozen references retain original x86 unaligned loads and are exempt from alignment sanitizer; methods/adapters are trapped']}
+ report={'root':str(root),'inputs_unchanged':unchanged,'input_sha256':inputs,'profiles':results,'expected_cases_per_profile':{'regen':4096,'damage':6144,'turn':336},'composed_ap_dependency':ap_composed,'composed_spent_turn_dependency':True,'limitations':['instrumented external service boundaries, not full game runtime','zero max HP and invalid building type are outside source preconditions','frozen references retain original x86 unaligned loads and are exempt from alignment sanitizer; methods/adapters are trapped']}
  (output/'summary.json').write_text(json.dumps(report,indent=2)+'\n')
  return 0 if unchanged and all(x.get('build')==0 and x.get('run')==0 for x in results) else 1
 if __name__=='__main__': raise SystemExit(main())

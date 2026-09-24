@@ -2,6 +2,16 @@
 
 Last consolidated: 2026-09-24.
 
+## UnitStack Spent-Turn Extraction
+
+The repaired set/clear operations now have canonical UnitStack methods in the
+original TU and thin adapters. UnitTurn calls the clear method directly; its
+tests compile that real operation and check the spent bit before later actions
+can hide a missing clear. All focused suites, both production builds, strict
+comparisons and eight asset-free gates pass. There are 33 canonical methods,
+31 relocated into six class-named files. Identity and source inventories remain
+unchanged. See [UNIT_STACK_SPENT_TURN_CLASSES.md](UNIT_STACK_SPENT_TURN_CLASSES.md).
+
 ## UnitStack AP-Spending Extraction And Relocation
 
 The three repaired AP operations now have canonical UnitStack methods in the

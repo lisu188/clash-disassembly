@@ -96,9 +96,6 @@ signed int UnitStack_AdjustMoraleByPredicate(__int16 *p,int delta,BOOL(*f)(int),
   using namespace fixture; event("morale",address((intptr_t)p),delta,pred(f),mask,(int)(ctx*8));
   ((unsigned char *)p)[17]^=0x18; return 18;
 }
-__int16 *UnitStack_ClearSpentTurnFlag(int p) {
-  fixture::event("clear_spent",fixture::address(p)); ((unsigned char *)(intptr_t)p)[720]&=0xFE; return (__int16 *)(intptr_t)p;
-}
 #ifndef UNIT_TURN_COMPOSED_SLOT_AP
 int UnitSlot_CalcActionPointsFromFatigue(__int16 *p) {
   fixture::event("calc_ap",fixture::address((intptr_t)p)); return (255-((unsigned char *)p)[10])&255;
