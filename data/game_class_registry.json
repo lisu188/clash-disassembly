@@ -71732,6 +71732,15 @@
         "g_RngState"
       ],
       "body_sha256": "01b3d2a42b0b408eef3ce0ffdfb72a9f0d3a398c11d8e486aca66a9a6d317ebb"
+    },
+    {
+      "class_owner": "WorldMap",
+      "qualified_name": "clash95::WorldMap::borrow",
+      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "referenced_globals": [
+        "gameData"
+      ],
+      "body_sha256": "0ad90a88ccee42f0fbdc08a9ccfdcb09a985d599af267626a563be297d0ac1fc"
     }
   ]
 }

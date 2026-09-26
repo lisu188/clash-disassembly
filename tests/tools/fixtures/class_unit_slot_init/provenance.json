@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "reference_commit": "e8f7a3b56064cbffefb827941c7b049ebbe5fc2c",
+  "prior_ap_relocation_patch_sha256": "bf7ac870a3aad7f3f35a9f2dde3489e9de08439d515ec716366240fdeb3c5845",
+  "name": "UnitSlot_InitFromType",
+  "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+  "original_address": "0x0040F440",
+  "body_sha256": "3dd05556f8bdc4fffbc54c94691e1ad3b280042dabd967ac2ecff751a823bf84",
+  "file_sha256": "8d68ec91073c0e9d42eed71ceb8b0e983c4aa8e3517c67b5cabc71ecad28f16b",
+  "assembly_lines": [
+    22913,
+    22967
+  ],
+  "prior_ap_table_provenance_sha256": "e2c0bbadbd0298aff15f4a9da0435ff358af0990fe5edc162e867bcf7df4afae",
+  "domain": "unit_type 0..39 or exactly 0xFFFFFFFF sentinel; legacy int receiver is low32, no invented native64 contract.",
+  "resumed_reference_commit": "d3d89b5549f86a294b4c765f02789a7f514e66d6",
+  "resumed_source_body_sha256": "3dd05556f8bdc4fffbc54c94691e1ad3b280042dabd967ac2ecff751a823bf84"
+}

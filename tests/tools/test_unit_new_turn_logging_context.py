@@ -20,7 +20,7 @@ class UnitNewTurnLoggingContextTests(unittest.TestCase):
   if platform.system()!='Linux' or platform.machine() not in ('x86_64','amd64'):
    self.skipTest('supported low32 fixture requires Linux x86-64')
   manifest=json.loads((ROOT/'data/recovered_sources.json').read_text()); records={x['name']:x for x in manifest['functions']}
-  names={'Unit_NewTurn','LogAllUnits','Debug_Log','UnitStack_HasReadyUnits','UnitSlot_CalcActionPointsFromFatigue'}
+  names={'Unit_NewTurn','LogAllUnits','Debug_Log','UnitStack_HasReadyUnits','UnitSlot_CalcActionPointsFromFatigue','UnitStack_ClearSpentTurnFlag'}
   sources=set()
   for name in names:
    sources.add(records[name]['source'])

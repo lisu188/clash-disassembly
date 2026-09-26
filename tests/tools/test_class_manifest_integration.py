@@ -49,7 +49,8 @@ class ClassManifestIntegrationTests(unittest.TestCase):
         functions = [{"name": name, "source": "src/units/UnitStack.cpp"}
                      for name in ("covered", "missing")]
         args = Namespace(build_dir=ROOT, worst=0, jsonout=None, minimum=89.7,
-                         require_functions=2, require_zero_uncovered=True)
+                         require_functions=2, require_zero_uncovered=True,
+                         gcov_command=["gcov"])
         ranges = {"covered": (functions[0]["source"], 1, 3),
                   "missing": (functions[0]["source"], 4, 6)}
         with patch.object(measure_pure_coverage, "parse_args", return_value=args), \

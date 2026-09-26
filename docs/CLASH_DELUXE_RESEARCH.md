@@ -1,14 +1,22 @@
 # Clash Deluxe and clash.y0.pl research
 
-Status: 2026-09-24.
+Status: 2026-09-26.
 
 ## What is confirmed
 
-The historical `clash.y0.pl` site is an unofficial Polish Clash site with a separate forum. Boghute Ara advertised the site publicly in late 2015 and again in 2016. Community references identify pages for missions and gameplay mechanics, including the opening phase, queen, taxes, traps and ambushes. Reachability is a dated observation; use the retained metadata below rather than assuming the site remains available or unavailable.
+`clash.y0.pl` is an unofficial Polish Clash site with a separate forum. Both the site and forum were reachable during the September 26 research; the tracked `research/clash_y0/live_status.json` also records HTTP 200 responses. Earlier access failures do not establish permanent unavailability. Boghute Ara advertised the site publicly in late 2015 and again in 2016. Community references identify pages for missions and gameplay mechanics, including the opening phase, queen, taxes, traps and ambushes.
 
 Boghute Ara described a fan modification developed by changing values at specific addresses in `CLASH.EXE` with a hex editor. The stated changes included typo fixes, queen-request costs, workshop and forge prices, unit licence and production costs, combat-stat rebalancing, selected terrain bonuses, and setting initial unit morale to 10. The author said the rebalance also affects both campaigns.
 
-`Clash Deluxe 0.1` was publicly announced on 2020-01-03 with the download location `http://clash.y0.pl/download/`.
+The author's [release thread](http://forum.clash.y0.pl/viewtopic.php?p=1424#p1424) dates the first `Clash Deluxe 0.1` announcement to January 1, 2020; the January 3 announcement found in the earlier research is a later public reference. The dated December 26, 2021 update announces version **0.13** and the name **Clash De Luxe**. The [live download listing](http://clash.y0.pl/download/) still names 0.13 and describes replacing `CLASH.EXE`. No newer release or Win95 compatibility was verified. The current thread title must not be used to date 0.13 to January 2020.
+
+## OpenClash and source-code leads
+
+**OpenClash** is Griz's separate C#/Unity remake, announced on [August 9, 2016](http://forum.clash.y0.pl/viewtopic.php?p=150#p150). Its [January 24, 2018 update](http://forum.clash.y0.pl/viewtopic.php?p=496#p496) describes version 0.2.3 and says a public download still required separating original assets. A [May 2026 community report](http://forum.clash.y0.pl/viewtopic.php?p=1783#p1783) says development had stopped; this is second-hand correspondence, not a fresh public announcement by the developer.
+
+Griz's [Resource Unpacker repository](https://github.com/Grizmu/ClashResUnpacker) is a distinct tool. Its public source does not establish that OpenClash, Clash De Luxe or the original game has released source code. A contributor identifying himself as Jacek discusses the [CLIPS integration](http://forum.clash.y0.pl/viewtopic.php?p=164#p164) and [finding scenario files in 2016](http://forum.clash.y0.pl/viewtopic.php?p=166#p166); the archive itself has not been inspected. These are follow-up leads, not recovered production artifacts.
+
+The September 26 live research covered selected Clash forum topics and pagination, GOG, VOGONS, Old-Games.RU, PPA and GRYOnline, plus targeted searches of other communities. It did not cover every forum or every post. Contact correspondence and private outreach receipts remain outside the public source tree.
 
 Primary external references used for this summary:
 
@@ -30,12 +38,13 @@ Tracked generated metadata lives in `research/clash_y0/`:
 - [summary.json](../research/clash_y0/summary.json): capture and fetch totals plus Deluxe/download-related URLs.
 - [live link results](../research/clash_y0/live_link_fetch_results.csv): content types, hashes and failures for the live candidate links.
 
-The retained summary dated 2026-09-24 reports 1,287 unique archived URLs, four
-high-value URL candidates, 17 downloaded responses and 1,270 errors. Its live
+The automated summary dated 2026-09-26 20:36 UTC reports 1,287 unique archived
+URLs, four high-value URL candidates, 18 downloaded responses and 1,269 errors. Its live
 root observations record HTTP 200 responses. The live candidate downloads are
 HTML pages and JSON/XML embed metadata; these records do not establish recovery
-of a Deluxe executable or archive. This documentation review reads the committed
-metadata and does not perform a new crawl or establish present-day availability.
+of a Deluxe executable or archive. These automated mirror results are distinct
+from the selected live forum research above; neither establishes complete
+coverage of every post or recovery of released game source.
 
 The raw mirror is intentionally not tracked. Use `artifacts/clash_y0_mirror/` or another ignored directory when reproducing it locally.
 

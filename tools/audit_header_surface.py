@@ -109,8 +109,60 @@ def _class_header_closure(header: str) -> tuple[list[str], list[str]]:
     return sorted(visited), errors
 
 
+def _named_parameter_declarators(code: str, opening: int) -> list[tuple[int, int]]:
+    """Locate names in ordinary typed parameters of a proven member declaration.
+
+    Only declaration tokens are returned: defaults, bounds, type names and uses
+    elsewhere keep their dependency meaning. Complex declarators fail closed.
+    In particular, one typedef token (even with cv qualifiers) is an unnamed
+    parameter type, not a parameter named after a recovered global.
+    """
+    parts = []
+    start = opening + 1
+    stack = ['(']
+    pairs = {')': '(', ']': '[', '}': '{', '>': '<'}
+    for offset in range(start, len(code)):
+        char = code[offset]
+        if char in '([{<':
+            stack.append(char)
+        elif char in ')]}>':
+            if not stack or stack[-1] != pairs[char]:
+                return []
+            stack.pop()
+            if not stack:
+                parts.append((start, offset))
+                break
+        elif char == ',' and stack == ['(']:
+            parts.append((start, offset))
+            start = offset + 1
+    else:
+        return []
+    qualifiers = {'const', 'volatile', 'restrict', '__restrict', '__restrict__',
+                  'struct', 'class', 'enum', 'typename'}
+    spans = []
+    for start, end in parts:
+        # Truncate only for declarator recognition. The caller retains every
+        # token in the default expression and array bounds for dependency checks.
+        declaration = re.split(r'[=\[]', code[start:end], maxsplit=1)[0]
+        match = re.fullmatch(r'\s*(.+?)([A-Za-z_][A-Za-z0-9_]*)\s*', declaration, re.S)
+        if not match:
+            continue
+        prefix = match.group(1)
+        if (not re.fullmatch(r'[A-Za-z_0-9\s:*&]+', prefix)
+                or prefix.rstrip().endswith('::')
+                or (prefix[-1].isalnum() or prefix[-1] == '_')):
+            continue
+        # Strip pointer/reference punctuation; at least one type component
+        # must precede the name. 'const Alias' and 'struct Tag' remain types.
+        type_names = re.findall(r'[A-Za-z_][A-Za-z0-9_]*', prefix)
+        if not type_names or not any(name not in qualifiers for name in type_names):
+            continue
+        spans.append((start + match.start(2), start + match.end(2)))
+    return spans
+
+
 def _mask_class_method_declarators(text: str, function_names: set[str]) -> str:
-    """Mask only class member declaration names, never call/default arguments.
+    """Mask proven member/parameter declaration names, never expressions.
 
     The header contract is intentionally narrow: ordinary class declarations,
     borrowing constructors, and trivial accessors. This is not a C++ parser;
@@ -133,7 +185,7 @@ def _mask_class_method_declarators(text: str, function_names: set[str]) -> str:
             boundary = match.end()
         elif token == ';':
             boundary = match.end()
-        elif scopes and scopes[-1] == 'class' and token in function_names:
+        elif scopes and scopes[-1] == 'class':
             class_offsets.add(match.start())
     for match in re.finditer(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*\(', masked):
         if match.start() not in class_offsets:
@@ -144,8 +196,12 @@ def _mask_class_method_declarators(text: str, function_names: set[str]) -> str:
         if (not prefix or re.search(r'\b(?:return|throw|co_return|new|delete|decltype|sizeof|alignof)\b', prefix)
                 or re.search(r'[=().{}?+\-/]', prefix)):
             continue
-        for index in range(match.start(1), match.end(1)):
-            chars[index] = ' '
+        if match.group(1) in function_names:
+            for index in range(match.start(1), match.end(1)):
+                chars[index] = ' '
+        for start, end in _named_parameter_declarators(masked, match.end() - 1):
+            for index in range(start, end):
+                chars[index] = ' '
     return ''.join(chars)
 
 

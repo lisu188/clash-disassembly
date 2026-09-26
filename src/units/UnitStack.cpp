@@ -51,6 +51,100 @@ signed int clash95::UnitStack::UnitStack_GetMinCurrentActionPoints() const
   return minActionPoints;
 }
 
+signed int clash95::UnitStack::UnitStack_GetMaxOrderTier() const
+{
+  intptr_t stackPtr = address_;
+  typedef __int16 StackTypeWord __attribute__((aligned(1), may_alias));
+  intptr_t slot_record; // eax
+  int max_order_tier; // ebx
+  int i; // edx
+
+  if ( this->UnitStack_HasSpecialPersonageUnits() )
+    return 3;
+  slot_record = stackPtr;
+  max_order_tier = 0;
+  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
+  {
+    if ( *(StackTypeWord *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
+      break;
+    if ( (*(_BYTE *)(slot_record + 18) & 3) > max_order_tier )
+      max_order_tier = *(_BYTE *)(slot_record + 18) & 3;
+    slot_record += UNIT_STACK_SLOT_STRIDE;
+  }
+  return max_order_tier;
+}
+
+signed int clash95::UnitStack::UnitStack_SpendActionPointsClamped(int spendAmount, DWORD a3, double a4) const
+{
+  __int16 *stackPtr = (__int16 *)(uintptr_t)address_;
+  __int16 *slotPtr; // eax
+  int i; // ecx
+  int slotType; // ebx
+  char currentActionPoints; // bl
+
+  slotPtr = stackPtr + 3;
+  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
+  {
+    slotType = *(clash95_unaligned_int16 *)slotPtr;
+    if ( slotType == -1 )
+      break;
+    if ( *((unsigned __int8 *)slotPtr + 8) < spendAmount )
+      spendAmount = *((unsigned __int8 *)slotPtr + 8);
+    currentActionPoints = *((_BYTE *)slotPtr + 8);
+    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
+    LOBYTE(slotType) = (unsigned int)(unsigned __int8)currentActionPoints - (unsigned int)spendAmount;
+    *((_BYTE *)slotPtr - 23) = slotType;
+  }
+  return Rules_LinkArmyFact(stackPtr, spendAmount, i, a4, slotType, a3);
+}
+
+int clash95::UnitStack::UnitStack_SpendActionPointsUnchecked(char spendAmount) const
+{
+  int stackPtr = (int)address_;
+  unsigned int slotPtr; // eax
+  int slotIndex; // edx
+
+  slotPtr = (unsigned int)stackPtr + 6u;
+  slotIndex = 0;
+  while ( slotIndex < UNIT_STACK_SLOT_COUNT )
+  {
+    if ( *(clash95_unaligned_int16 *)(uintptr_t)slotPtr == -1 )
+      break;
+    UNIT_SLOT_ACTION_POINTS(slotPtr) -= spendAmount;
+    slotPtr += UNIT_SLOT_RECORD_BYTES;
+    ++slotIndex;
+  }
+  return (int)slotPtr;
+}
+
+signed int clash95::UnitStack::UnitStack_SubtractActionPointsFloorZero(int subtractAmount, DWORD a3, double a4) const
+{
+  __int16 *stackPtr = (__int16 *)(uintptr_t)address_;
+  __int16 *slotPtr; // eax
+  int i; // edx
+  int currentActionPoints; // ebx
+
+  slotPtr = stackPtr + 3;
+  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
+  {
+    currentActionPoints = *(clash95_unaligned_int16 *)slotPtr;
+    if ( currentActionPoints == -1 )
+      break;
+    currentActionPoints = *((unsigned __int8 *)slotPtr + 8);
+    if ( currentActionPoints <= subtractAmount )
+    {
+      *((_BYTE *)slotPtr + 8) = 0;
+    }
+    else
+    {
+      LOBYTE(currentActionPoints) = (unsigned int)currentActionPoints - (unsigned int)subtractAmount;
+      *((_BYTE *)slotPtr + 8) = currentActionPoints;
+    }
+    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
+  }
+  return Rules_LinkArmyFact(stackPtr, i, subtractAmount, a4, currentActionPoints, a3);
+}
+
 signed int clash95::UnitStack::UnitStack_HasBuilder() const
 {
   typedef __int16 SlotTypeWord __attribute__((aligned(1), may_alias));
@@ -73,6 +167,56 @@ signed int clash95::UnitStack::UnitStack_HasBuilder() const
       return 0;
   }
   return 1;
+}
+
+signed int clash95::UnitStack::UnitStack_HasNormalCombatUnits() const
+{
+  intptr_t stackPtr = address_;
+  typedef __int16 StackTypeWord __attribute__((aligned(1), may_alias));
+  signed int result; // eax
+  intptr_t slot_record; // edx
+  signed int squad_count; // esi
+  signed int has_normal_unit; // ebx
+  signed int slot_index; // ecx
+  int unit_type; // eax
+
+  if ( *(StackTypeWord *)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
+    return 0;
+  result = Unit_GetSquadCount(stackPtr);
+  squad_count = result;
+  if ( result )
+  {
+    slot_record = stackPtr;
+    has_normal_unit = 0;
+    slot_index = 0;
+    if ( result > 0 )
+    {
+      while ( !has_normal_unit )
+      {
+        unit_type = *(StackTypeWord *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET);
+        if ( unit_type == UNIT_TYPE_GOLD_CARGO
+          || unit_type == UNIT_TYPE_PEASANT_CARGO
+          || unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+          || unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+        {
+          ++slot_index;
+          slot_record += UNIT_STACK_SLOT_STRIDE;
+          if ( slot_index >= squad_count )
+            return has_normal_unit;
+        }
+        else
+        {
+          has_normal_unit = 1;
+          ++slot_index;
+          slot_record += UNIT_STACK_SLOT_STRIDE;
+          if ( slot_index >= squad_count )
+            return 1;
+        }
+      }
+    }
+    return has_normal_unit;
+  }
+  return result;
 }
 
 signed int clash95::UnitStack::UnitStack_NormalizePeasantCargo(DWORD a2, double a3) const
@@ -158,6 +302,63 @@ signed int clash95::UnitStack::UnitStack_NormalizePeasantCargo(DWORD a2, double 
   return Rules_SyncArmyFactStrength(stackPtr, 0, 0, i, a2, a3);
 }
 
+__int16 * clash95::UnitStack::UnitStack_SetSpentTurnFlag() const
+{
+  int stackPtr = (int)address_;
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
+
+  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)stackPtr;
+  slot = &stack->unit_slots[0];
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
+  {
+    if ( slot->unit_type_id == -1 )
+      break;
+    slot->state_flags |= UNIT_SLOT_FLAG_SPENT_TURN;
+    ++slot;
+  }
+  return (__int16 *)(uintptr_t)((uint32_t)stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
+}
+
+__int16 * clash95::UnitStack::UnitStack_ClearSpentTurnFlag() const
+{
+  int stackPtr = (int)address_;
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
+
+  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)stackPtr;
+  slot = &stack->unit_slots[0];
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
+  {
+    if ( slot->unit_type_id == -1 )
+      break;
+    slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_SPENT_TURN;
+    ++slot;
+  }
+  return (__int16 *)(uintptr_t)((uint32_t)stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
+}
+
+int clash95::UnitStack::UnitStack_SetPlagueFlag() const
+{
+  int result = (int)address_;
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
+
+  stack = (UnitStackRecord *)(uintptr_t)(uint32_t)result;
+  slot = &stack->unit_slots[0];
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
+  {
+    if ( slot->unit_type_id == -1 )
+      break;
+    slot->state_flags |= UNIT_SLOT_FLAG_PLAGUE;
+    ++slot;
+  }
+  return (int)((uint32_t)(uintptr_t)slot - UNIT_STACK_SLOT_BASE_OFFSET);
+}
+
 signed int clash95::UnitStack::UnitStack_HasPlague() const
 {
   int stackPtr = (int)address_;
@@ -189,6 +390,24 @@ signed int clash95::UnitStack::UnitStack_HasLowMoraleUnit() const
     if ( slot->unit_type_id == -1 )
       return 0;
     if ( (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) != 0 )
+      return 1;
+  }
+  return 0;
+}
+
+signed int clash95::UnitStack::UnitStack_HasSpecialPersonageUnits() const
+{
+  intptr_t stackPtr = address_;
+  UnitStackRecord *stack;
+  int slotIndex;
+
+  stack = (UnitStackRecord *)stackPtr;
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
+  {
+    int slotType = stack->unit_slots[slotIndex].unit_type_id;
+    if ( slotType == -1 )
+      return 0;
+    if ( slotType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slotType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       return 1;
   }
   return 0;

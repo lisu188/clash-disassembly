@@ -11,6 +11,8 @@
 #include "../runtime/runtime_api.h"
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
+#include "../units/UnitSlot.hpp"
+#include "../world/WorldMap.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0040D6D0) --------------------------------------------------------
@@ -1022,110 +1024,26 @@ void  Map_RevealAllTilesForPlayer(int playerIndex)
 // 5202E4: using guessed type int gameData;
 
 //----- (0040EDE0) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Map_RevealTileWithPropagation(int tileX, signed int tileY, int playerIndex)
 {
-  int revealByteAddr; // eax
-  int diagRightTileX2; // edi
-
-  if ( tileX < 0
-    || tileY < 0
-    || tileX >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
-    || tileY >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
-    || Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
-  {
-    return 0;
-  }
-  revealByteAddr = PLAYER_DATA(playerIndex) + PLAYER_REVEALED_TILE_ROW_BYTES * tileX + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3);
-  *(_BYTE *)(uintptr_t)(revealByteAddr + PLAYER_REVEALED_TILES_OFFSET) |= 1 << (tileY & 7);
-  MiniMap_DrawTileCell((void *)(uintptr_t)tileX, tileY);
-  if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) )
-    Map_RevealTileWithPropagation(tileX - 1, tileY, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) )
-    Map_RevealTileWithPropagation(tileX + 1, tileY, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX, tileY - 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX, tileY + 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX, tileY + 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX, tileY + 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX - 1, tileY - 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX + 1, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX + 1, tileY - 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY + 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY + 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX - 1, tileY + 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY + 2, playerIndex) )
-  {
-    diagRightTileX2 = tileX + 1;
-    if ( !Map_IsTileVisibleToPlayer(diagRightTileX2, tileY + 1, playerIndex) )
-      Map_RevealTileWithPropagation(diagRightTileX2, tileY + 1, playerIndex);
-  }
-  return 1;
+  return clash95::WorldMap::borrow().Map_RevealTileWithPropagation(tileX, tileY, playerIndex);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F060) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  Map_IsTileVisibleToPlayer(int tileX, signed int tileY, int playerIndex)
 {
-  return tileX >= 0
-      && tileY >= 0
-      && tileX < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
-      && tileY < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
-      && ((1 << (tileY & 7)) & *(unsigned __int8 *)(uintptr_t)(PLAYER_DATA(playerIndex)
-                                               + PLAYER_REVEALED_TILE_ROW_BYTES * tileX
-                                               + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3)
-                                               + PLAYER_REVEALED_TILES_OFFSET)) != 0;
+  return clash95::WorldMap::borrow().Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F0C0) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Map_ClassifyFogOfWarOverlayForPlayer(int tileX, signed int tileY, int playerIndex)
 {
-  if ( Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
-    return -1;
-
-  // 0040F0E3..0040F1A8: each visibility result replaces one bit of CL.
-  unsigned int neighborMask = 0;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX - 1, tileY - 1, playerIndex) & 1u) << 7;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX, tileY - 1, playerIndex) & 1u) << 6;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX + 1, tileY - 1, playerIndex) & 1u) << 5;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) & 1u) << 4;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) & 1u) << 3;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX - 1, tileY + 1, playerIndex) & 1u) << 2;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX, tileY + 1, playerIndex) & 1u) << 1;
-  neighborMask |= Map_IsTileVisibleToPlayer(tileX + 1, tileY + 1, playerIndex) & 1u;
-  if ( !neighborMask )
-    return 0;
-
-  TextSprite_SetStyleFlag(1);
-  if ( !(neighborMask & 0x5A) && (neighborMask & 1) != 0 )
-    return 12;
-  if ( !(neighborMask & 0x5A) && (neighborMask & 0x80) != 0 )
-    return 9;
-  if ( !(neighborMask & 0x5A) && (neighborMask & 4) != 0 )
-    return 11;
-  if ( !(neighborMask & 0x5A) && (neighborMask & 0x20) != 0 )
-    return 10;
-  if ( !(neighborMask & 0x58) && (neighborMask & 2) != 0 )
-    return 7;
-  if ( !(neighborMask & 0x4A) && (neighborMask & 0x10) != 0 )
-    return 4;
-  if ( !(neighborMask & 0x52) && (neighborMask & 8) != 0 )
-    return 5;
-  if ( !(neighborMask & 0x1A) && (neighborMask & 0x40) != 0 )
-    return 2;
-  if ( !(neighborMask & 0xA) && (neighborMask & 0x50) == 0x50 )
-    return 1;
-  if ( !(neighborMask & 0x12) && (neighborMask & 0x48) == 0x48 )
-    return 3;
-  if ( !(neighborMask & 0x48) && (neighborMask & 0x12) == 0x12 )
-    return 6;
-  if ( !(neighborMask & 0x50) && (neighborMask & 0xA) == 0xA )
-    return 8;
-  if ( (neighborMask & 0x18) == 0x18 || (neighborMask & 0x42) == 0x42 )
-    return -1;
-  // Retain the original branch order, including the shadowed 0xFF case.
-  if ( neighborMask == 255 )
-    return 13;
-  return 14;
+  return clash95::WorldMap::borrow().Map_ClassifyFogOfWarOverlayForPlayer(tileX, tileY, playerIndex);
 }
 
 //----- (0040F3C0) --------------------------------------------------------
@@ -1159,42 +1077,10 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F440) --------------------------------------------------------
+__attribute__((used, retain))
 int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
 {
-  char moraleValue; // dl
-  char stanceBits; // bh
-  char auxFlagsByte; // cl
-  char stateBitsByte; // dl
-  char flagsByte; // ch
-
-  *(_WORD *)(uintptr_t)(result + 4) = 0;
-  *(_WORD *)(uintptr_t)(result + 6) = 0;
-  *(_BYTE *)(uintptr_t)(result + 3) = 0;
-  *(_DWORD *)(uintptr_t)(result + 23) = 0;
-  UNIT_SLOT_TYPE(result) = unitType;
-  UNIT_SLOT_OWNER(result) = ownerIndex;
-  if ( unitType != -1 )
-    UNIT_SLOT_ACTION_POINTS(result) = g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unitType];
-  UNIT_SLOT_HEALTH_PERCENT(result) = 100;
-  if ( unitType != -1 )
-  {
-    if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * unitType] & 2) != 0 )
-      moraleValue = 6;
-    else
-      moraleValue = 10;
-    UNIT_SLOT_MORALE(result) = moraleValue;
-  }
-  UNIT_SLOT_FATIGUE(result) = 0;
-  stanceBits = UNIT_SLOT_STANCE_BITS(result);
-  UNIT_SLOT_AUX_STATE(result) = 0;
-  auxFlagsByte = *(_BYTE *)(uintptr_t)(result + 17);
-  UNIT_SLOT_STANCE_BITS(result) = stanceBits & 0x80;
-  stateBitsByte = UNIT_SLOT_STATE_BITS(result);
-  *(_BYTE *)(uintptr_t)(result + 17) = auxFlagsByte & 0xF8;
-  flagsByte = UNIT_SLOT_FLAGS(result);
-  UNIT_SLOT_STATE_BITS(result) = stateBitsByte & 0xFE;
-  UNIT_SLOT_FLAGS(result) = flagsByte & 0xF0;
-  return result;
+  return clash95::UnitSlot((intptr_t)result).UnitSlot_InitFromType(unitType, ownerIndex);
 }
 // 51257A: using guessed type int g_UnitTypeFlags[];
 
@@ -1209,4 +1095,11 @@ char  UnitStack_ResetRecord(int stackPtr, unit_type unitType, char ownerIndex)
   *(_DWORD *)(uintptr_t)UNIT_STACK_PATH_BUFFER(stackPtr) = 0;
   UNIT_STACK_OWNER_INDEX(stackPtr) = ownerIndex;
   return ownerIndex;
+}
+
+// Borrowing glue remains at the original adapter anchor.
+extern int gameData;
+clash95::WorldMap clash95::WorldMap::borrow() noexcept
+{
+  return WorldMap(::gameData);
 }

@@ -1,0 +1,26 @@
+{
+  "reference_commit": "705fc0fe9b01b7587a7a6290f15379dbd8a1d264",
+  "functions": [
+    {
+      "name": "Map_RevealTileWithPropagation",
+      "original_address": "0x0040EDE0",
+      "body_sha256": "a162c541acfcb813f46e3f99a9c16475e1cd33eed2ebf4bcee56e116de7f1357",
+      "file_sha256": "627b1591b2b471420aaf237d7892342f5a235db34d19f78087472b939d9217dc",
+      "fixture": "Map_RevealTileWithPropagation.cpp"
+    },
+    {
+      "name": "Map_IsTileVisibleToPlayer",
+      "original_address": "0x0040F060",
+      "body_sha256": "4df8f0020b4ecf7295b995ff184b3b4b256a1d95f84555d10b7383f0d0b8da84",
+      "file_sha256": "d08e91f988d726ddfa445c4b35ac4e3297c8dd633ae0bb3c54733cce2157af7f",
+      "fixture": "Map_IsTileVisibleToPlayer.cpp"
+    },
+    {
+      "name": "Map_ClassifyFogOfWarOverlayForPlayer",
+      "original_address": "0x0040F0C0",
+      "body_sha256": "dcfa9e8b714e3ee6888da979a834b48ac5f80fc3b080fd261cc77c40bdb2bad9",
+      "file_sha256": "b7a523a4d7b8d8f32dd723efffb0492f5e7f39ac4c402a69967537fb246b36f8",
+      "fixture": "Map_ClassifyFogOfWarOverlayForPlayer.cpp"
+    }
+  ]
+}

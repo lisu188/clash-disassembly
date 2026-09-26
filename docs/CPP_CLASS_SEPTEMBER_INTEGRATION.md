@@ -162,11 +162,32 @@ Source headers. There are no zero-executable canonical methods. All failed
 reader attempts and the first source-index freeze failure remain retained under
 `artifacts/cpp-classes/20260919/runtime-native-preparation/`.
 
-The supplementary six-route replay is still in progress. Its first mission-13
-GCC attempt stopped on a dark checkpoint-frame metric at turn 2. An exact-main
-control and unchanged current retry are being retained to classify the capture
-and state evidence. This attempt is not promoted to a route pass or attributed
-to a class regression without the controlled comparison.
+The supplementary six-route replay remains incomplete and pinned to the frozen
+23-method binaries. Mission 13 passes on both compilers, with the first GCC
+dark-frame failure retained separately from its unchanged passing repeat. The
+exact-main control also passes. Concurrent live-window observations show that
+stride-128 capture can leave the latest dumped frame stale; they do not prove
+the precise cause of the earlier unobserved failure. Fresh nonblank human-turn
+frames are retained, while the objective transition's actual black window and
+older bright dump are reported separately.
+
+Mission 00 fails on both compilers with the same selection-marker mismatch as
+exact main. Mission 01's sparse initial black dump is reproduced on exact main
+while a concurrent actual window is nonblank. Restoring capture cadence 1, with
+unchanged route inputs, passes the initial and Stormus-exit checkpoints. Its
+2 GiB RAM evidence guard then stops the run after 26.99 seconds of game activity;
+this is a capacity stop, not a gameplay failure. All 1,751 raw members are
+verified in the 176,949,336-byte archive. At the observed approximately 79.5 MB/s
+raw rate, another blind 6 GiB attempt would be insufficient. Missions 02–04 and
+Clang mission 01 remain unrun while transparent compression is assessed. No
+route acceptance or campaign milestone is advanced by this partial matrix.
+
+The detailed commands, attempts and capture investigation are in
+`artifacts/cpp-classes/20260919/integrated-runtime/completed-routes/`. Lossless
+cleanup recovered 1,095,121,878 bytes from 886 current and historical loose
+BMP/log duplicates only after archive/member size and SHA verification. Existing
+archives retain all raw bytes; screenshots, saves, binaries, source freezes and
+reports stay available. Exact removal mappings are retained in that directory.
 
 A read-only preflight of the next AP-spending family found additional inherited
 boundary debt. On `INT_MIN` amounts, Clang diagnoses signed subtraction overflow
@@ -178,3 +199,272 @@ individual build/run outcomes and exact canonical-body hashes are retained in
 remain unchanged. Their distinct AP algorithms require separate original-backed
 arithmetic repairs before extraction; the migration does not narrow their public
 input domains to hide the findings.
+
+## Header parameter declaration correction
+
+The integrated selection check reproduced a separate inherited policy error:
+`UnitStack_NormalizePeasantCargo(DWORD a2, double a3)` declares a parameter named
+`a2`, while the recovered declaration database also contains `extern char a2[3]`.
+The token-only dependency check mistook the parameter declaration for use of that
+global. The audit now masks only proven ordinary parameter declaration tokens.
+The recovered parameter name stays unchanged. Default expressions, array bounds,
+type tokens, qualified global references, other scopes and inline behavior remain
+checked; ambiguous complex declarators remain conservative.
+
+All 32 focused header-policy tests pass, including seven new regression methods.
+The unchanged checker reproduces eight failing positive scenarios and the exact
+production `a2` finding. The corrected current checker reports no class-header
+policy error. Its overall check still fails on the same 23 numeric ratchet rows;
+all rows are compared explicitly, and no baseline changes. The preparation and
+integrated logs are retained under `artifacts/cpp-classes/20260919/` in
+`header-policy-shadowing/` and `header-policy-integration/`. This tooling change
+does not modify any canonical implementation, storage or runtime behavior.
+
+## September 26 origin and hosted validation review
+
+Track: Win95 reconstruction, validating the 33-method class checkpoint.
+`e896279` integrates origin `44928710be14842127d9c581e2e67dfff2d65e09`,
+including the selected-slot predicate, strategic-AI projection repair, DLX
+extent names and the explicitly unvalidated Mission 05 bridge-probe draft.
+Only the status prepend conflicts; all incoming and class entries are retained.
+The class-header parameter checker correction remains, alongside origin's
+declaration-only parameter rename. The main checkout's unrelated working changes
+are preserved.
+
+Read-only integrated audits pass: 4,157 canonical identities, 33 adapters, 147
+TUs, the unchanged 718-function selection, all canonical hashes, and the DAT
+contract (16-byte label, 586,398-byte payload, 586,414-byte file). The nine
+workflow tests, three Markdown tests and five slot-override tests pass in WSL,
+including all thirteen strategic activation witnesses. These small checks do
+not substitute for integrated builds or runtime evidence.
+
+The earlier exact relocated class head `e188e2c` has a completed
+[hosted run](https://github.com/lisu188/clash-disassembly/actions/runs/35970985364):
+
+- Both supported production builds, warning checks, all eight asset-free gates
+  and both 12-test runner-policy suites pass.
+- The complete tooling run executes 560 tests with three workflow-condition
+  failures. They match the exact incoming `c9c0fa7`
+  [comparison run](https://github.com/lisu188/clash-disassembly/actions/runs/35965496476).
+  Origin's later AI validation commit corrects their prerequisite assertions;
+  the actual CLIPS prerequisites remain in the workflow.
+- The hosted GameRandom fixture passes. The interrupted local run's FAIL marker
+  has no retained traceback, so its cause remains unresolved. All three pinned
+  reference-file hashes match; a hosted pass does not erase the local failure.
+- GCC coverage passes at 6,168 / 6,659 executable lines (92.63%), with all 718
+  functions reached and zero uncovered. The exact hosted comparator measures
+  6,168 / 6,656: executable lines increase by three, covered lines have no net
+  increase, and fully covered functions change from 585 to 584. The three
+  prepared receiver-binding additions explain the expected denominator change,
+  but summary-only CI output cannot establish the integrated per-function
+  change or explain the unchanged numerator. These are not the older local
+  6,165 / 6,656 measurements.
+- The historical raw link gates remain failed: GCC differences change from
+  453 to 463 and Clang from 705 to 715, with zero cross-check errors. GCC's
+  visible additions are exactly the ten expected methods. The Clang diagnostic
+  list is truncated before those names, so those logs alone do not establish
+  the complete symbol comparison.
+
+The original remote jobs retained only pre-execution compiler logs for native
+coverage. They did not retain all 718 coverage rows or individual native
+outcomes. A new detailed run can compare current inputs, but cannot reconstruct
+the lost details of those historical runs. The review and artifact inventories
+are retained under `artifacts/cpp-classes/20260926/ci-review/`; the comparison
+receipt SHA256 is
+`3d8396daba96c927bfbe553bee229c32febf9acf48515cb1e8e7e83515188be2`.
+
+### Detailed integrated candidate and current-main reference
+
+The later checkpoint `212bb559c322634f8e69ab0ae664440d24bf8df7`
+integrates origin `26f5f35`, including the independently validated player-info
+sprite loader repair. No class identity is added by that incoming repair.
+[Candidate run 36263284415](https://github.com/lisu188/clash-disassembly/actions/runs/36263284415)
+checks out PR merge `ae962e6cb74c30bc7f9871c424a195737474d6f0`, whose tree
+is byte-identical to the candidate head. The source comparison pins tree
+`18f7074899bc21388200694b67edb948efe7b700` and both merge parents.
+
+[Reference run 36263644099](https://github.com/lisu188/clash-disassembly/actions/runs/36263644099)
+uses `2c93086d32354b698fdcf3aace285aba135d1227`: current main `26f5f35`
+plus the same nine diagnostic files as the candidate. Its production sources,
+data, CMake inputs and native fixtures are unchanged from main. The exact
+source proof is retained under
+`artifacts/cpp-classes/20260926/native-reference/source-comparison.json`.
+
+Both runs pass both production builds, warnings, all eight asset-free gates and
+both runner-policy suites. Candidate tooling passes all 597 tests; current
+header, activation and Markdown checks also pass. Reference tooling passes
+585 tests; its three inherited mission-05 Markdown links still fail. Historical
+raw link-surface failures remain in both runs; those ratchets are not reseeded.
+
+Every ordered native registration and selected coverage identity matches:
+
+| Compiler | Reference pass/fail/crash | Candidate pass/fail/crash | Reference covered/executable | Candidate covered/executable |
+| --- | --- | --- | --- | --- |
+| GCC 13 | 1100/0/516 | 1100/0/516 | 6165/6656 | 6170/6659 |
+| Clang 18 | 1099/1/516 | 1101/1/514 | 6811/7345 | 6814/7348 |
+
+GCC outcomes are identical for all 1,616 cases. Clang changes three cases from
+CRASH to PASS: `cov12_crt.to_upper_in_place_nonempty`,
+`cov2_08_tzdaylight.a1_flag_set_jumps_to_shared_tail`, and
+`cov4_03_crt.tz_year_starts_in_daylight_goto_label6`. It also changes
+`cov3_07_definstances.delete_record_not_bloaded_retry_for_luck` from **PASS to
+CRASH**. That fixture and production body are byte-identical between reference
+and candidate and exercise uninitialized recovered locals. This establishes
+susceptibility, not the precise cause; the observed regression remains open.
+Separate hosted runs do not establish identical address layout or scheduling.
+
+Clang retains `cov5_01_getallowedattrtoken.allowed_symbols` at expected 2,
+actual -1, and the same eight zero-covered functions. Both profiles exceed the
+unchanged 89.7% floor and retain all 718 nonempty coverage rows, but Clang fails
+the zero-uncovered requirement. GCC passes that requirement. Individual crashes
+remain visible even where the native runner's existing policy permits them.
+
+Both executable denominators increase by exactly three: one covered receiver
+binding in each of `UnitSlot_InitFromType`,
+`UnitStack_SubtractActionPointsFloorZero`, and
+`UnitStack_HasSpecialPersonageUnits`. The remaining GCC covered delta is +2 in
+`Building_UpdatePlagueState`. Other Clang covered deltas are +3 in
+`CRT_ToUpperInPlace`, -1 in `Defgeneric_ClearDefgenericsReady`, and -2 in
+`Definstances_DeleteRecord`. These observations do not explain the lost detail
+from the older summary-only runs or resolve the interrupted local RNG failure.
+The complete comparison is retained in
+`artifacts/cpp-classes/20260926/ci-review/reference2c93086d/hosted-reference-comparison.json`.
+
+### Native log framing correction
+
+The candidate Clang collector originally failed on one complete CRASH record
+joined to a concurrent diagnostic; reference GCC failed on two such records.
+The actual logs and failed receipts remain unchanged. The collector now accepts
+at most one complete exception suffix using the existing registered-name,
+ordering and exact-total checks. It preserves the full joined line and prefix
+as unattributed diagnostics. Ambiguous markers, malformed or foreign records,
+duplicates, late exceptions and inconsistent totals still fail collection.
+Plain-text log framing cannot independently authenticate a status-shaped string;
+no signal, missing outcome or diagnostic-prefix ownership is inferred.
+
+All 19 focused Python tests pass in WSL on the final files:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 TMPDIR=/dev/shm python3 -m unittest discover -s tests/tools -p test_native_test_evidence.py -v
+git diff --check -- tools/collect_native_test_evidence.py tests/tools/test_native_test_evidence.py
+```
+
+The final review receipt is
+`artifacts/cpp-classes/20260926/ci-review/collector-final-review.json`.
+Offline reconciliations on the retained candidate Clang and reference GCC logs
+recover complete 1101/1/514 and 1100/0/516 counts respectively. They pin their
+original evidence and tool hashes but do not rerun native tests or assert fresh
+hosted binary/HEAD verification. Exact hosted validation of the final parser
+remained pending at that checkpoint. Collection success is not native-suite
+success.
+
+### Exact hosted validation of the collector correction
+
+[Run 36266431294](https://github.com/lisu188/clash-disassembly/actions/runs/36266431294)
+validates head `12ff25bc1a62d4036850f4db53f016d849234fea` through merge
+`66bbded1499acbe4318f218aee05cac6c6fa1971`, with an identical tree. The
+hosted tool hash matches the final focused-test receipt. Both collectors
+successfully retain all 1,616 outcomes and exercise actual joined records:
+GCC `cov2_08_crtexcfilter.cold_call`, and Clang
+`cov21_messagehandler.register_system_handlers`. Their prefixes remain
+unattributed; the earlier failed receipts are not replaced.
+
+Both production builds, warning checks, all eight asset-free gates and both
+runner-policy suites pass. All 600 tooling tests pass in 277.493 seconds;
+Markdown, current header and strategic activation checks also pass. GCC retains
+exactly 1100/0/516 native outcomes and 6170/6659 coverage. Clang records
+1100/1/515; all 718 coverage rows are identical to the earlier candidate,
+including 6814/7348 covered/executable lines and eight uncovered functions.
+
+`cov20_crt.tz_year_starts_label6_a1_flag_set` changes from PASS to CRASH against
+both the earlier candidate and current-main reference. The earlier
+Definstances PASS-to-CRASH observation also persists against the reference.
+No production or native fixture files changed from `212bb55`. This establishes
+an outcome variation with unchanged source, not its precise cause or a resolved
+regression. The Clang assertion, zero-uncovered gate and both historical raw
+link checks still fail. The draft is not ready for migration acceptance.
+
+Logs, exact checkout/tool identities, original collection receipts, all native
+rows and coverage comparisons are retained under
+`artifacts/cpp-classes/20260926/ci-review/integrated12ff25b/`. This follow-up
+changes validation tooling and documentation only; it adds no class method,
+runtime or campaign milestone.
+
+### Native variation evidence boundary
+
+A later read-only audit finds the same native executable SHA256,
+`78556a4c5825fee1599671f285df6ac80115642c68dc6c0ccef164867da367e2`, in
+the hosted capture receipts for both candidate runs above. The timezone case
+passes in the first and crashes in the second, establishing an outcome variation
+without a change to those executable bytes. The executables were not downloaded
+and rehashed locally; the capture receipts and preserved collector outcomes are
+the evidence. This does not resolve the candidate-versus-main comparison.
+
+Both target fixtures discard the function result rather than asserting behavior.
+The relevant procedural source, fixtures and runner are identical to the
+reference, and original assembly confirms missing register dataflow in both
+recoveries. However, the runner's CRASH outcome conflates caught faults, its
+one-second alarm, abnormal exits and possible coverage-dump failures. It retains
+no signal or faulting instruction. No precise cause is established and neither
+unfavorable observation is waived. Exact receipt hashes, raw lines, source blob
+comparisons and the bounded diagnostic plan remain under
+`artifacts/cpp-classes/20260926/native-variation-audit/`.
+
+### Integrated WorldMap extraction checkpoint
+
+The later 36-method extraction at `9123e70` has a complete
+[hosted run](https://github.com/lisu188/clash-disassembly/actions/runs/36269978257)
+whose actual merge tree equals the requested head. All 602 tooling tests,
+both production builds and warning checks, eight asset-free gates and both
+outcome collectors pass. GCC retains all previous individual native outcomes,
+1100/0/516, with coverage 6169/6659 and no uncovered function. Clang records
+1097/1/518 and coverage 6808/7348, with the same assertion and eight uncovered
+functions. The overall run fails, including both historical link ratchets.
+
+Both executable denominators remain unchanged from `12ff25b`. GCC loses one
+covered line in the unchanged procedural radius-two reveal caller; Clang loses
+six across two CRT functions. The three additional Clang crashes relative to
+`12ff25b` were also crashes in the incoming-main reference. The two unfavorable
+reference comparisons remain unresolved. Aggregate coverage and the runner's
+combined CRASH category do not establish causes. Full receipts, all cases and
+coverage deltas remain under
+`artifacts/cpp-classes/20260926/ci-review/integrated9123e70/`.
+See [the WorldMap report](WORLD_MAP_VISIBILITY_CLASSES.md) for the extraction
+scope and storage comparisons. Source relocation and runtime validation are
+separate subsequent stages.
+
+### Incoming header baseline change
+
+Origin commit `6ad7f2d` independently reseeds the header baseline and documents
+its dependency reasons. The five API additions match the tracked old/current
+sets; eighteen peer-edge rows increase, one decreases, and shared globals stay
+244. Integrating that published history does not repair the earlier 23 numeric
+failures: they become acceptable because the thresholds change. Retain the
+earlier frozen baseline and raw failure records for migration comparison;
+a pass against origin's new baseline is not class-behavior validation. The
+incoming record does not retain the complete old/current preprocessed member
+sets claimed in its narrative. No class batch reseeds the link, warning or
+coverage baselines.
+
+### Resource and runtime limits
+
+The user-required disk threshold is now less than 90% used on both the output
+filesystem and the Windows volume backing WSL, in addition to existing reserves.
+The initial host-capacity hold is retained in the earlier receipts. A later
+September 26 check observes 88.555% used and 114.4 GB free, allowing bounded
+local work to resume without weakening any guard. Fresh sequential GCC/Clang
+builds, warnings and all eight asset-free gates pass at `9a74d4c`; all 859 frozen
+inputs remain unchanged. The earlier audit timeouts remain distinct outcomes.
+The subsequent original-paired first-Road replays also pass their bounded state
+checks, with full payload and unmasked frame differences explicitly retained.
+See [the fresh checkpoint report](CPP_CLASS_FIRST_ROAD_REVALIDATION.md#september-26-33-method-checkpoint).
+No installed tool or runtime asset is removed to obtain room.
+Verified cache cleanup and archive-member restoration maps are retained under
+`artifacts/cpp-classes/20260926/disk-cleanup/`.
+
+The full migration and full C++ reimplementation remain incomplete. GCC native
+outcomes now match the current-main reference; Clang differences and failures
+remain unresolved. The first-Road comparison is now refreshed for the 33-method
+checkpoint. The default smoke suite, six completed-route regressions and later
+class-batch acceptance remain required. No campaign or visual-fidelity milestone
+advances.

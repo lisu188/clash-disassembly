@@ -78,3 +78,75 @@ artifact root. Passing this series does not erase them.
 The six completed direct-route gates, whole-game equivalence, mission-05
 completion and automatic campaign advancement are not promoted by this probe.
 Later class batches require their own relevant validation.
+
+## September 26: 33-method checkpoint
+
+The fresh replay pins `9a74d4c9b486e15495d5a48fea7b3dd81f46eb5d`, with
+33 canonical methods in six class sources and 147 recovered translation units.
+Fresh GCC 13 and Clang 18 production builds, warning checks and all eight
+asset-free gates pass. Their source audits complete within the unchanged
+timeout; the earlier timeouts remain recorded separately. All 859 frozen inputs
+remain unchanged throughout the builds and runtime runs.
+
+Both production executables pass the canonical mission-05 first-Road route in
+headless WSL, using private native game/save/cwd directories, dummy audio,
+unchanged route inputs and frame stride 32. They reach turn 6, `(49,50)`, 2 AP,
+an empty path and roads 867/879. Before and after the Road action, comparison
+against the fresh original passes all 310 slot bytes, all 1,300 visibility bytes
+and all six Road words. The endpoint visibility has 228 set tiles and SHA256
+`6a3c5de203b5c40db4ab8c442f3a65017cd0eee2fb9971d727148d012a7fd4b0`.
+Both transitions preserve the other 499 stack records, all 100 building records
+and their money entries. These checks do not establish whole-game-byte equality.
+
+The first fresh original attempt fails when its read-only observer cannot open
+`/proc/PID/mem`; the wrapper's zero exit does not override `workflow_pass=false`.
+The separate root-context retry uses a new private Wine prefix with matching
+ownership and succeeds without changing global ptrace policy. It performs real
+Load of the unchanged engine-authored turn-6 DAT/FAC checkpoint and the actual
+Road action. Executable, checkpoint and prefix-template hashes remain unchanged.
+This is not continuous original turn-1 replay. The failed attempt's raw capture,
+log and verified archive remain; its temporary prefix was later observed absent
+despite the wrapper recording no removal, with no cause established.
+
+Both pairs align viewport `(47,48)`, cursor `(192,176)`, selected stack 4 and the
+verified endpoint. Complete 640-by-480 frames give these unmasked metrics:
+
+| Reconstruction | Different pixels | Percentage | Mean absolute RGB-channel difference |
+| --- | ---: | ---: | ---: |
+| GCC 13 | 286,486 | 93.25716146% | 11.15446181 |
+| Clang 18 | 287,316 | 93.52734375% | 11.28456272 |
+
+No resizing, cropping, masking or acceptable-difference waiver is applied.
+Original tile-coordinate labels, upper-right fog differences and the original
+unit portraits versus overlapping reconstruction text remain visible. Visual
+equivalence is not established. Whole-game payload differences against the
+original remain 684/1,048 bytes before/after for GCC and 698/1,057 for Clang.
+The two reconstruction payloads differ by 322/325 bytes before/after. All offsets
+and values are retained without normalizing unknown bytes or attributing every
+difference to RNG.
+
+Evidence is retained under `artifacts/cpp-classes/20260926/local-current33/`
+and `artifacts/cpp-classes/20260926/runtime-current33/`. The former contains the
+859-input freeze, build receipts and exact binary hashes; the latter contains
+per-attempt commands, unchanged orchestration scripts, raw archives, observed
+saves, endpoint verification and comparison-fresh-original.json for each
+compiler. The fresh original frame SHA256 is
+`88adfa9c1d135ac59ae8d6733e833103990ce72ceda2832b273a9763e29ed783`.
+The retained scripts reject reuse of completed output directories. Their actual
+entry points, run sequentially with the recorded working directories, were:
+
+```sh
+python3 -B artifacts/cpp-classes/20260926/local-current33/run-validation.py
+python3 -B artifacts/cpp-classes/20260926/runtime-current33/run-first-road.py gcc13
+python3 -B artifacts/cpp-classes/20260926/runtime-current33/run-first-road.py clang18
+python3 -B artifacts/cpp-classes/20260926/runtime-current33/fresh-original.py \
+  --attempt fresh-original-endpoint-root --guard-load-menu --wait-road-endpoint
+```
+
+The final command runs in the recorded root process context, headlessly; each
+verify.py invocation pins the successful fresh-original directory explicitly.
+The 90%-usage threshold, additional 2-GiB reserve and 3-GiB per-runtime budget
+remain enforced. No runtime guard fires. Original failure diagnostics remain
+distinct from the successful retry. The default smoke suite, six completed
+direct-route gates, unresolved native/coverage failures and broader migration
+acceptance remain outstanding; no campaign milestone is promoted.

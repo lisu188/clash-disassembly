@@ -504,52 +504,10 @@ int  UnitSlots_AppendEntriesForBuildingAttack(char *destSlots, char *srcSlots)
 }
 
 //----- (00412100) --------------------------------------------------------
-signed int  UnitStack_HasNormalCombatUnits(intptr_t stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasNormalCombatUnits(intptr_t stackPtr)
 {
-  signed int result; // eax
-  intptr_t slot_record; // edx
-  signed int squad_count; // esi
-  signed int has_normal_unit; // ebx
-  signed int slot_index; // ecx
-  int unit_type; // eax
-
-  if ( *(__int16 *)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET) == -1 )
-    return 0;
-  result = Unit_GetSquadCount(stackPtr);
-  squad_count = result;
-  if ( result )
-  {
-    slot_record = stackPtr;
-    has_normal_unit = 0;
-    slot_index = 0;
-    if ( result > 0 )
-    {
-      while ( !has_normal_unit )
-      {
-        unit_type = *(__int16 *)(slot_record + UNIT_STACK_SLOT_BASE_OFFSET);
-        if ( unit_type == UNIT_TYPE_GOLD_CARGO
-          || unit_type == UNIT_TYPE_PEASANT_CARGO
-          || unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
-          || unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-        {
-          ++slot_index;
-          slot_record += UNIT_STACK_SLOT_STRIDE;
-          if ( slot_index >= squad_count )
-            return has_normal_unit;
-        }
-        else
-        {
-          has_normal_unit = 1;
-          ++slot_index;
-          slot_record += UNIT_STACK_SLOT_STRIDE;
-          if ( slot_index >= squad_count )
-            return 1;
-        }
-      }
-    }
-    return has_normal_unit;
-  }
-  return result;
+  return clash95::UnitStack(stackPtr).UnitStack_HasNormalCombatUnits();
 }
 
 //----- (00412170) --------------------------------------------------------
@@ -1044,61 +1002,30 @@ signed int  UnitStack_CycleAllSlotOrders(__int16 *stackPtr, DWORD a2, double a3)
 }
 
 //----- (00412A30) --------------------------------------------------------
+
+
+__attribute__((used, retain))
 __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
 {
-  UnitStackRecord *stack;
-  UnitSlotRecord *slot;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
-  slot = &stack->unit_slots[0];
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    if ( slot->unit_type_id == -1 )
-      break;
-    slot->state_flags |= UNIT_SLOT_FLAG_SPENT_TURN;
-    ++slot;
-  }
-  return (__int16 *)(uintptr_t)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
+  return clash95::UnitStack(stackPtr).UnitStack_SetSpentTurnFlag();
 }
 
 //----- (00412A60) --------------------------------------------------------
+
+
+__attribute__((used, retain))
 __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
 {
-  UnitStackRecord *stack;
-  UnitSlotRecord *slot;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
-  slot = &stack->unit_slots[0];
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    if ( slot->unit_type_id == -1 )
-      break;
-    slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_SPENT_TURN;
-    ++slot;
-  }
-  return (__int16 *)(uintptr_t)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
+  return clash95::UnitStack(stackPtr).UnitStack_ClearSpentTurnFlag();
 }
 
 //----- (00412A90) --------------------------------------------------------
 int  UnitStack_SetPlagueFlag(int result)
 {
-  UnitStackRecord *stack;
-  UnitSlotRecord *slot;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)(uintptr_t)result;
-  slot = &stack->unit_slots[0];
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    if ( slot->unit_type_id == -1 )
-      break;
-    slot->state_flags |= UNIT_SLOT_FLAG_PLAGUE;
-    ++slot;
-  }
-  return (int)(intptr_t)slot;
+  return clash95::UnitStack(result).UnitStack_SetPlagueFlag();
 }
+
+
 
 //----- (00412AC0) --------------------------------------------------------
 __attribute__((used, retain))
@@ -1140,21 +1067,10 @@ int  UnitStackSelection_BuildSelectedSlotIndexList(int result, int slotCount, in
 }
 
 //----- (00412B60) --------------------------------------------------------
-signed int  UnitStack_HasSpecialPersonageUnits(intptr_t stackPtr)
+__attribute__((used, retain))
+signed int UnitStack_HasSpecialPersonageUnits(intptr_t stackPtr)
 {
-  UnitStackRecord *stack;
-  int slotIndex;
-
-  stack = (UnitStackRecord *)stackPtr;
-  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-  {
-    int slotType = stack->unit_slots[slotIndex].unit_type_id;
-    if ( slotType == -1 )
-      return 0;
-    if ( slotType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slotType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-      return 1;
-  }
-  return 0;
+  return clash95::UnitStack(stackPtr).UnitStack_HasSpecialPersonageUnits();
 }
 
 //----- (00412B90) --------------------------------------------------------

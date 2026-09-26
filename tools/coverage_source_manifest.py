@@ -7,6 +7,7 @@ are derived from the canonical split sources at measurement time.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 import json
 import os
 import re
@@ -264,8 +265,16 @@ def _canonical_source(source: str, expected: set[str]) -> str | None:
     return None
 
 
-def collect_split_gcov(build_dir: Path, sources: set[str]) -> dict[str, dict[int, bool]]:
-    """Run gcov for independently compiled recovered sources."""
+def collect_split_gcov(
+    build_dir: Path, sources: set[str], *, gcov_command: Sequence[str] = ("gcov",)
+) -> dict[str, dict[int, bool]]:
+    """Run the selected gcov-compatible reader for recovered sources."""
+    if (isinstance(gcov_command, str) or not gcov_command
+            or not all(isinstance(argument, str) and argument
+                       for argument in gcov_command)):
+        raise CoverageMetadataError("gcov_command must be a nonempty argument sequence")
+    reader_command = tuple(gcov_command)
+    reader_name = " ".join(reader_command)
     notes_by_name: dict[str, list[Path]] = {}
     for note in build_dir.rglob("*.gcno"):
         if "coverage-shards" in note.parts:
@@ -329,7 +338,7 @@ def collect_split_gcov(build_dir: Path, sources: set[str]) -> dict[str, dict[int
                         names.append(note.name)
                     try:
                         result = subprocess.run(
-                            ["gcov", "-p", "-l", "-o", str(scratch), *names],
+                            [*reader_command, "-p", "-l", "-o", str(scratch), *names],
                             cwd=output,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
@@ -337,11 +346,11 @@ def collect_split_gcov(build_dir: Path, sources: set[str]) -> dict[str, dict[int
                         )
                     except FileNotFoundError as error:
                         raise CoverageMetadataError(
-                            "gcov is required to measure coverage"
+                            f"{reader_name} is required to measure coverage"
                         ) from error
                     if result.returncode:
                         raise CoverageMetadataError(
-                            f"gcov failed for {relative_parent}: {result.stderr.strip()}"
+                            f"{reader_name} failed for {relative_parent}: {result.stderr.strip()}"
                         )
                     for gcov_file in output.glob("*.gcov"):
                         emitted_source, lines = parse_gcov(gcov_file)
@@ -377,7 +386,7 @@ def collect_split_gcov(build_dir: Path, sources: set[str]) -> dict[str, dict[int
         for note in selected.values():
             try:
                 result = subprocess.run(
-                    ["gcov", "-p", "-l", "-o", str(note.parent), note.name],
+                    [*reader_command, "-p", "-l", "-o", str(note.parent), note.name],
                     cwd=output,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -385,11 +394,11 @@ def collect_split_gcov(build_dir: Path, sources: set[str]) -> dict[str, dict[int
                 )
             except FileNotFoundError as error:
                 raise CoverageMetadataError(
-                    "gcov is required to measure coverage"
+                    f"{reader_name} is required to measure coverage"
                 ) from error
             if result.returncode:
                 raise CoverageMetadataError(
-                    f"gcov failed for {note}: {result.stderr.strip()}"
+                    f"{reader_name} failed for {note}: {result.stderr.strip()}"
                 )
         for gcov_file in output.glob("*.gcov"):
             source, lines = parse_gcov(gcov_file)

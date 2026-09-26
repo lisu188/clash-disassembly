@@ -1005,7 +1005,6 @@
    "g_UnitBattleActionWidgetTable",
    "g_UnitStackSelectionActiveUnitIndex",
    "g_UnitStackSlotSelectedFlags",
-   "g_UnitTypeRuntimeCoreMetadata",
    "g_WhirlSpriteSet",
    "g_WorldMapActionButtonWidgetTable",
    "g_WorldMapBackgroundSpriteSet",
@@ -16789,7 +16788,6 @@
     "g_UnitBattleActionWidgetTable",
     "g_UnitStackSelectionActiveUnitIndex",
     "g_UnitStackSlotSelectedFlags",
-    "g_UnitTypeRuntimeCoreMetadata",
     "g_WhirlSpriteSet",
     "g_WorldMapActionButtonWidgetTable",
     "g_WorldMapBackgroundSpriteSet",
@@ -16876,7 +16874,6 @@
     "g_UnitBattleActionWidgetTable",
     "g_UnitStackSelectionActiveUnitIndex",
     "g_UnitStackSlotSelectedFlags",
-    "g_UnitTypeRuntimeCoreMetadata",
     "g_WhirlSpriteSet",
     "g_WorldMapActionButtonWidgetTable",
     "g_WorldMapBackgroundSpriteSet",
@@ -16963,7 +16960,6 @@
     "g_UnitBattleActionWidgetTable",
     "g_UnitStackSelectionActiveUnitIndex",
     "g_UnitStackSlotSelectedFlags",
-    "g_UnitTypeRuntimeCoreMetadata",
     "g_WhirlSpriteSet",
     "g_WorldMapActionButtonWidgetTable",
     "g_WorldMapBackgroundSpriteSet",
@@ -16990,7 +16986,6 @@
     "g_RenderHook",
     "g_RenderState",
     "g_SelectedUnitIndex",
-    "g_UnitTypeRuntimeCoreMetadata",
     "g_WorldMapTargetSurface",
     "gameData"
    ],
@@ -17038,7 +17033,6 @@
     "g_UnitBattleActionWidgetTable",
     "g_UnitStackSelectionActiveUnitIndex",
     "g_UnitStackSlotSelectedFlags",
-    "g_UnitTypeRuntimeCoreMetadata",
     "g_WhirlSpriteSet",
     "g_WorldMapActionButtonWidgetTable",
     "g_WorldMapBackgroundSpriteSet",
@@ -17049,6 +17043,10 @@
    ]
   },
   "src/world/WorldGeometry.cpp": {
+   "referenced": [],
+   "visible": []
+  },
+  "src/world/WorldMap.cpp": {
    "referenced": [],
    "visible": []
   }

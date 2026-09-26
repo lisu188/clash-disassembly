@@ -1,0 +1,45 @@
+{
+  "source_revision": "33a5959820dfcb70902183d9c094221c547b05fc",
+  "original_executable_sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae",
+  "functions": [
+    {
+      "name": "UnitStack_SpendActionPointsClamped",
+      "original_address": "0x410130",
+      "end_exclusive": "0x410169",
+      "bytes": 57,
+      "sha256": "bf064533cef9f45f92ba2187e52287ad521fe43d39ec71f3f0725757ade8bbe0"
+    },
+    {
+      "name": "UnitStack_SubtractActionPointsFloorZero",
+      "original_address": "0x4101a0",
+      "end_exclusive": "0x4101dc",
+      "bytes": 60,
+      "sha256": "997af999f2195b29274f4774996f35d1b6ec92e8434aa3ccfb5a59428ce1afcf"
+    },
+    {
+      "name": "UnitStack_SpendActionPointsUnchecked",
+      "original_address": "0x410170",
+      "end_exclusive": "0x410195",
+      "bytes": 37,
+      "sha256": "4a0f8e37ae9f0ded2237be9e04bcbe889b1e7b0bca51f98f5567124b2e60ffff"
+    }
+  ],
+  "measurement": "Unmodified original PE target instructions executed in a 32-bit Linux process, with Rules_LinkArmyFact at 0x454f50 replaced by an explicit register/byte observer. Target page copied byte-identically; external fact implementation excluded.",
+  "callback_contract": "Capture EAX, EDX, ECX, BL raw bits, EBP, ST0 binary64; one call after AP writes; return observer EAX; optional observer byte mutation retained. Unchecked makes no callback.",
+  "scope": "All 16 alignments, sentinel prefixes 0..10, other negative slot types, every AP/subtraction-byte pair, signed extremes, both sides of INT_MAX addresses, full 800-byte arenas, signed/unsigned char. Inputs include finite values, signed zero, infinities and quiet NaN; signaling NaNs and unmapped/wrapping-through-zero record memory excluded. A supplementary 1,152-case original measurement covers initial +6 crossing INT_MAX and high-bit handles, all alignments, sentinel prefixes 0/1/10 and four subtraction extremes.",
+  "measured_streams": {
+    "case_count": 35280,
+    "input_bytes": 29352960,
+    "output_bytes": 57718080,
+    "input_sha256": "b43be927a43b795f1ce69804cf611b436ec42ea9fb83ff6744805aca3f92b917",
+    "output_sha256": "ff26a5b3890365197455b8e838c9d60b8ec96e46d445c8644edf375cf701df34"
+  },
+  "target_page_sha256": "d5ac0ebbeab7df3f8eb1d615258849c7ca5b746c53f225b96de482ad9dd6d0d9",
+  "address_boundary_streams": {
+    "case_count": 1152,
+    "input_bytes": 958464,
+    "output_bytes": 1884672,
+    "input_sha256": "b13faa95e232cf223fe2b3081a9017ca6bf1c9598d7e30b208636d036280f9ea",
+    "output_sha256": "f56c677dcfaab98353ea1921dc912df4f198f803ecafad61776ab5c14495d81e"
+  }
+}

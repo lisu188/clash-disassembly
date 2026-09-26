@@ -62,6 +62,11 @@ receipts and superseded assumptions. Current status now lives in
 [STATUS.md](../STATUS.md); do not treat historical "current" headings as a live
 queue. No recorded batch evidence was removed in this consolidation.
 
+The [class migration status supplement](CLASS_MIGRATION_STATUS_20260926.md)
+retains the separate migration branch additions through `c902051`, including
+later native, runtime and class-validation outcomes. The main ledger remains
+unchanged.
+
 ## Retained In Place
 
 | Path | Reason |

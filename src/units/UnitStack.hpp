@@ -13,6 +13,15 @@ class CLASH95_INTERNAL UnitStack final {
   signed int UnitStack_NormalizePeasantCargo(DWORD factSyncContext, double a3) const;
   signed int UnitStack_HasPlague() const;
   signed int UnitStack_HasLowMoraleUnit() const;
+  signed int UnitStack_GetMaxOrderTier() const;
+  signed int UnitStack_HasNormalCombatUnits() const;
+  signed int UnitStack_HasSpecialPersonageUnits() const;
+  int UnitStack_SetPlagueFlag() const;
+  signed int UnitStack_SpendActionPointsClamped(int spendAmount, DWORD a3, double a4) const;
+  signed int UnitStack_SubtractActionPointsFloorZero(int subtractAmount, DWORD a3, double a4) const;
+  int UnitStack_SpendActionPointsUnchecked(char spendAmount) const;
+  __int16 * UnitStack_SetSpentTurnFlag() const;
+  __int16 * UnitStack_ClearSpentTurnFlag() const;
  private:
   intptr_t address_;
 };

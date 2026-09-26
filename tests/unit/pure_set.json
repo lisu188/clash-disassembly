@@ -514,10 +514,11 @@
    "original_address": "0x0040F0C0",
    "original_source": "src/recovered/world/00408030_world_map.inc.c",
    "original_line": 5118,
-   "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+   "source": "src/world/WorldMap.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "Map_ClassifyFogOfWarOverlayForPlayer"
+    "kind": "method",
+    "qualified_name": "clash95::WorldMap::Map_ClassifyFogOfWarOverlayForPlayer",
+    "header": "src/world/WorldMap.hpp"
    }
   },
   {
@@ -525,10 +526,11 @@
    "original_address": "0x0040F440",
    "original_source": "src/recovered/world/00408030_world_map.inc.c",
    "original_line": 5206,
-   "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+   "source": "src/units/UnitSlot.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitSlot_InitFromType"
+    "kind": "method",
+    "qualified_name": "clash95::UnitSlot::UnitSlot_InitFromType",
+    "header": "src/units/UnitSlot.hpp"
    }
   },
   {
@@ -604,10 +606,11 @@
    "original_address": "0x004101A0",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 596,
-   "source": "src/units/0040F510_00411560_units_001.cpp",
+   "source": "src/units/UnitStack.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitStack_SubtractActionPointsFloorZero"
+    "kind": "method",
+    "qualified_name": "clash95::UnitStack::UnitStack_SubtractActionPointsFloorZero",
+    "header": "src/units/UnitStack.hpp"
    }
   },
   {
@@ -793,10 +796,11 @@
    "original_address": "0x00412B60",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 2842,
-   "source": "src/units/004115E0_00412BE0_units_002.cpp",
+   "source": "src/units/UnitStack.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "UnitStack_HasSpecialPersonageUnits"
+    "kind": "method",
+    "qualified_name": "clash95::UnitStack::UnitStack_HasSpecialPersonageUnits",
+    "header": "src/units/UnitStack.hpp"
    }
   },
   {

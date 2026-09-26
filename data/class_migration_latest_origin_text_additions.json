@@ -276,6 +276,118 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC1ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ],
       "archive_text": [
@@ -464,16 +576,16 @@
         {
           "name": "_ZN7clash958UnitSlotC1El",
           "class": "W",
-          "count": 3,
+          "count": 4,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling. The explicit initializer adapter in world004 adds one existing constructor COMDAT at O0; the linked count stays one."
         },
         {
           "name": "_ZN7clash958UnitSlotC2El",
           "class": "W",
-          "count": 3,
+          "count": 4,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling. The explicit initializer adapter in world004 adds one existing constructor COMDAT at O0; the linked count stays one."
         },
         {
           "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
@@ -551,6 +663,118 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC1ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ]
     },
@@ -786,6 +1010,111 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ],
       "archive_text": [
@@ -939,9 +1268,9 @@
         {
           "name": "_ZN7clash958UnitSlotC2El",
           "class": "W",
-          "count": 3,
+          "count": 4,
           "kind": "accessor",
-          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling."
+          "reason": "Trivial UnitSlot borrowing constructor stores only the supplied packed-record address. Two additional existing borrowing-constructor COMDAT users: AP adapters in units_001 and the direct UnitTurn AP call; relocatable-link coalescing still retains one constructor per ABI spelling. The explicit initializer adapter in world004 adds one existing constructor COMDAT at O0; the linked count stays one."
         },
         {
           "name": "_ZNK7clash958UnitSlot24UnitSlot_CycleOrderStateEv",
@@ -1019,6 +1348,111 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack flag query; exact packed record, sentinel order and signed Boolean result preserved against the frozen f6849c6 body."
+        },
+        {
+          "name": "_ZNK7clash958UnitSlot21UnitSlot_InitFromTypeE9unit_typec",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitSlot initializer; existing low32 int receiver, unsigned unit type, char owner, store widths/order and sentinel bytes preserved. Constructor only binds the address."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack25UnitStack_GetMaxOrderTierEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack30UnitStack_HasNormalCombatUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_HasSpecialPersonageUnitsEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack personage query; signed type/sentinel and tier masks retained, packed fields use alignment-safe access, and the max-tier method directly calls the special-personage method. Actual methods/adapters match frozen production and measured original returns/full bytes."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack23UnitStack_SetPlagueFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical explicit UnitStack plague setter, preserving the separately original-backed low32 repair, complete packed bytes and return cursor; exercised through adapter and direct method against the frozen repaired function and 36,344 original cases."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack34UnitStack_SpendActionPointsClampedEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack39UnitStack_SubtractActionPointsFloorZeroEijd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack36UnitStack_SpendActionPointsUncheckedEc",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack AP-spending operation; preserves the separately original-backed repaired arithmetic, packed bytes, distinct algorithms, exact callback contexts and legacy adapter. Methods and adapters match frozen repaired functions and 36,432 original observations."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack26UnitStack_SetSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZNK7clash959UnitStack28UnitStack_ClearSpentTurnFlagEv",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ]
     }

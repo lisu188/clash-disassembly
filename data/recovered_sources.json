@@ -2,7 +2,7 @@
   "schema_version": 3,
   "language": "GNU C++20",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.cpp",
-  "source_file_count": 147,
+  "source_file_count": 148,
   "function_count": 4157,
   "functions": [
     {
@@ -87798,9 +87798,9 @@
       "original_address": "0x004100B0",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 511,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "3aafb73894bead8ed4c433a626df0d1678a7299986bd718bde28524897aaf4b4",
+      "body_sha256": "03d053ef54802b5ee9e231527fbd62f31804a29f607b8f9ed765f44ff76bf8db",
       "original_address_range": {
         "start": "0x004100B0",
         "end_exclusive": "0x00410100"
@@ -87810,12 +87810,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "205d76f9c39c9a3e4e410dd6257d04877adf5dcffbbca56a5d2a576645663eef",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_GetMaxOrderTier"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_GetMaxOrderTier",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_GetMaxOrderTier is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "93cfc6823039e2267933bde6e46026b750f656a8459a999b82afecd9137a17cf"
+      }
     },
     {
       "name": "UnitStack_HasPlagueFlag",
@@ -87846,9 +87851,9 @@
       "original_address": "0x00410130",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 553,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "16acffc728bbabdfa366c2fc313fc2ea7d7ff95b7323012f1464cdac0e30dc1c",
+      "body_sha256": "f00f995a88fb93edcbb3a66a420298f3cf82ab97e548c7c3a0e8d6cd6d2ca3ee",
       "original_address_range": {
         "start": "0x00410130",
         "end_exclusive": "0x00410170"
@@ -87858,21 +87863,26 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "a3137a67a53e819552600cc46625c3f86c904a672859c4624ab493adcdf539e4",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_SpendActionPointsClamped"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_SpendActionPointsClamped",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_SpendActionPointsClamped is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "95eeb7a70af6eb0a047958a0075f6cae47a6c7e9eae8e4ce08443d31f0ec2727"
+      }
     },
     {
       "name": "UnitStack_SpendActionPointsUnchecked",
       "original_address": "0x00410170",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 577,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "b26ac74cc2d1d28fd1f9fd3ab7643e58ce90bb06f65768273ddbbe05de7b3931",
+      "body_sha256": "43c8b3cbdb0341e5853c077dcd59616188c075ec9b6e928b90db7aa232926a3a",
       "original_address_range": {
         "start": "0x00410170",
         "end_exclusive": "0x004101A0"
@@ -87882,21 +87892,26 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "13d36556b2ec2832b14d32cad71727d15b32538e60eb944075b86804d8f3af70",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_SpendActionPointsUnchecked"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_SpendActionPointsUnchecked",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_SpendActionPointsUnchecked is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "41fbeb4603533fafa0d3c3d7ce567abd1d95292e51006d4c17d92bae3898b4af"
+      }
     },
     {
       "name": "UnitStack_SubtractActionPointsFloorZero",
       "original_address": "0x004101A0",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 596,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "5f6487556b53a89c8780de0ea07680e2b8e846995cb1a98d7b6a1dfa326d23c5",
+      "body_sha256": "5111f03733be3f765d0727fd16d63d9c03ca6a5d1c474ab78f80502595253647",
       "original_address_range": {
         "start": "0x004101A0",
         "end_exclusive": "0x004101E0"
@@ -87906,12 +87921,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "e71c344ac53cd8144fddd0d228b3aea80784e3816c3e5de3005779ad91860d21",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_SubtractActionPointsFloorZero"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_SubtractActionPointsFloorZero",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_SubtractActionPointsFloorZero is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "eeec3bbf77efae8813ec40b8bc6e4c60c48d73ca5f4bacfbda34ef1ecd427060"
+      }
     },
     {
       "name": "UnitStack_SpendActionPointsByIndexClamped",
@@ -88463,7 +88483,7 @@
       "original_line": 1603,
       "source": "src/units/UnitTurn.cpp",
       "linkage": "external",
-      "body_sha256": "8a26d94ae3470cdd2037c56e5fc5282673d381594b56fc4e61f51a31a0e71cdc",
+      "body_sha256": "26744d3f2ac4b53269008badf44c085bfd4ffc6f19c969dfed060ad8cb25eaf4",
       "original_address_range": {
         "start": "0x004118E0",
         "end_exclusive": "0x00411AB0"
@@ -88759,9 +88779,9 @@
       "original_address": "0x00412100",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 2099,
-      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "563564e98d5d707792779615c157d85f85508d69acc4974e4f1a4e7b8acf90dc",
+      "body_sha256": "df2756d6420f8c8a0d46fc976806b072f3e27a56b767ce949358c5e9e7d84d1e",
       "original_address_range": {
         "start": "0x00412100",
         "end_exclusive": "0x00412170"
@@ -88771,12 +88791,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "6f775eeb572294aa1f9fadc079ce0143f39a80c9164f986c0e04a6d17fb5ef65",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_HasNormalCombatUnits"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_HasNormalCombatUnits",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_HasNormalCombatUnits is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "9c87d2e955a32f2933bbda9b24aa7aa76c84633b6bcb82f0259bf9e6465d812f"
+      }
     },
     {
       "name": "UnitStack_HasGoldCargo",
@@ -89081,9 +89106,9 @@
       "original_address": "0x00412A30",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 2724,
-      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "b36b0081ca94921b85d8866060a7da8e694a7a2932a0860a5882d902226eab03",
+      "body_sha256": "e72bdbb6d9d7080fe051458eb81c4e702907c8671716e0bf9f20e845c541f033",
       "original_address_range": {
         "start": "0x00412A30",
         "end_exclusive": "0x00412A60"
@@ -89093,21 +89118,26 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "c9cb3477d69064174233195d64288a68ab55b00e16813471006ea36e470e3d98",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_SetSpentTurnFlag"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_SetSpentTurnFlag",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_SetSpentTurnFlag is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "e508d8adf401206a1ee5bd8e7d01327b56147602e31feb3112a81e0a70caf753"
+      }
     },
     {
       "name": "UnitStack_ClearSpentTurnFlag",
       "original_address": "0x00412A60",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 2743,
-      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "48902e2bad32212585dc6e625eaefec4ebe13ed5c8be7747f96aa420597586c7",
+      "body_sha256": "12cf1dd4e2294648cb0ef22abd1cf2d13dd9a65c58b5ae029c3060e8acf85e27",
       "original_address_range": {
         "start": "0x00412A60",
         "end_exclusive": "0x00412A90"
@@ -89117,21 +89147,26 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "4909259cf2a3979ea467c15964db5805d1cfc18119565333b0948111718f9624",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_ClearSpentTurnFlag"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_ClearSpentTurnFlag",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_ClearSpentTurnFlag is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "cf98d3370eda0261eb085929a735629948b5dc378124b0402f8851c49af42967"
+      }
     },
     {
       "name": "UnitStack_SetPlagueFlag",
       "original_address": "0x00412A90",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 2762,
-      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "2184eaa5663cb680cc74e6f05544d6a0fa612ac247128b2af70d8eedaa5dce88",
+      "body_sha256": "5283767eb76452f7a3b716feb1a19c956d67a300b1121e4bda22b859d8530e2c",
       "original_address_range": {
         "start": "0x00412A90",
         "end_exclusive": "0x00412AC0"
@@ -89141,12 +89176,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "c6183b0f7414ed6c7725bb20ce388ba4dbb9498f1a48bb46c571975bbee8882c",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_SetPlagueFlag"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_SetPlagueFlag",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_SetPlagueFlag is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "3114121af33606a15d0dbbc748250291d4b0e51b5245b1818320999bc90698db"
+      }
     },
     {
       "name": "UnitStack_HasPlague",
@@ -89235,9 +89275,9 @@
       "original_address": "0x00412B60",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 2842,
-      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
-      "body_sha256": "843e6362ede08465ea3b1ce3c7815a632c52c06ef2798a6dc3e1b8ac727d641a",
+      "body_sha256": "39a6d33b0883cde1d5f152056e414c9995d6fcd132ca0fac15cc57a0f77ed6b6",
       "original_address_range": {
         "start": "0x00412B60",
         "end_exclusive": "0x00412B90"
@@ -89247,12 +89287,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "6c6fd68220b703fbf2756a5e9003423b27d97b889b130be15d30d86d813cf156",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitStack_HasSpecialPersonageUnits"
+        "kind": "method",
+        "qualified_name": "clash95::UnitStack::UnitStack_HasSpecialPersonageUnits",
+        "header": "src/units/UnitStack.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitStack_HasSpecialPersonageUnits is assigned to the UnitStack behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitStack"
+      "class_owner": "clash95::UnitStack",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "51a08b4d9879a28bccc2208bc4f63e742c64fe8ea8b0adaf315b6e50b550de8a"
+      }
     },
     {
       "name": "UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck",
@@ -94189,9 +94234,9 @@
       "original_address": "0x0040EDE0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 5047,
-      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "source": "src/world/WorldMap.cpp",
       "linkage": "external",
-      "body_sha256": "a162c541acfcb813f46e3f99a9c16475e1cd33eed2ebf4bcee56e116de7f1357",
+      "body_sha256": "4f2893584859f624549fd401071bac119694748d97b2d463f537e8cac7e5e7ce",
       "original_address_range": {
         "start": "0x0040EDE0",
         "end_exclusive": "0x0040F060"
@@ -94201,21 +94246,26 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "9ea376802e69fe0c0d7de322a2b3d4f5b3bb6949b7fd2cd42834e5ff68d701df",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Map_RevealTileWithPropagation"
+        "kind": "method",
+        "qualified_name": "clash95::WorldMap::Map_RevealTileWithPropagation",
+        "header": "src/world/WorldMap.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Map_RevealTileWithPropagation is assigned to the WorldMap behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldMap"
+      "class_owner": "clash95::WorldMap",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "42fdf47ec34645497171fea579c9e359dbd07f30519a49b1d8b6b5fff3541ec4"
+      }
     },
     {
       "name": "Map_IsTileVisibleToPlayer",
       "original_address": "0x0040F060",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 5104,
-      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "source": "src/world/WorldMap.cpp",
       "linkage": "external",
-      "body_sha256": "4df8f0020b4ecf7295b995ff184b3b4b256a1d95f84555d10b7383f0d0b8da84",
+      "body_sha256": "abbc1be09cb5899d605bb59957b28d639af2045a0c18147498103388e26bb358",
       "original_address_range": {
         "start": "0x0040F060",
         "end_exclusive": "0x0040F0C0"
@@ -94225,21 +94275,26 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "9764f46ee0a41b02761c5d99a9456e50f1012d10d3fbb8e6f0b77f04acd12c3e",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Map_IsTileVisibleToPlayer"
+        "kind": "method",
+        "qualified_name": "clash95::WorldMap::Map_IsTileVisibleToPlayer",
+        "header": "src/world/WorldMap.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Map_IsTileVisibleToPlayer is assigned to the WorldMap behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldMap"
+      "class_owner": "clash95::WorldMap",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "ea03108b3bd7899cc1fd3694a994dce958539ba025bacb3401f2b0c2ad66e8e8"
+      }
     },
     {
       "name": "Map_ClassifyFogOfWarOverlayForPlayer",
       "original_address": "0x0040F0C0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 5118,
-      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "source": "src/world/WorldMap.cpp",
       "linkage": "external",
-      "body_sha256": "dcfa9e8b714e3ee6888da979a834b48ac5f80fc3b080fd261cc77c40bdb2bad9",
+      "body_sha256": "2e8214e73a8e2bdc3d73e33be0f109927b48312d4c00890e308319120125efee",
       "original_address_range": {
         "start": "0x0040F0C0",
         "end_exclusive": "0x0040F3C0"
@@ -94249,12 +94304,17 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "6c4b6790094be041531b08e79e773b8390c2368223a7e13e931049042d144dc4",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Map_ClassifyFogOfWarOverlayForPlayer"
+        "kind": "method",
+        "qualified_name": "clash95::WorldMap::Map_ClassifyFogOfWarOverlayForPlayer",
+        "header": "src/world/WorldMap.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Map_ClassifyFogOfWarOverlayForPlayer is assigned to the WorldMap behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldMap"
+      "class_owner": "clash95::WorldMap",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "f279b5cba1fd5e84e16875c86117d0934e064dc02139b1a82850a4ba3067165a"
+      }
     },
     {
       "name": "UnitStack_IsIndexOnMap",
@@ -94285,9 +94345,9 @@
       "original_address": "0x0040F440",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 5206,
-      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "source": "src/units/UnitSlot.cpp",
       "linkage": "external",
-      "body_sha256": "3dd05556f8bdc4fffbc54c94691e1ad3b280042dabd967ac2ecff751a823bf84",
+      "body_sha256": "09346d53e35f63f848447b6d7edfeaebd695e0d15aee9bf321e89f74511a3fd2",
       "original_address_range": {
         "start": "0x0040F440",
         "end_exclusive": "0x0040F4D0"
@@ -94297,12 +94357,17 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "6b5292c2a1e195c57bd7de317051d1f12bc06667920fa2f36b87e5a6ffc4beef",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "UnitSlot_InitFromType"
+        "kind": "method",
+        "qualified_name": "clash95::UnitSlot::UnitSlot_InitFromType",
+        "header": "src/units/UnitSlot.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "UnitSlot_InitFromType is assigned to the UnitSlot behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitSlot"
+      "class_owner": "clash95::UnitSlot",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "2c36e33a68789cb55c75c76b90a48e9a02791bdd0d4219c2efb18682fa40897c"
+      }
     },
     {
       "name": "UnitStack_ResetRecord",
@@ -97801,7 +97866,8 @@
         "src/world/0040A0E0_0040B020_world_002.cpp",
         "src/world/0040B0A0_0040D560_world_003.cpp",
         "src/world/0040D6D0_0040F4D0_world_004.cpp",
-        "src/world/WorldGeometry.cpp"
+        "src/world/WorldGeometry.cpp",
+        "src/world/WorldMap.cpp"
       ]
     }
   ]
