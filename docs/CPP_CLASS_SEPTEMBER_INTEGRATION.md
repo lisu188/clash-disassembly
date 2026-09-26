@@ -219,3 +219,84 @@ all rows are compared explicitly, and no baseline changes. The preparation and
 integrated logs are retained under `artifacts/cpp-classes/20260919/` in
 `header-policy-shadowing/` and `header-policy-integration/`. This tooling change
 does not modify any canonical implementation, storage or runtime behavior.
+
+## September 26 origin and hosted validation review
+
+Track: Win95 reconstruction, validating the 33-method class checkpoint.
+`e896279` integrates origin `44928710be14842127d9c581e2e67dfff2d65e09`,
+including the selected-slot predicate, strategic-AI projection repair, DLX
+extent names and the explicitly unvalidated Mission 05 bridge-probe draft.
+Only the status prepend conflicts; all incoming and class entries are retained.
+The class-header parameter checker correction remains, alongside origin's
+declaration-only parameter rename. The main checkout's unrelated working changes
+are preserved.
+
+Read-only integrated audits pass: 4,157 canonical identities, 33 adapters, 147
+TUs, the unchanged 718-function selection, all canonical hashes, and the DAT
+contract (16-byte label, 586,398-byte payload, 586,414-byte file). The nine
+workflow tests, three Markdown tests and five slot-override tests pass in WSL,
+including all thirteen strategic activation witnesses. These small checks do
+not substitute for integrated builds or runtime evidence.
+
+The earlier exact relocated class head `e188e2c` has a completed
+[hosted run](https://github.com/lisu188/clash-disassembly/actions/runs/35970985364):
+
+- Both supported production builds, warning checks, all eight asset-free gates
+  and both 12-test runner-policy suites pass.
+- The complete tooling run executes 560 tests with three workflow-condition
+  failures. They match the exact incoming `c9c0fa7`
+  [comparison run](https://github.com/lisu188/clash-disassembly/actions/runs/35965496476).
+  Origin's later AI validation commit corrects their prerequisite assertions;
+  the actual CLIPS prerequisites remain in the workflow.
+- The hosted GameRandom fixture passes. The interrupted local run's FAIL marker
+  has no retained traceback, so its cause remains unresolved. All three pinned
+  reference-file hashes match; a hosted pass does not erase the local failure.
+- GCC coverage passes at 6,168 / 6,659 executable lines (92.63%), with all 718
+  functions reached and zero uncovered. The exact hosted comparator measures
+  6,168 / 6,656: executable lines increase by three, covered lines have no net
+  increase, and fully covered functions change from 585 to 584. The three
+  prepared receiver-binding additions explain the expected denominator change,
+  but summary-only CI output cannot establish the integrated per-function
+  change or explain the unchanged numerator. These are not the older local
+  6,165 / 6,656 measurements.
+- The historical raw link gates remain failed: GCC differences change from
+  453 to 463 and Clang from 705 to 715, with zero cross-check errors. GCC's
+  visible additions are exactly the ten expected methods. The Clang diagnostic
+  list is truncated before those names, so those logs alone do not establish
+  the complete symbol comparison.
+
+The original remote jobs retained only pre-execution compiler logs for native
+coverage. They did not retain all 718 coverage rows or individual native
+outcomes. A new detailed run can compare current inputs, but cannot reconstruct
+the lost details of those historical runs. The review and artifact inventories
+are retained under `artifacts/cpp-classes/20260926/ci-review/`; the comparison
+receipt SHA256 is
+`3d8396daba96c927bfbe553bee229c32febf9acf48515cb1e8e7e83515188be2`.
+
+### Incoming header baseline change
+
+Origin commit `6ad7f2d` independently reseeds the header baseline and documents
+its dependency reasons. The five API additions match the tracked old/current
+sets; eighteen peer-edge rows increase, one decreases, and shared globals stay
+244. Integrating that published history does not repair the earlier 23 numeric
+failures: they become acceptable because the thresholds change. Retain the
+earlier frozen baseline and raw failure records for migration comparison;
+a pass against origin's new baseline is not class-behavior validation. The
+incoming record does not retain the complete old/current preprocessed member
+sets claimed in its narrative. No class batch reseeds the link, warning or
+coverage baselines.
+
+### Resource and runtime limits
+
+The user-required disk threshold is now less than 90% used on both the output
+filesystem and the Windows volume backing WSL, in addition to existing reserves.
+The host still exceeds that threshold. Local builds, native batches and fresh
+captures remain held. Small read-only checks use disabled Python bytecode
+generation; no installed tool or runtime asset is removed to obtain room.
+Verified cache cleanup and archive-member restoration maps are retained under
+`artifacts/cpp-classes/20260926/disk-cleanup/`.
+
+The full migration and full C++ reimplementation remain incomplete. Current
+33-method native outcome parity, original/reconstruction runtime comparisons,
+the default smoke suite, six completed-route regressions and the first-Road
+probe remain required. No campaign or visual-fidelity milestone advances.

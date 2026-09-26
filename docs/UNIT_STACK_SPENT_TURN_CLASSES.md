@@ -50,6 +50,16 @@ unchanged 60-second timeout. Sequential unchanged retries also time out. All fou
 failed attempts remain recorded; the relocation's remaining validation is pending
 under concurrent filesystem/resource pressure. No timeout or baseline is raised.
 
+The exact relocated commit `e188e2cd17193ddf84003437e48265432dbaa436`
+subsequently passes both hosted production builds, warning checks and all eight
+asset-free gates in [CI run 35970985364](https://github.com/lisu188/clash-disassembly/actions/runs/35970985364).
+The complete tooling run has 560 tests and only the three inherited workflow
+condition failures. The local source-audit timeouts and interrupted tooling
+attempt remain separate recorded outcomes; the hosted pass does not diagnose
+their cause. Full individual native outcomes and current runtime validation
+are still outstanding. See the
+[September 26 integration review](CPP_CLASS_SEPTEMBER_INTEGRATION.md#september-26-origin-and-hosted-validation-review).
+
 All 33 current canonical methods reside in six class-named files. Measured canonical
 executable lines change from nine to ten for each method and remain 94 for
 `Unit_NewTurn`. All three identities are outside the fixed 718-function set, so

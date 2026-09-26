@@ -59,10 +59,10 @@ in this preservation batch; the verified first-Road frontier above remains.
 
 Private worktree files, original startup captures, failed-stage logs and commands
 are hash-verified under the main checkout's
-`artifacts/worktree-retirement/1a34-20260926-merge/`; `preserved-files.json` records
+`artifacts/worktree-retirement/1a34-20260926-merge/`; the private preserved-files.json records
 the file inventory. The separate Linux build and interrupted C++ evidence root
-`/home/andrz/clash-mission05-20260924` is left in place. The archived `build.sh`
-and `run-route.sh` record the earlier compiler and route commands; their old
+`/home/andrz/clash-mission05-20260924` is left in place. The archived build.sh
+and run-route.sh record the earlier compiler and route commands; their old
 worktree paths require review before reuse. Retirement checks cover env syntax,
 DSL command/include references and whitespace only, not runtime behavior.
 

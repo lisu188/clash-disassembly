@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-26.
 
+## Class Checkpoint Origin Refresh And Hosted Evidence
+
+The 33-method checkpoint integrates origin `4492871`, preserving the incoming
+AI, selection and DLX work. Integrated identity, source, hash, coverage-metadata
+and save-format audits pass, as do the small workflow, Markdown and slot-override
+test suites. Exact earlier head `e188e2c` passes both hosted builds, warning
+checks, all eight asset-free gates and the 718-function coverage gate. Its
+completed tooling run retains only three inherited workflow-condition failures;
+the local interrupted RNG failure remains unexplained. Hosted coverage is
+6,168/6,659; the exact hosted comparator is 6,168/6,656. Individual coverage and
+native outcomes were not retained by those old jobs. Origin's header baseline
+reseed is reported separately from the historical migration failures. Local
+builds and fresh captures remain held above the 90% host-disk usage threshold.
+[Evidence, comparison limits and remaining work](CPP_CLASS_SEPTEMBER_INTEGRATION.md#september-26-origin-and-hosted-validation-review).
+
 ## DLX Physical Extent Names
 
 Track: Win95 reconstruction, evidence-backed numeric naming. Seven literals in
