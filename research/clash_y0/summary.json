@@ -1,0 +1,81 @@
+{
+  "generated_utc": "2026-09-24T09:43:53Z",
+  "unique_url_count": 1287,
+  "high_value_candidate_count": 4,
+  "downloaded_count": 17,
+  "downloaded_bytes": 4853296,
+  "error_count": 1270,
+  "deluxe_related_urls": [
+    "http://clash.y0.pl/clash-deluxe/"
+  ],
+  "download_related_urls": [
+    "http://clash.y0.pl/download/",
+    "http://forum.clash.y0.pl/download/file.php?avatar=2_1513884121.jpg"
+  ],
+  "live_candidate_links": [
+    "http://clash.y0.pl/download/",
+    "http://clash.y0.pl/download/#main",
+    "http://clash.y0.pl/clash-deluxe/",
+    "http://clash.y0.pl/download/##",
+    "http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F",
+    "http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F&format=xml",
+    "http://clash.y0.pl/clash-deluxe/#main",
+    "http://clash.y0.pl/clash-deluxe/##"
+  ],
+  "live_candidate_downloads": [
+    {
+      "url": "http://clash.y0.pl/clash-deluxe/",
+      "status": "downloaded",
+      "bytes": 52911,
+      "sha256": "267dbe0f6c4cdde87abdde44aaeb2c55a8208268e5a13f7abb64b9d19d55e59c",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "http://clash.y0.pl/clash-deluxe/",
+      "error": ""
+    },
+    {
+      "url": "http://clash.y0.pl/clash-deluxe/#main",
+      "status": "downloaded",
+      "bytes": 52911,
+      "sha256": "267dbe0f6c4cdde87abdde44aaeb2c55a8208268e5a13f7abb64b9d19d55e59c",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "http://clash.y0.pl/clash-deluxe/#main",
+      "error": ""
+    },
+    {
+      "url": "http://clash.y0.pl/download/",
+      "status": "downloaded",
+      "bytes": 52097,
+      "sha256": "83bbebe91c357698b3e635b310d396a0417b7a9f7af600ffc5a6352f8852939a",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "http://clash.y0.pl/download/",
+      "error": ""
+    },
+    {
+      "url": "http://clash.y0.pl/download/#main",
+      "status": "downloaded",
+      "bytes": 52097,
+      "sha256": "83bbebe91c357698b3e635b310d396a0417b7a9f7af600ffc5a6352f8852939a",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "http://clash.y0.pl/download/#main",
+      "error": ""
+    },
+    {
+      "url": "http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F",
+      "status": "downloaded",
+      "bytes": 3246,
+      "sha256": "bf355d6802177b49c77bb5173d1239452b8ca61f48219d2eed2e4513c020e0b1",
+      "content_type": "application/json; charset=UTF-8",
+      "final_url": "http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F",
+      "error": ""
+    },
+    {
+      "url": "http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F&format=xml",
+      "status": "downloaded",
+      "bytes": 3436,
+      "sha256": "53893ec0bed4e4a775118e690bc6d69516d613dc57128f5918dd182ea2e1f0cc",
+      "content_type": "text/xml; charset=UTF-8",
+      "final_url": "http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F&format=xml",
+      "error": ""
+    }
+  ]
+}

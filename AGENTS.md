@@ -207,6 +207,15 @@ but behavioral claims still require this evidence chain.
 - The original executable may be used as a local comparison oracle, never as a
   production dependency of the reimplementation.
 
+## 7a. Clash Deluxe / clash.y0.pl Corroboration
+
+- Historical-site recovery metadata lives in `research/clash_y0/`; refresh it with `tools/scrape_clash_y0.py`. The raw mirror belongs under ignored `artifacts/` and must not become a public dependency or be committed as third-party site/game content.
+- `Clash Deluxe 0.1` is secondary differential evidence. Its author reported changing specific values at specific addresses in `CLASH.EXE` with a hex editor, including unit stats/morale/terrain bonuses, queen-request costs, workshop/forge prices, licence and production costs, and text fixes.
+- Establish the executable lineage before interpreting byte offsets. `CLASH.EXE` may be a DOS-family executable; do not assume offsets or layouts match Win95 `clash95.exe`.
+- For a matching original/Deluxe pair, hash both, diff changed byte spans, and use the documented rebalance categories to prioritize candidate constants/records. Then prove semantics against `clash95.asm`, recovered source/data flow, structures and runtime evidence before promoting a name or behavior.
+- If the Deluxe binary is not byte-compatible with Win95, use its value ordering, table shape and changed-value relationships only as semantic corroboration. Record nonmatches and rejected cross-version candidates.
+- See `docs/CLASH_DELUXE_RESEARCH.md` for sources, recovery commands, generated manifests and confidence limits.
+
 ## 8. Confidence Rules
 
 - **High:** multiple independent signals align.

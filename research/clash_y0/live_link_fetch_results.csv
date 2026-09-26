@@ -1,0 +1,9 @@
+url,status,bytes,sha256,content_type,final_url,error
+http://clash.y0.pl/clash-deluxe/,downloaded,52911,267dbe0f6c4cdde87abdde44aaeb2c55a8208268e5a13f7abb64b9d19d55e59c,text/html; charset=UTF-8,http://clash.y0.pl/clash-deluxe/,
+http://clash.y0.pl/clash-deluxe/##,error,0,,,,HTTPError: HTTP Error 400: Bad Request
+http://clash.y0.pl/clash-deluxe/#main,downloaded,52911,267dbe0f6c4cdde87abdde44aaeb2c55a8208268e5a13f7abb64b9d19d55e59c,text/html; charset=UTF-8,http://clash.y0.pl/clash-deluxe/#main,
+http://clash.y0.pl/download/,downloaded,52097,83bbebe91c357698b3e635b310d396a0417b7a9f7af600ffc5a6352f8852939a,text/html; charset=UTF-8,http://clash.y0.pl/download/,
+http://clash.y0.pl/download/##,error,0,,,,HTTPError: HTTP Error 400: Bad Request
+http://clash.y0.pl/download/#main,downloaded,52097,83bbebe91c357698b3e635b310d396a0417b7a9f7af600ffc5a6352f8852939a,text/html; charset=UTF-8,http://clash.y0.pl/download/#main,
+http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F,downloaded,3246,bf355d6802177b49c77bb5173d1239452b8ca61f48219d2eed2e4513c020e0b1,application/json; charset=UTF-8,http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F,
+http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F&format=xml,downloaded,3436,53893ec0bed4e4a775118e690bc6d69516d613dc57128f5918dd182ea2e1f0cc,text/xml; charset=UTF-8,http://clash.y0.pl/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fclash.y0.pl%2Fclash-deluxe%2F&format=xml,
