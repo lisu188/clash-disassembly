@@ -23,6 +23,26 @@ No runtime, visual or campaign milestone advances. Original failures and all
 private evidence are preserved during worktree closeout.
 [Scope, provenance, exact receipts and validation limits](archive/literal_rules/F8_dlx_extents_findings.md#september-26-closeout).
 
+## Player-Info Sprite Loader Readability
+
+Track: Win95 reconstruction, Road-family selection-panel prerequisites.
+`UI_LoadCurrentPlayerInfoSpriteSet` now uses named values and an explicit
+allocation/load sequence, removes an uninitialized ignored allocator argument,
+and preserves original 32-bit filename wrap and pointer-handle representation.
+The public declaration and all 34 neighboring definitions remain unchanged.
+Actual-source contracts pass 40 cases across four supported compiler profiles;
+five deliberate mutations are rejected. The first production build stops on
+an unchanged file with `Cannot allocate memory`; its retained failure and the
+coordinated retry remain separate from the focused passes. PR #145 CI completes
+both production builds, warning gates, eight public CTests and the coverage
+gate; its original 550-test run retains three then-inherited workflow failures.
+The local retry at `75ae3c8` passes GCC build/warning/strict-surface checks and
+four public CTests; the Clang attempt remains incomplete. Closeout integrates
+main `4492871`, including its audit repairs and DLX naming; final integrated
+checks are recorded on PR #145. Panel caller defects remain a separate repair,
+and no runtime, visual or campaign milestone advances.
+[Loader evidence and limits](HUMAN_READABILITY.md#batch-22-ui_loadcurrentplayerinfospriteset).
+
 ## Recovered AI Slot Override Dispatch
 
 Track: strategic-AI validation prerequisite (Definition of Done items 8-10).

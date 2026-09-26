@@ -2255,6 +2255,111 @@ publication are bound separately to the compiled head. This integration
 supersedes the preceding checkpoint's pending-main status without replacing
 its historical measurements.
 
+### Batch 22: UI_LoadCurrentPlayerInfoSpriteSet
+
+Track: Win95 reconstruction, Road-family selection-panel prerequisites. The
+loader at `0x423370` now names its filename, allocation address, sprite-set
+pointer and retained logging inputs. It removes ghost copies and an
+uninitialized allocator argument, while keeping the public types, 24-byte
+filename buffer, 4112-byte allocation and existing outer-block free policy.
+The original free, clear, format, allocate, conditional load, publish and return
+order remains intact. The actual loader return value is still published and
+returned; no destructor, retry or fallback is introduced.
+
+Original `UI_SetCurrentPlayer` instructions at `clash95.asm:54311` through
+54361 and the current allocator/loader implementations support the change.
+Entry ECX is saved and overwritten; it is distinct from the allocator-call
+register. Zero is used because the current `Mem_Alloc` discards that argument,
+not because original ECX was proven zero. Unsigned 32-bit addition recovers the
+original wrapping increment before signed filename formatting. Decoding the
+allocation bits before widening and explicitly publishing the returned
+pointer's low 32 bits remove implicit address conversions. These are bounded
+arithmetic/address repairs, not claims that the old C++ had defined behavior
+at every boundary. Ordinary current allocations remain in the signed-safe
+low32 domain.
+
+Independent review confirms the applied definition equals the reviewed
+candidate. All 34 neighboring definitions and the public declaration remain
+unchanged; only the selected current manifest hash changes. Confidence is high
+for these source contracts. The original CRT's complete failure behavior and
+nested allocation cleanup remain unproven. Two panel callers still evaluate
+uninitialized context locals; those caller defects require the separate panel
+repair. The neighboring free helper's empty-path return is also deferred.
+
+The actual-source regression passes ten cases with GCC 13 and Clang 18 at O0
+and O2: 40 executions with warnings as errors and undefined-behavior checking.
+It observes helper order and global state, filename boundaries, allocation
+size, conditional loading, forwarded logging arguments, returned pointer and
+low32 publication. The old body is rejected for its uninitialized local under
+all four compiler profiles. Five compiled mutations fail for the intended
+reasons. Synthetic addresses are never dereferenced; wide synthetic return
+values test truncation outside the production allocator's domain. This is
+source/helper contract evidence, not original-executable or rendering proof.
+
+The first fresh GCC production build stops with `Cannot allocate memory` while
+compiling unchanged `src/units/UnitSlot.cpp`; there is no C++ diagnostic
+identifying the loader as the failure. The failed log and completed objects
+are retained.
+The local retry at `75ae3c8` subsequently passes the GCC build, warning gate,
+strict symbol/data comparison, exact raw-profile comparison and four public
+CTests. It preserves all 837 non-documentation inputs and the original failed
+attempt. The Clang attempt links the targets but has no terminal build/audit
+receipt after interruption; full local native validation is not claimed.
+Exact commands, source bindings, failed old-source builds and mutation
+diagnostics are retained under
+artifacts/readability/road-functions-20260906/batch-22-player-info-loader/.
+No runtime, visual or campaign milestone advances.
+
+#### Remote CI for the player-info loader
+
+[PR #145 validation run](https://github.com/lisu188/clash-disassembly/actions/runs/35969219707)
+is terminal at source commit `959803b`. Both GCC 13 and Clang 18 production
+builds, warning checks, eight public asset-free CTests and runner-policy checks
+pass. The separate GCC coverage gate passes with 6167/6656 executable lines
+(92.65%): 585 functions fully covered, 133 partially covered and none uncovered
+among the 718 selected functions. Successful CTest output suppresses the unit
+harness's individual results, so no isolated-case pass/crash count is inferred.
+
+The full tooling run executes 550 tests in 257.437 seconds and retains the
+three workflow-condition subtest failures present on published main `c9c0fa7`.
+The activation-witness payload and two missing private Markdown paths also
+match that main run. Both remote header logs contain 15 ratchet rows plus the
+same parameter-name policy finding; these remote measurements are distinct
+from the previously recorded 23 local ratchet rows. The overall CI result
+remains failed. Frozen baselines and policies are unchanged.
+
+The downloaded complete current link profiles, frozen link baselines and link
+diagnostic logs are byte-identical to main for both compilers. Complete header
+profiles, baselines and diagnostic logs are likewise byte-identical. Comparing
+compiler diagnostic messages after normalizing line/column locations and order
+finds only the removed loader `v5` uninitialized warning in each compiler;
+each total decreases from 6569 to 6568. This separates the loader improvement
+from the inherited surface failures.
+
+Full logs and downloaded diagnostics for both runs are retained under the
+batch-22 evidence directory. These remote measurements remain distinct from
+local strict comparisons and do not establish runtime/visual parity.
+
+#### September 26 integration and worktree closeout
+
+Closeout integrates main `4492871`, preserving the AI slot-override repair,
+reviewed header baseline, blocked bridge-probe draft and DLX extent names.
+The loader source, selected manifest body hash and actual-source test remain
+unchanged from reviewed source commit `959803b`. Both competing status/log
+entries are retained. Main's later audit repairs supersede the old activation,
+workflow-condition, Markdown and header failures for integration acceptance;
+the historical observations above retain their original commit scope.
+
+Fresh integrated CI is recorded on
+[PR #145](https://github.com/lisu188/clash-disassembly/pull/145).
+The requested worktree removal preserves ignored evidence and build trees
+under the main checkout's private
+artifacts/worktree-archives/a46b-20260926/ directory, with an old-root to
+archive-root relocation record. Historical hashes and paths are preserved;
+relocated CMake trees are evidence, not reusable configured builds. The shared
+main checkout's unrelated working changes remain untouched. No additional
+panel repair, runtime, visual-fidelity or campaign acceptance is claimed.
+
 ## Next migration batches
 
 The bounded `DLXSprite_LoadCachedEntry` view migration is recorded in

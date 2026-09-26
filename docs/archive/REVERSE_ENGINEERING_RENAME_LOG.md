@@ -1,5 +1,28 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-24 - Player-info sprite loader readability
+
+Track: Win95 reconstruction. Reviewed `UI_LoadCurrentPlayerInfoSpriteSet`
+(`0x423370`) against original `UI_SetCurrentPlayer`. Named the filename,
+allocation address, sprite pointer and logging inputs; removed ghost copies,
+an uninitialized ignored allocator argument and stale annotations. Explicit
+32-bit increment and handle conversions preserve the original register width.
+Call/write order, allocation size, public types and existing free policy remain;
+34 neighboring definitions are unchanged and one current body hash changes.
+Confidence is high within the recorded source/helper contract. Forty focused
+case executions pass under GCC/Clang O0/O2; five mutations are rejected.
+The first production build stops with `Cannot allocate memory` on unchanged
+`src/units/UnitSlot.cpp`; the failure is retained. The retry at `75ae3c8` passes
+the GCC build, warning check, strict surface comparison and four public CTests.
+The local Clang attempt lacks a terminal build/audit receipt and remains incomplete.
+PR #145 CI completes both production builds, warning gates, eight public CTests
+and coverage at 6167/6656 lines across all 718 selected functions. The remote
+550-test tooling run retains three workflow-condition failures. Main `4492871`
+is integrated for closeout, preserving its later audit repairs and DLX naming.
+Final integrated CI is recorded on PR #145. No original
+failure-path, leak-freedom, visual or campaign claim is added.
+[Evidence and deferred caller work](../HUMAN_READABILITY.md#batch-22-ui_loadcurrentplayerinfospriteset).
+
 ## 2026-09-26 - F8 DLX physical extent names
 
 Track: Win95 reconstruction. Seven unsuffixed literals in four canonical TUs
