@@ -1055,7 +1055,7 @@ int  BuildingSpriteCache_LoadEntry(
   mapThemeIndex = *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET);
   if ( mapThemeIndex == 0 )
   {
-    spriteHandleTheme0 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
+    spriteHandleTheme0 = Mem_Alloc(DLX_SPRITE_OBJECT_BYTES, entry_index, spriteAssetIndex, allocContext);
     if ( spriteHandleTheme0 )
       spriteHandleTheme0 = DLXSprite_LoadCachedEntry(spriteHandleTheme0, aBuildin1_s32, spriteAssetIndex);
     *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = spriteHandleTheme0;
@@ -1063,7 +1063,7 @@ int  BuildingSpriteCache_LoadEntry(
   }
   if ( mapThemeIndex == 1 )
   {
-    spriteHandleTheme1 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
+    spriteHandleTheme1 = Mem_Alloc(DLX_SPRITE_OBJECT_BYTES, entry_index, spriteAssetIndex, allocContext);
     if ( spriteHandleTheme1 )
       spriteHandleTheme1 = DLXSprite_LoadCachedEntry(spriteHandleTheme1, aBuildin2_s32, spriteAssetIndex);
     *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = spriteHandleTheme1;
@@ -1071,7 +1071,7 @@ int  BuildingSpriteCache_LoadEntry(
   }
   if ( mapThemeIndex == 2 )
   {
-    spriteHandleTheme2 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
+    spriteHandleTheme2 = Mem_Alloc(DLX_SPRITE_OBJECT_BYTES, entry_index, spriteAssetIndex, allocContext);
     if ( spriteHandleTheme2 )
       spriteHandleTheme2 = DLXSprite_LoadCachedEntry(spriteHandleTheme2, aBuildin3_s32, spriteAssetIndex);
     *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = spriteHandleTheme2;

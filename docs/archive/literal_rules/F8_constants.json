@@ -1,0 +1,26 @@
+[
+  {
+    "name": "DLX_SPRITE_OBJECT_BYTES",
+    "value": 22,
+    "spelling": "22",
+    "kind": "size",
+    "family": "dlx_sprite",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "behavior-confirmed",
+    "evidence": "Original set borrowed/owning allocation paths request EAX=16h before Mem_Alloc and sub_406260/sub_406350 (clash95.asm:8641-8648,8841-8846). Independent constructors and destructor use the final dword at +12h (9378,9476,9497,9553), ending at byte22. The unit cache requests 16h then calls sub_4060E0 (29726-29759); three building cache branches do the same (96621-96678). That loader stores/reads the same payload and serialized-size fields at +0Ah/+0Eh (9246,9290,9303-9325). DLXSpriteView::kObjectSize=22 and the tail assertion corroborate this physical record extent; preserve unsuffixed decimal 22."
+  },
+  {
+    "name": "DLX_SPRITE_PAYLOAD_HANDLE_BYTES",
+    "value": 4,
+    "spelling": "4",
+    "kind": "size",
+    "family": "dlx_sprite",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "behavior-confirmed",
+    "evidence": "Original copy loads ECX=4, targets object+0Ah, and copies the stored allocator result by dword/tail loop (clash95.asm:9547-9564). Independent constructor/destructor/serializer access the dword at +0Ah (9391,9494,9629), followed by serialized-size dword +0Eh (9380,9628). DLXSpriteView uint32_t payload access corroborates the original stored handle width. This is not native pointer width, array stride, or allocator alignment; preserve unsuffixed decimal 4."
+  }
+]

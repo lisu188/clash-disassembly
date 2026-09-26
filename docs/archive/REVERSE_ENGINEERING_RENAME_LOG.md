@@ -1,5 +1,23 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-26 - F8 DLX physical extent names
+
+Track: Win95 reconstruction. Seven unsuffixed literals in four canonical TUs
+and five functions now use `DLX_SPRITE_OBJECT_BYTES` (`22`, six allocations) and
+`DLX_SPRITE_PAYLOAD_HANDLE_BYTES` (`4`, one copy). Original allocation/copy
+instructions and independent field consumers establish both meanings with high
+confidence. Five current body hashes and two guards are refreshed; historical
+identities, hashes, arithmetic, types, public APIs and save layouts are preserved.
+
+The compiled `576bc2` comparison against incoming `c9c0fa7` passes for all 153
+debug-stripped objects per compiler, normalized disassembly, stripped executables
+and strict surfaces without allowances. Native case outcomes and complete
+coverage match the fresh baseline. Original local test timeouts, interrupted
+tooling and incomplete runtime attempts remain explicit; later main integration
+is not represented as having those compiled results. No behavioral repair,
+function rename or campaign promotion is included.
+[F8 evidence and closeout limits](literal_rules/F8_dlx_extents_findings.md#september-26-closeout).
+
 ## 2026-09-24 - Selected-slot predicate integration
 
 Track: Win95 reconstruction. Integrated the selected-slot readability checkpoint
