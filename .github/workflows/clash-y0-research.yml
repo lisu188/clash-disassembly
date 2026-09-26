@@ -1,0 +1,43 @@
+name: Refresh clash.y0.pl research
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - tools/scrape_clash_y0.py
+      - .github/workflows/clash-y0-research.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: clash-y0-research-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Crawl archive and hash recoverable files
+        run: >-
+          python3 tools/scrape_clash_y0.py
+          --output research/clash_y0
+          --mirror-dir "$RUNNER_TEMP/clash_y0_mirror"
+          --max-file-mib 128
+          --max-total-mib 512
+      - name: Commit refreshed metadata
+        shell: bash
+        run: |
+          if ! git status --porcelain -- research/clash_y0 | grep -q .; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add research/clash_y0
+          git commit -m "research: refresh clash.y0.pl archive metadata"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

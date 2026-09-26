@@ -83,3 +83,8 @@ __pycache__/
 
 # Rename-provenance ledgers are durable evidence (exception to *.jsonl).
 !docs/archive/*_rename_accum.jsonl
+
+# Historical web mirrors and third-party research downloads.
+/research/clash_y0/raw/
+/research/clash_y0/mirror/
+/research/clash_y0/downloads/
