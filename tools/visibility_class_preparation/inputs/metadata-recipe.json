@@ -1,0 +1,132 @@
+{
+  "reference_commit": "705fc0fe9b01b7587a7a6290f15379dbd8a1d264",
+  "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+  "header": "src/world/WorldMap.hpp",
+  "class_source": "src/world/WorldMap.cpp",
+  "identities": {
+    "Map_RevealTileWithPropagation": {
+      "baseline": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "a162c541acfcb813f46e3f99a9c16475e1cd33eed2ebf4bcee56e116de7f1357",
+        "implementation": {
+          "kind": "free",
+          "qualified_name": "Map_RevealTileWithPropagation"
+        }
+      },
+      "extraction": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "4f2893584859f624549fd401071bac119694748d97b2d463f537e8cac7e5e7ce",
+        "implementation": {
+          "kind": "method",
+          "qualified_name": "clash95::WorldMap::Map_RevealTileWithPropagation",
+          "header": "src/world/WorldMap.hpp"
+        },
+        "adapter": {
+          "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+          "body_sha256": "42fdf47ec34645497171fea579c9e359dbd07f30519a49b1d8b6b5fff3541ec4"
+        }
+      },
+      "relocation": {
+        "source": "src/world/WorldMap.cpp",
+        "body_sha256": "4f2893584859f624549fd401071bac119694748d97b2d463f537e8cac7e5e7ce",
+        "implementation": {
+          "kind": "method",
+          "qualified_name": "clash95::WorldMap::Map_RevealTileWithPropagation",
+          "header": "src/world/WorldMap.hpp"
+        },
+        "adapter": {
+          "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+          "body_sha256": "42fdf47ec34645497171fea579c9e359dbd07f30519a49b1d8b6b5fff3541ec4"
+        }
+      }
+    },
+    "Map_IsTileVisibleToPlayer": {
+      "baseline": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "4df8f0020b4ecf7295b995ff184b3b4b256a1d95f84555d10b7383f0d0b8da84",
+        "implementation": {
+          "kind": "free",
+          "qualified_name": "Map_IsTileVisibleToPlayer"
+        }
+      },
+      "extraction": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "abbc1be09cb5899d605bb59957b28d639af2045a0c18147498103388e26bb358",
+        "implementation": {
+          "kind": "method",
+          "qualified_name": "clash95::WorldMap::Map_IsTileVisibleToPlayer",
+          "header": "src/world/WorldMap.hpp"
+        },
+        "adapter": {
+          "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+          "body_sha256": "ea03108b3bd7899cc1fd3694a994dce958539ba025bacb3401f2b0c2ad66e8e8"
+        }
+      },
+      "relocation": {
+        "source": "src/world/WorldMap.cpp",
+        "body_sha256": "abbc1be09cb5899d605bb59957b28d639af2045a0c18147498103388e26bb358",
+        "implementation": {
+          "kind": "method",
+          "qualified_name": "clash95::WorldMap::Map_IsTileVisibleToPlayer",
+          "header": "src/world/WorldMap.hpp"
+        },
+        "adapter": {
+          "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+          "body_sha256": "ea03108b3bd7899cc1fd3694a994dce958539ba025bacb3401f2b0c2ad66e8e8"
+        }
+      }
+    },
+    "Map_ClassifyFogOfWarOverlayForPlayer": {
+      "baseline": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "dcfa9e8b714e3ee6888da979a834b48ac5f80fc3b080fd261cc77c40bdb2bad9",
+        "implementation": {
+          "kind": "free",
+          "qualified_name": "Map_ClassifyFogOfWarOverlayForPlayer"
+        }
+      },
+      "extraction": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "2e8214e73a8e2bdc3d73e33be0f109927b48312d4c00890e308319120125efee",
+        "implementation": {
+          "kind": "method",
+          "qualified_name": "clash95::WorldMap::Map_ClassifyFogOfWarOverlayForPlayer",
+          "header": "src/world/WorldMap.hpp"
+        },
+        "adapter": {
+          "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+          "body_sha256": "f279b5cba1fd5e84e16875c86117d0934e064dc02139b1a82850a4ba3067165a"
+        }
+      },
+      "relocation": {
+        "source": "src/world/WorldMap.cpp",
+        "body_sha256": "2e8214e73a8e2bdc3d73e33be0f109927b48312d4c00890e308319120125efee",
+        "implementation": {
+          "kind": "method",
+          "qualified_name": "clash95::WorldMap::Map_ClassifyFogOfWarOverlayForPlayer",
+          "header": "src/world/WorldMap.hpp"
+        },
+        "adapter": {
+          "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+          "body_sha256": "f279b5cba1fd5e84e16875c86117d0934e064dc02139b1a82850a4ba3067165a"
+        }
+      }
+    }
+  },
+  "binding": {
+    "class_owner": "WorldMap",
+    "qualified_name": "clash95::WorldMap::borrow",
+    "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+    "referenced_globals": [
+      "gameData"
+    ],
+    "body_sha256": "0ad90a88ccee42f0fbdc08a9ccfdcb09a985d599af267626a563be297d0ac1fc"
+  },
+  "allowance_suffixes": [
+    "",
+    "_origin",
+    "_latest_origin",
+    "_published_main",
+    "_september_main"
+  ]
+}

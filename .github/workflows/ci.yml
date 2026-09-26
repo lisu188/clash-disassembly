@@ -1,440 +1,130 @@
-name: CI
+name: WorldMap visibility preparation
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: visibility-preparation-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  repo-checks:
-    name: Repo checks
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Check out repository
-        id: checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install CLIPS runtime
-        id: clips
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends clips
-
-      - name: Compile Python tooling
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 -m py_compile tools/*.py
-
-      - name: Validate strategic AI BSAVE contract
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_bsave.py
-
-      - name: Validate strategic AI compiled primitives
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_primitives.py
-
-      - name: Validate direct matcher oracle primitive coverage
-        id: matcher-oracle-coverage
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: |
-          python3 tools/check_clash_matcher_eval_coverage.py --json clash_matcher_eval_coverage.json
-          python3 -m json.tool clash_matcher_eval_coverage.json >/dev/null
-
-      - name: Upload matcher oracle coverage report
-        if: ${{ always() && steps.matcher-oracle-coverage.outcome == 'success' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: clash-matcher-eval-coverage
-          path: clash_matcher_eval_coverage.json
-          if-no-files-found: error
-
-      - name: Validate strategic AI defclass recovery
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_classes.py
-
-      - name: Validate strategic AI deffacts recovery
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_deffacts.py
-
-
-      - name: Validate strategic AI slot facet recovery
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_slot_facets.py
-
-      - name: Validate strategic AI message-handler recovery
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_message_handlers.py
-
-      - name: Validate strategic AI RETE topology
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_rete.py
-
-      - name: Validate strategic AI LHS recovery
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_dat_lhs.py
-
-      - name: Inventory unresolved strategic AI matcher tests
-        id: matcher-inventory
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: |
-          python3 tools/check_clash_dat_unresolved.py --json clash_dat_unresolved_inventory.json
-          python3 -m json.tool clash_dat_unresolved_inventory.json >/dev/null
-
-      - name: Validate unified recovered CLP program
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 tools/check_clash_recovered_clp.py
-
-      - name: Load unified recovered CLP in CLIPS
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
-        run: python3 tools/check_clash_recovered_clips_load.py
-
-      - name: Validate recompiled strategic AI RETE path depth
-        id: recovered-rete
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
-        run: |
-          python3 tools/check_clash_recovered_rete_runtime.py --json clash_recovered_rete_runtime.json
-          python3 -m json.tool clash_recovered_rete_runtime.json >/dev/null
-
-      - name: Upload recompiled RETE path report
-        if: ${{ always() && steps.recovered-rete.outcome == 'success' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: clash-recovered-rete-runtime
-          path: clash_recovered_rete_runtime.json
-          if-no-files-found: error
-
-      - name: Validate reset-time strategic AI agenda
-        id: recovered-reset-agenda
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
-        run: |
-          python3 tools/check_clash_recovered_reset_agenda.py --json clash_recovered_reset_agenda.json
-          python3 -m json.tool clash_recovered_reset_agenda.json >/dev/null
-
-      - name: Upload reset-time agenda report
-        if: ${{ always() && steps.recovered-reset-agenda.outcome == 'success' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: clash-recovered-reset-agenda
-          path: clash_recovered_reset_agenda.json
-          if-no-files-found: error
-
-      - name: Validate strategic AI activation witnesses
-        id: recovered-activation-witnesses
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' && steps.clips.outcome == 'success' }}
-        run: |
-          python3 tools/check_clash_recovered_activation_witnesses.py --json clash_recovered_activation_witnesses.json
-          python3 -m json.tool clash_recovered_activation_witnesses.json >/dev/null
-
-      - name: Upload activation witness report
-        if: ${{ always() && steps.recovered-activation-witnesses.outcome == 'success' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: clash-recovered-activation-witnesses
-          path: clash_recovered_activation_witnesses.json
-          if-no-files-found: error
-
-      - name: Validate JSON files
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m json.tool RECOVERED_STRUCTURES.json >/dev/null
-          python3 -m json.tool UNIT_TYPES_AND_STATS.json >/dev/null
-          python3 -m json.tool data/recovered_sources.json >/dev/null
-          python3 -m json.tool data/recovered_warning_baseline.json >/dev/null
-          python3 -m json.tool data/link_surface_baseline.json >/dev/null
-          python3 -m json.tool data/recovered_decls.json >/dev/null
-          python3 -m json.tool data/subsystem_api.json >/dev/null
-          python3 -m json.tool data/header_surface_baseline.json >/dev/null
-          python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
-          python3 -m json.tool tests/unit/pure_set.json >/dev/null
-
-      - name: Upload unresolved matcher inventory
-        if: ${{ always() && steps.matcher-inventory.outcome == 'success' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: clash-dat-unresolved-matcher-inventory
-          path: clash_dat_unresolved_inventory.json
-          if-no-files-found: error
-
-      - name: Audit split sources and frozen metadata
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: |
-          python3 tools/audit_split_sources.py
-          python3 tools/migrate_pure_coverage_metadata.py --check
-          python3 tools/check_save_format_contract.py
-          python3 tools/gen_constant_guard.py --check
-          python3 tools/gen_recovered_structs.py --check
-          python3 tools/gen_unit_type_runtime_metadata.py --check
-
-      - name: Test declaration metadata and header boundaries
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: python3 -m unittest discover -s tests/tools -p 'test_*.py'
-
-      - name: Record current header-surface diagnostics
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        run: >-
-          PYTHONPATH=tools python3 -c
-          'import json; from audit_header_surface import surface_metrics; print(json.dumps({"schema_version": 1, **surface_metrics()}, indent=1, sort_keys=True))'
-          > header-surface-current.json
-
-      - name: Audit header surface and coupling ratchet
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 tools/audit_header_surface.py --mode check 2>&1 | tee header-surface.log
-
-      - name: Upload header-surface diagnostics
-        if: ${{ always() && steps.checkout.outcome == 'success' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: header-surface-diagnostics
-          path: |
-            header-surface.log
-            header-surface-current.json
-            data/header_surface_baseline.json
-          if-no-files-found: warn
-
-      - name: Check Markdown links
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}
-        id: markdown-links
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 tests/check_markdown_links.py 2>&1 | tee markdown-links.log
-
-      - name: Upload Markdown-link diagnostics
-        if: failure() && steps.markdown-links.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: markdown-link-diagnostics
-          path: markdown-links.log
-          if-no-files-found: error
-
-      - name: Check whitespace errors
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' }}
-        run: git diff --check
-
-  linux-build:
-    name: Linux ${{ matrix.compiler }} compile and link
-    runs-on: ubuntu-latest
+  preparation:
+    name: Visibility preparation (${{ matrix.id }})
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         include:
-          - compiler: GCC 13
-            cxx: g++-13
+          - id: gcc13
+            compiler: g++-13
             package: g++-13
-            compiler_id: gcc
-            warning_mode: check
-          - compiler: Clang 18
-            cxx: clang++-18
+          - id: clang18
+            compiler: clang++-18
             package: clang-18
-            compiler_id: clang
-            warning_mode: check
-
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PACKET: tools/visibility_class_preparation
     steps:
-      - name: Check out repository
+      - name: Check out exact diagnostic branch and reference history
+        id: checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install build dependencies
+      - name: Install required compiler
         id: dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev ${{ matrix.package }}
+          sudo apt-get install -y --no-install-recommends g++ ${{ matrix.package }}
+          command -v ${{ matrix.compiler }}
+          command -v g++
 
-      - name: Configure
-        env:
-          CXX: ${{ matrix.cxx }}
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
-
-      - name: Build split targets with asset-free tests
-        id: build
-        shell: bash
+      - name: Record source and compiler identity
+        id: identity
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.dependencies.outcome == 'success' }}
         run: |
-          if ! cmake --build build --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >compiler.log 2>&1; then
-            tail -n 200 compiler.log
-            exit 1
-          fi
+          PREPARATION="$RUNNER_TEMP/visibility-preparation"
+          EVIDENCE="$RUNNER_TEMP/visibility-evidence"
+          echo "PREPARATION=$PREPARATION" >> "$GITHUB_ENV"
+          echo "EVIDENCE=$EVIDENCE" >> "$GITHUB_ENV"
+          mkdir -p "$EVIDENCE"
+          git rev-parse HEAD > "$EVIDENCE/checkout.txt"
+          git rev-parse HEAD^{tree} > "$EVIDENCE/tree.txt"
+          ${{ matrix.compiler }} --version > "$EVIDENCE/compiler-version.txt"
+          python3 --version > "$EVIDENCE/python-version.txt"
+          df -h > "$EVIDENCE/filesystems.txt"
 
-      - name: Check recovered warning ratchet
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 tools/check_recovered_warnings.py compiler.log --compiler ${{ matrix.compiler_id }} --mode ${{ matrix.warning_mode }} 2>&1 | tee warning-ratchet.log
-
-      - name: Check linked symbol surface and data layout
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        shell: bash
+      - name: Materialize and verify pinned source stages
+        id: materialize
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
         run: |
           set -o pipefail
-          python3 tools/check_link_surface.py build/bin/clash95_bootstrap \
-            --lib build/lib/libclash95_recovered.a \
-            --compiler ${{ matrix.compiler_id }} --mode check 2>&1 | tee link-surface.log
+          python3 "$PACKET/materialize.py" --repo "$GITHUB_WORKSPACE" --output "$PREPARATION" 2>&1 | tee "$EVIDENCE/materialize.log"
 
-      - name: Record current link-surface diagnostics
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        run: |
-          python3 tools/check_link_surface.py build/bin/clash95_bootstrap \
-            --lib build/lib/libclash95_recovered.a \
-            --compiler ${{ matrix.compiler_id }} \
-            --baseline link-surface-current.json --mode update
-
-      - name: Run asset-free CTest gates
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        shell: bash
+      - name: Reproduce extraction and relocation recipes
+        if: ${{ !cancelled() && steps.materialize.outcome == 'success' }}
         run: |
           set -o pipefail
-          ctest --test-dir build -R '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' --output-on-failure --no-tests=error 2>&1 | tee asset-free-ctest.log
+          python3 "$PACKET/verify_recipe.py" --work-root "$PREPARATION" --output "$EVIDENCE/recipe" 2>&1 | tee "$EVIDENCE/recipe.log"
 
-      - name: Test unit runner failure policy
-        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
-        env:
-          CLASH95_RUNNER_TEST_CXX: ${{ matrix.cxx }}
-        run: python3 -m unittest discover -s tests/tools -p 'test_unit_runner.py' -v
+      - name: Validate extracted methods and compatibility adapters
+        if: ${{ !cancelled() && steps.materialize.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python3 "$PREPARATION/extraction/tests/tools/fixtures/class_world_visibility/verify_world_visibility.py" \
+            --root "$PREPARATION/extraction" --output "$EVIDENCE/extraction" \
+            --kind all --compiler "${{ matrix.compiler }}" \
+            --optimization O0 --optimization O2 --char-mode signed --char-mode unsigned \
+            2>&1 | tee "$EVIDENCE/extraction.log"
+          python3 "$PACKET/assert_profiles.py" --summary "$EVIDENCE/extraction/summary.json" --compiler "${{ matrix.compiler }}"
 
-      - name: Upload compiler diagnostics
-        if: ${{ always() && (steps.build.outcome == 'success' || steps.build.outcome == 'failure') }}
+      - name: Validate relocated class methods and compatibility adapters
+        if: ${{ !cancelled() && steps.materialize.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python3 "$PREPARATION/relocation/tests/tools/fixtures/class_world_visibility/verify_world_visibility.py" \
+            --root "$PREPARATION/relocation" --output "$EVIDENCE/relocation" \
+            --kind all --compiler "${{ matrix.compiler }}" \
+            --optimization O0 --optimization O2 --char-mode signed --char-mode unsigned \
+            2>&1 | tee "$EVIDENCE/relocation.log"
+          python3 "$PACKET/assert_profiles.py" --summary "$EVIDENCE/relocation/summary.json" --compiler "${{ matrix.compiler }}"
+
+      - name: Exercise public visibility unittest entry points
+        if: ${{ !cancelled() && steps.materialize.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python3 "$PACKET/run_public_entrypoints.py" --root "$PREPARATION/relocation" \
+            --compiler "${{ matrix.compiler }}" --output "$EVIDENCE/public-entrypoints.json" \
+            2>&1 | tee "$EVIDENCE/public-entrypoints.log"
+
+      - name: Verify extracted metadata and focused class tooling
+        if: ${{ !cancelled() && steps.materialize.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python3 "$PACKET/validate_tooling.py" --root "$PREPARATION/extraction" \
+            --output "$EVIDENCE/extraction-tooling" --compiler "${{ matrix.compiler }}" --metadata-only \
+            2>&1 | tee "$EVIDENCE/extraction-tooling.log"
+
+      - name: Verify relocated metadata and focused class tooling
+        if: ${{ !cancelled() && steps.materialize.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python3 "$PACKET/validate_tooling.py" --root "$PREPARATION/relocation" \
+            --output "$EVIDENCE/relocation-tooling" --compiler "${{ matrix.compiler }}" --metadata-only \
+            2>&1 | tee "$EVIDENCE/relocation-tooling.log"
+
+      - name: Retain preparation evidence including failures
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: recovered-${{ matrix.cxx }}-diagnostics
+          name: visibility-preparation-${{ matrix.id }}
           path: |
-            compiler.log
-            warning-ratchet.log
-            link-surface.log
-            link-surface-current.json
-            data/link_surface_baseline.json
-            asset-free-ctest.log
-            build/Testing/Temporary/LastTest.log
-          if-no-files-found: warn
-
-  unit-coverage:
-    name: Split unit coverage (${{ matrix.compiler }})
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - compiler: GCC 13
-            compiler_id: gcc13
-            cxx: g++-13
-            packages: g++-13
-            gcov_command: gcov-13
-          - compiler: Clang 18
-            compiler_id: clang18
-            cxx: clang++-18
-            packages: clang-18 llvm-18 libclang-rt-18-dev
-            gcov_command: llvm-cov-18 gcov
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev gdb ${{ matrix.packages }}
-
-      - name: Configure coverage build
-        env:
-          CXX: ${{ matrix.cxx }}
-        run: cmake -S . -B build/coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
-
-      - name: Build independently compiled unit harness
-        id: unit-build
-        shell: bash
-        run: |
-          if ! cmake --build build/coverage --target clash95_unit_tests -j2 >unit-compiler.log 2>&1; then
-            tail -n 200 unit-compiler.log
-            exit 1
-          fi
-
-      - name: Upload unit harness compiler diagnostics
-        if: always() && steps.unit-build.outcome != 'skipped'
-        uses: actions/upload-artifact@v4
-        with:
-          name: split-unit-compiler-diagnostics-${{ matrix.compiler_id }}
-          path: unit-compiler.log
-          if-no-files-found: warn
-
-      - name: Capture native registry and provenance
-        if: ${{ !cancelled() && steps.unit-build.outcome == 'success' }}
-        shell: bash
-        run: |
-          git rev-parse HEAD > native-revision.txt
-          ${{ matrix.cxx }} --version > native-compiler-version.txt
-          ${{ matrix.gcov_command }} --version > native-reader-version.txt
-          python3 tools/collect_native_test_evidence.py registry \
-            --binary build/coverage/bin/clash95_unit_tests --root . --output native-evidence
-
-      - name: Run split unit suite
-        id: unit-run
-        if: ${{ !cancelled() && steps.unit-build.outcome == 'success' }}
-        shell: bash
-        run: |
-          set -o pipefail
-          set +e
-          ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure --no-tests=error 2>&1 | tee native-ctest.log
-          pipeline_status=("${PIPESTATUS[@]}")
-          test_status=${pipeline_status[0]}
-          log_status=${pipeline_status[1]}
-          set -e
-          printf '%s\n' "$test_status" > native-ctest-exit.txt
-          printf '%s\n' "$log_status" > native-tee-exit.txt
-          if [[ "$test_status" -eq 0 ]]; then
-            exit "$log_status"
-          fi
-          exit "$test_status"
-
-      - name: Reconcile individual native outcomes
-        if: ${{ !cancelled() && (steps.unit-run.outcome == 'success' || steps.unit-run.outcome == 'failure') }}
-        shell: bash
-        run: |
-          python3 tools/collect_native_test_evidence.py reconcile \
-            --evidence native-evidence --log build/coverage/Testing/Temporary/LastTest.log \
-            --ctest-exit-code "$(cat native-ctest-exit.txt)"
-
-      - name: Enforce frozen coverage floor
-        if: ${{ !cancelled() && (steps.unit-run.outcome == 'success' || steps.unit-run.outcome == 'failure') }}
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 tools/measure_pure_coverage.py build/coverage --minimum 89.7 --require-functions 718 --require-zero-uncovered --worst 10 --json coverage.json --gcov-command ${{ matrix.gcov_command }} 2>&1 | tee coverage.log
-
-      - name: Upload native and coverage evidence
-        if: ${{ always() && (steps.unit-build.outcome == 'success' || steps.unit-build.outcome == 'failure') }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: split-unit-native-${{ matrix.compiler_id }}-${{ github.sha }}
-          path: |
-            native-evidence/
-            native-revision.txt
-            native-compiler-version.txt
-            native-reader-version.txt
-            native-ctest.log
-            native-ctest-exit.txt
-            native-tee-exit.txt
-            coverage.json
-            coverage.log
-            build/coverage/Testing/Temporary/LastTest.log
-          if-no-files-found: warn
+            ${{ runner.temp }}/visibility-evidence/
+            ${{ runner.temp }}/visibility-preparation/*.json
+            ${{ runner.temp }}/visibility-preparation/metadata-logs/
+          if-no-files-found: error
+          retention-days: 30

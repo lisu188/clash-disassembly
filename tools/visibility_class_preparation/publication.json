@@ -1,0 +1,53 @@
+{
+  "status": "provisional; root review required before publication",
+  "files": [
+    "README.md",
+    "apply_stage.py",
+    "audit_packet.py",
+    "candidate/tests/tools/fixtures/class_world_visibility/binding.cpp",
+    "candidate/tests/tools/fixtures/class_world_visibility/common.hpp",
+    "candidate/tests/tools/fixtures/class_world_visibility/fog.cpp",
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_ClassifyFogOfWarOverlayForPlayer.cpp",
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_IsTileVisibleToPlayer.cpp",
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_RevealTileWithPropagation.cpp",
+    "candidate/tests/tools/fixtures/class_world_visibility/references/provenance.json",
+    "candidate/tests/tools/fixtures/class_world_visibility/reveal.cpp",
+    "candidate/tests/tools/fixtures/class_world_visibility/verify_world_visibility.py",
+    "candidate/tests/tools/test_class_world_visibility.py",
+    "candidate/tests/tools/test_fog_overlay.py",
+    "candidate/tests/tools/test_reveal_propagation.py",
+    "expected-stages.json",
+    "input-provenance.json",
+    "inputs/WorldMap-borrow.cpp",
+    "inputs/WorldMap.hpp",
+    "inputs/adapters/Map_ClassifyFogOfWarOverlayForPlayer.cpp",
+    "inputs/adapters/Map_IsTileVisibleToPlayer.cpp",
+    "inputs/adapters/Map_RevealTileWithPropagation.cpp",
+    "inputs/canonical/Map_ClassifyFogOfWarOverlayForPlayer.cpp",
+    "inputs/canonical/Map_IsTileVisibleToPlayer.cpp",
+    "inputs/canonical/Map_RevealTileWithPropagation.cpp",
+    "inputs/input-freeze.json",
+    "inputs/metadata-recipe.json",
+    "inputs/object-audit/allowance-additions.json",
+    "inputs/relocation-WorldMap.cpp",
+    "materialize.py",
+    "packet-seal.json",
+    "packet_common.py",
+    "publication.json",
+    "validate_tooling.py",
+    "verify_recipe.py"
+  ],
+  "excluded_local_intake_scripts": [
+    "assemble_packet.py",
+    "finalize_input_receipt.py",
+    "seal_packet.py"
+  ],
+  "excluded_evidence": [
+    "pending-stages.tar.gz",
+    "historical archives",
+    "native objects/binaries",
+    "retail assets",
+    "captures",
+    "private saves"
+  ]
+}

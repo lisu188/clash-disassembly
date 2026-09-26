@@ -1,0 +1,166 @@
+{
+  "status": "provisional preparation input seal; no hosted or behavioral acceptance",
+  "created_utc": "2026-09-26T19:49:34.594728+00:00",
+  "reference_commit": "705fc0fe9b01b7587a7a6290f15379dbd8a1d264",
+  "public_payload_bytes_excluding_seal": 410175,
+  "file_map_sha256": "b2cef9c0274d7b22778878f676948a9a48170b858729051d12ed9326c83c1484",
+  "local_read_only_audit": {
+    "pass": true,
+    "python_files_parsed": 13,
+    "input_files_verified": 24,
+    "stage_file_counts": {
+      "baseline": 582,
+      "extraction": 593,
+      "relocation": 594
+    },
+    "compiler_runs": 0,
+    "tree_expansions": 0
+  },
+  "files": {
+    "README.md": {
+      "sha256": "d1cfee27db518fa6fe7f42a4a99dc15d462d138c437c2cee2022ff2f820abb1b",
+      "bytes": 7756
+    },
+    "apply_stage.py": {
+      "sha256": "484db03c9e93a1a6442497b9df62f1ea4bdfc3963feb586d8d9191d27d314ed2",
+      "bytes": 7899
+    },
+    "audit_packet.py": {
+      "sha256": "3eb06c33719ad6a3bbcedbd61a6471f3f6f1cc35423da6263d5674a0fd5f2c18",
+      "bytes": 2168
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/binding.cpp": {
+      "sha256": "316d33b05fb215eb4f223168307a66668f86dfff9390075ec958942792bea0ae",
+      "bytes": 4234
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/common.hpp": {
+      "sha256": "7ad76c6acefd069b2d760493073e229778e205b4fdcb762e122585de158efb5f",
+      "bytes": 300
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/fog.cpp": {
+      "sha256": "baf5eb1f0e938ecf55c8bc3c3d6d6d2688f678e77b3f9cfb12f15491ac69539e",
+      "bytes": 5361
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_ClassifyFogOfWarOverlayForPlayer.cpp": {
+      "sha256": "b7a523a4d7b8d8f32dd723efffb0492f5e7f39ac4c402a69967537fb246b36f8",
+      "bytes": 2192
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_IsTileVisibleToPlayer.cpp": {
+      "sha256": "d08e91f988d726ddfa445c4b35ac4e3297c8dd633ae0bb3c54733cce2157af7f",
+      "bytes": 649
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_RevealTileWithPropagation.cpp": {
+      "sha256": "627b1591b2b471420aaf237d7892342f5a235db34d19f78087472b939d9217dc",
+      "bytes": 2388
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/provenance.json": {
+      "sha256": "fdc4ba85c4247a3f2e1f2983ec7a97c00365bd7dedb11b2474acc760d3617994",
+      "bytes": 1089
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/reveal.cpp": {
+      "sha256": "606767d00ccd462d2f8b61b63823a8157bed47e9fd9ce24b837f205c5d5df368",
+      "bytes": 9991
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/verify_world_visibility.py": {
+      "sha256": "7573d3b6893327f75b214b21948de3d8623457af9bf746a098eeea71a32ccf25",
+      "bytes": 8030
+    },
+    "candidate/tests/tools/test_class_world_visibility.py": {
+      "sha256": "a55b21d38db647f7575fb49189d6cdedb292aa4b056b8ba36d16b7a10ef15cfb",
+      "bytes": 1031
+    },
+    "candidate/tests/tools/test_fog_overlay.py": {
+      "sha256": "04cb5662500675aab24ed313f44c07d23013ec494fd9cdc6329f608aec612751",
+      "bytes": 8037
+    },
+    "candidate/tests/tools/test_reveal_propagation.py": {
+      "sha256": "a53fd3964d796c82266fde7fa99ced784301b70bb74862e25afeb009e60a2a8f",
+      "bytes": 13348
+    },
+    "expected-stages.json": {
+      "sha256": "020b32398e04eb706731cbb51caa4c59629d773594fd55897b7b2f514bedef97",
+      "bytes": 210120
+    },
+    "input-provenance.json": {
+      "sha256": "ba1b2734febae9cdaafe1bd8dcc6455ff57465a9e89b240bb48065456c34489e",
+      "bytes": 7581
+    },
+    "inputs/WorldMap-borrow.cpp": {
+      "sha256": "b6031f36e808fd53464cb232a1b06869332c5acea1a23b3a219d8feb4ec6867c",
+      "bytes": 111
+    },
+    "inputs/WorldMap.hpp": {
+      "sha256": "708c08c875558090ce70f9866ad3a8f9250d05e0ce0ab12b134663948c0f676e",
+      "bytes": 633
+    },
+    "inputs/adapters/Map_ClassifyFogOfWarOverlayForPlayer.cpp": {
+      "sha256": "73512f209c2ef3dc7084e8e7ec35a616be92caea13bfc8c6d342b55ec21875dd",
+      "bytes": 231
+    },
+    "inputs/adapters/Map_IsTileVisibleToPlayer.cpp": {
+      "sha256": "390dca38c71cc78565b989c61c675ff8760cdc2cf50427916d328d7880732368",
+      "bytes": 203
+    },
+    "inputs/adapters/Map_RevealTileWithPropagation.cpp": {
+      "sha256": "6b9f29c606f209f57fc9af0d3fa3e8e97f64045e4e75e6efded63196a8619979",
+      "bytes": 217
+    },
+    "inputs/canonical/Map_ClassifyFogOfWarOverlayForPlayer.cpp": {
+      "sha256": "769acb5299d66c13dd69855b54f68053eea23ef5bcd64a621543395ffe3b8780",
+      "bytes": 2273
+    },
+    "inputs/canonical/Map_IsTileVisibleToPlayer.cpp": {
+      "sha256": "cc85fdcac3a494515d0ddd3b5b2d3bf1307e3afebe5af856388c6632ca0eb4eb",
+      "bytes": 763
+    },
+    "inputs/canonical/Map_RevealTileWithPropagation.cpp": {
+      "sha256": "f38c38e2123553e28638ea0b36cd7c6c024bc6eb953955d9b7f95472a060cd63",
+      "bytes": 2654
+    },
+    "inputs/input-freeze.json": {
+      "sha256": "e0e01626dee350ac36930a856a4edcb8ce4b8f127db7051f848a438ba342b9a2",
+      "bytes": 69057
+    },
+    "inputs/metadata-recipe.json": {
+      "sha256": "2e1108cbb6254b1320bd57def7b48bf304a8e6381ba5abac79aa4f64be934c74",
+      "bytes": 5051
+    },
+    "inputs/object-audit/allowance-additions.json": {
+      "sha256": "7ddabbfe525b6e4923ee55dc92d057c6340f7f7335c697022a6adca1074cceee",
+      "bytes": 7759
+    },
+    "inputs/relocation-WorldMap.cpp": {
+      "sha256": "76a729a836afe7e24bb68fc9f7d32d4dbf8308f76e4f1f3e99c9bfe32c72dd36",
+      "bytes": 6125
+    },
+    "materialize.py": {
+      "sha256": "9268f47a014d0b844a57cf1d493189e05d0923a803fe898d7bddc67e5faf5c51",
+      "bytes": 7739
+    },
+    "packet_common.py": {
+      "sha256": "302f1e7b15a8ba6a9815fe8ea2376161dc22a730af706f6e25d73837bcabc148",
+      "bytes": 5967
+    },
+    "publication.json": {
+      "sha256": "687c507f6fe0091c3620fced3171a11bbe5f99d9e7ac1f10a3eded58800c3ca6",
+      "bytes": 2165
+    },
+    "validate_tooling.py": {
+      "sha256": "ec4a417bb4f9d2aec340d9f68565b6bed015906eda89a35587617497d5fdb910",
+      "bytes": 4186
+    },
+    "verify_recipe.py": {
+      "sha256": "fca3f6b9bd39565cb81edda9d14d1d832e4eb7e6bb141c32d1abe2079583f0d7",
+      "bytes": 2867
+    }
+  },
+  "pending": [
+    "hosted materialization exact bytes",
+    "independent recipe exact bytes",
+    "16 focused compiler profiles and 48 runs",
+    "corrected public wrappers",
+    "focused metadata/tooling",
+    "current-head compatibility",
+    "production integration gates"
+  ]
+}

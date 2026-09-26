@@ -1,0 +1,149 @@
+{
+  "status": "provisional, not compiled or recipe-validated",
+  "reference_commit": "705fc0fe9b01b7587a7a6290f15379dbd8a1d264",
+  "archive": {
+    "name": "pending-stages.tar.gz",
+    "sha256": "673b0a678a4e55e79425861511ec85e74acce2ffa118f936b67aa911fa174887",
+    "bytes": 10369157
+  },
+  "files": {
+    "candidate/tests/tools/fixtures/class_world_visibility/binding.cpp": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/binding.cpp",
+      "sha256": "316d33b05fb215eb4f223168307a66668f86dfff9390075ec958942792bea0ae",
+      "bytes": 4234
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/common.hpp": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/common.hpp",
+      "sha256": "7ad76c6acefd069b2d760493073e229778e205b4fdcb762e122585de158efb5f",
+      "bytes": 300
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/fog.cpp": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/fog.cpp",
+      "sha256": "baf5eb1f0e938ecf55c8bc3c3d6d6d2688f678e77b3f9cfb12f15491ac69539e",
+      "bytes": 5361
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_ClassifyFogOfWarOverlayForPlayer.cpp": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/references/Map_ClassifyFogOfWarOverlayForPlayer.cpp",
+      "sha256": "b7a523a4d7b8d8f32dd723efffb0492f5e7f39ac4c402a69967537fb246b36f8",
+      "bytes": 2192
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_IsTileVisibleToPlayer.cpp": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/references/Map_IsTileVisibleToPlayer.cpp",
+      "sha256": "d08e91f988d726ddfa445c4b35ac4e3297c8dd633ae0bb3c54733cce2157af7f",
+      "bytes": 649
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/Map_RevealTileWithPropagation.cpp": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/references/Map_RevealTileWithPropagation.cpp",
+      "sha256": "627b1591b2b471420aaf237d7892342f5a235db34d19f78087472b939d9217dc",
+      "bytes": 2388
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/references/provenance.json": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/references/provenance.json",
+      "sha256": "fdc4ba85c4247a3f2e1f2983ec7a97c00365bd7dedb11b2474acc760d3617994",
+      "bytes": 1089
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/reveal.cpp": {
+      "archive_member": "relocation/tests/tools/fixtures/class_world_visibility/reveal.cpp",
+      "sha256": "606767d00ccd462d2f8b61b63823a8157bed47e9fd9ce24b837f205c5d5df368",
+      "bytes": 9991
+    },
+    "candidate/tests/tools/test_class_world_visibility.py": {
+      "archive_member": "relocation/tests/tools/test_class_world_visibility.py",
+      "sha256": "a55b21d38db647f7575fb49189d6cdedb292aa4b056b8ba36d16b7a10ef15cfb",
+      "bytes": 1031
+    },
+    "candidate/tests/tools/test_fog_overlay.py": {
+      "archive_member": "relocation/tests/tools/test_fog_overlay.py",
+      "sha256": "04cb5662500675aab24ed313f44c07d23013ec494fd9cdc6329f608aec612751",
+      "bytes": 8037
+    },
+    "candidate/tests/tools/test_reveal_propagation.py": {
+      "archive_member": "relocation/tests/tools/test_reveal_propagation.py",
+      "sha256": "a53fd3964d796c82266fde7fa99ced784301b70bb74862e25afeb009e60a2a8f",
+      "bytes": 13348
+    },
+    "inputs/WorldMap.hpp": {
+      "loose_source": "WorldMap.hpp",
+      "sha256": "708c08c875558090ce70f9866ad3a8f9250d05e0ce0ab12b134663948c0f676e",
+      "bytes": 633
+    },
+    "inputs/WorldMap-borrow.cpp": {
+      "loose_source": "WorldMap-borrow.cpp",
+      "sha256": "b6031f36e808fd53464cb232a1b06869332c5acea1a23b3a219d8feb4ec6867c",
+      "bytes": 111
+    },
+    "inputs/metadata-recipe.json": {
+      "loose_source": "metadata-recipe.json",
+      "sha256": "2e1108cbb6254b1320bd57def7b48bf304a8e6381ba5abac79aa4f64be934c74",
+      "bytes": 5051
+    },
+    "inputs/input-freeze.json": {
+      "loose_source": "input-freeze.json",
+      "sha256": "e0e01626dee350ac36930a856a4edcb8ce4b8f127db7051f848a438ba342b9a2",
+      "bytes": 69057
+    },
+    "inputs/object-audit/allowance-additions.json": {
+      "loose_source": "object-audit/allowance-additions.json",
+      "sha256": "7ddabbfe525b6e4923ee55dc92d057c6340f7f7335c697022a6adca1074cceee",
+      "bytes": 7759
+    },
+    "inputs/canonical/Map_RevealTileWithPropagation.cpp": {
+      "loose_source": "canonical/Map_RevealTileWithPropagation.cpp",
+      "sha256": "f38c38e2123553e28638ea0b36cd7c6c024bc6eb953955d9b7f95472a060cd63",
+      "bytes": 2654
+    },
+    "inputs/canonical/Map_IsTileVisibleToPlayer.cpp": {
+      "loose_source": "canonical/Map_IsTileVisibleToPlayer.cpp",
+      "sha256": "cc85fdcac3a494515d0ddd3b5b2d3bf1307e3afebe5af856388c6632ca0eb4eb",
+      "bytes": 763
+    },
+    "inputs/canonical/Map_ClassifyFogOfWarOverlayForPlayer.cpp": {
+      "loose_source": "canonical/Map_ClassifyFogOfWarOverlayForPlayer.cpp",
+      "sha256": "769acb5299d66c13dd69855b54f68053eea23ef5bcd64a621543395ffe3b8780",
+      "bytes": 2273
+    },
+    "inputs/adapters/Map_RevealTileWithPropagation.cpp": {
+      "loose_source": "adapters/Map_RevealTileWithPropagation.cpp",
+      "sha256": "6b9f29c606f209f57fc9af0d3fa3e8e97f64045e4e75e6efded63196a8619979",
+      "bytes": 217
+    },
+    "inputs/adapters/Map_IsTileVisibleToPlayer.cpp": {
+      "loose_source": "adapters/Map_IsTileVisibleToPlayer.cpp",
+      "sha256": "390dca38c71cc78565b989c61c675ff8760cdc2cf50427916d328d7880732368",
+      "bytes": 203
+    },
+    "inputs/adapters/Map_ClassifyFogOfWarOverlayForPlayer.cpp": {
+      "loose_source": "adapters/Map_ClassifyFogOfWarOverlayForPlayer.cpp",
+      "sha256": "73512f209c2ef3dc7084e8e7ec35a616be92caea13bfc8c6d342b55ec21875dd",
+      "bytes": 231
+    },
+    "candidate/tests/tools/fixtures/class_world_visibility/verify_world_visibility.py": {
+      "loose_source": "verify_world_visibility.py",
+      "sha256": "7573d3b6893327f75b214b21948de3d8623457af9bf746a098eeea71a32ccf25",
+      "bytes": 8030
+    },
+    "inputs/relocation-WorldMap.cpp": {
+      "archive_member": "relocation/src/world/WorldMap.cpp",
+      "sha256": "76a729a836afe7e24bb68fc9f7d32d4dbf8308f76e4f1f3e99c9bfe32c72dd36",
+      "bytes": 6125
+    }
+  },
+  "expected_overrides": [
+    {
+      "stage": "extraction",
+      "path": "tests/tools/fixtures/class_world_visibility/verify_world_visibility.py",
+      "archive_sha256": "b2dee942e7e7865213d30ba0afd7193aa0b3f25189e97fe46ec6aabe59f150fd",
+      "candidate_sha256": "7573d3b6893327f75b214b21948de3d8623457af9bf746a098eeea71a32ccf25",
+      "reason": "Final loose runner adds optional local resource guard and per-profile durable progress; methods and fixture assertions unchanged."
+    },
+    {
+      "stage": "relocation",
+      "path": "tests/tools/fixtures/class_world_visibility/verify_world_visibility.py",
+      "archive_sha256": "b2dee942e7e7865213d30ba0afd7193aa0b3f25189e97fe46ec6aabe59f150fd",
+      "candidate_sha256": "7573d3b6893327f75b214b21948de3d8623457af9bf746a098eeea71a32ccf25",
+      "reason": "Final loose runner adds optional local resource guard and per-profile durable progress; methods and fixture assertions unchanged."
+    }
+  ],
+  "publication_scope": "Only explicitly listed reconstructed source fixtures and metadata; historical archives and evidence are excluded.",
+  "expected_stages_sha256": "020b32398e04eb706731cbb51caa4c59629d773594fd55897b7b2f514bedef97"
+}
