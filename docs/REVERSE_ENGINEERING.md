@@ -48,7 +48,7 @@ When two sources disagree, prefer them in this order:
 
 Rule of thumb:
 - **map names** tell you what existed publicly,
-- **asm/c** tell you what the code actually does,
+- **assembly/C++** tell you what the code actually does,
 - **repo recovery files** tell you what the current project already considers stable,
 - **SDL / compat files** tell you where to place shims instead of burying semantics in fake Win32 code.
 

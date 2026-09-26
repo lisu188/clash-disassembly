@@ -4,7 +4,7 @@ Status: 2026-09-24.
 
 ## What is confirmed
 
-The now-unavailable `clash.y0.pl` site was an unofficial Polish Clash site with a separate forum. Boghute Ara advertised the site publicly in late 2015 and again in 2016. Community references identify pages for missions and gameplay mechanics, including the opening phase, queen, taxes, traps and ambushes.
+The historical `clash.y0.pl` site is an unofficial Polish Clash site with a separate forum. Boghute Ara advertised the site publicly in late 2015 and again in 2016. Community references identify pages for missions and gameplay mechanics, including the opening phase, queen, taxes, traps and ambushes. Reachability is a dated observation; use the retained metadata below rather than assuming the site remains available or unavailable.
 
 Boghute Ara described a fan modification developed by changing values at specific addresses in `CLASH.EXE` with a hex editor. The stated changes included typo fixes, queen-request costs, workshop and forge prices, unit licence and production costs, combat-stat rebalancing, selected terrain bonuses, and setting initial unit morale to 10. The author said the rebalance also affects both campaigns.
 
@@ -23,11 +23,19 @@ Primary external references used for this summary:
 
 Tracked generated metadata lives in `research/clash_y0/`:
 
-- `inventory.csv`: one row per normalized archived URL.
-- `download_candidates.csv`: URLs likely to be archives, executables, documents, patches, or download-related resources.
-- `fetch_results.csv`: result and SHA-256 for each attempted archived download during the refresh job.
-- `live_status.json`: current reachability of the historical site roots.
-- `summary.json`: capture and fetch totals plus Deluxe/download-related URLs.
+- [inventory.csv](../research/clash_y0/inventory.csv): one row per normalized archived URL.
+- [download_candidates.csv](../research/clash_y0/download_candidates.csv): URL-name candidates for archives, executables, documents, patches, or download-related resources; a candidate is not a verified mod binary.
+- [fetch_results.csv](../research/clash_y0/fetch_results.csv): result and SHA-256 for each attempted archived download during the refresh job.
+- [live_status.json](../research/clash_y0/live_status.json): reachability observed during the recorded refresh.
+- [summary.json](../research/clash_y0/summary.json): capture and fetch totals plus Deluxe/download-related URLs.
+- [live link results](../research/clash_y0/live_link_fetch_results.csv): content types, hashes and failures for the live candidate links.
+
+The retained summary dated 2026-09-24 reports 1,287 unique archived URLs, four
+high-value URL candidates, 17 downloaded responses and 1,270 errors. Its live
+root observations record HTTP 200 responses. The live candidate downloads are
+HTML pages and JSON/XML embed metadata; these records do not establish recovery
+of a Deluxe executable or archive. This documentation review reads the committed
+metadata and does not perform a new crawl or establish present-day availability.
 
 The raw mirror is intentionally not tracked. Use `artifacts/clash_y0_mirror/` or another ignored directory when reproducing it locally.
 
@@ -49,7 +57,7 @@ The GitHub workflow `.github/workflows/clash-y0-research.yml` also refreshes the
 
 Treat Clash Deluxe as a differential oracle, not as authoritative original behavior.
 
-1. Identify the recovered Deluxe archive or executable from `download_candidates.csv` and verify its SHA-256 from `fetch_results.csv` or a fresh local run.
+1. If a candidate yields a Deluxe archive or executable, identify it from [download candidates](../research/clash_y0/download_candidates.csv), verify its content type and bytes, and check its SHA-256 against [fetch results](../research/clash_y0/fetch_results.csv) or a fresh local run.
 2. Do not overwrite `clash95.exe`. Extract candidate files under `artifacts/` and record file type, size, hashes, embedded version strings and archive provenance.
 3. Determine which original executable family the mod targets before comparing offsets. The author explicitly called the modified file `CLASH.EXE`; that does not prove it is byte-compatible with this repository's Win95 `clash95.exe`.
 4. If a matching unmodified executable is available, byte-diff the pair. Coalesced changed spans are high-value candidates for gameplay constants or compact records.

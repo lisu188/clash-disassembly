@@ -1,11 +1,11 @@
 # Roadmap
 
-The repository has two active recovery tracks. See `docs/PROJECT_TRACKS.md` for
+The repository has two active recovery tracks. See [PROJECT_TRACKS.md](PROJECT_TRACKS.md) for
 current baselines and completion language.
 
 ## Immediate Sequence
 
-See `docs/PROJECT_TRACKS.md` → "Immediate priority sequence" for the current
+See [the immediate priority sequence](PROJECT_TRACKS.md#immediate-priority-sequence) for the current
 ordered near-term steps. The per-track goals below are the longer-term view.
 
 ## Campaign Recovery
@@ -24,7 +24,7 @@ ordered near-term steps. The per-track goals below are the longer-term view.
 - Keep `clash95_bootstrap` building cleanly under the SDL-backed runtime.
 - Preserve menu, route, timing, input, rendering, save-format, and multiplayer-map
   milestones while fixing reached blockers.
-- Continue replacing reached decompiler artifacts with assembly-backed recovered C.
+- Continue replacing reached decompiler artifacts with assembly-backed, maintainable C++.
 - Inventory and replace compatibility stubs only when active routes reach them.
 - Keep original game behavior out of platform and compile-only shims.
 - Do not add fake loops, objective-state shortcuts, or host-specific behavior as

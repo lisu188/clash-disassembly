@@ -53,23 +53,14 @@ the current docs:
 | `docs/archive/SUB_RENAME_INDEX.md` | canonical `sub_XXXXXX` ↔ semantic-name grep index (both directions) | `docs/STATUS.md`, `docs/REVERSE_ENGINEERING.md` |
 | `docs/archive/CLIPS_SOURCE_CROSSREF.md` | CLIPS engine source cross-reference (accuracy check) | `docs/STATUS.md`, `docs/REVERSE_ENGINEERING.md` |
 
-## Current Public Docs
+## Current navigation and dated status ledger
 
-| Path | Classification |
-| --- | --- |
-| `README.md` | concise project entrypoint |
-| `docs/STATUS.md` | current validated state and active blocker |
-| `docs/ROADMAP.md` | near-term and long-term recovery goals |
-| `docs/BUILD_AND_TEST.md` | build, CTest, route, validation, and env-var commands |
-| `docs/RUNTIME_MILESTONES.md` | validated route/milestone table with gaps |
-| `docs/REVERSE_ENGINEERING.md` | source-of-truth, naming, and patch policy |
-| `docs/STRUCTURES.md` | structure/data recovery policy and metadata links |
-| `docs/SAVE_DAT_FORMAT.md` | focused save-format evidence |
-| `docs/artifacts.md` | artifact retention and pruning policy |
-| `docs/probes/README_campaign_arc_probe.md` | full campaign route framework notes |
-| `docs/probes/README_first_campaign_arc_probe.md` | first-campaign wrapper notes |
-| `docs/probes/README_first_campaign_mission00_gate_probe.md` | mission-00 regression gate notes |
-| `docs/probes/README_first_mission_stack6_probe.md` | historical stack6 probe notes |
+Use the [documentation guide](../README.md) for the maintained topic index.
+[STATUS_20260926.md](STATUS_20260926.md) preserves the complete pre-consolidation
+status ledger from main `26f5f35`, including dated runtime/class/readability
+receipts and superseded assumptions. Current status now lives in
+[STATUS.md](../STATUS.md); do not treat historical "current" headings as a live
+queue. No recorded batch evidence was removed in this consolidation.
 
 ## Retained In Place
 

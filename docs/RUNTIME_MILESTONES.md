@@ -5,7 +5,10 @@ progress logs.
 
 ## Validation Commands
 
-The canonical build/test/probe command reference is `docs/BUILD_AND_TEST.md`.
+The canonical build/test/probe command reference is [BUILD_AND_TEST.md](BUILD_AND_TEST.md).
+The table's `build` directory is an example: substitute the configured compiler
+directory, such as `build/gcc-13`. Measurements below are retained milestones,
+not a claim that every listed probe was rerun on the current revision.
 The milestone table below maps each route/runtime milestone to the test that
 exercises it and the durable evidence it produces.
 
@@ -21,7 +24,7 @@ exercises it and the durable evidence it produces.
 | Direct first mission route smoke | `ctest --test-dir build -R clash95_direct_a0_route_smoke --output-on-failure` | `tests/verify_direct_a0_route_smoke.sh` | Direct route remains diagnostic, not final campaign acceptance. |
 | First mission playability probe | `ctest --test-dir build -R clash95_first_mission_playability_probe --output-on-failure` | `tests/run_first_mission_playability_probe.sh`, stack selection plus split-move markers | Historical probe; route table now tracks mission `00` completion. |
 | First mission attack probe | `ctest --test-dir build -R clash95_first_mission_attack_probe --output-on-failure` | `tests/run_first_mission_attack_probe.sh` | Historical first-mission attack coverage. |
-| Starting castle economy dialog | `CLASH95_ENABLE_CASTLE_ECONOMY_REGRESSION=1 ctest --test-dir build -R clash95_castle_economy_regression --output-on-failure` | `tests/run_castle_economy_probe.sh`, castle hotspot and economy frame metrics | Opt-in real-input coverage depends on SDL/X11 availability. |
+| Starting castle economy dialog | `CLASH95_ENABLE_CASTLE_ECONOMY_REGRESSION=1 ctest --test-dir build -R clash95_castle_economy_regression --output-on-failure` | `tests/run_castle_economy_probe.sh`, castle hotspot and economy frame metrics | Enabled by default by CMake; requires retail assets and headless SDL/X11. |
 | Main-menu endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_DURATION_SECONDS=120 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/main-menu-idle/latest.txt` | Soak probe only; artifacts are ignored unless promoted deliberately. |
 | First-mission world-map endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=world-map-pan CLASH95_SOAK_DURATION_SECONDS=120 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/world-map-pan/latest.txt` | Soak probe only. |
 | Starting castle economy endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=castle-economy CLASH95_SOAK_DURATION_SECONDS=120 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/castle-economy/latest.txt` | Soak probe only. |
