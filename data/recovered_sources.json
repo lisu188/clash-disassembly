@@ -2,7 +2,7 @@
   "schema_version": 3,
   "language": "GNU C++20",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.cpp",
-  "source_file_count": 147,
+  "source_file_count": 148,
   "function_count": 4157,
   "functions": [
     {
@@ -94234,7 +94234,7 @@
       "original_address": "0x0040EDE0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 5047,
-      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "source": "src/world/WorldMap.cpp",
       "linkage": "external",
       "body_sha256": "4f2893584859f624549fd401071bac119694748d97b2d463f537e8cac7e5e7ce",
       "original_address_range": {
@@ -94263,7 +94263,7 @@
       "original_address": "0x0040F060",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 5104,
-      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "source": "src/world/WorldMap.cpp",
       "linkage": "external",
       "body_sha256": "abbc1be09cb5899d605bb59957b28d639af2045a0c18147498103388e26bb358",
       "original_address_range": {
@@ -94292,7 +94292,7 @@
       "original_address": "0x0040F0C0",
       "original_source": "src/recovered/world/00408030_world_map.inc.c",
       "original_line": 5118,
-      "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+      "source": "src/world/WorldMap.cpp",
       "linkage": "external",
       "body_sha256": "2e8214e73a8e2bdc3d73e33be0f109927b48312d4c00890e308319120125efee",
       "original_address_range": {
@@ -97866,7 +97866,8 @@
         "src/world/0040A0E0_0040B020_world_002.cpp",
         "src/world/0040B0A0_0040D560_world_003.cpp",
         "src/world/0040D6D0_0040F4D0_world_004.cpp",
-        "src/world/WorldGeometry.cpp"
+        "src/world/WorldGeometry.cpp",
+        "src/world/WorldMap.cpp"
       ]
     }
   ]
