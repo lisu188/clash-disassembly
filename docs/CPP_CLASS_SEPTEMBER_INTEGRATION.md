@@ -355,7 +355,40 @@ Offline reconciliations on the retained candidate Clang and reference GCC logs
 recover complete 1101/1/514 and 1100/0/516 counts respectively. They pin their
 original evidence and tool hashes but do not rerun native tests or assert fresh
 hosted binary/HEAD verification. Exact hosted validation of the final parser
-remains pending. Collection success is not native-suite success.
+remained pending at that checkpoint. Collection success is not native-suite
+success.
+
+### Exact hosted validation of the collector correction
+
+[Run 36266431294](https://github.com/lisu188/clash-disassembly/actions/runs/36266431294)
+validates head `12ff25bc1a62d4036850f4db53f016d849234fea` through merge
+`66bbded1499acbe4318f218aee05cac6c6fa1971`, with an identical tree. The
+hosted tool hash matches the final focused-test receipt. Both collectors
+successfully retain all 1,616 outcomes and exercise actual joined records:
+GCC `cov2_08_crtexcfilter.cold_call`, and Clang
+`cov21_messagehandler.register_system_handlers`. Their prefixes remain
+unattributed; the earlier failed receipts are not replaced.
+
+Both production builds, warning checks, all eight asset-free gates and both
+runner-policy suites pass. All 600 tooling tests pass in 277.493 seconds;
+Markdown, current header and strategic activation checks also pass. GCC retains
+exactly 1100/0/516 native outcomes and 6170/6659 coverage. Clang records
+1100/1/515; all 718 coverage rows are identical to the earlier candidate,
+including 6814/7348 covered/executable lines and eight uncovered functions.
+
+`cov20_crt.tz_year_starts_label6_a1_flag_set` changes from PASS to CRASH against
+both the earlier candidate and current-main reference. The earlier
+Definstances PASS-to-CRASH observation also persists against the reference.
+No production or native fixture files changed from `212bb55`. This establishes
+an outcome variation with unchanged source, not its precise cause or a resolved
+regression. The Clang assertion, zero-uncovered gate and both historical raw
+link checks still fail. The draft is not ready for migration acceptance.
+
+Logs, exact checkout/tool identities, original collection receipts, all native
+rows and coverage comparisons are retained under
+`artifacts/cpp-classes/20260926/ci-review/integrated12ff25b/`. This follow-up
+changes validation tooling and documentation only; it adds no class method,
+runtime or campaign milestone.
 
 ### Incoming header baseline change
 

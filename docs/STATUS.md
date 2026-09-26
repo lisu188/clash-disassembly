@@ -5,19 +5,21 @@ Last consolidated: 2026-09-26.
 ## Class Checkpoint Origin Refresh And Hosted Evidence
 
 The 33-method checkpoint integrates origin `26f5f35`, preserving the incoming
-AI, selection, DLX and player-info loader work. Hosted head `212bb55` passes
-both production builds, warning checks, all eight asset-free gates and all 597
+AI, selection, DLX and player-info loader work. Hosted head `12ff25b` passes
+both production builds, warning checks, all eight asset-free gates and all 600
 tooling tests. Detailed evidence now retains all 1,616 native outcomes and 718
 coverage rows per compiler. GCC matches current main's individual outcomes
 (1,100 passes, 516 crashes); coverage is 6,170/6,659 with no uncovered functions.
-Clang records 1,101 passes, one assertion failure and 514 crashes, including one
-PASS-to-CRASH change against the matched reference. Its 6,814/7,348 coverage
+Clang records 1,100 passes, one assertion failure and 515 crashes, including two
+PASS-to-CRASH changes against the matched reference. Its 6,814/7,348 coverage
 retains eight uncovered functions, so the Clang gates remain failed. Both
 executable denominators increase by exactly three covered receiver-binding
 lines. Historical link failures and the interrupted local RNG failure remain.
 The native-log collector now handles complete exception records after concurrent
-diagnostics; 19 focused tests pass, with exact hosted validation pending.
-Original collection failures and offline reconciliations remain separate.
+diagnostics; 19 focused tests and both hosted collectors pass. Both compiler
+jobs exercise actual joined records. Original collection failures and offline
+reconciliations remain separate. Production and native fixture bytes are
+unchanged from `212bb55`; the additional Clang outcome variation remains open.
 Origin's header baseline reseed is not a class-behavior repair. Local builds
 and fresh captures remain held above the 90% host-disk usage threshold.
 [Evidence, comparison limits and remaining work](CPP_CLASS_SEPTEMBER_INTEGRATION.md#detailed-integrated-candidate-and-current-main-reference).
