@@ -11,6 +11,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import sys
 import unittest
 
 
@@ -113,6 +114,19 @@ class FogOverlayTest(unittest.TestCase):
         compiler = next((shutil.which(name) for name in candidates if shutil.which(name)), None)
         if compiler is None:
             self.skipTest("required C++ compiler unavailable: " + ", ".join(candidates))
+        # Migrated identities resolve to actual qualified methods and adapters.
+        # The original truth table below remains available for unmigrated pins.
+        import json
+        root = Path(__file__).resolve().parents[2]
+        manifest = json.loads((root / "data/recovered_sources.json").read_text())
+        identity = next(row for row in manifest["functions"] if row["name"] == "Map_ClassifyFogOfWarOverlayForPlayer")
+        if identity["implementation"]["kind"] == "method":
+            with tempfile.TemporaryDirectory(prefix="clash95-visibility-fog-") as temp:
+                command = [sys.executable, str(root / "tests/tools/fixtures/class_world_visibility/verify_world_visibility.py"),
+                           "--root", str(root), "--output", str(Path(temp) / "result"), "--kind", "fog", "--compiler", compiler]
+                run = subprocess.run(command, capture_output=True, text=True, timeout=240)
+                self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+            return
         match = re.search(
             r"(?m)^signed int\s+Map_ClassifyFogOfWarOverlayForPlayer\([^\n]*\)\n\{.*?^\}",
             SOURCE.read_text(), re.DOTALL)

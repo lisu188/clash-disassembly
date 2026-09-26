@@ -94236,7 +94236,7 @@
       "original_line": 5047,
       "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
       "linkage": "external",
-      "body_sha256": "a162c541acfcb813f46e3f99a9c16475e1cd33eed2ebf4bcee56e116de7f1357",
+      "body_sha256": "4f2893584859f624549fd401071bac119694748d97b2d463f537e8cac7e5e7ce",
       "original_address_range": {
         "start": "0x0040EDE0",
         "end_exclusive": "0x0040F060"
@@ -94246,12 +94246,17 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "9ea376802e69fe0c0d7de322a2b3d4f5b3bb6949b7fd2cd42834e5ff68d701df",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Map_RevealTileWithPropagation"
+        "kind": "method",
+        "qualified_name": "clash95::WorldMap::Map_RevealTileWithPropagation",
+        "header": "src/world/WorldMap.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Map_RevealTileWithPropagation is assigned to the WorldMap behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldMap"
+      "class_owner": "clash95::WorldMap",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "42fdf47ec34645497171fea579c9e359dbd07f30519a49b1d8b6b5fff3541ec4"
+      }
     },
     {
       "name": "Map_IsTileVisibleToPlayer",
@@ -94260,7 +94265,7 @@
       "original_line": 5104,
       "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
       "linkage": "external",
-      "body_sha256": "4df8f0020b4ecf7295b995ff184b3b4b256a1d95f84555d10b7383f0d0b8da84",
+      "body_sha256": "abbc1be09cb5899d605bb59957b28d639af2045a0c18147498103388e26bb358",
       "original_address_range": {
         "start": "0x0040F060",
         "end_exclusive": "0x0040F0C0"
@@ -94270,12 +94275,17 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "9764f46ee0a41b02761c5d99a9456e50f1012d10d3fbb8e6f0b77f04acd12c3e",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Map_IsTileVisibleToPlayer"
+        "kind": "method",
+        "qualified_name": "clash95::WorldMap::Map_IsTileVisibleToPlayer",
+        "header": "src/world/WorldMap.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Map_IsTileVisibleToPlayer is assigned to the WorldMap behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldMap"
+      "class_owner": "clash95::WorldMap",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "ea03108b3bd7899cc1fd3694a994dce958539ba025bacb3401f2b0c2ad66e8e8"
+      }
     },
     {
       "name": "Map_ClassifyFogOfWarOverlayForPlayer",
@@ -94284,7 +94294,7 @@
       "original_line": 5118,
       "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
       "linkage": "external",
-      "body_sha256": "dcfa9e8b714e3ee6888da979a834b48ac5f80fc3b080fd261cc77c40bdb2bad9",
+      "body_sha256": "2e8214e73a8e2bdc3d73e33be0f109927b48312d4c00890e308319120125efee",
       "original_address_range": {
         "start": "0x0040F0C0",
         "end_exclusive": "0x0040F3C0"
@@ -94294,12 +94304,17 @@
       "legacy_path": "src/recovered/world/00408030_world_map.inc.c",
       "legacy_body_sha256": "6c4b6790094be041531b08e79e773b8390c2368223a7e13e931049042d144dc4",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Map_ClassifyFogOfWarOverlayForPlayer"
+        "kind": "method",
+        "qualified_name": "clash95::WorldMap::Map_ClassifyFogOfWarOverlayForPlayer",
+        "header": "src/world/WorldMap.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Map_ClassifyFogOfWarOverlayForPlayer is assigned to the WorldMap behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldMap"
+      "class_owner": "clash95::WorldMap",
+      "adapter": {
+        "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
+        "body_sha256": "f279b5cba1fd5e84e16875c86117d0934e064dc02139b1a82850a4ba3067165a"
+      }
     },
     {
       "name": "UnitStack_IsIndexOnMap",

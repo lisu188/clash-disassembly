@@ -200,6 +200,48 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC1ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ],
       "archive_text": [
@@ -398,6 +440,48 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC1ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ]
     },
@@ -584,6 +668,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ],
       "archive_text": [
@@ -768,6 +887,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical UnitStack spent-turn operation; preserves the separately repaired uint32 entry and return arithmetic, complete packed bytes and explicit legacy adapters."
+        },
+        {
+          "name": "_ZN7clash958WorldMap6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered binding factory at the original world adapter anchor; borrows the gameData variable without caching its current handle or changing storage."
+        },
+        {
+          "name": "_ZN7clash958WorldMapC2ERi",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial private constructor binds only the live gameData reference; no allocation, state read, mutation or gameplay action."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap25Map_IsTileVisibleToPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap29Map_RevealTileWithPropagationEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
+        },
+        {
+          "name": "_ZNK7clash958WorldMap36Map_ClassifyFogOfWarOverlayForPlayerEiii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldMap visibility operation; preserves complete visibility bytes, live arena rebinding, ordered callbacks and explicit legacy adapter."
         }
       ]
     }
