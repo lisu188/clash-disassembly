@@ -32,6 +32,40 @@ no engine-authored arrival save exists. The complete original evidence is under
 Do not restore transfer shortcuts. Tactical entry, objective completion and menu
 advancement remain separate gates; mission 05 stays partial and completion 6/20.
 
+## Unvalidated bridge draft preserved at worktree retirement (2026-09-26)
+
+`mission_05_bridge_probe.env` and `mission_05_bridge_probe.script` preserve the
+interrupted continuation draft. They are explicit opt-in diagnostics, not a
+registered regression or a replacement for `mission_05.env`. The intended route
+includes the first-Road prefix, normal turn-7 refresh and Roads 2..5 to `(45,50)`.
+Engine-written slots 10..14 retain refresh and endpoint observations. Movement
+trace AP is measured before the extra construction charge: 17/13/9/4 in those
+traces must be checked against 16/12/8/3 in the completed saves.
+
+The draft is **known blocked and unvalidated**. The separate Road-mode loop in
+`Builder_StartRoadBuildMode` does not call `Diagnostics_TraceWorldMapCursorSample`.
+The first Road cursor wait and the later guarded viewport pan therefore lack
+their required observations. Preserve those input gates; investigate read-only
+cursor reporting inside Road mode before replaying. Calling the ordinary tile
+handler there would change the input path and is not a valid workaround.
+
+Both compiler builds and the four selected public asset-free tests passed before
+the maintenance pause. The two C++ route attempts were interrupted, and the fresh
+original capture stopped before planned input when read-only process memory
+access returned `PermissionError: [Errno 13] Permission denied`. Neither attempt
+proves this continuation or supplies a fresh matching Road frame pair. No C++
+function, original identity, runtime stub or canonical campaign status changes
+in this preservation batch; the verified first-Road frontier above remains.
+
+Private worktree files, original startup captures, failed-stage logs and commands
+are hash-verified under the main checkout's
+`artifacts/worktree-retirement/1a34-20260926-merge/`; `preserved-files.json` records
+the file inventory. The separate Linux build and interrupted C++ evidence root
+`/home/andrz/clash-mission05-20260924` is left in place. The archived `build.sh`
+and `run-route.sh` record the earlier compiler and route commands; their old
+worktree paths require review before reuse. Retirement checks cover env syntax,
+DSL command/include references and whitespace only, not runtime behavior.
+
 ## Previous frontier: reproduce actual Road construction (2026-09-06)
 
 The seventh-leg chronological probe reaches `(50,50)`, turn 6, 6 AP, empty path
