@@ -12,14 +12,34 @@ Call/write order, allocation size, public types and existing free policy remain;
 Confidence is high within the recorded source/helper contract. Forty focused
 case executions pass under GCC/Clang O0/O2; five mutations are rejected.
 The first production build stops with `Cannot allocate memory` on unchanged
-`src/units/UnitSlot.cpp`; the failure is retained and retry awaits shared build
-capacity.
+`src/units/UnitSlot.cpp`; the failure is retained. The retry at `75ae3c8` passes
+the GCC build, warning check, strict surface comparison and four public CTests.
+The local Clang attempt lacks a terminal build/audit receipt and remains incomplete.
 PR #145 CI completes both production builds, warning gates, eight public CTests
 and coverage at 6167/6656 lines across all 718 selected functions. The remote
-550-test tooling run retains three workflow-condition failures. Local strict
-comparisons and main integration remain pending. No original
+550-test tooling run retains three workflow-condition failures. Main `4492871`
+is integrated for closeout, preserving its later audit repairs and DLX naming.
+Final integrated CI is recorded on PR #145. No original
 failure-path, leak-freedom, visual or campaign claim is added.
 [Evidence and deferred caller work](../HUMAN_READABILITY.md#batch-22-ui_loadcurrentplayerinfospriteset).
+
+## 2026-09-26 - F8 DLX physical extent names
+
+Track: Win95 reconstruction. Seven unsuffixed literals in four canonical TUs
+and five functions now use `DLX_SPRITE_OBJECT_BYTES` (`22`, six allocations) and
+`DLX_SPRITE_PAYLOAD_HANDLE_BYTES` (`4`, one copy). Original allocation/copy
+instructions and independent field consumers establish both meanings with high
+confidence. Five current body hashes and two guards are refreshed; historical
+identities, hashes, arithmetic, types, public APIs and save layouts are preserved.
+
+The compiled `576bc2` comparison against incoming `c9c0fa7` passes for all 153
+debug-stripped objects per compiler, normalized disassembly, stripped executables
+and strict surfaces without allowances. Native case outcomes and complete
+coverage match the fresh baseline. Original local test timeouts, interrupted
+tooling and incomplete runtime attempts remain explicit; later main integration
+is not represented as having those compiled results. No behavioral repair,
+function rename or campaign promotion is included.
+[F8 evidence and closeout limits](literal_rules/F8_dlx_extents_findings.md#september-26-closeout).
 
 ## 2026-09-24 - Selected-slot predicate integration
 

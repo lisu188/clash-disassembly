@@ -2300,10 +2300,11 @@ The first fresh GCC production build stops with `Cannot allocate memory` while
 compiling unchanged `src/units/UnitSlot.cpp`; there is no C++ diagnostic
 identifying the loader as the failure. The failed log and completed objects
 are retained.
-The local retry is held while the coordinated runtime probes release capacity
-and physical disk space recovers above the unchanged 8 GiB reserve. The local
-Clang production build and final native comparisons have not run; main
-integration remains pending for this draft checkpoint.
+The local retry at `75ae3c8` subsequently passes the GCC build, warning gate,
+strict symbol/data comparison, exact raw-profile comparison and four public
+CTests. It preserves all 837 non-documentation inputs and the original failed
+attempt. The Clang attempt links the targets but has no terminal build/audit
+receipt after interruption; full local native validation is not claimed.
 Exact commands, source bindings, failed old-source builds and mutation
 diagnostics are retained under
 artifacts/readability/road-functions-20260906/batch-22-player-info-loader/.
@@ -2336,8 +2337,28 @@ each total decreases from 6569 to 6568. This separates the loader improvement
 from the inherited surface failures.
 
 Full logs and downloaded diagnostics for both runs are retained under the
-batch-22 evidence directory. These remote measurements do not replace the
-pending local strict symbol/data comparison or establish runtime/visual parity.
+batch-22 evidence directory. These remote measurements remain distinct from
+local strict comparisons and do not establish runtime/visual parity.
+
+#### September 26 integration and worktree closeout
+
+Closeout integrates main `4492871`, preserving the AI slot-override repair,
+reviewed header baseline, blocked bridge-probe draft and DLX extent names.
+The loader source, selected manifest body hash and actual-source test remain
+unchanged from reviewed source commit `959803b`. Both competing status/log
+entries are retained. Main's later audit repairs supersede the old activation,
+workflow-condition, Markdown and header failures for integration acceptance;
+the historical observations above retain their original commit scope.
+
+Fresh integrated CI is recorded on
+[PR #145](https://github.com/lisu188/clash-disassembly/pull/145).
+The requested worktree removal preserves ignored evidence and build trees
+under the main checkout's private
+artifacts/worktree-archives/a46b-20260926/ directory, with an old-root to
+archive-root relocation record. Historical hashes and paths are preserved;
+relocated CMake trees are evidence, not reusable configured builds. The shared
+main checkout's unrelated working changes remain untouched. No additional
+panel repair, runtime, visual-fidelity or campaign acceptance is claimed.
 
 ## Next migration batches
 

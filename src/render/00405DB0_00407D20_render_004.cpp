@@ -312,7 +312,7 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
   // payload copy into a heap overflow. The second nmalloc_ argument is dead register
   // noise (edx was clobbered by DLXSprite_Destroy and the allocator ignores it).
   alloc_buffer[0] = nmalloc_(*(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET) - DLX_SPRITE_SERIALIZED_HEADER_BYTES, 0);
-  qmemcpy((void *)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET), alloc_buffer, 4);
+  qmemcpy((void *)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET), alloc_buffer, DLX_SPRITE_PAYLOAD_HANDLE_BYTES);
   if ( !*(_DWORD *)(uintptr_t)(sprite + DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET) )
   {
     Debug_Log(0, sprite, source_sprite, (int)(intptr_t)aNotEnoughMe_15);

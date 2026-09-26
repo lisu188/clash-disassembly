@@ -1,6 +1,27 @@
 # Current Status
 
-Last consolidated: 2026-09-24.
+Last consolidated: 2026-09-26.
+
+## DLX Physical Extent Names
+
+Track: Win95 reconstruction, evidence-backed numeric naming. Seven literals in
+five functions now use two exact-token macros for the 22-byte DLX sprite object
+and four-byte stored payload handle. The paired 147-TU census against `c9c0fa7`
+falls from 79,146 to 79,139 numeric tokens; all 4,157 historical identities remain.
+At compiled head `576bc2`, both builds and warning checks pass. The resumed
+comparison confirms all 153 debug-stripped objects per compiler, normalized
+disassembly, whole stripped executables and strict symbol/data/layout surfaces
+match the incoming reference, without allowances. Fresh native results match
+every baseline case and coverage measurement: 1,092 passes, no assertion
+failures, the same 524 isolated crashes, and 6,165/6,656 covered lines across all
+718 selected functions.
+
+Three local public-test timeouts, an interrupted final tooling run, a missing
+GCC turn-3 input marker and a disk-aborted Clang replay remain unresolved. The
+later integration of main `6ad7f2d` is separate from the compiled evidence above.
+No runtime, visual or campaign milestone advances. Original failures and all
+private evidence are preserved during worktree closeout.
+[Scope, provenance, exact receipts and validation limits](archive/literal_rules/F8_dlx_extents_findings.md#september-26-closeout).
 
 ## Player-Info Sprite Loader Readability
 
@@ -14,9 +35,12 @@ five deliberate mutations are rejected. The first production build stops on
 an unchanged file with `Cannot allocate memory`; its retained failure and the
 coordinated retry remain separate from the focused passes. PR #145 CI completes
 both production builds, warning gates, eight public CTests and the coverage
-gate; its 550 tooling tests retain three workflow-condition failures. The local
-strict comparisons and main integration are pending. Panel caller defects
-remain a separate repair, and no runtime, visual or campaign milestone advances.
+gate; its original 550-test run retains three then-inherited workflow failures.
+The local retry at `75ae3c8` passes GCC build/warning/strict-surface checks and
+four public CTests; the Clang attempt remains incomplete. Closeout integrates
+main `4492871`, including its audit repairs and DLX naming; final integrated
+checks are recorded on PR #145. Panel caller defects remain a separate repair,
+and no runtime, visual or campaign milestone advances.
 [Loader evidence and limits](HUMAN_READABILITY.md#batch-22-ui_loadcurrentplayerinfospriteset).
 
 ## Recovered AI Slot Override Dispatch

@@ -1,0 +1,125 @@
+# Diagnostic extension of the chronological seven-leg approach and first Road.
+# Original oracle: artifacts/campaign-validation/mission05-bridge-20260906/
+# original/README.md and state-road2..5-before/after.json. That original run
+# resumed an unchanged turn-6 engine-authored save via the real Load menu.
+# This script itself establishes neither original parity nor mission completion.
+# Known blocker: Road mode does not call Diagnostics_TraceWorldMapCursorSample.
+# Its first guarded Road cursor wait and later world_pan_viewport cannot finish
+# until equivalent read-only observations exist in that mode. Do not remove the
+# input gates or invoke the ordinary world tile handler to bypass this blocker.
+include_script tests/first_campaign_arc_routes/mission_05_first_road_probe.script
+
+# Observe the next banner before dismissing it exactly once. The shared helper
+# gates End Turn on menu entry and a cursor acknowledgment inside the menu loop.
+mark_log_count bridge_turn7_banner1 tura1.gfx
+mark_log_count bridge_turn7_banner2 tura2.gfx
+mark_log_count bridge_turn7_banner3 tura3.gfx
+mark_log_count bridge_turn7_banner4 tura4.gfx
+mark_log_count bridge_turn7_banner5 tura5.gfx
+mark_log_count bridge_turn7_banner6 tura6.gfx
+mark_log_count bridge_turn7_banner7 tura7.gfx
+mark_log_count bridge_turn7_human playgame_before_human_turn selected=-1 a=0 b=7
+mark_log_count bridge_turn7_queen queen_proposal_dialog_enter
+include_script tests/first_campaign_arc_routes/mission_05_end_turn_ready.script
+wait_log_marked_any 120 bridge_turn7_banner1 || bridge_turn7_banner2 || bridge_turn7_banner3 || bridge_turn7_banner4 || bridge_turn7_banner5 || bridge_turn7_banner6 || bridge_turn7_banner7
+wait 1.0
+click 320 240 0.12 0.65 dismiss-observed-turn7-banner
+wait_log_marked_any 120 bridge_turn7_human || bridge_turn7_queen
+fail_unless_last_wait_log_mark bridge_turn7_human
+world_pan_viewport 47 48 80
+mark_log_count bridge_turn7_selection selected_stack_changed selected=4 a=49 b=50
+click 192 176 0.18 1.0 select-stack4-at-49-50-turn7
+wait_log_marked 20 bridge_turn7_selection
+
+# Unique slots preserve the included prefix's surviving saves. Slot 10 is the
+# natural turn-7 refresh (original minimum AP 20); slots 11..14 are Roads 2..5.
+# save_slot invokes the recovered writer; these are observations, not fabricated
+# input saves. Preserve each DAT/FAC pair when collecting this run's artifacts.
+mark_log_count bridge_refresh_save debug-save-written slot=10 ok=1
+world_save_slot 10 1.0 save-natural-turn7-refresh
+wait_log_marked 30 bridge_refresh_save
+world_move 192 176 0.5 align-original-turn7-refresh-cursor
+wait 5.0
+screenshot mission05-bridge-turn7-refresh
+nonblank mission05-bridge-turn7-refresh
+fail_if_log mission05_failure_friendly_attack
+
+mark_log_count bridge_building_button action_widget_hit selected=4 a=480 b=432
+mark_log_count bridge_building_ready builder_menu_enter selected=4 a=-1
+click 496 448 0.18 1.0 open-authentic-turn7-building-menu
+wait_log_marked 20 bridge_building_button
+wait_log_marked 20 bridge_building_ready
+mark_log_count bridge_road_ready road_mode_enter selected=4 a=2
+click 432 416 0.18 1.0 enter-turn7-road-mode
+wait_log_marked 20 bridge_road_ready
+
+# Cursor gates precede dependent map presses. A failed wait or viewport probe
+# aborts the runner before subsequent clicks. Road mode stays active throughout.
+# The existing unit_move_after_path_ap trace is BEFORE Road_Build's extra one-AP
+# construction charge: traces 17/13/9/4 correspond to saved endpoints 16/12/8/3.
+mark_log_count bridge_road2_cursor [world_cursor] cursor=128,176 tile=48,50 left=47 top=48 selected=4
+world_move 128 176 0.5 point-at-second-road-target
+wait_log_marked 20 bridge_road2_cursor
+mark_log_count bridge_road2_move unit_move_after_path_state selected=4 a=48 b=50 c=0
+mark_log_count bridge_road2_move_ap unit_move_after_path_ap selected=4 a=17 b=0 c=0
+click 128 176 0.18 2.0 build-second-road-segment-west
+wait_log_marked 60 bridge_road2_move
+wait_log_marked 20 bridge_road2_move_ap
+mark_log_count bridge_road2_save debug-save-written slot=11 ok=1
+world_save_slot 11 1.0 save-after-second-road
+wait_log_marked 30 bridge_road2_save
+wait 5.0
+screenshot mission05-second-road-built
+nonblank mission05-second-road-built
+fail_if_log mission05_failure_friendly_attack
+
+mark_log_count bridge_road3_cursor [world_cursor] cursor=64,176 tile=47,50 left=47 top=48 selected=4
+world_move 64 176 0.5 point-at-third-road-target
+wait_log_marked 20 bridge_road3_cursor
+mark_log_count bridge_road3_move unit_move_after_path_state selected=4 a=47 b=50 c=0
+mark_log_count bridge_road3_move_ap unit_move_after_path_ap selected=4 a=13 b=0 c=0
+click 64 176 0.18 2.0 build-third-road-segment-west
+wait_log_marked 60 bridge_road3_move
+wait_log_marked 20 bridge_road3_move_ap
+mark_log_count bridge_road3_save debug-save-written slot=12 ok=1
+world_save_slot 12 1.0 save-after-third-road
+wait_log_marked 30 bridge_road3_save
+wait 5.0
+screenshot mission05-third-road-built
+nonblank mission05-third-road-built
+fail_if_log mission05_failure_friendly_attack
+
+world_pan_viewport 45 48 80
+mark_log_count bridge_road4_cursor [world_cursor] cursor=128,176 tile=46,50 left=45 top=48 selected=4
+world_move 128 176 0.5 point-at-fourth-road-target
+wait_log_marked 20 bridge_road4_cursor
+mark_log_count bridge_road4_move unit_move_after_path_state selected=4 a=46 b=50 c=0
+mark_log_count bridge_road4_move_ap unit_move_after_path_ap selected=4 a=9 b=0 c=0
+click 128 176 0.18 2.0 build-fourth-road-segment-west
+wait_log_marked 60 bridge_road4_move
+wait_log_marked 20 bridge_road4_move_ap
+mark_log_count bridge_road4_save debug-save-written slot=13 ok=1
+world_save_slot 13 1.0 save-after-fourth-road
+wait_log_marked 30 bridge_road4_save
+wait 5.0
+screenshot mission05-fourth-road-built
+nonblank mission05-fourth-road-built
+fail_if_log mission05_failure_friendly_attack
+
+# Road 5 is the action's exit onto ordinary land. Original target road word is
+# 65535, not a new road overlay; movement costs four AP plus one construction AP.
+mark_log_count bridge_road5_cursor [world_cursor] cursor=64,176 tile=45,50 left=45 top=48 selected=4
+world_move 64 176 0.5 point-at-fifth-road-target
+wait_log_marked 20 bridge_road5_cursor
+mark_log_count bridge_road5_move unit_move_after_path_state selected=4 a=45 b=50 c=0
+mark_log_count bridge_road5_move_ap unit_move_after_path_ap selected=4 a=4 b=0 c=0
+click 64 176 0.18 2.0 finish-road-crossing-onto-west-bank
+wait_log_marked 60 bridge_road5_move
+wait_log_marked 20 bridge_road5_move_ap
+mark_log_count bridge_road5_save debug-save-written slot=14 ok=1
+world_save_slot 14 1.0 save-after-fifth-road
+wait_log_marked 30 bridge_road5_save
+wait 5.0
+screenshot mission05-fifth-road-built
+nonblank mission05-fifth-road-built
+fail_if_log mission05_failure_friendly_attack

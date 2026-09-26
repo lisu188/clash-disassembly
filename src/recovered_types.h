@@ -267,6 +267,11 @@
 #define DLX_SPRITE_PAYLOAD_HANDLE_BYTE_OFFSET 10
 #define DLX_SPRITE_SERIALIZED_SIZE_BYTE_OFFSET 14
 #define DLX_SPRITE_OWNS_PAYLOAD_BYTE_OFFSET 18
+/* Original DLX allocations span 22 bytes; the stored payload handle spans
+ * four bytes regardless of native pointer size. Keep exact int tokens.
+ * Evidence: docs/archive/literal_rules/F8_dlx_extents_findings.md. */
+#define DLX_SPRITE_OBJECT_BYTES 22
+#define DLX_SPRITE_PAYLOAD_HANDLE_BYTES 4
 /* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */
 #define CLIPS_SYMBOL_BUCKET_COUNT 1013
 /* Rules_InitAtomTables (0x482260; clash95.asm:206479-206528) allocates and clears symbol/float/integer/bitmap tables of 4052/2012/668/668 bytes in four-byte steps. Rules_RestoreAtomicValueBuckets (0x482EF0) and Rules_ClearAtomInUseMarks (0x4949E0) independently traverse 1013/503/167/167 typed buckets. Str_Intern, Rules_AddDoubleValue, Rules_AddIntegerValue and Rules_AddBitmapValue use corresponding hash ranges. Integer and bitmap are separate domains despite equal counts. */

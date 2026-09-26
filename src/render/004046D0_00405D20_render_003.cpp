@@ -1327,7 +1327,7 @@ _DWORD * DLXSpriteSet_Load(_DWORD *sprite_set, const void *file_name)
       entry_size = entry_end_offset - g_DlxSpriteSetOffsetTable[entry_index];
     else
       entry_size = IO_QueryVTableStreamSize(query_handle) - g_DlxSpriteSetOffsetTable[entry_index];
-    sprite_set[entry_index] = Mem_Alloc(22, entry_index, entry_size, (DWORD)(intptr_t)sprite_set);
+    sprite_set[entry_index] = Mem_Alloc(DLX_SPRITE_OBJECT_BYTES, entry_index, entry_size, (DWORD)(intptr_t)sprite_set);
     if ( sprite_set[entry_index] )
       sprite_set[entry_index] = DLXSprite_ConstructFromBuffer(sprite_set[entry_index], g_DlxSpriteSetOffsetTable[entry_index] + sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX] - DLX_DIRECTORY_BYTES, entry_size);
     ++entry_index;
@@ -1414,7 +1414,7 @@ int * DLXSpriteSet_CopyEntriesFrom(int *sprite_set, DWORD *source_set, int a3, s
     {
       if ( *source_set )
       {
-        new_sprite = Mem_Alloc(22, entry_index, (char)(intptr_t)source_set, entry_count);
+        new_sprite = Mem_Alloc(DLX_SPRITE_OBJECT_BYTES, entry_index, (char)(intptr_t)source_set, entry_count);
         if ( new_sprite )
           new_sprite = DLXSprite_ConstructOwningCopy(new_sprite, *source_set);
         *dest_entry = new_sprite;
