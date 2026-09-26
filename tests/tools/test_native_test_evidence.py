@@ -55,6 +55,56 @@ class NativeEvidenceParserTests(unittest.TestCase):
         self.assertTrue(evidence.reconcile_output(registry, raw)["runner_policy_would_succeed"])
         self.assertFalse(evidence.reconcile_output(registry, raw, "strict")["runner_policy_would_succeed"])
 
+    def test_actual_interleaved_diagnostic_preserves_complete_crash_suffix(self):
+        # CI 36263284415, Clang LastTest.log line 292. The original failed
+        # reconciliation and raw log remain retained separately from this fix.
+        raw = ("[world_units] cov2_06_stage idx=0 owner=0 tile=0,0 first=0 slots=10 "
+               "first_ap=0 first_count=0 first_morale=0 first_fatigue=0 ap=0"
+               "CRASH cov2_08_parsedefrulerhs.cold_call")
+        registry = {"count": 2, "names": ["unrelated.case", "cov2_08_parsedefrulerhs.cold_call"]}
+        result = evidence.reconcile_output(
+            registry, raw + "\n== 1 passed, 0 failed, 1 crashed, 2 total ==")
+        self.assertEqual([r["outcome"] for r in result["cases"]], ["PASS", "CRASH"])
+        self.assertEqual(result["cases"][1]["exception"]["raw"], raw)
+        self.assertEqual(result["cases"][1]["exception"]["reported_detail"], "")
+        self.assertEqual(result["unattributed_diagnostics"], [{
+            "output_line": 1, "raw": raw,
+            "interleaved_prefix": raw[:raw.index("CRASH ")]}])
+
+    def test_interleaved_suffix_uses_same_status_and_detail_contract(self):
+        for status, failed, crashed in (("FAIL  ", 1, 0), ("ERROR ", 1, 0), ("CRASH ", 0, 1)):
+            with self.subTest(status=status):
+                prefix = "CHECK failed in other.case: value=0"
+                raw = f"{prefix}{status}one.case: reported detail"
+                result = evidence.reconcile_output(
+                    {"count": 2, "names": ["one.case", "other.case"]},
+                    f"{raw}\n== 1 passed, {failed} failed, {crashed} crashed, 2 total ==")
+                self.assertEqual(result["cases"][0]["outcome"], status.strip())
+                self.assertEqual(result["cases"][0]["exception"]["reported_detail"], ": reported detail")
+                self.assertEqual(result["cases"][1]["outcome"], "PASS")
+                self.assertNotIn("exception", result["cases"][1])
+                self.assertEqual(result["unattributed_diagnostics"][0]["interleaved_prefix"],
+                                 prefix)
+
+    def test_interleaved_ambiguous_foreign_malformed_or_late_suffix_fails(self):
+        registry = {"count": 2, "names": ["one.case", "two.case"]}
+        summary = "== 1 passed, 0 failed, 1 crashed, 2 total =="
+        invalid = {
+            "two complete records": "prefixCRASH one.case CRASH two.case\n" + summary,
+            "record inside detail": "CRASH one.case: detail ERROR two.case\n" + summary,
+            "partial marker inside detail": "CRASH one.case: diagnostic ERROR \n" + summary,
+            "malformed first marker": "prefixFAIL one.caseCRASH two.case\n" + summary,
+            "foreign suffix": "prefixCRASH foreign.case\n" + summary,
+            "malformed spacing": "prefixFAIL one.case\n" + summary,
+            "incomplete name": "prefixCRASH one.\n" + summary,
+            "malformed name": "prefixCRASH one.case!\n" + summary,
+            "duplicate joined record": "CRASH one.case\nprefixCRASH one.case\n" + summary,
+            "joined after summary": summary + "\nprefixCRASH one.case",
+        }
+        for label, raw in invalid.items():
+            with self.subTest(label=label), self.assertRaises(ValueError):
+                evidence.reconcile_output(registry, raw)
+
     def test_malformed_or_ambiguous_registries_fail(self):
         for registry in (None, {}, {"count": True, "names": ["a.b"]},
                          {"count": 0, "names": []}, {"count": 2, "names": ["a.b"]},

@@ -273,6 +273,90 @@ are retained under `artifacts/cpp-classes/20260926/ci-review/`; the comparison
 receipt SHA256 is
 `3d8396daba96c927bfbe553bee229c32febf9acf48515cb1e8e7e83515188be2`.
 
+### Detailed integrated candidate and current-main reference
+
+The later checkpoint `212bb559c322634f8e69ab0ae664440d24bf8df7`
+integrates origin `26f5f35`, including the independently validated player-info
+sprite loader repair. No class identity is added by that incoming repair.
+[Candidate run 36263284415](https://github.com/lisu188/clash-disassembly/actions/runs/36263284415)
+checks out PR merge `ae962e6cb74c30bc7f9871c424a195737474d6f0`, whose tree
+is byte-identical to the candidate head. The source comparison pins tree
+`18f7074899bc21388200694b67edb948efe7b700` and both merge parents.
+
+[Reference run 36263644099](https://github.com/lisu188/clash-disassembly/actions/runs/36263644099)
+uses `2c93086d32354b698fdcf3aace285aba135d1227`: current main `26f5f35`
+plus the same nine diagnostic files as the candidate. Its production sources,
+data, CMake inputs and native fixtures are unchanged from main. The exact
+source proof is retained under
+`artifacts/cpp-classes/20260926/native-reference/source-comparison.json`.
+
+Both runs pass both production builds, warnings, all eight asset-free gates and
+both runner-policy suites. Candidate tooling passes all 597 tests; current
+header, activation and Markdown checks also pass. Reference tooling passes
+585 tests; its three inherited mission-05 Markdown links still fail. Historical
+raw link-surface failures remain in both runs; those ratchets are not reseeded.
+
+Every ordered native registration and selected coverage identity matches:
+
+| Compiler | Reference pass/fail/crash | Candidate pass/fail/crash | Reference covered/executable | Candidate covered/executable |
+| --- | --- | --- | --- | --- |
+| GCC 13 | 1100/0/516 | 1100/0/516 | 6165/6656 | 6170/6659 |
+| Clang 18 | 1099/1/516 | 1101/1/514 | 6811/7345 | 6814/7348 |
+
+GCC outcomes are identical for all 1,616 cases. Clang changes three cases from
+CRASH to PASS: `cov12_crt.to_upper_in_place_nonempty`,
+`cov2_08_tzdaylight.a1_flag_set_jumps_to_shared_tail`, and
+`cov4_03_crt.tz_year_starts_in_daylight_goto_label6`. It also changes
+`cov3_07_definstances.delete_record_not_bloaded_retry_for_luck` from **PASS to
+CRASH**. That fixture and production body are byte-identical between reference
+and candidate and exercise uninitialized recovered locals. This establishes
+susceptibility, not the precise cause; the observed regression remains open.
+Separate hosted runs do not establish identical address layout or scheduling.
+
+Clang retains `cov5_01_getallowedattrtoken.allowed_symbols` at expected 2,
+actual -1, and the same eight zero-covered functions. Both profiles exceed the
+unchanged 89.7% floor and retain all 718 nonempty coverage rows, but Clang fails
+the zero-uncovered requirement. GCC passes that requirement. Individual crashes
+remain visible even where the native runner's existing policy permits them.
+
+Both executable denominators increase by exactly three: one covered receiver
+binding in each of `UnitSlot_InitFromType`,
+`UnitStack_SubtractActionPointsFloorZero`, and
+`UnitStack_HasSpecialPersonageUnits`. The remaining GCC covered delta is +2 in
+`Building_UpdatePlagueState`. Other Clang covered deltas are +3 in
+`CRT_ToUpperInPlace`, -1 in `Defgeneric_ClearDefgenericsReady`, and -2 in
+`Definstances_DeleteRecord`. These observations do not explain the lost detail
+from the older summary-only runs or resolve the interrupted local RNG failure.
+The complete comparison is retained in
+`artifacts/cpp-classes/20260926/ci-review/reference2c93086d/hosted-reference-comparison.json`.
+
+### Native log framing correction
+
+The candidate Clang collector originally failed on one complete CRASH record
+joined to a concurrent diagnostic; reference GCC failed on two such records.
+The actual logs and failed receipts remain unchanged. The collector now accepts
+at most one complete exception suffix using the existing registered-name,
+ordering and exact-total checks. It preserves the full joined line and prefix
+as unattributed diagnostics. Ambiguous markers, malformed or foreign records,
+duplicates, late exceptions and inconsistent totals still fail collection.
+Plain-text log framing cannot independently authenticate a status-shaped string;
+no signal, missing outcome or diagnostic-prefix ownership is inferred.
+
+All 19 focused Python tests pass in WSL on the final files:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 TMPDIR=/dev/shm python3 -m unittest discover -s tests/tools -p test_native_test_evidence.py -v
+git diff --check -- tools/collect_native_test_evidence.py tests/tools/test_native_test_evidence.py
+```
+
+The final review receipt is
+`artifacts/cpp-classes/20260926/ci-review/collector-final-review.json`.
+Offline reconciliations on the retained candidate Clang and reference GCC logs
+recover complete 1101/1/514 and 1100/0/516 counts respectively. They pin their
+original evidence and tool hashes but do not rerun native tests or assert fresh
+hosted binary/HEAD verification. Exact hosted validation of the final parser
+remains pending. Collection success is not native-suite success.
+
 ### Incoming header baseline change
 
 Origin commit `6ad7f2d` independently reseeds the header baseline and documents
@@ -296,7 +380,9 @@ generation; no installed tool or runtime asset is removed to obtain room.
 Verified cache cleanup and archive-member restoration maps are retained under
 `artifacts/cpp-classes/20260926/disk-cleanup/`.
 
-The full migration and full C++ reimplementation remain incomplete. Current
-33-method native outcome parity, original/reconstruction runtime comparisons,
-the default smoke suite, six completed-route regressions and the first-Road
-probe remain required. No campaign or visual-fidelity milestone advances.
+The full migration and full C++ reimplementation remain incomplete. GCC native
+outcomes now match the current-main reference; Clang differences and failures
+remain unresolved. Original/reconstruction runtime comparisons, the default
+smoke suite, six completed-route regressions and the first-Road probe remain
+required for the current checkpoint. No campaign or visual-fidelity milestone
+advances.

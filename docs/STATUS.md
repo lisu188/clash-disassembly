@@ -4,18 +4,23 @@ Last consolidated: 2026-09-26.
 
 ## Class Checkpoint Origin Refresh And Hosted Evidence
 
-The 33-method checkpoint integrates origin `4492871`, preserving the incoming
-AI, selection and DLX work. Integrated identity, source, hash, coverage-metadata
-and save-format audits pass, as do the small workflow, Markdown and slot-override
-test suites. Exact earlier head `e188e2c` passes both hosted builds, warning
-checks, all eight asset-free gates and the 718-function coverage gate. Its
-completed tooling run retains only three inherited workflow-condition failures;
-the local interrupted RNG failure remains unexplained. Hosted coverage is
-6,168/6,659; the exact hosted comparator is 6,168/6,656. Individual coverage and
-native outcomes were not retained by those old jobs. Origin's header baseline
-reseed is reported separately from the historical migration failures. Local
-builds and fresh captures remain held above the 90% host-disk usage threshold.
-[Evidence, comparison limits and remaining work](CPP_CLASS_SEPTEMBER_INTEGRATION.md#september-26-origin-and-hosted-validation-review).
+The 33-method checkpoint integrates origin `26f5f35`, preserving the incoming
+AI, selection, DLX and player-info loader work. Hosted head `212bb55` passes
+both production builds, warning checks, all eight asset-free gates and all 597
+tooling tests. Detailed evidence now retains all 1,616 native outcomes and 718
+coverage rows per compiler. GCC matches current main's individual outcomes
+(1,100 passes, 516 crashes); coverage is 6,170/6,659 with no uncovered functions.
+Clang records 1,101 passes, one assertion failure and 514 crashes, including one
+PASS-to-CRASH change against the matched reference. Its 6,814/7,348 coverage
+retains eight uncovered functions, so the Clang gates remain failed. Both
+executable denominators increase by exactly three covered receiver-binding
+lines. Historical link failures and the interrupted local RNG failure remain.
+The native-log collector now handles complete exception records after concurrent
+diagnostics; 19 focused tests pass, with exact hosted validation pending.
+Original collection failures and offline reconciliations remain separate.
+Origin's header baseline reseed is not a class-behavior repair. Local builds
+and fresh captures remain held above the 90% host-disk usage threshold.
+[Evidence, comparison limits and remaining work](CPP_CLASS_SEPTEMBER_INTEGRATION.md#detailed-integrated-candidate-and-current-main-reference).
 
 ## DLX Physical Extent Names
 

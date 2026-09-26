@@ -83,3 +83,4 @@ __pycache__/
 
 # Rename-provenance ledgers are durable evidence (exception to *.jsonl).
 !docs/archive/*_rename_accum.jsonl
+.firecrawl/

@@ -25,6 +25,7 @@ import time
 NAME = r"[A-Za-z_][A-Za-z_0-9]*\.[A-Za-z_][A-Za-z_0-9]*"
 SUMMARY = re.compile(r"^== (\d+) passed, (\d+) failed, (\d+) crashed, (\d+) total ==$")
 EXCEPTION = re.compile(rf"^(FAIL  |CRASH |ERROR )({NAME})(?P<detail>(?:[: \t].*)?)$")
+EXCEPTION_MARKER = re.compile(r"(?:FAIL|CRASH|ERROR)(?=\s|$)")
 GDB_SCRIPT = '''set pagination off
 set confirm off
 set debuginfod enabled off
@@ -117,7 +118,15 @@ def reconcile_output(registry: object, text: str, mode: str = "default") -> dict
             continue
         if raw.startswith("=="):
             raise ValueError(f"malformed summary at output line {number}")
-        exception = EXCEPTION.fullmatch(raw)
+        # Concurrent diagnostics can precede a complete exception report on the
+        # same line. Accept only one complete exception suffix, with the same
+        # registered-name and total checks as a standalone report. Multiple
+        # status markers are ambiguous, even within otherwise valid detail.
+        markers = list(EXCEPTION_MARKER.finditer(raw))
+        if len(markers) > 1:
+            raise ValueError(f"multiple exception markers at output line {number}")
+        start = markers[0].start() if markers else 0
+        exception = EXCEPTION.fullmatch(raw[start:]) if markers else None
         if exception:
             status, name = exception.group(1).strip(), exception.group(2)
             if name not in known_names:
@@ -126,7 +135,12 @@ def reconcile_output(registry: object, text: str, mode: str = "default") -> dict
                 raise ValueError(f"duplicate exception name: {name}")
             observed[name] = {"outcome": status, "output_line": number,
                               "raw": raw, "reported_detail": exception.group("detail")}
-        elif re.match(r"^(FAIL|CRASH|ERROR)(?:\s|$)", raw):
+            if start:
+                # Retain the entire joined line and its prefix without assigning
+                # that diagnostic to this exception or another worker's case.
+                other.append({"output_line": number, "raw": raw,
+                              "interleaved_prefix": raw[:start]})
+        elif markers:
             raise ValueError(f"malformed exception at output line {number}")
         elif raw:
             # Sixteen workers can interleave CHECK diagnostics. Do not guess
