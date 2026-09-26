@@ -17045,6 +17045,10 @@
   "src/world/WorldGeometry.cpp": {
    "referenced": [],
    "visible": []
+  },
+  "src/world/WorldMap.cpp": {
+   "referenced": [],
+   "visible": []
   }
  }
 }
