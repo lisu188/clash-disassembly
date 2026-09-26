@@ -35,6 +35,7 @@ ERROR_MARKERS = (
     "[OBJRTBLD",
     "[ARGACCES",
     "[MSGPSR",
+    "[MSGFUN",  # Includes missing primary handlers during make-instance.
     "[CSTRCPSR",
     "[RULEPSR",
 )

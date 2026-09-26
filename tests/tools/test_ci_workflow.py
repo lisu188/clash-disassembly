@@ -11,6 +11,12 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = ROOT / ".github/workflows/ci.yml"
 REPO_READY = "${{ !cancelled() && steps.checkout.outcome == 'success' && steps.python.outcome == 'success' }}"
+CLIPS_STEPS = (
+    "Load unified recovered CLP in CLIPS",
+    "Validate recompiled strategic AI RETE path depth",
+    "Validate reset-time strategic AI agenda",
+    "Validate strategic AI activation witnesses",
+)
 BUILD_READY = "${{ !cancelled() && steps.build.outcome == 'success' }}"
 
 
@@ -46,7 +52,7 @@ class CIWorkflowTests(unittest.TestCase):
     def test_repo_checks_only_require_their_inputs(self):
         for name, step in steps_for("repo-checks").items():
             if field(step, "run") is None or name in (
-                "Install CLIPS runtime", "Load unified recovered CLP in CLIPS", "Check whitespace errors"
+                "Install CLIPS runtime", "Check whitespace errors", *CLIPS_STEPS
             ):
                 continue
             with self.subTest(step=name):
@@ -58,10 +64,12 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertEqual(field(steps["Check whitespace errors"], "if"),
                          "${{ !cancelled() && steps.checkout.outcome == 'success' }}")
 
-    def test_clips_load_has_its_additional_runtime_prerequisite(self):
-        step = steps_for("repo-checks")["Load unified recovered CLP in CLIPS"]
-        self.assertEqual(field(step, "if"),
-                         REPO_READY[:-3] + " && steps.clips.outcome == 'success' }}")
+    def test_clips_checks_have_their_additional_runtime_prerequisite(self):
+        steps = steps_for("repo-checks")
+        for name in CLIPS_STEPS:
+            with self.subTest(step=name):
+                self.assertEqual(field(steps[name], "if"),
+                                 REPO_READY[:-3] + " && steps.clips.outcome == 'success' }}")
 
     def test_inventory_validation_and_upload_follow_generation(self):
         steps = steps_for("repo-checks")

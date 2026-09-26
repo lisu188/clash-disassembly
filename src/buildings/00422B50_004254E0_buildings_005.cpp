@@ -591,25 +591,16 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
 //----- (00423AC0) --------------------------------------------------------
 signed int UnitStackSelection_HasSelectedSlots(void)
 {
-  int byte_offset; // eax
+  if ( g_UnitStackSelectionActiveUnitIndex == -1 )
+    return 0;
 
-  if ( g_UnitStackSelectionActiveUnitIndex != -1 )
+  for ( int slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    byte_offset = 0;
-    if ( *(_DWORD *)g_UnitStackSlotSelectedFlags )
+    if ( g_UnitStackSlotSelectedFlags[slotIndex] != 0 )
       return 1;
-    while ( 1 )
-    {
-      byte_offset += 4;
-      if ( byte_offset >= 40 )
-        break;
-      if ( *(_DWORD *)((char *)g_UnitStackSlotSelectedFlags + byte_offset) )
-        return 1;
-    }
   }
   return 0;
 }
-// 514194: using guessed type int dword_514194;
 
 //----- (00423B00) --------------------------------------------------------
 int  UnitStackSelection_BeginForSelectedStack(DWORD a1)

@@ -1,6 +1,65 @@
 # Current Status
 
-Last consolidated: 2026-09-24.
+Last consolidated: 2026-09-26.
+
+## DLX Physical Extent Names
+
+Track: Win95 reconstruction, evidence-backed numeric naming. Seven literals in
+five functions now use two exact-token macros for the 22-byte DLX sprite object
+and four-byte stored payload handle. The paired 147-TU census against `c9c0fa7`
+falls from 79,146 to 79,139 numeric tokens; all 4,157 historical identities remain.
+At compiled head `576bc2`, both builds and warning checks pass. The resumed
+comparison confirms all 153 debug-stripped objects per compiler, normalized
+disassembly, whole stripped executables and strict symbol/data/layout surfaces
+match the incoming reference, without allowances. Fresh native results match
+every baseline case and coverage measurement: 1,092 passes, no assertion
+failures, the same 524 isolated crashes, and 6,165/6,656 covered lines across all
+718 selected functions.
+
+Three local public-test timeouts, an interrupted final tooling run, a missing
+GCC turn-3 input marker and a disk-aborted Clang replay remain unresolved. The
+later integration of main `6ad7f2d` is separate from the compiled evidence above.
+No runtime, visual or campaign milestone advances. Original failures and all
+private evidence are preserved during worktree closeout.
+[Scope, provenance, exact receipts and validation limits](archive/literal_rules/F8_dlx_extents_findings.md#september-26-closeout).
+
+## Recovered AI Slot Override Dispatch
+
+Track: strategic-AI validation prerequisite (Definition of Done items 8-10).
+The source projection now emits each serialized slot override handler by name
+instead of replacing ordinary `put-<slot>` handlers with literal `DEFAULT`.
+All 23 descriptor symbols and the original loader at `0x4C6990` support the
+repair. The old projection parsed but failed instance creation with `MSGFUN1`;
+the shared stock-CLIPS check now rejects that diagnostic. All 13 activation
+witnesses pass locally, including the previously failing nonzero-AP object.
+Five focused regressions include a mutation proving a failed object cannot
+silently pass the empty-agenda negative witness. The nine workflow tests also
+pass after recognizing the actual CLIPS prerequisites of all four runtime
+checks; the workflow and frozen baselines are unchanged.
+Slot-facet, source-projection, load, RETE-depth and reset-agenda checks pass
+with stock CLIPS 6.30. These are validation-tool repairs, not production C++
+or full strategic-AI parity claims. Mission 05, runtime and frame milestones
+remain unchanged. See [CLASH_DAT_SLOT_FACETS.md](CLASH_DAT_SLOT_FACETS.md).
+
+## Selected-Slot Predicate Readability
+
+Track: Win95 reconstruction, Road-family selection helpers.
+`UnitStackSelection_HasSelectedSlots` now scans the existing ten-DWORD array
+directly, with the original exact `-1` inactive guard and full-DWORD nonzero
+tests. Assembly and independent source review agree; 34 neighbors are unchanged
+and exactly one canonical body hash changes. After integrating main `35f3adb`,
+both fresh compiler builds and warning gates, strict surface comparisons
+without allowances and eight existing CTests pass; 836 nondocumentation inputs
+remain stable. Complete raw profiles and the inherited 453 GCC / 705 Clang link
+rows remain exact; header metrics retain 23 rows and one parameter-name finding.
+The current 548-test tooling run retains three workflow-condition failures also
+present on incoming main. Five additional methods affected by Windows-backed
+temporary storage or timeouts pass on a focused Linux-native retry. The new
+strategic activation-witness mismatch and two private Markdown-path failures
+also reproduce main. CI coverage succeeds; no local coverage run is repeated.
+Four adjacent selection helpers were reviewed and retained unchanged. No
+runtime, visual or campaign milestone advances.
+[Predicate evidence and integration limits](HUMAN_READABILITY.md#batch-21-integration-with-rules-engine-main).
 
 ## UnitStack Spent-Turn Extraction And Relocation
 
@@ -150,6 +209,13 @@ measurements, not fresh merged-tree coverage or native-suite runs. The changed
 function has zero calls in all 32 retained default-worker observations. Runtime,
 visual and campaign milestones remain unchanged.
 [Integrated evidence and limits](HUMAN_READABILITY.md#batch-20-integration-with-class-main).
+
+The subsequent published `a0dc2f0` CI run completes both builds, warning gates,
+eight asset-free CTests and 542 tooling tests successfully. Its fresh GCC
+coverage is 6167/6656 lines (92.65%), all 718 functions covered. The overall run
+fails on header/link checks and two unchanged references to private class
+evidence. These are separate remote measurements, not new local Clang coverage.
+[Published CI evidence](HUMAN_READABILITY.md#published-ci-after-batch-20-integration).
 
 ## Current-Selection Synchronization Before Class Integration
 

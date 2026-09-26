@@ -254,7 +254,7 @@ int  UnitSpriteCache_GetOrLoadEntry(
   *(unsigned int *)(void *)(g_UnitSpriteCacheRecords + record_offset + 11) = Time_Now(0, 0);
 
   Unit_BuildGoSpriteFilePath(path, (unsigned __int8)unitType, ownerColor);
-  sprite_record = Mem_Alloc(22, 0, 0, 0);
+  sprite_record = Mem_Alloc(DLX_SPRITE_OBJECT_BYTES, 0, 0, 0);
   if ( sprite_record )
     sprite_record = DLXSprite_LoadCachedEntry(sprite_record, path, animFrame + 8 * facing);
   *(int *)(void *)(g_UnitSpriteCacheRecords + record_offset + 7) = sprite_record;

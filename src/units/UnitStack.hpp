@@ -10,7 +10,7 @@ class CLASH95_INTERNAL UnitStack final {
   signed int UnitStack_HasReadyUnits() const;
   signed int UnitStack_HasBuilder() const;
   int UnitStack_CalcMilitaryStrength() const;
-  signed int UnitStack_NormalizePeasantCargo(DWORD a2, double a3) const;
+  signed int UnitStack_NormalizePeasantCargo(DWORD factSyncContext, double a3) const;
   signed int UnitStack_HasPlague() const;
   signed int UnitStack_HasLowMoraleUnit() const;
   signed int UnitStack_GetMaxOrderTier() const;
