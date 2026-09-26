@@ -12,6 +12,7 @@
 #include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 #include "../units/UnitSlot.hpp"
+#include "../world/WorldMap.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0040D6D0) --------------------------------------------------------
@@ -1023,54 +1024,66 @@ void  Map_RevealAllTilesForPlayer(int playerIndex)
 // 5202E4: using guessed type int gameData;
 
 //----- (0040EDE0) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Map_RevealTileWithPropagation(int tileX, signed int tileY, int playerIndex)
+{
+  return clash95::WorldMap::borrow().Map_RevealTileWithPropagation(tileX, tileY, playerIndex);
+}
+
+signed int  clash95::WorldMap::Map_RevealTileWithPropagation(int tileX, signed int tileY, int playerIndex) const
 {
   int revealByteAddr; // eax
   int diagRightTileX2; // edi
 
   if ( tileX < 0
     || tileY < 0
-    || tileX >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
-    || tileY >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
-    || Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
+    || tileX >= *(_DWORD *)(uintptr_t)(this->state_field_0_ + MAP_WIDTH_TILES_OFFSET)
+    || tileY >= *(_DWORD *)(uintptr_t)(this->state_field_0_ + MAP_HEIGHT_TILES_OFFSET)
+    || this->Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
   {
     return 0;
   }
-  revealByteAddr = PLAYER_DATA(playerIndex) + PLAYER_REVEALED_TILE_ROW_BYTES * tileX + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3);
+  revealByteAddr = (this->state_field_0_ + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_DATA_STRIDE * (playerIndex)) + PLAYER_REVEALED_TILE_ROW_BYTES * tileX + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3);
   *(_BYTE *)(uintptr_t)(revealByteAddr + PLAYER_REVEALED_TILES_OFFSET) |= 1 << (tileY & 7);
-  MiniMap_DrawTileCell((void *)(uintptr_t)tileX, tileY);
-  if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) )
-    Map_RevealTileWithPropagation(tileX - 1, tileY, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) )
-    Map_RevealTileWithPropagation(tileX + 1, tileY, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX, tileY - 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX, tileY + 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX, tileY + 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX, tileY + 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX - 1, tileY - 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX + 1, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX + 1, tileY - 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY + 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY + 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX - 1, tileY + 1, playerIndex);
-  if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY + 2, playerIndex) )
+  ::MiniMap_DrawTileCell((void *)(uintptr_t)tileX, tileY);
+  if ( this->Map_IsTileVisibleToPlayer(tileX - 2, tileY, playerIndex) && !this->Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) )
+    this->Map_RevealTileWithPropagation(tileX - 1, tileY, playerIndex);
+  if ( this->Map_IsTileVisibleToPlayer(tileX + 2, tileY, playerIndex) && !this->Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) )
+    this->Map_RevealTileWithPropagation(tileX + 1, tileY, playerIndex);
+  if ( this->Map_IsTileVisibleToPlayer(tileX, tileY - 2, playerIndex) && !this->Map_IsTileVisibleToPlayer(tileX, tileY - 1, playerIndex) )
+    this->Map_RevealTileWithPropagation(tileX, tileY - 1, playerIndex);
+  if ( this->Map_IsTileVisibleToPlayer(tileX, tileY + 2, playerIndex) && !this->Map_IsTileVisibleToPlayer(tileX, tileY + 1, playerIndex) )
+    this->Map_RevealTileWithPropagation(tileX, tileY + 1, playerIndex);
+  if ( this->Map_IsTileVisibleToPlayer(tileX - 2, tileY - 2, playerIndex) && !this->Map_IsTileVisibleToPlayer(tileX - 1, tileY - 1, playerIndex) )
+    this->Map_RevealTileWithPropagation(tileX - 1, tileY - 1, playerIndex);
+  if ( this->Map_IsTileVisibleToPlayer(tileX + 2, tileY - 2, playerIndex) && !this->Map_IsTileVisibleToPlayer(tileX + 1, tileY - 1, playerIndex) )
+    this->Map_RevealTileWithPropagation(tileX + 1, tileY - 1, playerIndex);
+  if ( this->Map_IsTileVisibleToPlayer(tileX - 2, tileY + 2, playerIndex) && !this->Map_IsTileVisibleToPlayer(tileX - 1, tileY + 1, playerIndex) )
+    this->Map_RevealTileWithPropagation(tileX - 1, tileY + 1, playerIndex);
+  if ( this->Map_IsTileVisibleToPlayer(tileX + 2, tileY + 2, playerIndex) )
   {
     diagRightTileX2 = tileX + 1;
-    if ( !Map_IsTileVisibleToPlayer(diagRightTileX2, tileY + 1, playerIndex) )
-      Map_RevealTileWithPropagation(diagRightTileX2, tileY + 1, playerIndex);
+    if ( !this->Map_IsTileVisibleToPlayer(diagRightTileX2, tileY + 1, playerIndex) )
+      this->Map_RevealTileWithPropagation(diagRightTileX2, tileY + 1, playerIndex);
   }
   return 1;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F060) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  Map_IsTileVisibleToPlayer(int tileX, signed int tileY, int playerIndex)
+{
+  return clash95::WorldMap::borrow().Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex);
+}
+
+BOOL  clash95::WorldMap::Map_IsTileVisibleToPlayer(int tileX, signed int tileY, int playerIndex) const
 {
   return tileX >= 0
       && tileY >= 0
-      && tileX < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
-      && tileY < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
-      && ((1 << (tileY & 7)) & *(unsigned __int8 *)(uintptr_t)(PLAYER_DATA(playerIndex)
+      && tileX < *(_DWORD *)(uintptr_t)(this->state_field_0_ + MAP_WIDTH_TILES_OFFSET)
+      && tileY < *(_DWORD *)(uintptr_t)(this->state_field_0_ + MAP_HEIGHT_TILES_OFFSET)
+      && ((1 << (tileY & 7)) & *(unsigned __int8 *)(uintptr_t)((this->state_field_0_ + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_DATA_STRIDE * (playerIndex))
                                                + PLAYER_REVEALED_TILE_ROW_BYTES * tileX
                                                + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3)
                                                + PLAYER_REVEALED_TILES_OFFSET)) != 0;
@@ -1078,25 +1091,31 @@ BOOL  Map_IsTileVisibleToPlayer(int tileX, signed int tileY, int playerIndex)
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F0C0) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Map_ClassifyFogOfWarOverlayForPlayer(int tileX, signed int tileY, int playerIndex)
 {
-  if ( Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
+  return clash95::WorldMap::borrow().Map_ClassifyFogOfWarOverlayForPlayer(tileX, tileY, playerIndex);
+}
+
+signed int  clash95::WorldMap::Map_ClassifyFogOfWarOverlayForPlayer(int tileX, signed int tileY, int playerIndex) const
+{
+  if ( this->Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
     return -1;
 
   // 0040F0E3..0040F1A8: each visibility result replaces one bit of CL.
   unsigned int neighborMask = 0;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX - 1, tileY - 1, playerIndex) & 1u) << 7;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX, tileY - 1, playerIndex) & 1u) << 6;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX + 1, tileY - 1, playerIndex) & 1u) << 5;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) & 1u) << 4;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) & 1u) << 3;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX - 1, tileY + 1, playerIndex) & 1u) << 2;
-  neighborMask |= (Map_IsTileVisibleToPlayer(tileX, tileY + 1, playerIndex) & 1u) << 1;
-  neighborMask |= Map_IsTileVisibleToPlayer(tileX + 1, tileY + 1, playerIndex) & 1u;
+  neighborMask |= (this->Map_IsTileVisibleToPlayer(tileX - 1, tileY - 1, playerIndex) & 1u) << 7;
+  neighborMask |= (this->Map_IsTileVisibleToPlayer(tileX, tileY - 1, playerIndex) & 1u) << 6;
+  neighborMask |= (this->Map_IsTileVisibleToPlayer(tileX + 1, tileY - 1, playerIndex) & 1u) << 5;
+  neighborMask |= (this->Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) & 1u) << 4;
+  neighborMask |= (this->Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) & 1u) << 3;
+  neighborMask |= (this->Map_IsTileVisibleToPlayer(tileX - 1, tileY + 1, playerIndex) & 1u) << 2;
+  neighborMask |= (this->Map_IsTileVisibleToPlayer(tileX, tileY + 1, playerIndex) & 1u) << 1;
+  neighborMask |= this->Map_IsTileVisibleToPlayer(tileX + 1, tileY + 1, playerIndex) & 1u;
   if ( !neighborMask )
     return 0;
 
-  TextSprite_SetStyleFlag(1);
+  ::TextSprite_SetStyleFlag(1);
   if ( !(neighborMask & 0x5A) && (neighborMask & 1) != 0 )
     return 12;
   if ( !(neighborMask & 0x5A) && (neighborMask & 0x80) != 0 )
@@ -1178,4 +1197,11 @@ char  UnitStack_ResetRecord(int stackPtr, unit_type unitType, char ownerIndex)
   *(_DWORD *)(uintptr_t)UNIT_STACK_PATH_BUFFER(stackPtr) = 0;
   UNIT_STACK_OWNER_INDEX(stackPtr) = ownerIndex;
   return ownerIndex;
+}
+
+// Borrowing glue remains at the original adapter anchor.
+extern int gameData;
+clash95::WorldMap clash95::WorldMap::borrow() noexcept
+{
+  return WorldMap(::gameData);
 }

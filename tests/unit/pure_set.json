@@ -516,8 +516,9 @@
    "original_line": 5118,
    "source": "src/world/0040D6D0_0040F4D0_world_004.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "Map_ClassifyFogOfWarOverlayForPlayer"
+    "kind": "method",
+    "qualified_name": "clash95::WorldMap::Map_ClassifyFogOfWarOverlayForPlayer",
+    "header": "src/world/WorldMap.hpp"
    }
   },
   {
