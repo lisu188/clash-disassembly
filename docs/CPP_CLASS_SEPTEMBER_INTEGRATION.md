@@ -407,15 +407,21 @@ coverage baselines.
 
 The user-required disk threshold is now less than 90% used on both the output
 filesystem and the Windows volume backing WSL, in addition to existing reserves.
-The host still exceeds that threshold. Local builds, native batches and fresh
-captures remain held. Small read-only checks use disabled Python bytecode
-generation; no installed tool or runtime asset is removed to obtain room.
+The initial host-capacity hold is retained in the earlier receipts. A later
+September 26 check observes 88.555% used and 114.4 GB free, allowing bounded
+local work to resume without weakening any guard. Fresh sequential GCC/Clang
+builds, warnings and all eight asset-free gates pass at `9a74d4c`; all 859 frozen
+inputs remain unchanged. The earlier audit timeouts remain distinct outcomes.
+The subsequent original-paired first-Road replays also pass their bounded state
+checks, with full payload and unmasked frame differences explicitly retained.
+See [the fresh checkpoint report](CPP_CLASS_FIRST_ROAD_REVALIDATION.md#september-26-33-method-checkpoint).
+No installed tool or runtime asset is removed to obtain room.
 Verified cache cleanup and archive-member restoration maps are retained under
 `artifacts/cpp-classes/20260926/disk-cleanup/`.
 
 The full migration and full C++ reimplementation remain incomplete. GCC native
 outcomes now match the current-main reference; Clang differences and failures
-remain unresolved. Original/reconstruction runtime comparisons, the default
-smoke suite, six completed-route regressions and the first-Road probe remain
-required for the current checkpoint. No campaign or visual-fidelity milestone
+remain unresolved. The first-Road comparison is now refreshed for the 33-method
+checkpoint. The default smoke suite, six completed-route regressions and later
+class-batch acceptance remain required. No campaign or visual-fidelity milestone
 advances.

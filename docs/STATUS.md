@@ -20,8 +20,14 @@ diagnostics; 19 focused tests and both hosted collectors pass. Both compiler
 jobs exercise actual joined records. Original collection failures and offline
 reconciliations remain separate. Production and native fixture bytes are
 unchanged from `212bb55`; the additional Clang outcome variation remains open.
-Origin's header baseline reseed is not a class-behavior repair. Local builds
-and fresh captures remain held above the 90% host-disk usage threshold.
+Origin's header baseline reseed is not a class-behavior repair. After host disk
+usage fell below the unchanged 90% threshold, fresh local GCC/Clang builds,
+warnings and all eight asset-free gates pass at `9a74d4c`. Both first-Road
+replays also match the fresh original's bounded turn-6 endpoint, all 310 slot
+bytes and all 1,300 visibility bytes. Full payload and visible frame differences
+remain; the failed original permission attempt is retained separately. Origin
+`85acb2f` adds research only and is now integrated without game-source changes.
+[Fresh replay evidence and limits](CPP_CLASS_FIRST_ROAD_REVALIDATION.md#september-26-33-method-checkpoint).
 [Evidence, comparison limits and remaining work](CPP_CLASS_SEPTEMBER_INTEGRATION.md#detailed-integrated-candidate-and-current-main-reference).
 
 ## DLX Physical Extent Names
