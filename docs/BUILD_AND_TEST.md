@@ -1,7 +1,9 @@
 # Build And Test
 
 Run commands from the repository root in Linux or WSL. For the Windows checkout,
-start a WSL shell and use `/mnt/c/Users/andrz/git/clash-disassembly`. Keep runtime
+start a WSL shell and change to that checkout's `/mnt/c/...` path (the main
+checkout is `/mnt/c/Users/andrz/git/clash-disassembly`). Use the actual worktree
+root when working in an isolated branch. Keep runtime
 execution headless; never launch either game binary on the host desktop.
 
 ## Prerequisites
@@ -19,8 +21,8 @@ sudo apt-get install -y cmake ninja-build pkg-config python3 \
 The Clang runtime package supplies the sanitizer libraries used by native tooling
 regressions.
 
-The current WSL environment has CMake 3.28.3, GCC 13.3.0, Clang 18.1.3,
-Ninja 1.11.1, SDL2 2.30.0, X11 1.8.7, and Python 3.12.3.
+Check installed tool versions on the host where the commands will run; historical
+package snapshots in evidence reports are not prerequisites or a live inventory.
 Use fresh build directories when changing compilers or switching from the
 former mixed-language configuration. CMake selects the compiler through `CXX`;
 `CC` does not select the runtime compiler. GNU extensions remain enabled, while
@@ -31,9 +33,34 @@ a maintained C runtime target.
 
 Runtime probes additionally use Xvfb, xauth, and xdotool; original-binary frame
 comparison uses Wine with 32-bit support, ImageMagick `import`, and `xwd`
-(`x11-apps`). These tools are installed locally. Actual boot, menu, and campaign
-work also requires the retail game data at `/mnt/c/clash`; an empty directory
+(`x11-apps`). Install them in the runtime environment before probing. Stock-CLIPS
+validation tools also require the `clips` package, as configured by public CI.
+Actual boot, menu, and campaign work also requires retail game data at
+`/mnt/c/clash`; an empty directory
 does not suffice. Public CI must neither require nor publish those assets.
+
+## Documentation-only changes
+
+Run these focused asset-free checks for prose, navigation and evidence-index edits:
+
+```sh
+python3 tests/check_markdown_links.py
+python3 -m unittest discover -s tests/tools -p 'test_markdown_links.py' -v
+bash tests/summarize_campaign_arc_routes.sh
+git diff --check
+```
+
+The link checker validates local paths, including untracked Markdown, and skips
+archives, private artifact paths, URL fetching and heading-fragment resolution.
+Inspect any changed fragment targets separately. Review source manifests or run
+their existing audits when changing factual inventory claims; these checks do not
+constitute fresh compile, runtime or original-game validation.
+
+Windows-created Git worktrees may store Windows paths in their `.git` file. If
+Linux Git cannot resolve that file, supply the translated worktree-specific Git
+directory and worktree root through `GIT_DIR` and `GIT_WORK_TREE` for the WSL
+process. Resolve them from `git rev-parse --absolute-git-dir` in Windows; do not
+rewrite shared Git metadata or assume the main checkout is the worktree.
 
 ## Original Wine Capture Environment
 
@@ -120,7 +147,7 @@ set -euo pipefail
 for profile in gcc-13 clang-18; do
   ctest --test-dir "build/$profile" \
     -R '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' \
-    --output-on-failure
+    --output-on-failure --no-tests=error
 done
 ```
 
@@ -206,19 +233,16 @@ done
 
 ## Shared-State Header Rollout
 
-Consumer layout is active as of 2026-09-05. Eleven generated shared-state
-slices reduce declaration exposure from 32,776 to 11,994 across 136 consumer
-TUs. All 45 tooling tests pass. GCC 13 and Clang 18 preserve all 140 normalized
-recovered object disassemblies and linked symbol layouts. Existing header,
-warning and link ratchet failures remain unchanged; their baselines were not
-raised. Coverage passes at 92.40% across all 718 frozen functions. The default
-headless CTest suite remains red: 10 pass, 3 failures reproduce against the
-saved pre-rollout executable, and 8 opt-in tests skip. Evidence and exact commands are under
-`artifacts/modularization/shared-state-20260905/rollout/`. The earlier WSL
-access failure is retained as preparation history in the parent directory.
+Consumer-specific shared-state layout remains active. The September-5 rollout's
+compiler/object comparisons, coverage and failing runtime/ratchet results are
+historical receipts, preserved in the
+[status archive](archive/STATUS_20260926.md#shared-state-modularization-consumer-headers-active).
+The later [header baseline review](HEADER_SURFACE_BASELINE_20260924.md) documents
+the reviewed synchronization; do not report the old header-failure counts as
+current or use that review to excuse unrelated baseline changes.
 
 From the repository root in Linux/WSL, first run the tooling tests and record
-the current generator freshness and existing header-ratchet failures:
+current generator freshness and header-ratchet results:
 
 ```sh
 python3 -m unittest discover -s tests/tools -p 'test_*.py'
@@ -288,7 +312,7 @@ Preserve log/objective/failure markers, current frames, and repeatable route
 checkpoints before reporting route completion. Every visual-fidelity claim
 requires a same-state original/reconstruction frame comparison under WSL Xvfb,
 with pixel metrics and exact commands, as specified in
-[AGENTS.md](../AGENTS.md#9a-mandatory-frame-comparison-against-the-original).
+[AGENTS.md](../AGENTS.md#10a-mandatory-frame-comparison-against-the-original).
 Keep frame evidence under `artifacts/`; do not open host image viewers.
 
 Run the full campaign arc wrapper only after every required route is marked

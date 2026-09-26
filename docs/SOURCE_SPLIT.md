@@ -1,6 +1,12 @@
 # Recovered GNU C17 Source Split
 
-## Current state
+Historical source-split report for the July-2026 C17 cutover. The maintained
+runtime subsequently moved to GNU++20 and class sources. Use
+[SOURCE_LAYOUT.md](SOURCE_LAYOUT.md) for current ownership and
+[CPP_MIGRATION.md](CPP_MIGRATION.md) for the completed language cutover.
+The C paths, source counts and gates below retain that earlier evidence.
+
+## State at the source-split cutover
 
 The source split reached final repository cutover on 2026-07-15. The recovered
 implementation used by `clash95_recovered` and `clash95_bootstrap` is canonical
