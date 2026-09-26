@@ -1,14 +1,22 @@
 # Clash Deluxe and clash.y0.pl research
 
-Status: 2026-09-24.
+Status: 2026-09-26.
 
 ## What is confirmed
 
-The now-unavailable `clash.y0.pl` site was an unofficial Polish Clash site with a separate forum. Boghute Ara advertised the site publicly in late 2015 and again in 2016. Community references identify pages for missions and gameplay mechanics, including the opening phase, queen, taxes, traps and ambushes.
+`clash.y0.pl` is an unofficial Polish Clash site with a separate forum. Both the site and forum were reachable during the September 26 research; the tracked `live_status.json` also records HTTP 200 responses. Earlier access failures do not establish permanent unavailability. Boghute Ara advertised the site publicly in late 2015 and again in 2016. Community references identify pages for missions and gameplay mechanics, including the opening phase, queen, taxes, traps and ambushes.
 
 Boghute Ara described a fan modification developed by changing values at specific addresses in `CLASH.EXE` with a hex editor. The stated changes included typo fixes, queen-request costs, workshop and forge prices, unit licence and production costs, combat-stat rebalancing, selected terrain bonuses, and setting initial unit morale to 10. The author said the rebalance also affects both campaigns.
 
-`Clash Deluxe 0.1` was publicly announced on 2020-01-03 with the download location `http://clash.y0.pl/download/`.
+The author's [release thread](http://forum.clash.y0.pl/viewtopic.php?p=1424#p1424) dates the first `Clash Deluxe 0.1` announcement to January 1, 2020; the January 3 announcement found in the earlier research is a later public reference. The dated December 26, 2021 update announces version **0.13** and the name **Clash De Luxe**. The [live download listing](http://clash.y0.pl/download/) still names 0.13 and describes replacing `CLASH.EXE`. No newer release or Win95 compatibility was verified. The current thread title must not be used to date 0.13 to January 2020.
+
+## OpenClash and source-code leads
+
+**OpenClash** is Griz's separate C#/Unity remake, announced on [August 9, 2016](http://forum.clash.y0.pl/viewtopic.php?p=150#p150). Its [January 24, 2018 update](http://forum.clash.y0.pl/viewtopic.php?p=496#p496) describes version 0.2.3 and says a public download still required separating original assets. A [May 2026 community report](http://forum.clash.y0.pl/viewtopic.php?p=1783#p1783) says development had stopped; this is second-hand correspondence, not a fresh public announcement by the developer.
+
+Griz's [Resource Unpacker repository](https://github.com/Grizmu/ClashResUnpacker) is a distinct tool. Its public source does not establish that OpenClash, Clash De Luxe or the original game has released source code. A contributor identifying himself as Jacek discusses the [CLIPS integration](http://forum.clash.y0.pl/viewtopic.php?p=164#p164) and [finding scenario files in 2016](http://forum.clash.y0.pl/viewtopic.php?p=166#p166); the archive itself has not been inspected. These are follow-up leads, not recovered production artifacts.
+
+The September 26 live research covered selected Clash forum topics and pagination, GOG, VOGONS, Old-Games.RU, PPA and GRYOnline, plus targeted searches of other communities. It did not cover every forum or every post. Contact correspondence and private outreach receipts remain outside the public source tree.
 
 Primary external references used for this summary:
 
