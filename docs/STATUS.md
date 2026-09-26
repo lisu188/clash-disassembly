@@ -1,6 +1,27 @@
 # Current Status
 
-Last consolidated: 2026-09-24.
+Last consolidated: 2026-09-26.
+
+## DLX Physical Extent Names
+
+Track: Win95 reconstruction, evidence-backed numeric naming. Seven literals in
+five functions now use two exact-token macros for the 22-byte DLX sprite object
+and four-byte stored payload handle. The paired 147-TU census against `c9c0fa7`
+falls from 79,146 to 79,139 numeric tokens; all 4,157 historical identities remain.
+At compiled head `576bc2`, both builds and warning checks pass. The resumed
+comparison confirms all 153 debug-stripped objects per compiler, normalized
+disassembly, whole stripped executables and strict symbol/data/layout surfaces
+match the incoming reference, without allowances. Fresh native results match
+every baseline case and coverage measurement: 1,092 passes, no assertion
+failures, the same 524 isolated crashes, and 6,165/6,656 covered lines across all
+718 selected functions.
+
+Three local public-test timeouts, an interrupted final tooling run, a missing
+GCC turn-3 input marker and a disk-aborted Clang replay remain unresolved. The
+later integration of main `6ad7f2d` is separate from the compiled evidence above.
+No runtime, visual or campaign milestone advances. Original failures and all
+private evidence are preserved during worktree closeout.
+[Scope, provenance, exact receipts and validation limits](archive/literal_rules/F8_dlx_extents_findings.md#september-26-closeout).
 
 ## Recovered AI Slot Override Dispatch
 

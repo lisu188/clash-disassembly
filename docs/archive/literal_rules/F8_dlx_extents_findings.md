@@ -255,3 +255,116 @@ reviewed plan after F8; it must not reuse the sprite object's payload-field widt
 The popup's `spriteSetOffset += 4` walks an array of whole sprite sets and stays
 in a different domain. The bounded follow-up audit is retained in
 `audit/next-family-entry-stride.md`.
+
+## September 26 closeout
+
+F8 source commit `31875517298df6e88a17aee3712974a5b70896e1` was integrated with
+published main `c9c0fa7a64606dc9712ad13d40720b6f0fca5a39` at compiled head
+`576bc2d3f8ab9ad39d405f80b66dc3fef3ab614e`. The independent source review reverses
+exactly seven substitutions to incoming bytes across all 147 canonical TUs;
+the other 143 TUs and all historical identity metadata remain unchanged.
+
+| Numeric code tokens | Incoming c9c0fa7 | Integrated F8 576bc2 |
+|---|---:|---:|
+| All literals | 79,146 | 79,139 |
+| Integers | 78,968 | 78,961 |
+| Small integers below 10 | 50,919 | 50,918 |
+| Floating literals | 178 | 178 |
+
+The earlier 35f3adb census remains the preintegration measurement; the two
+additional tokens removed by incoming selection work are not F8 substitutions.
+The reviewed application, exclusions and two independent signals per name above
+remain the complete scope. The broader numeric-naming campaign is not complete.
+
+### Completed compiled and native evidence
+
+Both fresh GCC 13 and Clang 18 builds and warning checks pass at `576bc2`.
+All 816 bound inputs remain stable. Both complete 147-TU preprocessing streams,
+all 153 raw objects per compiler, archives, executables, strict snapshots and
+build recipes are retained. The earlier independent 147-TU preguard streams
+remain exact; their focused postguard comparison removes only the two reviewed
+assertion declarations. That is not an unqualified final-stream equality claim.
+
+The resumed `validation/integrated-comparison-retry01/summary.json` reports
+`ok: true`: every debug-stripped object and normalized disassembly matches the
+sealed incoming reference; both complete executables match after removing only
+debug and build-ID sections. Strict symbol/data/layout comparisons use zero
+allowances. Complete raw link profiles, error lists, crosschecks, header findings
+and Markdown findings are equal. Raw debug-object equality is not claimed.
+The comparison receipt binds 626 files with SHA-256
+`ec8dc314b82c2cead08a9544a7766bae84a2481db78587cb50fd10e969cbf55c`.
+The retained capture seal binds 1,003 files with SHA-256
+`11acaf52764f1a6c7ee7543ddabf19436d9221a17cb22190f758de26138264fb`.
+These later receipts supersede only the incomplete-comparison/seal fields in
+`validation/FINAL_STATUS.json`; its original failed test outcomes remain valid.
+
+Fresh native compilation, CTest and coverage pass. All 1,616 ordered registrations,
+each case outcome and complete coverage JSON match the fresh `35f3adb` baseline:
+1,092 passes, no assertion failures, the same 524 isolated crashes, 6,165/6,656
+covered lines (92.623197%), all 718 selected functions reached. All 462 native
+inputs remain unchanged. This comparison spans incoming selection plus F8;
+it is not a source-identical F8-only native experiment or crash-free acceptance.
+See `native/baseline-final-comparison.json` and `native/candidate/summary.json`.
+
+The first integration intake stopped on one existing CRLF/LF representation
+difference in the noncompiled `tests/tools/fixtures/dlx_cached_entry/provenance.json`.
+Its local baseline/after/current bytes are identical. Replacing its 19 CRLF pairs
+with LF gives exact incoming bytes and identical parsed JSON. The fixture was not
+edited. `validation/integration-fixture-line-ending-proof.json` grants no source,
+token, object, executable or layout normalization.
+
+### Retained failures and scope limits
+
+Of four explicit public CTests per compiler, five executions pass and three time
+out: GCC split-source (60.08 seconds), GCC metadata (29.52 seconds), and Clang
+split-source (60.07 seconds). Unchanged focused retries are outstanding. The
+preintegration 548-test run completed with three failed subtests of one workflow
+method, reproduced on its fresh baseline. The final integrated tooling run was
+interrupted at the unchanged five-GiB reserve before final counts and tracebacks;
+four additional error markers remain unclassified. No completed final-local
+548-test result is claimed. Generator checks after that interrupted suite did
+not execute. Complete earlier generation/application evidence remains separate.
+
+At `576bc2`, hosted CI build, warning, public-test and coverage steps pass, while
+the overall run fails. All six reported failed steps match incoming c9c0fa7;
+the comparison includes all three complete failed-subtest traceback blocks.
+Hosted link logs omit 373 GCC and 625 Clang rows, so their equality does not prove
+hidden-row equality; the completed local full-policy comparison above does.
+These historical policy/workflow/activation failures are not asserted to remain
+on newer main, which subsequently repaired several of them.
+
+The GCC first-Road attempt fails after turn-3 refresh at stack 4 `(63,49)`.
+The cursor reaches `(59,51)`, but no game click or movement-result event appears
+before the existing 20-second wait expires. No rejection or failure cause is
+established. Its raw frames, saves, trace and verified archive are retained.
+Clang is stopped by the disk guard after 13.298 seconds, with exit -15; this is
+an aborted probe, not a gameplay result. No completed original/reconstruction
+comparison pair or successful final Road endpoint is established by this batch.
+The F7 final save slot 6 is a different turn/state and was rejected as a matched
+control. `runtime/HOLD.md` and `runtime/results/` retain exact commands and limits.
+No route action, timeout, reserve floor, state shortcut or ratchet was changed
+by F8. Runtime and campaign status remain unchanged.
+
+Main `6ad7f2d` was subsequently integrated at `db9e037` for closeout. It includes
+independent AI-validation/header-policy fixes. The compiled results above remain
+bound to `576bc2` and are not relabeled as a fresh build or full test of this later
+integration. The closeout preserves the unfinished gates rather than marking
+them passed.
+
+### Evidence relocation and commands
+
+All private paths above are relative to
+`artifacts/magic-numbers-dlx-extents-20260924/` inside this worktree snapshot.
+The full snapshot is preserved during worktree removal at
+`C:/Users/andrz/git/clash-disassembly/artifacts/preserved-worktrees/62e9-clash-disassembly-20260926`.
+Historical receipts retain their original absolute paths; this relocation maps
+the old `C:/Users/andrz/.codex/worktrees/62e9/clash-disassembly` prefix to that
+snapshot root without rewriting sealed evidence. Separate persistent Linux build
+trees remain at `/home/andrz/clash-f8-validation-20260924`,
+`/home/andrz/clash-f8-native-20260924` and `/home/andrz/clash-f8-runtime-20260924`.
+
+Exact argument arrays, environment, input hashes and outcomes are retained by
+`validation/README.md`, `validation/integrated-interrupted-runs.json`,
+`validation/resume_comparisons_01.py`, `native/candidate/summary.json` and
+`runtime/commands.json`. Original unsuccessful attempts remain alongside the
+resumed comparison. No historical evidence is deleted during closeout.
