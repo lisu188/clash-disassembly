@@ -6,6 +6,7 @@ Split coverage is keyed by function/file identity from
 
 Usage:
   measure_pure_coverage.py <build_dir> [--worst N] [--json OUT]
+  measure_pure_coverage.py <build_dir> --gcov-command llvm-cov-18 gcov
 """
 
 from __future__ import annotations
@@ -42,6 +43,14 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="fail when any function has zero covered executable lines",
     )
+    parser.add_argument(
+        "--gcov-command",
+        nargs="+",
+        default=["gcov"],
+        metavar="ARG",
+        help="gcov-compatible reader command (default: gcov); place last, e.g. "
+             "--gcov-command llvm-cov-18 gcov",
+    )
     return parser.parse_args()
 
 
@@ -51,7 +60,8 @@ def main() -> int:
     pure_document, functions = load_pure_set(require_manifest=True)
     ranges = split_ranges(functions)
     source_coverage = collect_split_gcov(
-        build_dir, {function["source"] for function in functions}
+        build_dir, {function["source"] for function in functions},
+        gcov_command=args.gcov_command,
     )
     per_fn = []
     total = covered = 0

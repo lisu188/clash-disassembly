@@ -118,6 +118,38 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertIn("cxx: clang++-18", text)
         self.assertEqual(text.count("warning_mode: check"), 2)
 
+    def test_native_evidence_keeps_both_compilers_and_failed_outcomes(self):
+        text = WORKFLOW.read_text(encoding="utf-8").split("  unit-coverage:\n", 1)[1]
+        self.assertIn("fail-fast: false", text)
+        for setting in ("cxx: g++-13", "cxx: clang++-18", "gcov_command: gcov-13",
+                        "gcov_command: llvm-cov-18 gcov"):
+            self.assertIn(setting, text)
+        steps = steps_for("unit-coverage")
+        build_ready = "${{ !cancelled() && steps.unit-build.outcome == 'success' }}"
+        run_finished = "${{ !cancelled() && (steps.unit-run.outcome == 'success' || steps.unit-run.outcome == 'failure') }}"
+        for name in ("Capture native registry and provenance", "Run split unit suite"):
+            self.assertEqual(field(steps[name], "if"), build_ready)
+        for name in ("Reconcile individual native outcomes", "Enforce frozen coverage floor"):
+            self.assertEqual(field(steps[name], "if"), run_finished)
+        native = field(steps["Run split unit suite"], "run")
+        self.assertIn("--no-tests=error", native)
+        self.assertIn('pipeline_status=("${PIPESTATUS[@]}")', native)
+        self.assertIn("test_status=${pipeline_status[0]}", native)
+        self.assertIn('exit "$log_status"', native)
+        self.assertIn('exit "$test_status"', native)
+        reconcile = field(steps["Reconcile individual native outcomes"], "run")
+        self.assertIn('--ctest-exit-code "$(cat native-ctest-exit.txt)"', reconcile)
+        coverage = field(steps["Enforce frozen coverage floor"], "run")
+        self.assertIn("--json coverage.json", coverage)
+        self.assertIn("--gcov-command ${{ matrix.gcov_command }}", coverage)
+        upload = steps["Upload native and coverage evidence"]
+        self.assertIn("always()", field(upload, "if"))
+        for path in ("native-evidence/", "native-revision.txt", "native-compiler-version.txt",
+                     "native-reader-version.txt", "native-ctest.log", "native-ctest-exit.txt", "native-tee-exit.txt",
+                     "coverage.json", "coverage.log", "build/coverage/Testing/Temporary/LastTest.log"):
+            self.assertIn(path, upload)
+        self.assertIn("${{ matrix.compiler_id }}-${{ github.sha }}", upload)
+
     @unittest.skipUnless(shutil.which("bash"), "bash is required for pipeline regression")
     def test_captured_diagnostics_preserve_real_exit_status(self):
         checks = (
@@ -125,6 +157,8 @@ class CIWorkflowTests(unittest.TestCase):
             ("linux-build", "Check recovered warning ratchet", "check_recovered_warnings.py", "warning-ratchet.log"),
             ("linux-build", "Check linked symbol surface and data layout", "check_link_surface.py", "link-surface.log"),
             ("linux-build", "Run asset-free CTest gates", None, "asset-free-ctest.log"),
+            ("unit-coverage", "Run split unit suite", None, "native-ctest.log"),
+            ("unit-coverage", "Enforce frozen coverage floor", "measure_pure_coverage.py", "coverage.log"),
         )
         for job, name, tool, log in checks:
             for exit_code in (0, 7):
@@ -142,6 +176,7 @@ class CIWorkflowTests(unittest.TestCase):
                     command = field(steps_for(job)[name], "run")
                     command = command.replace("${{ matrix.compiler_id }}", "gcc")
                     command = command.replace("${{ matrix.warning_mode }}", "check")
+                    command = command.replace("${{ matrix.gcov_command }}", "gcov-13")
                     env = dict(os.environ, PATH=str(root) + os.pathsep + os.environ.get("PATH", ""))
                     result = subprocess.run(
                         ["bash", "--noprofile", "--norc", "-e", "-o", "pipefail", "-c", command],
@@ -149,6 +184,31 @@ class CIWorkflowTests(unittest.TestCase):
                     )
                     self.assertEqual(result.returncode, exit_code, result.stdout + result.stderr)
                     self.assertIn("fixture diagnostic", (root / log).read_text(encoding="utf-8"))
+                    if job == "unit-coverage" and tool is None:
+                        self.assertEqual((root / "native-ctest-exit.txt").read_text().strip(), str(exit_code))
+                        self.assertEqual((root / "native-tee-exit.txt").read_text().strip(), "0")
+
+    @unittest.skipUnless(shutil.which("bash"), "bash is required for pipeline regression")
+    def test_native_log_write_failure_does_not_hide_ctest_status(self):
+        command = field(steps_for("unit-coverage")["Run split unit suite"], "run")
+        for ctest_status in (0, 7):
+            with self.subTest(ctest_status=ctest_status), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                for name, content in {
+                    "ctest": f"#!/bin/sh\nprintf 'native diagnostic\\n'\nexit {ctest_status}\n",
+                    "tee": '#!/bin/sh\ncat > "$1"\ncat "$1"\nexit 9\n',
+                }.items():
+                    path = root / name
+                    path.write_text(content, encoding="utf-8")
+                    path.chmod(0o755)
+                env = dict(os.environ, PATH=str(root) + os.pathsep + os.environ.get("PATH", ""))
+                result = subprocess.run(
+                    ["bash", "--noprofile", "--norc", "-e", "-o", "pipefail", "-c", command],
+                    cwd=root, env=env, capture_output=True, text=True, timeout=10)
+                self.assertEqual(result.returncode, ctest_status or 9, result.stdout + result.stderr)
+                self.assertEqual((root / "native-ctest-exit.txt").read_text().strip(), str(ctest_status))
+                self.assertEqual((root / "native-tee-exit.txt").read_text().strip(), "9")
+                self.assertIn("native diagnostic", (root / "native-ctest.log").read_text())
 
 
 if __name__ == "__main__":
