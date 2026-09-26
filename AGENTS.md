@@ -97,7 +97,7 @@ Reasoning effort, permissions, and authentication remain user settings.
 - `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
   runtime, reaches responsive menus, and runs validated gameplay routes.
 - The canonical implementation is in the 12 manifest-backed subsystem directories
-  directly under `src/`: 4,157 historical identities in 147 independently
+  directly under `src/`: 4,157 historical identities in 148 independently
   compiled GNU++20 translation units, including the current class-migrated
   sources.
 - The unified source, recovered include-C fragments, and compatibility symlinks

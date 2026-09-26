@@ -1,9 +1,9 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: UnitStack spent-turn relocation validation.
-Thirty-three identities have canonical methods in six class-named sources.
-The ordered manifest contains 147 translation units,
-including the independently recovered Road ownership change from main.
+Track: Win95 reconstruction. Frontier: WorldMap visibility relocation acceptance.
+Thirty-six identities have canonical methods in seven class-named sources.
+The ordered manifest contains 148 translation units, including WorldMap.cpp
+and the independently recovered Road ownership change from main.
 This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 
@@ -14,6 +14,15 @@ records, globals, low32 handles, callback tables, save bytes and explicit
 lifecycles remain authoritative. Classes describe the reconstruction's
 organization, not proven original C++ object layouts. The migration does not
 advance campaign or visual-fidelity claims.
+
+Three WorldMap visibility operations now live in WorldMap.cpp after separate
+extraction and relocation commits. Both stages pass eight actual-source profiles,
+both production builds, warning checks, strict symbol/storage comparisons and
+eight asset-free gates. Relocation requires no comparison allowances and keeps
+all three canonical body hashes. All 4,157 identities and 718 coverage selections
+remain. The extraction's full hosted run passes 602 tooling tests while retaining
+native, coverage and historical link failures. Runtime and complete migration
+acceptance remain separate. See [WorldMap evidence](WORLD_MAP_VISIBILITY_CLASSES.md).
 
 The two spent-turn methods pass all focused suites, both production builds,
 strict surface comparisons and eight asset-free gates. UnitTurn calls the real

@@ -1,9 +1,10 @@
-# WorldMap visibility class extraction
+# WorldMap visibility class extraction and relocation
 
 Track: Win95 reconstruction, behavior-preserving class migration. Three existing
 visibility operations now have canonical `clash95::WorldMap` methods, with thin
-original-signature adapters in the original world translation unit. This is the
-extraction stage; relocation into WorldMap.cpp remains separate work.
+original-signature adapters in the original world translation unit. Extraction
+and relocation are separately validated commits; the canonical methods now live
+in WorldMap.cpp while the adapters and borrowing factory retain their anchor.
 
 | Recovered identity | Original address | Prepared canonical executable lines |
 | --- | --- | --- |
@@ -20,7 +21,8 @@ drawing and text styling remain procedural boundaries. Construction and
 destruction perform no game action or allocation.
 
 The current integration starts at `9a74d4c9b486e15495d5a48fea7b3dd81f46eb5d`.
-Exactly 22 implementation, fixture and metadata files change: 21 sealed recipe
+At the extraction stage, exactly 22 implementation, fixture and metadata files
+change: 21 sealed recipe
 outputs and the regenerated classifier descriptor in `tests/unit/pure_set.json`.
 All 4,157 historical identities and their order remain. The prior 33 methods are
 unchanged, making 36 canonical methods across the unchanged 147-TU inventory.
@@ -112,8 +114,66 @@ python3 -B artifacts/cpp-classes/20260926/visibility-extraction/run_validation.p
 
 The retained one-shot recipe and validator require fresh guarded output paths;
 do not rerun them over sealed evidence. Both filesystems stayed below the 90%
-usage threshold with an additional 2-GiB reserve. Relevant runtime gates,
-relocation validation and the unresolved native observations remain outstanding.
+usage threshold with an additional 2-GiB reserve. Relevant runtime gates and the
+unresolved native observations remain outstanding.
 The [33-method first-Road comparison](CPP_CLASS_FIRST_ROAD_REVALIDATION.md#september-26-33-method-checkpoint)
 is a baseline, not runtime validation of these three new methods. No visual or
 campaign milestone is promoted.
+
+## Separate source relocation
+
+Commit `baa8c3ef2eaad36b922c5db51fcc6ffc8a6b8829` moves only the three canonical
+definitions into WorldMap.cpp. The six-file change also updates the manifest,
+CMake and subsystem inventories and the classifier's coverage source descriptor.
+All three method body hashes, all adapters and the live borrowing factory remain
+unchanged. No storage moves. The inventory now contains 148 translation units,
+including seven class-named sources with 36 canonical methods. All 4,157
+historical identities and all 718 selected coverage identities retain their order.
+
+Fresh GCC 13 and Clang 18 production builds, warning gates, all eight asset-free
+CTests, five metadata gates, 129 focused tooling tests and six public fixture
+entry points pass. Eight O0/O2 signed/unsigned-char profiles pass all 24 fixture
+binaries. Both strict comparisons against the sealed extraction products pass
+without any text, storage or initialization allowance. The raw link profiles
+and every historical difference are unchanged: 467 GCC and 719 Clang, with
+zero archive cross-check errors. No baseline changes or production rebuilds
+are used to hide a failed result.
+
+The first fixture-intake attempt failed after its owned Linux temporary directory
+disappeared. Initial passing command logs, profile outputs and production hashes
+survive. A separate recovery reruns the same eight profiles against the same
+874 frozen inputs in `/var/tmp` and immediately verifies a Windows evidence copy.
+All 24 outcomes match; 18 binary hashes match. Six Clang O0 binaries differ and
+contain new absolute source paths, but the missing originals prevent proving
+that paths explain every differing byte. The deletion event was not observed.
+The failed intake, bounded environment audit and passing recovery stay separate.
+
+The relocation evidence is under
+`artifacts/cpp-classes/20260926/visibility-relocation/` in the dedicated
+world-visibility worktree. Its 663-file seal SHA256 is
+`6ca64a3b0bf13f148100b5b68c586965330769eb5dc814ebff87c0a593a93aa7`;
+the independent source review is in the sibling visibility-relocation-review
+directory. The coordinator rehashed all 663 sealed files before committing.
+The exact driver is:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 artifacts/cpp-classes/20260926/visibility-relocation/run_validation.py
+```
+
+Its immutable output paths must not be reused. The build receipts identify
+incoming base `9123e70` plus the complete 874-file relocated source freeze;
+`baa8c3e` is the resulting source commit. The later documentation-only merge of
+main `089b96f` preserves the concise status and complete historical archive.
+The full native/coverage matrix and runtime gates for relocation remain distinct
+from the completed extraction run and 33-method original-paired replay.
+
+After integrating main `089b96f`, a comparison of all 874 compiled inputs finds
+872 byte-identical files; only the consolidated README and the documented
+AGENTS inventory count differ. Production, fixtures, tools and metadata match
+the tested relocation. The integrated inventory, generated headers, coverage
+metadata, class catalog, split audit and Markdown checks all pass. These receipts
+are retained under `artifacts/cpp-classes/20260926/documentation-integration/`.
+Prepared default smoke execution remains disabled: the latest backing-volume
+check is below the unchanged 10%-free plus 2-GiB reserve plus 3-GiB run-budget
+requirement. This resource hold and the remaining whole-migration acceptance
+work do not change the scope of the completed source-relocation checkpoint.

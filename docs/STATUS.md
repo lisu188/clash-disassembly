@@ -15,9 +15,9 @@ itself does not establish runtime parity; later validation is identified below.
 
 | Area | Retained baseline | Evidence and limit |
 | --- | --- | --- |
-| Implementation | GNU++20, 4,157 historical identities, 147 ordered translation units in 12 recovered subsystems | [Source layout](SOURCE_LAYOUT.md), source manifest and split audit. Language cutover is complete; full reimplementation is not. |
+| Implementation | GNU++20, 4,157 historical identities, 148 ordered translation units in 12 recovered subsystems | [Source layout](SOURCE_LAYOUT.md), source manifest and split audit. Language cutover is complete; full reimplementation is not. |
 | Naming and control flow | 3,031 original placeholder names resolved; all 17 known `JUMPOUT` scars recovered | [Rename index](archive/SUB_RENAME_INDEX.md) and [recovery log](archive/REVERSE_ENGINEERING_RENAME_LOG.md). Naming does not certify behavior. |
-| C++ classes | 36 historical identities have canonical methods; the three new WorldMap bodies are at their extraction checkpoint | [Class migration](CPP_CLASS_MIGRATION.md). Architectural assignments in registries are broader than implemented migration. |
+| C++ classes | 36 historical identities have canonical methods in seven class-named sources | [Class migration](CPP_CLASS_MIGRATION.md). Architectural assignments in registries are broader than implemented migration. |
 | Campaign routes | Missions `00..04` and `13` are route-complete (6/20); `05..12` and `14..19` remain partial | [Route env files](../tests/first_campaign_arc_routes/) are authoritative; direct boot does not prove menu progression. |
 | Mission 05 | First Road construction at turn 6, stack 4 at `(49,50)`, 2 AP, empty active path, 228 visible tiles | [First-Road probe](../tests/first_campaign_arc_routes/mission_05_first_road_probe.env) and [bounded original comparison](archive/STATUS_20260926.md#builder-road-menu-original-matching-first-construction). |
 | Runtime coverage | Authentic SDL menus and direct gameplay probes; all-AI multiplayer map IDs `0..10` have retained load/liveness/frame evidence | [Runtime milestones](RUNTIME_MILESTONES.md). Full-game, human multiplayer menu and visual equivalence remain unproven. |
@@ -31,9 +31,11 @@ bash tests/summarize_campaign_arc_routes.sh
 
 ## Current Class Checkpoint
 
-The WorldMap visibility extraction passes both production builds, warnings,
-strict symbol/storage comparisons, eight asset-free gates and eight actual-source
-behavior profiles. Hosted head `9123e70` passes all 602 tooling tests and retains
+The WorldMap visibility extraction and separate relocation pass both production
+builds, warnings, strict symbol/storage comparisons, eight asset-free gates and
+eight actual-source behavior profiles. Relocation `baa8c3e` preserves every
+method body and requires no symbol/storage/initialization allowances. Hosted
+extraction head `9123e70` passes all 602 tooling tests and retains
 all 1,616 native outcomes per compiler. GCC records 1100/0/516 passes/assertion
 failures/crashes with 6169/6659 covered/executable lines; Clang records 1097/1/518
 and 6808/7348, including the same eight uncovered functions. Native outcome and
