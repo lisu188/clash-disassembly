@@ -2,6 +2,24 @@
 
 Last consolidated: 2026-09-24.
 
+## Recovered AI Slot Override Dispatch
+
+Track: strategic-AI validation prerequisite (Definition of Done items 8-10).
+The source projection now emits each serialized slot override handler by name
+instead of replacing ordinary `put-<slot>` handlers with literal `DEFAULT`.
+All 23 descriptor symbols and the original loader at `0x4C6990` support the
+repair. The old projection parsed but failed instance creation with `MSGFUN1`;
+the shared stock-CLIPS check now rejects that diagnostic. All 13 activation
+witnesses pass locally, including the previously failing nonzero-AP object.
+Five focused regressions include a mutation proving a failed object cannot
+silently pass the empty-agenda negative witness. The nine workflow tests also
+pass after recognizing the actual CLIPS prerequisites of all four runtime
+checks; the workflow and frozen baselines are unchanged.
+Slot-facet, source-projection, load, RETE-depth and reset-agenda checks pass
+with stock CLIPS 6.30. These are validation-tool repairs, not production C++
+or full strategic-AI parity claims. Mission 05, runtime and frame milestones
+remain unchanged. See [CLASH_DAT_SLOT_FACETS.md](CLASH_DAT_SLOT_FACETS.md).
+
 ## Selected-Slot Predicate Readability
 
 Track: Win95 reconstruction, Road-family selection helpers.

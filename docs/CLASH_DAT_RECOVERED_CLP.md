@@ -58,7 +58,7 @@ source projection now has the full normalized shape:
   (pattern-match reactive)
   (visibility private)
   (create-accessor NONE)
-  (override-message DEFAULT)
+  (override-message put-x)
 )
 ```
 

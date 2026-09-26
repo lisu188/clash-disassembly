@@ -21,6 +21,7 @@ SKIP_PREFIXES = (
     ".worktrees/",
     "docs/archive/",
 )
+LOCAL_EVIDENCE_PREFIXES = ("artifacts/",)
 MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 BACKTICK_PATH_RE = re.compile(r"`([^`\s]+?\.(?:md|json|sh|py|cpp|c|h|csv|env|script))`")
 URL_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*:")
@@ -82,6 +83,8 @@ def check_file(path: Path) -> list[str]:
 
     for match in BACKTICK_PATH_RE.finditer(text):
         target = clean_target(match.group(1))
+        if target and target.startswith(LOCAL_EVIDENCE_PREFIXES):
+            continue
         if target and not path_exists(path, target, root_relative=False):
             errors.append(f"{rel}: missing referenced path: {target}")
 
