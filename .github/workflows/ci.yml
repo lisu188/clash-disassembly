@@ -328,9 +328,23 @@ jobs:
           if-no-files-found: warn
 
   unit-coverage:
-    name: Split unit coverage
+    name: Split unit coverage (${{ matrix.compiler }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - compiler: GCC 13
+            compiler_id: gcc13
+            cxx: g++-13
+            packages: g++-13
+            gcov_command: gcov-13
+          - compiler: Clang 18
+            compiler_id: clang18
+            cxx: clang++-18
+            packages: clang-18 llvm-18 libclang-rt-18-dev
+            gcov_command: llvm-cov-18 gcov
 
     steps:
       - name: Check out repository
@@ -339,11 +353,11 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev g++-13
+          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev gdb ${{ matrix.packages }}
 
       - name: Configure coverage build
         env:
-          CXX: g++-13
+          CXX: ${{ matrix.cxx }}
         run: cmake -S . -B build/coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
 
       - name: Build independently compiled unit harness
@@ -359,12 +373,68 @@ jobs:
         if: always() && steps.unit-build.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:
-          name: split-unit-compiler-diagnostics
+          name: split-unit-compiler-diagnostics-${{ matrix.compiler_id }}
           path: unit-compiler.log
           if-no-files-found: warn
 
+      - name: Capture native registry and provenance
+        if: ${{ !cancelled() && steps.unit-build.outcome == 'success' }}
+        shell: bash
+        run: |
+          git rev-parse HEAD > native-revision.txt
+          ${{ matrix.cxx }} --version > native-compiler-version.txt
+          ${{ matrix.gcov_command }} --version > native-reader-version.txt
+          python3 tools/collect_native_test_evidence.py registry \
+            --binary build/coverage/bin/clash95_unit_tests --root . --output native-evidence
+
       - name: Run split unit suite
-        run: ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure
+        id: unit-run
+        if: ${{ !cancelled() && steps.unit-build.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -o pipefail
+          set +e
+          ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure --no-tests=error 2>&1 | tee native-ctest.log
+          pipeline_status=("${PIPESTATUS[@]}")
+          test_status=${pipeline_status[0]}
+          log_status=${pipeline_status[1]}
+          set -e
+          printf '%s\n' "$test_status" > native-ctest-exit.txt
+          printf '%s\n' "$log_status" > native-tee-exit.txt
+          if [[ "$test_status" -eq 0 ]]; then
+            exit "$log_status"
+          fi
+          exit "$test_status"
+
+      - name: Reconcile individual native outcomes
+        if: ${{ !cancelled() && (steps.unit-run.outcome == 'success' || steps.unit-run.outcome == 'failure') }}
+        shell: bash
+        run: |
+          python3 tools/collect_native_test_evidence.py reconcile \
+            --evidence native-evidence --log build/coverage/Testing/Temporary/LastTest.log \
+            --ctest-exit-code "$(cat native-ctest-exit.txt)"
 
       - name: Enforce frozen coverage floor
-        run: python3 tools/measure_pure_coverage.py build/coverage --minimum 89.7 --require-functions 718 --require-zero-uncovered --worst 10
+        if: ${{ !cancelled() && (steps.unit-run.outcome == 'success' || steps.unit-run.outcome == 'failure') }}
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 tools/measure_pure_coverage.py build/coverage --minimum 89.7 --require-functions 718 --require-zero-uncovered --worst 10 --json coverage.json --gcov-command ${{ matrix.gcov_command }} 2>&1 | tee coverage.log
+
+      - name: Upload native and coverage evidence
+        if: ${{ always() && (steps.unit-build.outcome == 'success' || steps.unit-build.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: split-unit-native-${{ matrix.compiler_id }}-${{ github.sha }}
+          path: |
+            native-evidence/
+            native-revision.txt
+            native-compiler-version.txt
+            native-reader-version.txt
+            native-ctest.log
+            native-ctest-exit.txt
+            native-tee-exit.txt
+            coverage.json
+            coverage.log
+            build/coverage/Testing/Temporary/LastTest.log
+          if-no-files-found: warn

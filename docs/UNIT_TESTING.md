@@ -21,8 +21,9 @@ depending on removed unified-source line ranges.
 ## Build and test layout
 
 With coverage enabled, CMake creates
-`clash95_recovered_coverage_objects` from all 140 recovered split translation
-units. Recovered code and the test/support code are compiled separately as GNU++20:
+`clash95_recovered_coverage_objects` from the canonical source inventory in
+`data/recovered_sources.json` (currently 147 translation units). Recovered code
+and the test/support code are compiled separately as GNU++20:
 
 - every test source under `tests/unit/cases/` is an independent translation unit;
 - `tests/unit/case_prelude.h` provides the common case declarations;
@@ -77,6 +78,45 @@ The CTest entry invokes `tests/unit/run_split_coverage.sh`, which prepares the
 worker profiles consumed by `tools/measure_pure_coverage.py`. Running the test
 executable directly remains useful for case diagnostics, but does not create
 the persisted shard layout expected by the measurement command.
+
+## Retained native and coverage evidence
+
+CI runs the full native suite and frozen coverage gate in separate GCC 13 and
+Clang 18 jobs. Neither a native failure nor the other compiler's failure prevents
+the remaining diagnostics from running. Each job retains the complete CTest log,
+all 718 coverage rows in its coverage JSON, compiler/reader versions, source commit,
+binary hash and individual registered test outcomes. The original native and
+coverage steps keep their actual failing exit codes. A successful evidence
+collector means the report is complete; it does not mean the native suite passed.
+
+Before CTest, `tools/collect_native_test_evidence.py registry` stops the actual
+binary at `main` with GDB and reads its ordered registration table. It does not
+execute any test case. After CTest, its `reconcile` stage preserves the raw log
+before checking binary/source identity, registration uniqueness, exception
+membership and every reported count. Only then can it assign silent PASS results
+to registered names absent from the exception list. Missing, duplicate, foreign
+or incomplete results fail collection. Retries require a new evidence directory;
+earlier failed attempts cannot be overwritten.
+
+The runner reports FAIL, ERROR and CRASH independently. It does not retain the
+specific caught signal, and sixteen workers may interleave other diagnostics.
+The collector preserves those raw messages without guessing their case or signal.
+The default runner still permits isolated crashes; strict mode remains a separate
+invocation, and its counters must not be mixed into default coverage.
+
+The reader can be selected explicitly without changing source resolution,
+executable lines or worker-profile union. GCC uses `gcov-13`; Clang requires its
+matching `llvm-cov-18 gcov`. For example, after a Clang coverage build and CTest:
+
+```sh
+python3 tools/measure_pure_coverage.py build/coverage \
+  --minimum 89.7 --require-functions 718 --require-zero-uncovered \
+  --worst 10 --json coverage.json --gcov-command llvm-cov-18 gcov
+```
+
+Reader selection does not waive known Clang assertion or zero-uncovered failures.
+Historical summary-only CI jobs did not retain detailed native/coverage results;
+new diagnostics cannot reconstruct those missing old-run details.
 
 ## Adding tests
 
