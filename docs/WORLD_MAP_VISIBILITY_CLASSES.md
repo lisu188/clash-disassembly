@@ -56,8 +56,40 @@ Only the classifier belongs to the fixed 718-function coverage set. Its
 implementation descriptor now resolves the method. Prepared gcov accounting at
 pin `705fc0f` measured the unchanged line counts above, with zero executable-line
 delta inside the 718 set. Current method bodies match that prepared recipe;
-the full native coverage matrix has not been rerun for this extraction. The
-89.7% floor and zero-uncovered requirement remain unchanged.
+the full native coverage matrix is now recorded below. The 89.7% floor and
+zero-uncovered requirement remain unchanged.
+
+The exact integrated extraction at `9123e70` was validated by
+[hosted run 36269978257](https://github.com/lisu188/clash-disassembly/actions/runs/36269978257).
+Its actual PR merge `2653041b483452871f239b8d7f2b937de4298b40` has the same
+tree as the requested head. All 602 tooling tests, both production builds,
+warning checks, eight asset-free gates and both native outcome collectors pass.
+Each collector retains all 1,616 ordered outcomes and all 718 coverage rows.
+The run fails overall: Clang's assertion and zero-uncovered gate and both raw
+historical link gates still fail.
+
+GCC records 1,100 passes, no assertion failures and 516 isolated crashes, with
+6,169/6,659 covered/executable lines and zero uncovered functions. Clang records
+1,097 passes, one assertion failure and 518 isolated crashes, with 6,808/7,348
+lines and the same eight uncovered functions. Both percentage floors pass.
+Both executable denominators are unchanged from the prior `12ff25b` checkpoint;
+the visibility extraction adds no executable line to the selected set.
+
+GCC loses one covered line in the unchanged procedural
+`Map_RevealTilesInRadius2ForPlayer` (13/15 to 12/15). That function calls the
+class-backed reveal operation and contains an existing uninitialized loop
+cursor; all three of its native cases still crash. The retained coverage has
+aggregate rows, not per-line counters, so the missing line and cause remain
+unknown. Clang loses six covered lines across two unchanged CRT functions.
+Three additional Clang cases crash compared with `12ff25b`, but all three also
+crashed in the incoming-main reference. The two unfavorable changes against
+that reference remain unresolved. These observations are not waived as
+historical merely because the procedural source is unchanged.
+
+Exact checkout identities, all native outcomes, coverage deltas and source
+comparisons remain under
+`artifacts/cpp-classes/20260926/ci-review/integrated9123e70/`. This extraction
+run does not validate the subsequent source relocation or runtime behavior.
 
 Preparation was independently reproduced and tested for extraction and relocation
 in [hosted run 36267455378](https://github.com/lisu188/clash-disassembly/actions/runs/36267455378).
@@ -80,8 +112,8 @@ python3 -B artifacts/cpp-classes/20260926/visibility-extraction/run_validation.p
 
 The retained one-shot recipe and validator require fresh guarded output paths;
 do not rerun them over sealed evidence. Both filesystems stayed below the 90%
-usage threshold with an additional 2-GiB reserve. Fresh full tooling/native
-coverage, relevant runtime gates and relocation validation remain outstanding.
+usage threshold with an additional 2-GiB reserve. Relevant runtime gates,
+relocation validation and the unresolved native observations remain outstanding.
 The [33-method first-Road comparison](CPP_CLASS_FIRST_ROAD_REVALIDATION.md#september-26-33-method-checkpoint)
 is a baseline, not runtime validation of these three new methods. No visual or
 campaign milestone is promoted.

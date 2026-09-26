@@ -410,6 +410,29 @@ unfavorable observation is waived. Exact receipt hashes, raw lines, source blob
 comparisons and the bounded diagnostic plan remain under
 `artifacts/cpp-classes/20260926/native-variation-audit/`.
 
+### Integrated WorldMap extraction checkpoint
+
+The later 36-method extraction at `9123e70` has a complete
+[hosted run](https://github.com/lisu188/clash-disassembly/actions/runs/36269978257)
+whose actual merge tree equals the requested head. All 602 tooling tests,
+both production builds and warning checks, eight asset-free gates and both
+outcome collectors pass. GCC retains all previous individual native outcomes,
+1100/0/516, with coverage 6169/6659 and no uncovered function. Clang records
+1097/1/518 and coverage 6808/7348, with the same assertion and eight uncovered
+functions. The overall run fails, including both historical link ratchets.
+
+Both executable denominators remain unchanged from `12ff25b`. GCC loses one
+covered line in the unchanged procedural radius-two reveal caller; Clang loses
+six across two CRT functions. The three additional Clang crashes relative to
+`12ff25b` were also crashes in the incoming-main reference. The two unfavorable
+reference comparisons remain unresolved. Aggregate coverage and the runner's
+combined CRASH category do not establish causes. Full receipts, all cases and
+coverage deltas remain under
+`artifacts/cpp-classes/20260926/ci-review/integrated9123e70/`.
+See [the WorldMap report](WORLD_MAP_VISIBILITY_CLASSES.md) for the extraction
+scope and storage comparisons. Source relocation and runtime validation are
+separate subsequent stages.
+
 ### Incoming header baseline change
 
 Origin commit `6ad7f2d` independently reseeds the header baseline and documents

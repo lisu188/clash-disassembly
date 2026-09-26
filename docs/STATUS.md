@@ -12,9 +12,15 @@ world TU pending their separate relocation. Both compiler builds, warnings,
 strict symbol/storage comparisons, eight asset-free gates, eight behavior
 profiles and all 129 focused tooling tests pass. The raw historical link gates
 remain failed with exactly four explained strong-text additions per compiler.
-The fresh first-Road comparison below validates the preceding 33-method
-checkpoint; full native coverage and runtime acceptance of this extraction
-remain separate. [Evidence and limits](WORLD_MAP_VISIBILITY_CLASSES.md).
+Hosted extraction head `9123e70` also passes all 602 tooling tests and retains
+all 1,616 native outcomes per compiler. GCC records 1100/0/516
+passes/assertion failures/crashes and 6,169/6,659 covered/executable lines;
+Clang records 1097/1/518 and 6,808/7,348, with its same eight uncovered functions.
+The executable denominators are unchanged, but covered-line and native-outcome
+variations remain unresolved. The run fails overall. The fresh first-Road
+comparison below validates the preceding 33-method checkpoint; runtime
+acceptance of this extraction remains separate.
+[Evidence and limits](WORLD_MAP_VISIBILITY_CLASSES.md).
 
 ## Class Checkpoint Origin Refresh And Hosted Evidence
 
