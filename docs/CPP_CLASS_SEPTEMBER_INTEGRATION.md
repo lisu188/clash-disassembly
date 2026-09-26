@@ -390,6 +390,26 @@ rows and coverage comparisons are retained under
 changes validation tooling and documentation only; it adds no class method,
 runtime or campaign milestone.
 
+### Native variation evidence boundary
+
+A later read-only audit finds the same native executable SHA256,
+`78556a4c5825fee1599671f285df6ac80115642c68dc6c0ccef164867da367e2`, in
+the hosted capture receipts for both candidate runs above. The timezone case
+passes in the first and crashes in the second, establishing an outcome variation
+without a change to those executable bytes. The executables were not downloaded
+and rehashed locally; the capture receipts and preserved collector outcomes are
+the evidence. This does not resolve the candidate-versus-main comparison.
+
+Both target fixtures discard the function result rather than asserting behavior.
+The relevant procedural source, fixtures and runner are identical to the
+reference, and original assembly confirms missing register dataflow in both
+recoveries. However, the runner's CRASH outcome conflates caught faults, its
+one-second alarm, abnormal exits and possible coverage-dump failures. It retains
+no signal or faulting instruction. No precise cause is established and neither
+unfavorable observation is waived. Exact receipt hashes, raw lines, source blob
+comparisons and the bounded diagnostic plan remain under
+`artifacts/cpp-classes/20260926/native-variation-audit/`.
+
 ### Incoming header baseline change
 
 Origin commit `6ad7f2d` independently reseeds the header baseline and documents
