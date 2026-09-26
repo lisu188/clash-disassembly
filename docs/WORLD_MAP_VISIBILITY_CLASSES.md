@@ -3,7 +3,7 @@
 Track: Win95 reconstruction, behavior-preserving class migration. Three existing
 visibility operations now have canonical `clash95::WorldMap` methods, with thin
 original-signature adapters in the original world translation unit. This is the
-extraction stage; relocation into `WorldMap.cpp` remains separate work.
+extraction stage; relocation into WorldMap.cpp remains separate work.
 
 | Recovered identity | Original address | Prepared canonical executable lines |
 | --- | --- | --- |

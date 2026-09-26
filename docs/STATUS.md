@@ -2,6 +2,20 @@
 
 Last consolidated: 2026-09-26.
 
+## WorldMap Visibility Extraction
+
+Three visibility operations now have canonical WorldMap methods with live arena
+bindings and thin original-signature adapters. Direct recursive/query calls,
+all 4,157 historical identities, the 147-TU inventory and 718 coverage identities
+remain. There are now 36 methods; the three new bodies remain in the original
+world TU pending their separate relocation. Both compiler builds, warnings,
+strict symbol/storage comparisons, eight asset-free gates, eight behavior
+profiles and all 129 focused tooling tests pass. The raw historical link gates
+remain failed with exactly four explained strong-text additions per compiler.
+The fresh first-Road comparison below validates the preceding 33-method
+checkpoint; full native coverage and runtime acceptance of this extraction
+remain separate. [Evidence and limits](WORLD_MAP_VISIBILITY_CLASSES.md).
+
 ## Class Checkpoint Origin Refresh And Hosted Evidence
 
 The 33-method checkpoint integrates origin `26f5f35`, preserving the incoming
